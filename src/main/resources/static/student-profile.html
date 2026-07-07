@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - RecruitEase</title>
+
+    <link rel="stylesheet" href="student-profile.css">
+</head>
+
+<body>
+
+<div class="student-profile-layout">
+
+    <aside class="profile-sidebar">
+
+        <div class="profile-brand">
+            <div style="font-size:28px;">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Student Portal</p>
+            </div>
+        </div>
+
+        <div class="sidebar-student">
+            <img id="sidebarPhoto" alt="Student Photo">
+
+            <div>
+                <b id="sidebarName">Student</b>
+                <p id="sidebarInfo">Loading...</p>
+            </div>
+        </div>
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <a href="student-dashboard.html">🏠 Dashboard</a>
+        <a class="active" href="student-profile.html">👤 My Profile</a>
+        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+        <a href="student-placement-drives.html">💼 Placement Drives</a>
+        <a href="student-applications.html">📄 My Applications</a>
+        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="student-interviews.html">🎤 Interviews</a>
+        <a href="student-resume.html">📑 Resume Builder</a>
+        <a href="student-notifications.html">🔔 Notifications</a>
+
+        <p class="menu-title">ACCOUNT</p>
+
+        <a href="student-settings.html">⚙ Settings</a>
+        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+        <div class="help-box">
+            <h4>🎧 Need Help?</h4>
+            <p>Contact your TPO for placement support.</p>
+        </div>
+
+    </aside>
+
+    <main class="profile-main">
+
+        <header class="profile-topbar">
+
+            <input
+                class="profile-search"
+                id="profileSearch"
+                type="text"
+                placeholder="Search profile details..."
+                onkeyup="searchProfile()"
+            >
+
+            <div class="top-actions">
+
+                <button
+                    class="icon-button"
+                    type="button"
+                    id="themeButton"
+                    onclick="toggleTheme()"
+                    title="Change Theme"
+                >
+                    🌙
+                </button>
+
+                <button class="icon-button" type="button" title="Notifications">
+                    🔔
+                    <span class="notification-count">3</span>
+                </button>
+
+                <div class="top-profile">
+                    <img id="topPhoto" alt="Student Photo">
+
+                    <div>
+                        <b id="topName">Student</b>
+                        <p id="topInfo">Student Portal</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="page-heading">
+
+            <div>
+                <h1>My Profile 👤</h1>
+                <p>View your real personal and placement profile details.</p>
+            </div>
+
+            <div class="page-buttons">
+                <button class="primary-btn" type="button" onclick="goToSettings()">
+                    ✎ Edit Profile
+                </button>
+
+                <button class="secondary-btn" type="button" onclick="downloadProfilePdf()">
+                    ⬇ Download Profile PDF
+                </button>
+            </div>
+
+        </section>
+
+        <section class="profile-grid">
+
+            <!-- MAIN PROFILE -->
+            <section class="card">
+
+                <div class="profile-hero">
+
+                    <img id="mainPhoto" class="profile-main-photo" alt="Student Photo">
+
+                    <div class="profile-hero-content">
+                        <h2>
+                            <span id="profileName">Student</span>
+                            <span class="student-status">Active</span>
+                        </h2>
+
+                        <p>🎓 <span>Branch:</span> <b id="profileBranch">Not added</b></p>
+                        <p>🪪 <span>Roll No.:</span> <b id="profileRollNumber">Not added</b></p>
+                        <p>📅 <span>Year:</span> <b id="profileYear">Not added</b></p>
+                        <p>✉ <span>Email:</span> <b id="profileEmail">Not added</b></p>
+                        <p>☎ <span>Mobile:</span> <b id="profileMobile">Not added</b></p>
+
+                        <button class="secondary-btn change-photo-btn" type="button" onclick="goToSettings()">
+                            📸 Change Photo
+                        </button>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- OVERVIEW -->
+            <section class="card">
+
+                <div class="card-heading">
+                    <div class="heading-icon">◔</div>
+
+                    <div>
+                        <h3>Profile Overview</h3>
+                        <p>Current academic and placement details.</p>
+                    </div>
+                </div>
+
+                <div class="overview-list">
+
+                    <div class="overview-row">
+                        <span>⭐ CGPA</span>
+                        <b id="overviewCgpa">Not added</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>🏫 Branch</span>
+                        <b id="overviewBranch">Not added</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>🪪 Roll Number</span>
+                        <b id="overviewRollNumber">Not added</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>📅 Current Year</span>
+                        <b id="overviewYear">Not added</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>🏢 Preferred Company</span>
+                        <b id="overviewCompany">Not added</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>📄 Resume</span>
+                        <b id="overviewResume">Not uploaded</b>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- LOWER CARDS -->
+            <section class="lower-grid">
+
+                <article class="card">
+
+                    <div class="card-heading">
+                        <div class="heading-icon">📚</div>
+
+                        <div>
+                            <h3>Academic Details</h3>
+                            <p>Data available in your profile.</p>
+                        </div>
+                    </div>
+
+                    <div class="info-list">
+
+                        <div class="info-row">
+                            <span>Current CGPA</span>
+                            <b id="academicCgpa">Not added</b>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Branch</span>
+                            <b id="academicBranch">Not added</b>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Year</span>
+                            <b id="academicYear">Not added</b>
+                        </div>
+
+                        <div class="info-row">
+                            <span>Skills Added</span>
+                            <b id="academicSkillCount">0</b>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="card">
+
+                    <div class="card-heading">
+                        <div class="heading-icon">⌨</div>
+
+                        <div>
+                            <h3>Skills</h3>
+                            <p>Skills added by you in profile settings.</p>
+                        </div>
+                    </div>
+
+                    <div id="skillsWrap" class="skill-wrap">
+                        <div class="empty-note">No skills added yet.</div>
+                    </div>
+
+                </article>
+
+                <article class="card">
+
+                    <div class="card-heading">
+                        <div class="heading-icon">🔗</div>
+
+                        <div>
+                            <h3>Contact & Links</h3>
+                            <p>Your registered contact information.</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-list">
+
+                        <div class="contact-row">
+                            <span>✉ Email</span>
+                            <b id="contactEmail">Not added</b>
+                        </div>
+
+                        <div class="contact-row">
+                            <span>☎ Mobile</span>
+                            <b id="contactMobile">Not added</b>
+                        </div>
+
+                        <div class="contact-row">
+                            <span>📍 Address</span>
+                            <b id="contactAddress">Not added</b>
+                        </div>
+
+                        <div class="contact-row">
+                            <span>in LinkedIn</span>
+                            <a id="contactLinkedin" href="#" target="_blank">Not added</a>
+                        </div>
+
+                        <div class="contact-row">
+                            <span>◉ GitHub</span>
+                            <a id="contactGithub" href="#" target="_blank">Not added</a>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+            <!-- ABOUT -->
+            <section class="card about-card">
+
+                <div class="card-heading">
+                    <div class="heading-icon">👤</div>
+
+                    <div>
+                        <h3>About Me</h3>
+                        <p>Generated from your current profile details.</p>
+                    </div>
+                </div>
+
+                <p id="aboutText" class="about-text">
+                    Profile information is loading...
+                </p>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+const profileThemeKey = "recruiteaseStudentProfileTheme_" + studentId;
+
+let studentData = null;
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+}
+
+function defaultAvatar() {
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
+            <rect width="100%" height="100%" fill="#1d4ed8"/>
+            <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle"
+                  font-family="Arial" font-size="70" font-weight="bold" fill="white">
+                ST
+            </text>
+        </svg>
+    `);
+}
+
+function setPhoto(id, url) {
+    const image = document.getElementById(id);
+
+    if (!image) {
+        return;
+    }
+
+    image.onerror = function() {
+        image.src = defaultAvatar();
+    };
+
+    image.src = url || defaultAvatar();
+}
+
+function textValue(value, fallback = "Not added") {
+    return value && String(value).trim() !== ""
+        ? value
+        : fallback;
+}
+
+function setText(id, value, fallback = "Not added") {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.innerText = textValue(value, fallback);
+    }
+}
+
+function toUrl(value) {
+    const text = String(value || "").trim();
+
+    if (!text) {
+        return "#";
+    }
+
+    if (text.startsWith("http://") || text.startsWith("https://")) {
+        return text;
+    }
+
+    return "https://" + text;
+}
+
+function renderSkills(skillsValue) {
+    const skillsWrap = document.getElementById("skillsWrap");
+
+    const skills = String(skillsValue || "")
+        .split(",")
+        .map(function(skill) {
+            return skill.trim();
+        })
+        .filter(Boolean);
+
+    document.getElementById("academicSkillCount").innerText =
+        skills.length;
+
+    if (skills.length === 0) {
+        skillsWrap.innerHTML = `
+            <div class="empty-note">
+                No skills added yet. Update your profile settings to add skills.
+            </div>
+        `;
+        return;
+    }
+
+    skillsWrap.innerHTML = skills.map(function(skill) {
+        return `<span class="skill-chip">${escapeHtml(skill)}</span>`;
+    }).join("");
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function buildAboutText(student) {
+    const name = textValue(student.name, "This student");
+    const branch = textValue(student.branch, "their branch");
+    const year = textValue(student.year, "current year");
+    const cgpa = student.cgpa != null ? student.cgpa : null;
+    const skills = textValue(student.skills, "");
+
+    let text = `${name} is a student from ${branch}`;
+
+    if (year) {
+        text += `, currently in ${year}`;
+    }
+
+    if (cgpa !== null) {
+        text += ` with a CGPA of ${cgpa}`;
+    }
+
+    text += ".";
+
+    if (skills) {
+        text += ` Skills added: ${skills}.`;
+    } else {
+        text += " Skills can be added from the Settings page.";
+    }
+
+    return text;
+}
+
+async function loadProfile() {
+    try {
+        const response = await fetch("/api/students/" + studentId);
+
+        if (!response.ok) {
+            throw new Error("Student profile load failed.");
+        }
+
+        studentData = await response.json();
+
+        const photoUrl =
+            "/api/students/" + studentId + "/photo?t=" + Date.now();
+
+        setPhoto("sidebarPhoto", photoUrl);
+        setPhoto("topPhoto", photoUrl);
+        setPhoto("mainPhoto", photoUrl);
+
+        const studentInfo = [
+            studentData.branch || "Student",
+            studentData.year || ""
+        ].filter(Boolean).join(" · ");
+
+        setText("sidebarName", studentData.name, "Student");
+        setText("sidebarInfo", studentInfo, "RecruitEase Student");
+
+        setText("topName", studentData.name, "Student");
+        setText("topInfo", studentInfo, "Student Portal");
+
+        setText("profileName", studentData.name, "Student");
+        setText("profileBranch", studentData.branch);
+        setText("profileRollNumber", studentData.rollNumber);
+        setText("profileYear", studentData.year);
+        setText("profileEmail", studentData.email);
+        setText("profileMobile", studentData.mobile);
+
+        setText("overviewCgpa", studentData.cgpa);
+        setText("overviewBranch", studentData.branch);
+        setText("overviewRollNumber", studentData.rollNumber);
+        setText("overviewYear", studentData.year);
+        setText("overviewCompany", studentData.preferredCompany);
+        setText(
+            "overviewResume",
+            studentData.resumeFileName,
+            "Not uploaded"
+        );
+
+        setText("academicCgpa", studentData.cgpa);
+        setText("academicBranch", studentData.branch);
+        setText("academicYear", studentData.year);
+
+        setText("contactEmail", studentData.email);
+        setText("contactMobile", studentData.mobile);
+        setText("contactAddress", studentData.address);
+
+        const linkedin = studentData.linkedin || "";
+        const github = studentData.github || "";
+
+        const linkedinElement =
+            document.getElementById("contactLinkedin");
+
+        const githubElement =
+            document.getElementById("contactGithub");
+
+        linkedinElement.innerText =
+            linkedin || "Not added";
+
+        githubElement.innerText =
+            github || "Not added";
+
+        linkedinElement.href =
+            linkedin ? toUrl(linkedin) : "#";
+
+        githubElement.href =
+            github ? toUrl(github) : "#";
+
+        if (!linkedin) {
+            linkedinElement.removeAttribute("target");
+        }
+
+        if (!github) {
+            githubElement.removeAttribute("target");
+        }
+
+        renderSkills(studentData.skills);
+
+        document.getElementById("aboutText").innerText =
+            buildAboutText(studentData);
+
+    } catch (error) {
+        console.error(error);
+        alert("Profile load nahi ho raha. Backend check karo.");
+    }
+}
+
+function goToSettings() {
+    window.location.href = "student-settings.html";
+}
+
+function downloadProfilePdf() {
+    window.print();
+}
+
+function toggleTheme() {
+    const isLight = document.body.classList.toggle(
+        "student-light-profile"
+    );
+
+    const theme = isLight ? "light" : "dark";
+
+    localStorage.setItem(profileThemeKey, theme);
+
+    document.getElementById("themeButton").innerText =
+        isLight ? "☀️" : "🌙";
+}
+
+function loadTheme() {
+    const savedTheme =
+        localStorage.getItem(profileThemeKey) || "dark";
+
+    const isLight = savedTheme === "light";
+
+    document.body.classList.toggle(
+        "student-light-profile",
+        isLight
+    );
+
+    document.getElementById("themeButton").innerText =
+        isLight ? "☀️" : "🌙";
+}
+
+function searchProfile() {
+    const value = document.getElementById("profileSearch").value
+        .toLowerCase()
+        .trim();
+
+    if (value.includes("skill")) {
+        document.getElementById("skillsWrap").scrollIntoView({
+            behavior:"smooth"
+        });
+
+    } else if (
+        value.includes("email") ||
+        value.includes("mobile") ||
+        value.includes("contact")
+    ) {
+        document.querySelector(".contact-list").scrollIntoView({
+            behavior:"smooth"
+        });
+
+    } else if (
+        value.includes("cgpa") ||
+        value.includes("academic")
+    ) {
+        document.querySelector(".info-list").scrollIntoView({
+            behavior:"smooth"
+        });
+
+    } else if (
+        value.includes("edit") ||
+        value.includes("setting")
+    ) {
+        goToSettings();
+    }
+}
+
+function logout() {
+    localStorage.removeItem("studentId");
+    window.location.href = "student-login.html";
+}
+
+loadTheme();
+loadProfile();
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aptitude Test Management - RecruitEase</title>
+
+    <link rel="stylesheet" href="admin-aptitude-tests.css">
+
+    <style>
+        .direct-schedule-box{
+            margin-top:20px;
+            padding-top:18px;
+            border-top:1px solid rgba(255,255,255,.10);
+        }
+
+        .direct-schedule-head{
+            margin-bottom:14px;
+        }
+
+        .direct-schedule-head h3{
+            color:#ffffff;
+            font-size:17px;
+            font-weight:700;
+        }
+
+        .direct-schedule-head p{
+            margin-top:4px;
+            color:#9fb0c7;
+            font-size:13px;
+        }
+
+        .schedule-grid{
+            grid-template-columns:2fr 1fr 1fr 1fr !important;
+        }
+
+        .create-test-actions{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-top:18px;
+        }
+
+        .create-test-actions button{
+            min-height:48px;
+            padding:0 18px;
+            border:none;
+            border-radius:12px;
+            cursor:pointer;
+            color:#ffffff;
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .schedule-save-btn{
+            background:linear-gradient(135deg,#0f766e,#16c784) !important;
+        }
+
+        .manage-created-btn{
+            background:#0a1428;
+            border:1px solid rgba(47,128,255,.35) !important;
+            color:#8ebdff !important;
+        }
+
+        .created-test-message{
+            display:none;
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:12px;
+            background:rgba(22,199,132,.12);
+            border:1px solid rgba(22,199,132,.25);
+            color:#71efaf;
+            font-size:13px;
+            font-weight:600;
+        }
+
+        #newTestId{
+            cursor:not-allowed;
+            opacity:.82;
+        }
+
+        .scheduled-student-panel{
+            margin-top:24px;
+            overflow:hidden;
+            border:1px solid rgba(74,144,255,.18);
+            border-radius:18px;
+            background:#071a33;
+        }
+
+        .scheduled-student-head{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            padding:20px 22px;
+            border-bottom:1px solid rgba(255,255,255,.08);
+        }
+
+        .scheduled-student-head h2{
+            color:#ffffff;
+            font-size:20px;
+            margin:0;
+        }
+
+        .scheduled-student-head p{
+            margin:5px 0 0;
+            color:#9db2cc;
+            font-size:13px;
+        }
+
+        .student-test-table{
+            width:100%;
+            min-width:1050px;
+            border-collapse:collapse;
+        }
+
+        .student-test-table th,
+        .student-test-table td{
+            padding:16px 14px;
+            text-align:left;
+            border-bottom:1px solid rgba(255,255,255,.07);
+        }
+
+        .student-test-table th{
+            color:#bcd1ec;
+            background:#0b2343;
+            font-size:13px;
+        }
+
+        .student-test-table td{
+            color:#f4f8ff;
+            font-size:14px;
+        }
+
+        .student-test-name{
+            display:block;
+            color:#ffffff;
+            font-weight:700;
+        }
+
+        .student-test-sub{
+            display:block;
+            margin-top:4px;
+            color:#9db2cc;
+            font-size:12px;
+        }
+
+        .student-test-status{
+            display:inline-block;
+            padding:6px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .student-test-scheduled{
+            background:rgba(255,170,35,.16);
+            color:#ffc768;
+        }
+
+        .student-test-completed{
+            background:rgba(52,211,153,.14);
+            color:#63e6b0;
+        }
+
+        .result-qualified{
+            color:#50e3a4;
+            font-weight:700;
+        }
+
+        .result-failed{
+            color:#ff8fa3;
+            font-weight:700;
+        }
+
+        .result-pending{
+            color:#ffc768;
+            font-weight:700;
+        }
+
+        @media(max-width:1100px){
+            .schedule-grid{
+                grid-template-columns:1fr 1fr !important;
+            }
+        }
+
+        @media(max-width:700px){
+            .schedule-grid{
+                grid-template-columns:1fr !important;
+            }
+
+            .create-test-actions{
+                flex-direction:column;
+            }
+
+            .create-test-actions button{
+                width:100%;
+            }
+        }
+        
+        .scheduled-manage-btn{
+            border:1px solid rgba(47,128,255,.35);
+            border-radius:10px;
+            padding:9px 12px;
+            cursor:pointer;
+            background:#0a1428;
+            color:#8ebdff;
+            font-size:12px;
+            font-weight:700;
+            white-space:nowrap;
+        }
+
+        .scheduled-manage-btn:hover{
+            background:#173f92;
+            color:#ffffff;
+        }
+    </style>
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="tests-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a class="active" href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Aptitude Test Management 🧠</h1>
+                <p>Create, manage and schedule aptitude tests for placement drives.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    id="topSearch"
+                    type="text"
+                    placeholder="Search tests, types..."
+                    onkeyup="filterTests()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>3</span>
+                </button>
+
+                <button class="theme-btn" id="themeToggle" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img src="https://i.pravatar.cc/80?img=12" alt="Admin">
+                    <b>Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>Aptitude Tests</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Aptitude Tests
+                </p>
+            </div>
+
+            <button class="create-test-btn" type="button" onclick="toggleCreateTestPanel()">
+                ＋ Create New Test
+            </button>
+
+        </section>
+
+        <section class="create-test-panel" id="createTestPanel">
+
+            <div class="form-head">
+                <h3>Create and Schedule Aptitude Test</h3>
+
+                <button class="close-form-btn" type="button" onclick="toggleCreateTestPanel()">
+                    ×
+                </button>
+            </div>
+
+            <div class="test-form-grid">
+
+                <input
+                    id="newTestId"
+                    type="text"
+                    placeholder="Test ID auto-generate after saving"
+                    readonly
+                >
+
+                <input id="testName" placeholder="Test Name">
+
+                
+
+                <input id="duration" type="number" placeholder="Duration in minutes">
+
+                <select id="scheduledDay">
+                    <option value="">Select Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+
+                
+
+            </div>
+
+            <div class="direct-schedule-box">
+
+                <div class="direct-schedule-head">
+                    <h3>Schedule This Test for Student</h3>
+                    <p>Select a real application, then set the date and timing.</p>
+                </div>
+
+                <div class="test-form-grid schedule-grid">
+
+                    <select id="scheduleApplicationId">
+                        <option value="">Select Student Application</option>
+                    </select>
+
+                    <input id="scheduleDate" type="date">
+
+                    <input id="scheduleStartTime" type="time">
+
+                    <input id="scheduleEndTime" type="time">
+
+                </div>
+
+            </div>
+
+            <div class="create-test-actions">
+
+                <button class="save-test-btn" type="button" onclick="saveNewTest(false)">
+                    Save Test Only
+                </button>
+
+                <button class="save-test-btn schedule-save-btn" type="button" onclick="saveNewTest(true)">
+                    Save Test & Schedule
+                </button>
+
+                <button class="manage-created-btn" type="button" onclick="openNewTestQuestions()">
+                    Manage Questions
+                </button>
+
+            </div>
+
+            <p id="createdTestMessage" class="created-test-message"></p>
+
+        </section>
+
+        <section class="tests-content-grid">
+
+            <div>
+
+                <section class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-icon blue-icon">📋</div>
+
+                        <div>
+                            <p>Total Tests</p>
+                            <h3 id="totalTests">0</h3>
+                            <small>All Time</small>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green-icon">✅</div>
+
+                        <div>
+                            <p>Active Tests</p>
+                            <h3 id="activeTests">0</h3>
+                            <small>Currently Active</small>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange-icon">⏰</div>
+
+                        <div>
+                            <p>Scheduled Tests</p>
+                            <h3 id="scheduledTests">0</h3>
+                            <small>Student Tests</small>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple-icon">📈</div>
+
+                        <div>
+                            <p>Completed Tests</p>
+                            <h3 id="completedTests">0</h3>
+                            <small>Student Results</small>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section class="tests-panel">
+
+                    <div class="filter-bar">
+
+                        <input
+                            type="text"
+                            id="tableSearch"
+                            placeholder="Search by test name or type..."
+                            onkeyup="filterTests()"
+                        >
+
+                        <select id="typeFilter" onchange="filterTests()">
+                            <option value="">All Test Types</option>
+                            <option value="Online">Online</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+
+                        <select id="statusFilter" onchange="filterTests()">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Active">Active</option>
+                            <option value="Scheduled">Scheduled</option>
+                        </select>
+
+                        <select id="dayFilter" onchange="filterTests()">
+                            <option value="">All Days</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+
+                        <button class="clear-filter-btn" type="button" onclick="clearFilters()">
+                            ↻ Clear Filters
+                        </button>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table class="tests-table">
+
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Test Name</th>
+                                    <th>Test Type</th>
+                                    <th>Duration</th>
+                                    <th>Scheduled Day</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="testTable"></tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="table-footer">
+                        <p id="testCountText">Showing 0 tests</p>
+                        <p>RecruitEase Test Management</p>
+                    </div>
+
+                </section>
+
+                <section class="scheduled-student-panel">
+
+                    <div class="scheduled-student-head">
+
+                        <div>
+                            <h2>Scheduled Student Tests</h2>
+                            <p>Real student tests scheduled from Applications or this page.</p>
+                        </div>
+
+                        <span
+                            id="scheduledStudentCount"
+                            class="student-test-status student-test-scheduled"
+                        >
+                            0 Scheduled
+                        </span>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table class="student-test-table">
+
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student</th>
+                                    <th>Company</th>
+                                    <th>Test</th>
+                                    <th>Assigned Test ID</th>
+                                    <th>Schedule</th>
+                                    <th>Attempt Status</th>
+                                    <th>Marks / Cutoff</th>
+                                    <th>Result</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="scheduledStudentTestTable"></tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <aside class="right-column">
+
+                <section class="side-card">
+
+                    <h3>📅 Upcoming Test</h3>
+
+                    <div class="upcoming-test">
+
+                        <div class="date-box">
+                            <b id="upcomingDayNumber">--</b>
+                            <span id="upcomingDayText">DAY</span>
+                        </div>
+
+                        <div class="upcoming-details">
+                            <h4 id="upcomingTestName">No Scheduled Test</h4>
+                            <p id="upcomingTestInfo">
+                                Schedule a test for a student to see it here.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <button class="side-link" type="button" onclick="viewUpcomingTest()">
+                        View Details
+                    </button>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>Quick Actions</h3>
+
+                    <button class="quick-action" type="button" onclick="toggleCreateTestPanel()">
+                        <span>＋</span>
+                        Create New Test
+                    </button>
+
+                    <button class="quick-action" type="button" onclick="manageSelectedTest()">
+                        <span>❓</span>
+                        Manage Questions
+                    </button>
+
+                    <button class="quick-action" type="button" onclick="openQuestionBank()">
+                        <span>📚</span>
+                        Question Bank
+                    </button>
+
+                    <button class="quick-action" type="button" onclick="showTestReport()">
+                        <span>📊</span>
+                        Test Reports
+                    </button>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>Test Type Distribution</h3>
+
+                    <div class="distribution-row">
+                        <span>Online</span>
+                        <b id="onlinePercent">0%</b>
+                    </div>
+
+                    <div class="distribution-row">
+                        <span>Offline</span>
+                        <b id="offlinePercent">0%</b>
+                    </div>
+
+                    <div class="distribution-row">
+                        <span>Hybrid</span>
+                        <b id="hybridPercent">0%</b>
+                    </div>
+
+                    <div class="distribution-line"></div>
+
+                </section>
+
+                <section class="side-card note-card">
+
+                    <h3>🔔 Note</h3>
+
+                    <p>
+                        Test save hone ke baad <b>Manage Questions</b> par click
+                        karke usi generated Test ID ke MCQ add karo.
+                    </p>
+
+                </section>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+let tests = [];
+let scheduledApplications = [];
+let testMap = {};
+let selectedUpcomingApplication = null;
+let lastCreatedTestId = null;
+
+/* ================= LOAD REAL DATA ================= */
+
+async function loadDashboardData() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/aptitude-tests"),
+            fetch("/api/applications/all")
+        ]);
+
+        const testsResponse = responses[0];
+        const applicationsResponse = responses[1];
+
+        if (!testsResponse.ok || !applicationsResponse.ok) {
+            throw new Error("Unable to load dashboard data");
+        }
+
+        tests = await testsResponse.json();
+        scheduledApplications = await applicationsResponse.json();
+
+        testMap = {};
+
+        tests.forEach(test => {
+            testMap[test.id] = test;
+        });
+
+        renderTests(tests);
+        populateStudentApplications();
+        updateTestStats();
+        updateUpcomingTest();
+        updateDistribution();
+        renderScheduledStudentTests();
+
+    } catch (error) {
+        console.error("Aptitude dashboard load error:", error);
+
+        document.getElementById("testTable").innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    Tests load nahi ho rahe. Backend API check karo.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("scheduledStudentTestTable").innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    Scheduled student tests load nahi ho rahe.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+/* ================= TEST BANK ================= */
+
+function renderTests(data) {
+    const table = document.getElementById("testTable");
+
+    document.getElementById("testCountText").innerText =
+        `Showing ${data.length} of ${tests.length} tests`;
+
+    if (data.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    No tests found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    table.innerHTML = data.map((test, index) => `
+        <tr>
+            <td>${index + 1}</td>
+
+            <td>
+                <span class="test-name">${escapeHtml(test.testName || "-")}</span>
+                <span class="test-subtitle">Aptitude Test • ID ${test.id}</span>
+            </td>
+
+            <td>
+                <span class="type-badge ${getTypeClass(test.testType)}">
+                    ${escapeHtml(test.testType || "Not Set")}
+                </span>
+            </td>
+
+            <td>${test.duration || 0} min</td>
+
+            <td>${escapeHtml(test.scheduledDay || "-")}</td>
+
+            <td>
+                <span class="status-badge ${getStatusClass(test.status)}">
+                    ${escapeHtml(test.status || "Pending")}
+                </span>
+            </td>
+
+            <td>${test.score || 0}</td>
+
+            <td>
+                <div class="action-buttons">
+
+                    <button
+                        class="view-btn"
+                        type="button"
+                        title="View Test"
+                        onclick="viewTest(${test.id})"
+                    >
+                        👁
+                    </button>
+
+                    <button
+                        class="manage-btn"
+                        type="button"
+                        title="Manage Questions"
+                        onclick="manageQuestions(${test.id})"
+                    >
+                        ❓
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        type="button"
+                        title="Delete Test"
+                        onclick="showDeleteMessage(${test.id})"
+                    >
+                        🗑
+                    </button>
+
+                </div>
+            </td>
+        </tr>
+    `).join("");
+}
+
+/* ================= DIRECT CREATE + SCHEDULE ================= */
+
+function toggleCreateTestPanel() {
+    document.getElementById("createTestPanel").classList.toggle("show");
+}
+
+function populateStudentApplications() {
+    const select = document.getElementById("scheduleApplicationId");
+    const oldValue = select.value;
+
+    const availableApplications = scheduledApplications.filter(app =>
+        app.testPermission !== "Allowed"
+    );
+
+    select.innerHTML = `
+        <option value="">Select Student Application</option>
+    `;
+
+    availableApplications.forEach(app => {
+        select.innerHTML += `
+            <option value="${app.id}">
+                ${escapeHtml(app.studentName || "Student")}
+                | Student ID: ${app.studentId || "-"}
+                | ${escapeHtml(app.companyName || "Company")}
+                | Application ID: ${app.id}
+            </option>
+        `;
+    });
+
+    select.value = oldValue;
+}
+
+async function saveNewTest(shouldSchedule) {
+    const name = document.getElementById("testName").value.trim();
+    const type = "Online";
+    const duration = document.getElementById("duration").value.trim();
+    const day = document.getElementById("scheduledDay").value;
+    const selectedStatus = "Pending";
+
+    const applicationId = document.getElementById("scheduleApplicationId").value;
+    const testDate = document.getElementById("scheduleDate").value;
+    const startTime = document.getElementById("scheduleStartTime").value;
+    const endTime = document.getElementById("scheduleEndTime").value;
+
+    if (name === "" || duration === "" || day === "") {
+        alert("Please fill all test details.");
+        return;
+    }
+
+    if (Number(duration) <= 0) {
+        alert("Duration must be greater than 0.");
+        return;
+    }
+
+    if (shouldSchedule) {
+        if (
+            applicationId === "" ||
+            testDate === "" ||
+            startTime === "" ||
+            endTime === ""
+        ) {
+            alert("Student application, test date and time are required.");
+            return;
+        }
+    }
+
+    const testData = {
+        testName: name,
+        testType: type,
+        duration: Number(duration),
+        scheduledDay: day,
+        status: shouldSchedule ? "Scheduled" : selectedStatus,
+        score: 0
+    };
+
+    try {
+        const createResponse = await fetch("/api/aptitude-tests", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(testData)
+        });
+
+        if (!createResponse.ok) {
+            throw new Error(await createResponse.text());
+        }
+
+        const createdTest = await createResponse.json();
+
+        lastCreatedTestId = createdTest.id;
+
+        document.getElementById("newTestId").value =
+            `Generated Test ID: ${createdTest.id}`;
+
+        localStorage.setItem("selectedTestId", createdTest.id);
+
+        if (shouldSchedule) {
+            const scheduleResponse = await fetch(
+                `/api/applications/${applicationId}/schedule-test` +
+                `?testId=${encodeURIComponent(createdTest.id)}` +
+                `&testDate=${encodeURIComponent(testDate)}` +
+                `&testStartTime=${encodeURIComponent(startTime)}` +
+                `&testEndTime=${encodeURIComponent(endTime)}`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            if (!scheduleResponse.ok) {
+                throw new Error(await scheduleResponse.text());
+            }
+
+            showCreatedTestMessage(
+                `✅ Test ID ${createdTest.id} created and scheduled. Now click Manage Questions to add MCQs.`
+            );
+
+            alert(
+                `Test created and scheduled successfully.\n\nGenerated Test ID: ${createdTest.id}`
+            );
+
+        } else {
+            showCreatedTestMessage(
+                `✅ Test created successfully. Generated Test ID: ${createdTest.id}.`
+            );
+
+            alert(
+                `Test created successfully.\n\nGenerated Test ID: ${createdTest.id}`
+            );
+        }
+
+        clearNewTestForm();
+        await loadDashboardData();
+
+    } catch (error) {
+        console.error("Create test error:", error);
+        alert(error.message || "Test create nahi ho raha.");
+    }
+}
+
+function clearNewTestForm() {
+    document.getElementById("testName").value = "";
+    document.getElementById("duration").value = "";
+    document.getElementById("scheduledDay").value = "";
+    
+
+    document.getElementById("scheduleApplicationId").value = "";
+    document.getElementById("scheduleDate").value = "";
+    document.getElementById("scheduleStartTime").value = "";
+    document.getElementById("scheduleEndTime").value = "";
+}
+
+function showCreatedTestMessage(message) {
+    const messageBox = document.getElementById("createdTestMessage");
+
+    messageBox.innerText = message;
+    messageBox.style.display = "block";
+}
+
+function openNewTestQuestions() {
+    if (!lastCreatedTestId) {
+        alert("Pehle test save karo. Test ID generate hone ke baad questions add honge.");
+        return;
+    }
+
+    localStorage.setItem("selectedTestId", lastCreatedTestId);
+    window.location.href = "admin-test-questions.html";
+}
+
+/* ================= SCHEDULED STUDENT TABLE ================= */
+
+function renderScheduledStudentTests() {
+    const table = document.getElementById("scheduledStudentTestTable");
+
+    const scheduled = scheduledApplications
+        .filter(app =>
+            app.testId !== null &&
+            app.testId !== undefined &&
+            app.testPermission === "Allowed"
+        )
+        .sort((first, second) => {
+            const firstDate = new Date(
+                `${first.testDate || "2099-01-01"}T${first.testStartTime || "00:00"}`
+            );
+
+            const secondDate = new Date(
+                `${second.testDate || "2099-01-01"}T${second.testStartTime || "00:00"}`
+            );
+
+            return firstDate - secondDate;
+        });
+
+    const completedCount = scheduled.filter(app =>
+        Boolean(app.testResultStatus)
+    ).length;
+
+    document.getElementById("scheduledStudentCount").innerText =
+        `${scheduled.length} Scheduled • ${completedCount} Completed`;
+
+    if (scheduled.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    No student test is scheduled yet.
+                    <br>
+                    <small>Create Test & Schedule se student ko test assign karo.</small>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    table.innerHTML = scheduled.map((app, index) => {
+        const test = testMap[app.testId] || {};
+
+        const hasResult = Boolean(app.testResultStatus);
+
+        const qualified =
+            String(app.testResultStatus || "")
+                .toLowerCase()
+                .trim() === "qualified";
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <span class="student-test-name">
+                        ${escapeHtml(app.studentName || "Student")}
+                    </span>
+
+                    <span class="student-test-sub">
+                        Student ID: ${app.studentId || "-"}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="student-test-name">
+                        ${escapeHtml(app.companyName || "-")}
+                    </span>
+
+                    <span class="student-test-sub">
+                        ${escapeHtml(app.role || "Role Not Set")}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="student-test-name">
+                        Test ID: ${app.testId || "-"}
+                    </span>
+
+                    <span class="student-test-sub">
+                        Application ID: ${app.id || "-"}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="student-test-name">
+                        ${formatDate(app.testDate)}
+                    </span>
+
+                    <span class="student-test-sub">
+                        ${escapeHtml(app.testStartTime || "-")}
+                        -
+                        ${escapeHtml(app.testEndTime || "-")}
+                    </span>
+                </td>
+
+                <td>
+                    ${
+                        hasResult
+                            ? `<span class="student-test-status student-test-completed">Completed</span>`
+                            : `<span class="student-test-status student-test-scheduled">Scheduled</span>`
+                    }
+                </td>
+
+                <td>
+                    ${
+                        hasResult
+                            ? `
+                                <span class="student-test-name">
+                                    ${app.obtainedMarks ?? 0} / ${app.totalMarks ?? 0}
+                                </span>
+
+                                <span class="student-test-sub">
+                                    ${Number(app.percentage || 0).toFixed(2)}%
+                                    • Cutoff ${Number(app.companyCutoff || 0).toFixed(2)}%
+                                </span>
+                            `
+                            : `<span class="student-test-sub">Not Attempted Yet</span>`
+                    }
+                </td>
+
+                <td>
+                    <button
+                        class="scheduled-manage-btn"
+                        type="button"
+                        onclick="manageQuestions(${app.testId})"
+                    >
+                        ❓ Manage Questions
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+/* ================= FILTERS ================= */
+
+function filterTests() {
+    const topSearch = document.getElementById("topSearch").value
+        .toLowerCase()
+        .trim();
+
+    const tableSearch = document.getElementById("tableSearch").value
+        .toLowerCase()
+        .trim();
+
+    const searchValue = tableSearch || topSearch;
+
+    const selectedType = document.getElementById("typeFilter").value;
+    const selectedStatus = document.getElementById("statusFilter").value;
+    const selectedDay = document.getElementById("dayFilter").value;
+
+    const filteredTests = tests.filter(test => {
+        const testName = String(test.testName || "").toLowerCase();
+        const testType = String(test.testType || "").toLowerCase();
+
+        const matchesSearch =
+            testName.includes(searchValue) ||
+            testType.includes(searchValue);
+
+        const matchesType =
+            selectedType === "" ||
+            test.testType === selectedType;
+
+        const matchesStatus =
+            selectedStatus === "" ||
+            test.status === selectedStatus;
+
+        const matchesDay =
+            selectedDay === "" ||
+            test.scheduledDay === selectedDay;
+
+        return (
+            matchesSearch &&
+            matchesType &&
+            matchesStatus &&
+            matchesDay
+        );
+    });
+
+    renderTests(filteredTests);
+}
+
+function clearFilters() {
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+    document.getElementById("typeFilter").value = "";
+    document.getElementById("statusFilter").value = "";
+    document.getElementById("dayFilter").value = "";
+
+    renderTests(tests);
+}
+
+/* ================= TEST ACTIONS ================= */
+
+function manageQuestions(testId) {
+    localStorage.setItem("selectedTestId", testId);
+    window.location.href = "admin-test-questions.html";
+}
+
+function manageSelectedTest() {
+    const selectedTestId = localStorage.getItem("selectedTestId");
+
+    if (!selectedTestId) {
+        alert("Pehle kisi test ka Manage Questions button dabao.");
+        return;
+    }
+
+    window.location.href = "admin-test-questions.html";
+}
+
+function openQuestionBank() {
+    manageSelectedTest();
+}
+
+function viewTest(testId) {
+    const test = tests.find(item => Number(item.id) === Number(testId));
+
+    if (!test) {
+        alert("Test details not found.");
+        return;
+    }
+
+    alert(
+        "Test Details\n\n" +
+        "Test ID: " + test.id + "\n" +
+        "Name: " + (test.testName || "-") + "\n" +
+        "Type: " + (test.testType || "-") + "\n" +
+        "Duration: " + (test.duration || 0) + " minutes\n" +
+        "Scheduled Day: " + (test.scheduledDay || "-") + "\n" +
+        "Status: " + (test.status || "Pending")
+    );
+}
+
+async function showDeleteMessage(testId) {
+    const confirmed = confirm(
+        "Delete this aptitude test?\n\n" +
+        "Test ID: " + testId +
+        "\n\nIske questions bhi delete ho jayenge."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/aptitude-tests/" + testId, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        alert("Test deleted successfully.");
+
+        if (Number(lastCreatedTestId) === Number(testId)) {
+            lastCreatedTestId = null;
+            document.getElementById("newTestId").value = "";
+        }
+
+        loadDashboardData();
+
+    } catch (error) {
+        console.error("Delete test error:", error);
+
+        alert(
+            error.message ||
+            "Test delete nahi hua. Ho sakta hai ye test kisi student ko already scheduled ho."
+        );
+    }
+}
+
+function showTestReport() {
+    const scheduledCount = scheduledApplications.filter(app =>
+        app.testPermission === "Allowed"
+    ).length;
+
+    const completedCount = scheduledApplications.filter(app =>
+        Boolean(app.testResultStatus)
+    ).length;
+
+    const qualifiedCount = scheduledApplications.filter(app =>
+        String(app.testResultStatus || "").toLowerCase() === "qualified"
+    ).length;
+
+    alert(
+        "Test Report\n\n" +
+        "Total Tests: " + tests.length + "\n" +
+        "Student Tests Scheduled: " + scheduledCount + "\n" +
+        "Student Tests Completed: " + completedCount + "\n" +
+        "Qualified Students: " + qualifiedCount
+    );
+}
+
+/* ================= STATS + UPCOMING ================= */
+
+function updateTestStats() {
+    const scheduledCount = scheduledApplications.filter(app =>
+        app.testPermission === "Allowed"
+    ).length;
+
+    const completedCount = scheduledApplications.filter(app =>
+        Boolean(app.testResultStatus)
+    ).length;
+
+    document.getElementById("totalTests").innerText = tests.length;
+
+    document.getElementById("activeTests").innerText =
+        tests.filter(test =>
+            String(test.status || "").toLowerCase() === "active"
+        ).length;
+
+    document.getElementById("scheduledTests").innerText = scheduledCount;
+    document.getElementById("completedTests").innerText = completedCount;
+}
+
+function updateUpcomingTest() {
+    const upcoming = scheduledApplications
+        .filter(app =>
+            app.testPermission === "Allowed" &&
+            !app.testResultStatus
+        )
+        .sort((first, second) => {
+            const firstDate = new Date(
+                `${first.testDate || "2099-01-01"}T${first.testStartTime || "00:00"}`
+            );
+
+            const secondDate = new Date(
+                `${second.testDate || "2099-01-01"}T${second.testStartTime || "00:00"}`
+            );
+
+            return firstDate - secondDate;
+        });
+
+    selectedUpcomingApplication = upcoming[0] || null;
+
+    if (!selectedUpcomingApplication) {
+        document.getElementById("upcomingDayNumber").innerText = "--";
+        document.getElementById("upcomingDayText").innerText = "DAY";
+        document.getElementById("upcomingTestName").innerText = "No Scheduled Test";
+        document.getElementById("upcomingTestInfo").innerText =
+            "Schedule a test for a student to see it here.";
+        return;
+    }
+
+    const app = selectedUpcomingApplication;
+    const test = testMap[app.testId] || {};
+    const date = new Date((app.testDate || "2099-01-01") + "T00:00:00");
+
+    document.getElementById("upcomingDayNumber").innerText =
+        String(date.getDate()).padStart(2, "0");
+
+    document.getElementById("upcomingDayText").innerText =
+        date.toLocaleDateString("en-IN", { month:"short" }).toUpperCase();
+
+    document.getElementById("upcomingTestName").innerText =
+        test.testName || `Test ID: ${app.testId}`;
+
+    document.getElementById("upcomingTestInfo").innerText =
+        `${app.studentName || "Student"} • ${app.testStartTime || "Time Not Set"} • ${test.duration || 0} min`;
+}
+
+function viewUpcomingTest() {
+    if (!selectedUpcomingApplication) {
+        alert("No scheduled student test available.");
+        return;
+    }
+
+    const app = selectedUpcomingApplication;
+    const test = testMap[app.testId] || {};
+
+    alert(
+        "Upcoming Student Test\n\n" +
+        "Student: " + (app.studentName || "-") + "\n" +
+        "Student ID: " + (app.studentId || "-") + "\n" +
+        "Company: " + (app.companyName || "-") + "\n" +
+        "Test: " + (test.testName || `Test ID: ${app.testId}`) + "\n" +
+        "Date: " + formatDate(app.testDate) + "\n" +
+        "Time: " + (app.testStartTime || "-")
+    );
+}
+
+function updateDistribution() {
+    const total = tests.length;
+
+    if (total === 0) {
+        document.getElementById("onlinePercent").innerText = "0%";
+        document.getElementById("offlinePercent").innerText = "0%";
+        document.getElementById("hybridPercent").innerText = "0%";
+        return;
+    }
+
+    const online = tests.filter(test =>
+        String(test.testType || "").toLowerCase() === "online"
+    ).length;
+
+    const offline = tests.filter(test =>
+        String(test.testType || "").toLowerCase() === "offline"
+    ).length;
+
+    const hybrid = tests.filter(test =>
+        String(test.testType || "").toLowerCase() === "hybrid"
+    ).length;
+
+    document.getElementById("onlinePercent").innerText =
+        Math.round((online / total) * 100) + "%";
+
+    document.getElementById("offlinePercent").innerText =
+        Math.round((offline / total) * 100) + "%";
+
+    document.getElementById("hybridPercent").innerText =
+        Math.round((hybrid / total) * 100) + "%";
+}
+
+/* ================= HELPERS ================= */
+
+function getTypeClass(type) {
+    const value = String(type || "").toLowerCase();
+
+    if (value === "offline") return "type-offline";
+    if (value === "hybrid") return "type-hybrid";
+
+    return "type-online";
+}
+
+function getStatusClass(status) {
+    const value = String(status || "Pending").toLowerCase();
+
+    if (value === "active") return "status-active";
+    if (value === "scheduled") return "status-scheduled";
+
+    return "status-pending";
+}
+
+function formatDate(dateValue) {
+    if (!dateValue) return "Date Not Set";
+
+    const date = new Date(dateValue + "T00:00:00");
+
+    if (isNaN(date)) return dateValue;
+
+    return date.toLocaleDateString("en-IN", {
+        day:"2-digit",
+        month:"short",
+        year:"numeric"
+    });
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+document.getElementById("themeToggle").addEventListener("click", function() {
+    const button = document.getElementById("themeToggle");
+
+    button.innerText = button.innerText === "🌙" ? "☀️" : "🌙";
+});
+
+loadDashboardData();
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

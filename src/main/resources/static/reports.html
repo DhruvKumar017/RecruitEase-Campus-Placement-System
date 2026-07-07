@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - RecruitEase</title>
+
+    <link rel="stylesheet" href="reports.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="reports-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a class="active" href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Reports & Analytics 📊</h1>
+                <p>Track performance, analyze placement data and generate insights.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    type="text"
+                    placeholder="Search by name, company, role..."
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>5</span>
+                </button>
+
+                <button class="theme-btn" id="themeToggle" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img src="https://i.pravatar.cc/80?img=12" alt="Admin">
+                    <b>Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>Placement Analytics</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Reports & Analytics
+                </p>
+            </div>
+
+            <div class="header-buttons">
+                <select class="date-range">
+                    <option>Current Placement Data</option>
+                    <option>This Month</option>
+                    <option>This Year</option>
+                </select>
+
+                <button class="export-btn" onclick="exportReport()">
+                    ⬇ Export Report
+                </button>
+            </div>
+
+        </section>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-icon blue-icon">👥</span>
+
+                    <div>
+                        <p>Total Students</p>
+                        <h3 id="totalStudents">0</h3>
+                    </div>
+                </div>
+
+                <small>↗ Live student data</small>
+                <span class="sparkline">〽</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-icon green-icon">🏢</span>
+
+                    <div>
+                        <p>Total Companies</p>
+                        <h3 id="totalCompanies">0</h3>
+                    </div>
+                </div>
+
+                <small>↗ Live company data</small>
+                <span class="sparkline">〽</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-icon purple-icon">📄</span>
+
+                    <div>
+                        <p>Total Applications</p>
+                        <h3 id="totalApplications">0</h3>
+                    </div>
+                </div>
+
+                <small>↗ Placement applications</small>
+                <span class="sparkline">〽</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-icon orange-icon">🧠</span>
+
+                    <div>
+                        <p>Aptitude Tests</p>
+                        <h3 id="totalTests">0</h3>
+                    </div>
+                </div>
+
+                <small>↗ Available tests</small>
+                <span class="sparkline">〽</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-icon teal-icon">✅</span>
+
+                    <div>
+                        <p>Placed Students</p>
+                        <h3 id="placedStudents">0</h3>
+                    </div>
+                </div>
+
+                <small>↗ Final placements</small>
+                <span class="sparkline">〽</span>
+            </div>
+
+        </section>
+
+        <section class="analytics-grid">
+
+            <div class="analytics-card">
+
+                <h3>Placement Status</h3>
+
+                <div class="donut-row">
+
+                    <div class="donut">
+                        <div class="donut-center">
+                            <div>
+                                <h4 id="placedDonutCount">0</h4>
+                                <p>Placed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="legend-list">
+                        <div class="legend-row">
+                            <span><i class="legend-dot dot-green"></i>Placed</span>
+                            <b id="legendPlaced">0</b>
+                        </div>
+
+                        <div class="legend-row">
+                            <span><i class="legend-dot dot-blue"></i>In Process</span>
+                            <b id="legendProcess">0</b>
+                        </div>
+
+                        <div class="legend-row">
+                            <span><i class="legend-dot dot-orange"></i>Shortlisted</span>
+                            <b id="legendShortlisted">0</b>
+                        </div>
+
+                        <div class="legend-row">
+                            <span><i class="legend-dot dot-purple"></i>Rejected</span>
+                            <b id="legendRejected">0</b>
+                        </div>
+
+                        <div class="legend-row">
+                            <span><i class="legend-dot dot-red"></i>Selected</span>
+                            <b id="legendSelected">0</b>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="analytics-card">
+
+                <h3>Applications Status</h3>
+
+                <div class="chart-box">
+                    <canvas id="applicationsChart"></canvas>
+                </div>
+
+            </div>
+
+            <div class="analytics-card">
+
+                <h3>Placement Trend</h3>
+
+                <select class="chart-select">
+                    <option>Monthly</option>
+                    <option>Weekly</option>
+                </select>
+
+                <div class="chart-box">
+                    <canvas id="placementTrendChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="bottom-grid">
+
+            <div class="bottom-card">
+
+                <h3>Top Recruiting Companies</h3>
+
+                <div id="topCompaniesList"></div>
+
+                <button class="export-btn" style="width:100%; margin-top:14px;" onclick="window.location.href='companies.html'">
+                    View All Companies
+                </button>
+
+            </div>
+
+            <div class="bottom-card">
+
+                <h3>Placement by Branch</h3>
+
+                <div class="branch-donut"></div>
+
+                <div class="branch-legend" id="branchLegend"></div>
+
+            </div>
+
+            <div class="bottom-card">
+
+                <h3>Recent Activity</h3>
+
+                <div id="recentActivity"></div>
+
+            </div>
+
+        </section>
+
+        <div class="footer">
+            © 2026 RecruitEase. All rights reserved.
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+
+let students = [];
+let companies = [];
+let applications = [];
+let tests = [];
+
+let applicationsChart;
+let placementTrendChart;
+
+async function loadReports() {
+    try {
+        const [studentResponse, companyResponse, applicationResponse, testResponse] =
+            await Promise.all([
+                fetch("/api/students"),
+                fetch("/api/companies"),
+                fetch("/api/applications/all"),
+                fetch("/api/aptitude-tests")
+            ]);
+
+        students = await studentResponse.json();
+        companies = await companyResponse.json();
+        applications = await applicationResponse.json();
+        tests = await testResponse.json();
+
+        updateStats();
+        updatePlacementStatus();
+        renderTopCompanies();
+        renderBranchLegend();
+        renderRecentActivity();
+        renderCharts();
+
+    } catch (error) {
+        console.error("Reports load error:", error);
+    }
+}
+
+function updateStats() {
+    const placed = applications.filter(app =>
+        ["placed", "selected"].includes((app.status || "").toLowerCase())
+    ).length;
+
+    document.getElementById("totalStudents").innerText = students.length;
+    document.getElementById("totalCompanies").innerText = companies.length;
+    document.getElementById("totalApplications").innerText = applications.length;
+    document.getElementById("totalTests").innerText = tests.length;
+    document.getElementById("placedStudents").innerText = placed;
+}
+
+function updatePlacementStatus() {
+    const placed = applications.filter(app =>
+        (app.status || "").toLowerCase() === "placed"
+    ).length;
+
+    const selected = applications.filter(app =>
+        (app.status || "").toLowerCase() === "selected"
+    ).length;
+
+    const shortlisted = applications.filter(app =>
+        (app.status || "").toLowerCase() === "shortlisted"
+    ).length;
+
+    const rejected = applications.filter(app =>
+        (app.status || "").toLowerCase() === "rejected"
+    ).length;
+
+    const inProcess = applications.filter(app =>
+        ["applied", "interview", ""].includes((app.status || "").toLowerCase())
+    ).length;
+
+    document.getElementById("placedDonutCount").innerText = placed;
+    document.getElementById("legendPlaced").innerText = placed;
+    document.getElementById("legendProcess").innerText = inProcess;
+    document.getElementById("legendShortlisted").innerText = shortlisted;
+    document.getElementById("legendRejected").innerText = rejected;
+    document.getElementById("legendSelected").innerText = selected;
+}
+
+function renderTopCompanies() {
+    const companyCount = {};
+
+    applications.forEach(app => {
+        const company = app.companyName || "Unknown";
+
+        if (
+            ["placed", "selected", "shortlisted"].includes(
+                (app.status || "").toLowerCase()
+            )
+        ) {
+            companyCount[company] = (companyCount[company] || 0) + 1;
+        }
+    });
+
+    const topCompanies = Object.entries(companyCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    const maxCount = topCompanies.length > 0 ? topCompanies[0][1] : 1;
+
+    document.getElementById("topCompaniesList").innerHTML =
+        topCompanies.length === 0
+            ? `<p style="color:#9fb0c7;font-size:13px;">No placement company data available.</p>`
+            : topCompanies.map(([company, count], index) => `
+                <div class="company-row">
+                    <span class="rank">${index + 1}</span>
+
+                    <span class="company-logo">
+                        ${escapeHtml(company.substring(0, 3).toUpperCase())}
+                    </span>
+
+                    <span class="company-name">${escapeHtml(company)}</span>
+
+                    <div class="company-bar">
+                        <span style="width:${Math.round((count / maxCount) * 100)}%"></span>
+                    </div>
+
+                    <span class="company-count">${count}</span>
+                </div>
+            `).join("");
+}
+
+function renderBranchLegend() {
+    const branchCount = {};
+
+    students.forEach(student => {
+        const branch = student.branch || "Others";
+        branchCount[branch] = (branchCount[branch] || 0) + 1;
+    });
+
+    const total = students.length || 1;
+
+    const colors = ["#2f80ff", "#16c784", "#ff9f1c", "#7c3aed", "#0f9f9a"];
+
+    const branches = Object.entries(branchCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    document.getElementById("branchLegend").innerHTML =
+        branches.length === 0
+            ? `<div>No branch data</div>`
+            : branches.map(([branch, count], index) => `
+                <div>
+                    <span style="color:${colors[index] || "#0f9f9a"};">●</span>
+                    ${escapeHtml(branch)} -
+                    ${Math.round((count / total) * 100)}%
+                </div>
+            `).join("");
+}
+
+function renderRecentActivity() {
+    const placedApplications = applications
+        .filter(app =>
+            ["placed", "selected"].includes((app.status || "").toLowerCase())
+        )
+        .slice(0, 2);
+
+    const recentItems = [];
+
+    placedApplications.forEach(app => {
+        recentItems.push({
+            icon: "✅",
+            color: "activity-green",
+            title: "Student placed in " + (app.companyName || "Company"),
+            text: (app.role || "Placement role") + " • Application ID " + app.id,
+            time: "Recently"
+        });
+    });
+
+    if (applications.length > 0) {
+        recentItems.push({
+            icon: "📄",
+            color: "activity-purple",
+            title: "New placement applications available",
+            text: applications.length + " applications in the system",
+            time: "Live"
+        });
+    }
+
+    if (tests.length > 0) {
+        recentItems.push({
+            icon: "🧠",
+            color: "activity-orange",
+            title: "Aptitude tests available",
+            text: tests.length + " test records found",
+            time: "Live"
+        });
+    }
+
+    if (companies.length > 0) {
+        recentItems.push({
+            icon: "🏢",
+            color: "activity-blue",
+            title: "Companies registered",
+            text: companies.length + " recruiting companies available",
+            time: "Live"
+        });
+    }
+
+    document.getElementById("recentActivity").innerHTML =
+        recentItems.length === 0
+            ? `<p style="color:#9fb0c7;font-size:13px;">No recent activity available.</p>`
+            : recentItems.slice(0, 5).map(item => `
+                <div class="activity-row">
+                    <span class="activity-icon ${item.color}">
+                        ${item.icon}
+                    </span>
+
+                    <div class="activity-content">
+                        <b>${escapeHtml(item.title)}</b>
+                        <p>${escapeHtml(item.text)}</p>
+                    </div>
+
+                    <span class="activity-time">${item.time}</span>
+                </div>
+            `).join("");
+}
+
+function renderCharts() {
+    const applied = applications.filter(app =>
+        (app.status || "").toLowerCase() === "applied"
+    ).length;
+
+    const shortlisted = applications.filter(app =>
+        (app.status || "").toLowerCase() === "shortlisted"
+    ).length;
+
+    const rejected = applications.filter(app =>
+        (app.status || "").toLowerCase() === "rejected"
+    ).length;
+
+    const placed = applications.filter(app =>
+        ["placed", "selected"].includes((app.status || "").toLowerCase())
+    ).length;
+
+    if (applicationsChart) {
+        applicationsChart.destroy();
+    }
+
+    applicationsChart = new Chart(document.getElementById("applicationsChart"), {
+        type: "line",
+        data: {
+            labels: ["Applied", "Shortlisted", "Rejected", "Placed"],
+            datasets: [
+                {
+                    label: "Applications",
+                    data: [applied, shortlisted, rejected, placed],
+                    borderColor: "#2f80ff",
+                    backgroundColor: "rgba(47,128,255,.15)",
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: chartOptions()
+    });
+
+    if (placementTrendChart) {
+        placementTrendChart.destroy();
+    }
+
+    placementTrendChart = new Chart(document.getElementById("placementTrendChart"), {
+        type: "line",
+        data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+            datasets: [
+                {
+                    label: "Placed",
+                    data: [
+                        Math.max(0, placed - 5),
+                        Math.max(0, placed - 4),
+                        Math.max(0, placed - 3),
+                        Math.max(0, placed - 2),
+                        Math.max(0, placed - 1),
+                        placed
+                    ],
+                    borderColor: "#16c784",
+                    backgroundColor: "rgba(22,199,132,.15)",
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: chartOptions()
+    });
+}
+
+function chartOptions() {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "#d9e5f7"
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: "#9fb0c7"
+                },
+                grid: {
+                    color: "rgba(255,255,255,.05)"
+                }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: "#9fb0c7"
+                },
+                grid: {
+                    color: "rgba(255,255,255,.05)"
+                }
+            }
+        }
+    };
+}
+
+function exportReport() {
+    const placedCount = applications.filter(app =>
+        ["placed", "selected"].includes((app.status || "").toLowerCase())
+    ).length;
+
+    const csv =
+        "Report Item,Count\n" +
+        `"Total Students",${students.length}\n` +
+        `"Total Companies",${companies.length}\n` +
+        `"Total Applications",${applications.length}\n` +
+        `"Aptitude Tests",${tests.length}\n` +
+        `"Placed Students",${placedCount}\n`;
+
+    const file = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(file);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "recruitease-analytics-report.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function escapeHtml(value) {
+    return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+document.getElementById("themeToggle").addEventListener("click", function() {
+    const button = document.getElementById("themeToggle");
+
+    button.innerText = button.innerText === "🌙" ? "☀️" : "🌙";
+});
+
+loadReports();
+
+</script>
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+</body>
+</html>

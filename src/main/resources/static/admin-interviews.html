@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Interviews | RecruitEase</title>
+
+<link rel="stylesheet" href="applications-admin.css">
+
+<style>
+    .interview-admin-panel{
+        margin-top:24px;
+        padding:24px;
+        border-radius:18px;
+        background:#08182f;
+        border:1px solid rgba(47,128,255,.20);
+    }
+
+    .interview-filter-bar{
+        display:flex;
+        gap:12px;
+        flex-wrap:wrap;
+        margin-bottom:18px;
+    }
+
+    .interview-filter-bar input,
+    .interview-filter-bar select,
+    .modal-box select{
+        min-height:42px;
+        padding:0 13px;
+        border:1px solid rgba(47,128,255,.25);
+        border-radius:10px;
+        outline:none;
+        color:#ffffff;
+        background:#0a1428;
+    }
+
+    .interview-filter-bar input{
+        min-width:260px;
+        flex:1;
+    }
+
+    .interview-card{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:18px;
+        margin-top:14px;
+        padding:18px;
+        border-radius:14px;
+        background:#0a1428;
+        border:1px solid rgba(47,128,255,.16);
+    }
+
+    .interview-card.focused{
+        border-color:#2f80ff;
+        box-shadow:0 0 0 1px rgba(47,128,255,.20);
+    }
+
+    .interview-card h3{
+        margin:0;
+        color:#ffffff;
+        font-size:17px;
+    }
+
+    .interview-card p{
+        margin:7px 0 0;
+        color:#a9bbd3;
+        font-size:13px;
+        line-height:1.55;
+    }
+
+    .request-tag{
+        display:inline-block;
+        margin-top:8px;
+        padding:5px 10px;
+        border-radius:16px;
+        color:#9fc6ff;
+        background:rgba(47,128,255,.13);
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .request-status{
+        min-width:112px;
+        padding:8px 12px;
+        border-radius:18px;
+        text-align:center;
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .pending-status{
+        color:#ffd27a;
+        background:rgba(255,159,28,.17);
+    }
+
+    .scheduled-status{
+        color:#d7c5ff;
+        background:rgba(139,92,246,.22);
+    }
+
+    .completed-status,
+    .selected-status,
+    .placed-status{
+        color:#7af0b6;
+        background:rgba(22,199,132,.18);
+    }
+
+    .rejected-status{
+        color:#ff9aaa;
+        background:rgba(255,77,109,.16);
+    }
+
+    .interview-card-actions{
+        display:flex;
+        align-items:center;
+        gap:9px;
+        flex-wrap:wrap;
+        justify-content:flex-end;
+    }
+
+    .schedule-interview-btn,
+    .link-btn,
+    .status-update-btn{
+        min-height:40px;
+        padding:0 13px;
+        border:none;
+        border-radius:9px;
+        cursor:pointer;
+        color:#ffffff;
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .schedule-interview-btn{
+        background:linear-gradient(135deg,#1e40af,#2563eb);
+    }
+
+    .link-btn{
+        background:linear-gradient(135deg,#0f766e,#16c784);
+    }
+
+    .status-update-btn{
+        background:#17345f;
+        border:1px solid rgba(47,128,255,.35);
+        color:#9fc6ff;
+    }
+
+    .interview-empty{
+        padding:34px;
+        text-align:center;
+        color:#9fb0c7;
+    }
+
+    .day-display{
+        min-height:42px;
+        display:flex;
+        align-items:center;
+        margin-top:5px;
+        padding:0 12px;
+        border-radius:9px;
+        color:#8ec0ff;
+        background:#0a1428;
+        border:1px solid rgba(47,128,255,.18);
+        font-size:13px;
+        font-weight:700;
+    }
+
+    .modal-box textarea{
+        width:100%;
+        min-height:78px;
+        box-sizing:border-box;
+        padding:11px;
+        resize:vertical;
+        border:1px solid rgba(47,128,255,.25);
+        border-radius:10px;
+        outline:none;
+        color:#ffffff;
+        background:#0a1428;
+    }
+
+    @media(max-width:900px){
+        .interview-card{
+            flex-direction:column;
+            align-items:flex-start;
+        }
+
+        .interview-card-actions{
+            width:100%;
+            justify-content:flex-start;
+        }
+    }
+    .panel-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.panel-head h3{
+    margin:0;
+    color:#ffffff;
+    font-size:22px;
+}
+
+.refresh-btn{
+    min-height:40px;
+    padding:0 15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    color:#ffffff;
+    background:linear-gradient(135deg,#1e40af,#2563eb);
+    font-size:13px;
+    font-weight:700;
+    transition:.2s ease;
+}
+
+.refresh-btn:hover{
+    transform:translateY(-1px);
+    opacity:.92;
+}
+</style>
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="applications-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a class="active" href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+       <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Interview Management 🎤</h1>
+                <p>Schedule interviews and share working Google Meet/Classroom links.</p>
+            </div>
+        </div>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">🎤</div>
+                <div>
+                    <p>Total Requests</p>
+                    <h3 id="totalRequestCount">0</h3>
+                    <small>Live Data</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">⏳</div>
+                <div>
+                    <p>Pending Schedule</p>
+                    <h3 id="pendingRequestCount">0</h3>
+                    <small>Needs date & time</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">📅</div>
+                <div>
+                    <p>Scheduled</p>
+                    <h3 id="scheduledRequestCount">0</h3>
+                    <small>Upcoming interviews</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">✅</div>
+                <div>
+                    <p>Placed</p>
+                    <h3 id="placedRequestCount">0</h3>
+                    <small>Direct / Final Placement</small>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="interview-admin-panel">
+
+            <div class="panel-head">
+                <h3>Interview Candidates</h3>
+
+                <button
+    class="refresh-btn"
+    type="button"
+    onclick="loadInterviewRequests()"
+>
+    ↻ Refresh
+</button>
+            </div>
+
+            <div class="interview-filter-bar">
+
+                <input
+                    id="interviewSearch"
+                    type="text"
+                    placeholder="Search student or company..."
+                    onkeyup="renderInterviewRequests()"
+                >
+
+                <select
+                    id="interviewStatusFilter"
+                    onchange="renderInterviewRequests()"
+                >
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="scheduled">Scheduled</option>
+                    <option value="completed">Completed</option>
+                    <option value="selected">Selected</option>
+                    <option value="placed">Placed</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+
+            </div>
+
+            <div id="interviewRequestList">
+                <p class="interview-empty">Loading interview candidates...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div class="modal" id="interviewScheduleModal">
+
+    <div class="modal-box">
+
+        <h2>Schedule Interview</h2>
+
+        <p
+            id="scheduleCandidateInfo"
+            style="margin:8px 0 16px;color:#9fb0c7;font-size:13px;"
+        ></p>
+
+        <input type="hidden" id="interviewRequestId">
+
+        <label>Interview Date</label>
+        <input type="date" id="interviewDate" onchange="updateInterviewDay()">
+
+        <label>Interview Day</label>
+        <div class="day-display" id="interviewDayText">Select a date</div>
+
+        <label>Interview Time</label>
+        <input type="time" id="interviewTime">
+
+        <label>Interview Mode</label>
+        <select id="interviewMode" onchange="updateLinkLabel()">
+            <option value="Google Meet">Google Meet</option>
+            <option value="Google Classroom">Google Classroom</option>
+            <option value="Zoom">Zoom</option>
+            <option value="Microsoft Teams">Microsoft Teams</option>
+            <option value="Offline">Offline</option>
+        </select>
+
+        <label id="meetingLinkLabel">Google Meet / Classroom Link</label>
+        <input
+            type="url"
+            id="interviewLink"
+            placeholder="https://meet.google.com/..."
+        >
+
+        <label>Admin Note</label>
+        <textarea
+            id="adminRemark"
+            placeholder="Join 10 minutes early and carry your resume."
+        ></textarea>
+
+        <button class="save" type="button" onclick="saveInterviewSchedule()">
+            Save Interview Schedule
+        </button>
+
+        <button
+            class="cancel"
+            type="button"
+            onclick="closeInterviewScheduleModal()"
+        >
+            Cancel
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+let interviewRequests = [];
+let applicationMap = {};
+
+const focusApplicationId = Number(
+    new URLSearchParams(window.location.search)
+        .get("applicationId") || 0
+);
+
+let openFocusOnce = true;
+
+async function loadInterviewRequests() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/interview-requests"),
+            fetch("/api/applications/all")
+        ]);
+
+        if (!responses[0].ok || !responses[1].ok) {
+            throw new Error("Interview data load failed.");
+        }
+
+        interviewRequests = await responses[0].json();
+
+        const applications = await responses[1].json();
+
+        applicationMap = {};
+
+        applications.forEach(application => {
+            applicationMap[application.id] = application;
+        });
+
+        interviewRequests.sort((first, second) =>
+            Number(second.id) - Number(first.id)
+        );
+
+        updateInterviewStats();
+        renderInterviewRequests();
+        openFocusedInterview();
+
+    } catch (error) {
+        console.error(error);
+
+        document.getElementById("interviewRequestList").innerHTML = `
+            <p class="interview-empty">
+                Interview data load nahi ho raha. Backend check karo.
+            </p>
+        `;
+    }
+}
+
+function getEffectiveStatus(request) {
+    const application = applicationMap[request.applicationId];
+
+    const applicationStatus = normalizeStatus(application?.status);
+
+    if (applicationStatus === "placed") {
+        return "placed";
+    }
+
+    if (applicationStatus === "selected") {
+        return "selected";
+    }
+
+    if (applicationStatus === "rejected") {
+        return "rejected";
+    }
+
+    return normalizeStatus(request.interviewStatus);
+}
+
+function updateInterviewStats() {
+    document.getElementById("totalRequestCount").innerText =
+        interviewRequests.length;
+
+    document.getElementById("pendingRequestCount").innerText =
+        interviewRequests.filter(item =>
+            getEffectiveStatus(item) === "pending"
+        ).length;
+
+    document.getElementById("scheduledRequestCount").innerText =
+        interviewRequests.filter(item =>
+            getEffectiveStatus(item) === "scheduled"
+        ).length;
+
+    document.getElementById("placedRequestCount").innerText =
+        interviewRequests.filter(item =>
+            getEffectiveStatus(item) === "placed"
+        ).length;
+}
+
+function renderInterviewRequests() {
+    const search = document.getElementById("interviewSearch").value
+        .toLowerCase()
+        .trim();
+
+    const selectedStatus =
+        document.getElementById("interviewStatusFilter").value;
+
+    const filteredRequests = interviewRequests.filter(item => {
+        const studentName = String(item.studentName || "").toLowerCase();
+        const companyName = String(item.companyName || "").toLowerCase();
+
+        const effectiveStatus = getEffectiveStatus(item);
+
+        return (
+            (studentName.includes(search) || companyName.includes(search)) &&
+            (selectedStatus === "" || effectiveStatus === selectedStatus)
+        );
+    });
+
+    const container = document.getElementById("interviewRequestList");
+
+    if (filteredRequests.length === 0) {
+        container.innerHTML = `
+            <p class="interview-empty">No interview candidates found.</p>
+        `;
+        return;
+    }
+
+    container.innerHTML = filteredRequests.map(item => {
+        const status = getEffectiveStatus(item);
+
+        return `
+            <div class="interview-card ${
+                Number(item.applicationId) === focusApplicationId
+                    ? "focused"
+                    : ""
+            }">
+
+                <div>
+                    <h3>
+                        ${escapeHtml(item.studentName || "Student")}
+                        — ${escapeHtml(item.companyName || "Company")}
+                    </h3>
+
+                    <p>
+                        Student ID: ${item.studentId || "-"}
+                        • Application ID: ${item.applicationId || "-"}
+                        • Aptitude: ${Number(item.aptitudePercentage || 0).toFixed(2)}%
+                    </p>
+
+                    <p>${escapeHtml(getScheduleText(item, status))}</p>
+
+                    <span class="request-tag">
+                        Test ID: ${item.testId || "-"}
+                    </span>
+                </div>
+
+                <div class="interview-card-actions">
+
+                    <span class="request-status ${getStatusClass(status)}">
+                        ${escapeHtml(getStatusText(status))}
+                    </span>
+
+                    ${getAdminActionMarkup(item, status)}
+
+                </div>
+
+            </div>
+        `;
+    }).join("");
+}
+
+function getAdminActionMarkup(item, status) {
+    if (status === "placed") {
+        return `
+            <span class="request-status placed-status" style="min-width:135px;">
+                ✅ Placed Student
+            </span>
+        `;
+    }
+
+    if (status === "selected") {
+        return `
+            <span class="request-status selected-status" style="min-width:120px;">
+                ✅ Selected
+            </span>
+        `;
+    }
+
+    if (status === "rejected") {
+        return `
+            <span class="request-status rejected-status" style="min-width:120px;">
+                Rejected
+            </span>
+        `;
+    }
+
+    if (status === "completed") {
+        return `
+            <span class="request-status completed-status" style="min-width:120px;">
+                Completed
+            </span>
+        `;
+    }
+
+    const scheduleButton = `
+        <button
+            class="schedule-interview-btn"
+            type="button"
+            onclick="openInterviewScheduleModal(${item.id})"
+        >
+            ${status === "scheduled" ? "Edit Schedule" : "Schedule"}
+        </button>
+    `;
+
+    const linkButton =
+        status === "scheduled" && isValidHttpLink(item.interviewLink)
+            ? `
+                <button
+                    class="link-btn"
+                    type="button"
+                    onclick="openMeetingLink(${item.id})"
+                >
+                    Open Link
+                </button>
+            `
+            : "";
+
+    const statusButtons =
+        status === "scheduled"
+            ? `
+                <button
+                    class="status-update-btn"
+                    type="button"
+                    onclick="changeInterviewStatus(${item.id}, 'COMPLETED')"
+                >
+                    Completed
+                </button>
+
+                <button
+                    class="status-update-btn"
+                    type="button"
+                    onclick="changeInterviewStatus(${item.id}, 'SELECTED')"
+                >
+                    Selected
+                </button>
+
+                <button
+                    class="status-update-btn"
+                    type="button"
+                    onclick="changeInterviewStatus(${item.id}, 'REJECTED')"
+                >
+                    Reject
+                </button>
+            `
+            : "";
+
+    return scheduleButton + linkButton + statusButtons;
+}
+
+function openFocusedInterview() {
+    if (!focusApplicationId || !openFocusOnce) {
+        return;
+    }
+
+    const request = interviewRequests.find(item =>
+        Number(item.applicationId) === focusApplicationId
+    );
+
+    if (!request || getEffectiveStatus(request) !== "pending") {
+        return;
+    }
+
+    openFocusOnce = false;
+    openInterviewScheduleModal(request.id);
+}
+
+function openInterviewScheduleModal(requestId) {
+    const request = interviewRequests.find(item =>
+        Number(item.id) === Number(requestId)
+    );
+
+    if (!request) {
+        alert("Interview request not found.");
+        return;
+    }
+
+    const status = getEffectiveStatus(request);
+
+    if (["placed", "selected", "rejected", "completed"].includes(status)) {
+        alert("Interview schedule cannot be changed for this student.");
+        return;
+    }
+
+    document.getElementById("interviewRequestId").value = request.id;
+
+    document.getElementById("scheduleCandidateInfo").innerText =
+        `${request.studentName || "Student"} • ` +
+        `${request.companyName || "Company"} • ` +
+        `Application ID: ${request.applicationId}`;
+
+    document.getElementById("interviewDate").value =
+        request.interviewDate || "";
+
+    document.getElementById("interviewTime").value =
+        request.interviewTime || "";
+
+    document.getElementById("interviewMode").value =
+        request.interviewMode || "Google Meet";
+
+    document.getElementById("interviewLink").value =
+        request.interviewLink || "";
+
+    document.getElementById("adminRemark").value =
+        request.adminRemark || "";
+
+    updateInterviewDay();
+    updateLinkLabel();
+
+    document.getElementById("interviewScheduleModal").style.display = "grid";
+}
+
+function closeInterviewScheduleModal() {
+    document.getElementById("interviewScheduleModal").style.display = "none";
+}
+
+function updateInterviewDay() {
+    const dateValue = document.getElementById("interviewDate").value;
+    const dayText = document.getElementById("interviewDayText");
+
+    if (!dateValue) {
+        dayText.innerText = "Select a date";
+        return;
+    }
+
+    const date = new Date(dateValue + "T00:00:00");
+
+    dayText.innerText = Number.isNaN(date.getTime())
+        ? "Invalid date"
+        : date.toLocaleDateString("en-IN", {
+            weekday: "long"
+        });
+}
+
+function updateLinkLabel() {
+    const mode = document.getElementById("interviewMode").value;
+    const label = document.getElementById("meetingLinkLabel");
+    const linkInput = document.getElementById("interviewLink");
+
+    if (mode === "Offline") {
+        label.innerText = "Location / Address";
+        linkInput.type = "text";
+        linkInput.placeholder = "Example: Seminar Hall 2";
+    } else {
+        label.innerText = `${mode} Link`;
+        linkInput.type = "url";
+        linkInput.placeholder = "https://meet.google.com/...";
+    }
+}
+
+async function saveInterviewSchedule() {
+    const requestId = document.getElementById("interviewRequestId").value;
+    const date = document.getElementById("interviewDate").value;
+    const time = document.getElementById("interviewTime").value;
+    const mode = document.getElementById("interviewMode").value;
+    const link = document.getElementById("interviewLink").value.trim();
+    const remark = document.getElementById("adminRemark").value.trim();
+
+    if (!date || !time) {
+        alert("Interview date and time are required.");
+        return;
+    }
+
+    if (mode !== "Offline" && !isValidHttpLink(link)) {
+        alert("Meeting link should start with https://");
+        return;
+    }
+
+    try {
+        const params = new URLSearchParams();
+
+        params.set("interviewDate", date);
+        params.set("interviewTime", time);
+        params.set("interviewMode", mode);
+        params.set("interviewLink", link);
+        params.set("adminRemark", remark);
+
+        const response = await fetch(
+            `/api/interview-requests/${requestId}/schedule?${params.toString()}`,
+            { method: "PUT" }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        alert("Interview scheduled successfully.");
+
+        closeInterviewScheduleModal();
+        loadInterviewRequests();
+
+    } catch (error) {
+        alert(error.message || "Interview schedule save nahi hui.");
+    }
+}
+
+async function changeInterviewStatus(requestId, status) {
+    if (!confirm(`Mark this interview as ${status}?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/interview-requests/${requestId}/status/${status}`,
+            { method: "PUT" }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        loadInterviewRequests();
+
+    } catch (error) {
+        alert(error.message || "Interview status update nahi hua.");
+    }
+}
+
+function openMeetingLink(requestId) {
+    const request = interviewRequests.find(item =>
+        Number(item.id) === Number(requestId)
+    );
+
+    if (!request || !isValidHttpLink(request.interviewLink)) {
+        alert("Working meeting link not found.");
+        return;
+    }
+
+    window.open(
+        request.interviewLink,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+function getScheduleText(item, status) {
+    if (status === "placed") {
+        return "Student has been directly placed by the admin.";
+    }
+
+    if (status === "selected") {
+        return "Student selected after interview.";
+    }
+
+    if (status === "rejected") {
+        return "Interview process completed with rejected status.";
+    }
+
+    if (status === "completed") {
+        return "Interview completed. Final result updated.";
+    }
+
+    if (status === "pending") {
+        return "Waiting for admin to set date, time and meeting link.";
+    }
+
+    const day = item.interviewDate
+        ? new Date(item.interviewDate + "T00:00:00")
+            .toLocaleDateString("en-IN", { weekday: "long" })
+        : "-";
+
+    return `${day} • ${formatDate(item.interviewDate)} • ` +
+        `${formatTime(item.interviewTime)} • ` +
+        `${item.interviewMode || "Online"}`;
+}
+
+function getStatusClass(status) {
+    if (status === "scheduled") return "scheduled-status";
+    if (status === "completed") return "completed-status";
+    if (status === "selected") return "selected-status";
+    if (status === "placed") return "placed-status";
+    if (status === "rejected") return "rejected-status";
+
+    return "pending-status";
+}
+
+function getStatusText(status) {
+    if (status === "scheduled") return "Scheduled";
+    if (status === "completed") return "Completed";
+    if (status === "selected") return "Selected";
+    if (status === "placed") return "Placed";
+    if (status === "rejected") return "Rejected";
+
+    return "Pending";
+}
+
+function formatDate(value) {
+    if (!value) return "-";
+
+    const date = new Date(value + "T00:00:00");
+
+    return Number.isNaN(date.getTime())
+        ? value
+        : date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+}
+
+function formatTime(value) {
+    if (!value) return "-";
+
+    const normalTime = String(value).length === 5
+        ? value + ":00"
+        : value;
+
+    const date = new Date("2000-01-01T" + normalTime);
+
+    return Number.isNaN(date.getTime())
+        ? value
+        : date.toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        });
+}
+
+function isValidHttpLink(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
+    }
+}
+
+function normalizeStatus(value) {
+    return String(value || "PENDING")
+        .trim()
+        .toLowerCase();
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function getTodayLocal() {
+    const today = new Date();
+    const timezoneOffset = today.getTimezoneOffset() * 60000;
+
+    return new Date(today.getTime() - timezoneOffset)
+        .toISOString()
+        .split("T")[0];
+}
+
+document.getElementById("interviewDate").min = getTodayLocal();
+
+loadInterviewRequests();
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

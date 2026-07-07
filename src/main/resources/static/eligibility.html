@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eligibility Management - RecruitEase</title>
+
+    <link rel="stylesheet" href="eligibility.css">
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="eligibility-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a class="active" href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Eligibility Management 🏆</h1>
+                <p>View live student eligibility based on CGPA and skills.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    type="text"
+                    id="topSearch"
+                    placeholder="Search students or companies..."
+                    onkeyup="filterEligibilitySummary()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>3</span>
+                </button>
+
+                <button class="theme-btn" id="themeToggle" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img
+                        id="topAdminPhoto"
+                        src="https://i.pravatar.cc/80?img=12"
+                        alt="Admin"
+                    >
+
+                    <b id="topAdminName">Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE HEADER ================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>Eligibility Overview 📊</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Eligibility
+                </p>
+            </div>
+
+        </section>
+
+        <!-- ================= OVERVIEW STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">👥</div>
+
+                <div>
+                    <p>Active Students</p>
+                    <h3 id="totalActiveStudents">0</h3>
+                    <small>Live Student Data</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">🏢</div>
+
+                <div>
+                    <p>Total Companies</p>
+                    <h3 id="totalCompanies">0</h3>
+                    <small>Live Company Data</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">✅</div>
+
+                <div>
+                    <p>Eligible Students</p>
+                    <h3 id="eligibleStudentsCount">0</h3>
+                    <small>At Least One Company</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">📈</div>
+
+                <div>
+                    <p>Average CGPA</p>
+                    <h3 id="averageCgpa">0.00</h3>
+                    <small>Active Students</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= CHECKER ================= -->
+        <section class="checker-panel">
+
+            <div class="checker-card">
+
+                <h3>Check Student Eligibility</h3>
+                <p>Enter Student ID to view detailed eligible company information.</p>
+
+                <div class="checker-form">
+
+                    <input
+                        type="number"
+                        id="studentId"
+                        placeholder="Enter Student ID"
+                        min="1"
+                    >
+
+                    <button class="check-btn" type="button" onclick="checkEligibility()">
+                        🔍 Check Eligibility
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="student-summary-card">
+
+                <div class="summary-icon">🎓</div>
+
+                <div class="summary-data">
+                    <h4 id="studentSummaryName">No Student Selected</h4>
+                    <p id="studentSummaryText">
+                        Select a student from the list or enter Student ID.
+                    </p>
+                    <span id="studentSummaryStatus">Waiting for Search</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= SELECTED STUDENT STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">🏢</div>
+
+                <div>
+                    <p>Eligible Companies</p>
+                    <h3 id="eligibleCompaniesCount">0</h3>
+                    <small>For Selected Student</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">📈</div>
+
+                <div>
+                    <p>Student CGPA</p>
+                    <h3 id="studentCgpa">--</h3>
+                    <small>Academic Score</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">🛠️</div>
+
+                <div>
+                    <p>Skills Listed</p>
+                    <h3 id="skillsCount">0</h3>
+                    <small>Student Skills</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">✅</div>
+
+                <div>
+                    <p>Eligibility Status</p>
+                    <h3 id="eligibilityStatus">--</h3>
+                    <small>Based on Criteria</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= LIVE ELIGIBILITY SUMMARY ================= -->
+        <section class="result-panel">
+
+            <div class="panel-head">
+                <h3>All Students Eligibility</h3>
+                <span class="result-count" id="summaryResultCount">0 Students</span>
+            </div>
+
+            <div class="filter-bar">
+
+                <select class="filter-select" id="branchFilter" onchange="filterEligibilitySummary()">
+                    <option value="">All Branches</option>
+                </select>
+
+                <select class="filter-select" id="cgpaFilter" onchange="filterEligibilitySummary()">
+                    <option value="">All CGPA</option>
+                    <option value="6">6.0+</option>
+                    <option value="7">7.0+</option>
+                    <option value="8">8.0+</option>
+                    <option value="9">9.0+</option>
+                </select>
+
+                <button class="clear-filter-btn" type="button" onclick="clearEligibilityFilters()">
+                    ↻ Clear Filters
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Student</th>
+                            <th>Roll No.</th>
+                            <th>Branch</th>
+                            <th>CGPA</th>
+                            <th>Skills</th>
+                            <th>Eligible Count</th>
+                            <th>Eligible Companies</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="eligibilitySummaryBody">
+                        <tr>
+                            <td colspan="9" class="empty-message">
+                                Loading live eligibility data...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <!-- ================= SELECTED STUDENT COMPANIES ================= -->
+        <section class="result-panel">
+
+            <div class="panel-head">
+                <h3 id="selectedStudentCompaniesTitle">
+                    Selected Student Eligible Companies
+                </h3>
+                <span class="result-count" id="resultCount">0 Results</span>
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company</th>
+                            <th>Minimum CGPA</th>
+                            <th>Required Skills</th>
+                            <th>Aptitude Cutoff</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="eligibleTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-message">
+                                Select a student to see detailed company eligibility.
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <section class="info-card">
+            <span class="info-icon">i</span>
+
+            <p>
+                Eligibility is calculated using student CGPA and skills against
+                company minimum CGPA and required skills.
+            </p>
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+let eligibilitySummary = [];
+let filteredEligibilitySummary = [];
+let allCompanies = [];
+let selectedEligibleCompanies = [];
+
+/* ================= LOAD LIVE DATA ================= */
+
+async function loadEligibilityData() {
+    const summaryBody = document.getElementById("eligibilitySummaryBody");
+
+    summaryBody.innerHTML = `
+        <tr>
+            <td colspan="9" class="empty-message">
+                Loading live eligibility data...
+            </td>
+        </tr>
+    `;
+
+    try {
+        const responses = await Promise.all([
+            fetch("/api/students/eligibility-summary"),
+            fetch("/api/companies")
+        ]);
+
+        const summaryResponse = responses[0];
+        const companiesResponse = responses[1];
+
+        if (!summaryResponse.ok || !companiesResponse.ok) {
+            throw new Error("Eligibility data load failed");
+        }
+
+        eligibilitySummary = await summaryResponse.json();
+        allCompanies = await companiesResponse.json();
+
+        eligibilitySummary.sort((a, b) => {
+            return (b.eligibleCompanyCount || 0) - (a.eligibleCompanyCount || 0);
+        });
+
+        populateBranchFilter();
+        updateOverviewStats();
+        filterEligibilitySummary();
+
+    } catch (error) {
+        console.error("Eligibility load error:", error);
+
+        summaryBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty-message">
+                    Live eligibility data load nahi hua. Spring Boot backend check karo.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+/* ================= OVERVIEW STATS ================= */
+
+function updateOverviewStats() {
+    const totalStudents = eligibilitySummary.length;
+    const totalCompanies = allCompanies.length;
+
+    const eligibleStudents = eligibilitySummary.filter(student => {
+        return Number(student.eligibleCompanyCount || 0) > 0;
+    }).length;
+
+    const cgpaValues = eligibilitySummary
+        .map(student => Number(student.cgpa))
+        .filter(cgpa => !isNaN(cgpa) && cgpa > 0);
+
+    const averageCgpa = cgpaValues.length > 0
+        ? cgpaValues.reduce((total, cgpa) => total + cgpa, 0) / cgpaValues.length
+        : 0;
+
+    document.getElementById("totalActiveStudents").innerText = totalStudents;
+    document.getElementById("totalCompanies").innerText = totalCompanies;
+    document.getElementById("eligibleStudentsCount").innerText = eligibleStudents;
+    document.getElementById("averageCgpa").innerText = averageCgpa.toFixed(2);
+}
+
+/* ================= FILTERS ================= */
+
+function populateBranchFilter() {
+    const branchFilter = document.getElementById("branchFilter");
+    const selectedBranch = branchFilter.value;
+
+    const branches = [...new Set(
+        eligibilitySummary
+            .map(student => student.branch)
+            .filter(branch => branch && branch.trim() !== "")
+    )].sort();
+
+    branchFilter.innerHTML = `<option value="">All Branches</option>`;
+
+    branches.forEach(branch => {
+        branchFilter.innerHTML += `
+            <option value="${escapeHtml(branch)}">
+                ${escapeHtml(branch)}
+            </option>
+        `;
+    });
+
+    branchFilter.value = selectedBranch;
+}
+
+function filterEligibilitySummary() {
+    const searchValue = document.getElementById("topSearch").value
+        .toLowerCase()
+        .trim();
+
+    const selectedBranch = document.getElementById("branchFilter").value;
+    const selectedCgpa = document.getElementById("cgpaFilter").value;
+
+    filteredEligibilitySummary = eligibilitySummary.filter(student => {
+        const studentName = (student.studentName || "").toLowerCase();
+        const rollNumber = (student.rollNumber || "").toLowerCase();
+        const branch = (student.branch || "").toLowerCase();
+        const skills = (student.skills || "").toLowerCase();
+
+        const companies = (student.eligibleCompanies || [])
+            .join(", ")
+            .toLowerCase();
+
+        const matchesSearch =
+            studentName.includes(searchValue) ||
+            rollNumber.includes(searchValue) ||
+            branch.includes(searchValue) ||
+            skills.includes(searchValue) ||
+            companies.includes(searchValue);
+
+        const matchesBranch =
+            selectedBranch === "" ||
+            student.branch === selectedBranch;
+
+        const matchesCgpa =
+            selectedCgpa === "" ||
+            Number(student.cgpa || 0) >= Number(selectedCgpa);
+
+        return matchesSearch && matchesBranch && matchesCgpa;
+    });
+
+    renderEligibilitySummary();
+    renderEligibleCompanies();
+}
+
+function clearEligibilityFilters() {
+    document.getElementById("topSearch").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+
+    filterEligibilitySummary();
+}
+
+/* ================= SUMMARY TABLE ================= */
+
+function renderEligibilitySummary() {
+    const body = document.getElementById("eligibilitySummaryBody");
+
+    document.getElementById("summaryResultCount").innerText =
+        `${filteredEligibilitySummary.length} Students`;
+
+    if (filteredEligibilitySummary.length === 0) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty-message">
+                    No student eligibility records found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = filteredEligibilitySummary.map((student, index) => {
+        const eligibleCompanies = student.eligibleCompanies || [];
+        const count = Number(student.eligibleCompanyCount || 0);
+
+        const companyTags = eligibleCompanies.length > 0
+            ? eligibleCompanies.map(company => `
+                <span class="skill-tag">${escapeHtml(company)}</span>
+            `).join("")
+            : `<span class="skill-tag">No Company Match</span>`;
+
+        const studentName = student.studentName || "Student";
+        const initials = getInitials(studentName);
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="company-cell">
+                        <span class="company-logo">${initials}</span>
+
+                        <div>
+                            <div class="company-name">
+                                ${escapeHtml(studentName)}
+                            </div>
+                            <small>ID: ${student.studentId}</small>
+                        </div>
+                    </div>
+                </td>
+
+                <td>${escapeHtml(student.rollNumber || "-")}</td>
+                <td>${escapeHtml(student.branch || "-")}</td>
+
+                <td>
+                    <span class="cgpa-badge">
+                        ${student.cgpa ?? "-"}
+                    </span>
+                </td>
+
+                <td>
+                    <div class="skill-tags">
+                        ${createSkillTags(student.skills)}
+                    </div>
+                </td>
+
+                <td>
+                    <span class="cgpa-badge">
+                        ${count} Companies
+                    </span>
+                </td>
+
+                <td>
+                    <div class="skill-tags">
+                        ${companyTags}
+                    </div>
+                </td>
+
+                <td>
+                    <button
+                        class="check-btn"
+                        type="button"
+                        onclick="openStudentEligibility(${student.studentId})"
+                    >
+                        View
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+/* ================= SELECT STUDENT ================= */
+
+function openStudentEligibility(studentId) {
+    document.getElementById("studentId").value = studentId;
+    checkEligibility();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+async function checkEligibility() {
+    const studentId = document.getElementById("studentId").value.trim();
+
+    if (studentId === "") {
+        alert("Please enter Student ID.");
+        return;
+    }
+
+    const selectedStudent = eligibilitySummary.find(student => {
+        return Number(student.studentId) === Number(studentId);
+    });
+
+    if (!selectedStudent) {
+        resetSelectedStudentData();
+
+        document.getElementById("studentSummaryName").innerText =
+            "Student Not Found";
+
+        document.getElementById("studentSummaryText").innerText =
+            "This student is not active or Student ID is incorrect.";
+
+        document.getElementById("studentSummaryStatus").innerText =
+            "No Result";
+
+        alert("Active student not found.");
+        return;
+    }
+
+    document.getElementById("eligibleTableBody").innerHTML = `
+        <tr>
+            <td colspan="6" class="empty-message">
+                Checking company eligibility...
+            </td>
+        </tr>
+    `;
+
+    try {
+        const response = await fetch(
+            `/api/students/${studentId}/eligible-companies`
+        );
+
+        if (!response.ok) {
+            throw new Error("Student eligibility details load failed");
+        }
+
+        selectedEligibleCompanies = await response.json();
+
+        updateSelectedStudentSummary(selectedStudent);
+        updateSelectedStudentStats(selectedStudent);
+        renderEligibleCompanies();
+
+    } catch (error) {
+        console.error("Selected student eligibility error:", error);
+
+        selectedEligibleCompanies = [];
+
+        document.getElementById("eligibleTableBody").innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-message">
+                    Eligibility details load nahi hui.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function updateSelectedStudentSummary(student) {
+    const selectedStudentName = student.studentName || "Selected Student";
+
+document.getElementById("selectedStudentCompaniesTitle").innerText =
+    selectedStudentName + " - Eligible Companies";
+
+    const companyCount = Number(student.eligibleCompanyCount || 0);
+
+    document.getElementById("studentSummaryName").innerText =
+        student.studentName || "Student";
+
+    document.getElementById("studentSummaryText").innerText =
+        `${student.branch || "Branch Not Set"} • ${student.rollNumber || "Roll Number Not Set"} • CGPA: ${student.cgpa ?? "-"}`;
+
+    document.getElementById("studentSummaryStatus").innerText =
+        `${companyCount} eligible company option${companyCount === 1 ? "" : "s"} found`;
+}
+
+function updateSelectedStudentStats(student) {
+    const skills = String(student.skills || "")
+        .split(",")
+        .map(skill => skill.trim())
+        .filter(skill => skill !== "");
+
+    const companyCount = Number(student.eligibleCompanyCount || 0);
+
+    document.getElementById("eligibleCompaniesCount").innerText =
+        companyCount;
+
+    document.getElementById("studentCgpa").innerText =
+        student.cgpa ?? "--";
+
+    document.getElementById("skillsCount").innerText =
+        skills.length;
+
+    document.getElementById("eligibilityStatus").innerText =
+        companyCount > 0 ? "Qualified" : "No Match";
+}
+
+function resetSelectedStudentData() {
+    document.getElementById("selectedStudentCompaniesTitle").innerText =
+    "Selected Student Eligible Companies";
+
+    selectedEligibleCompanies = [];
+
+    document.getElementById("eligibleCompaniesCount").innerText = "0";
+    document.getElementById("studentCgpa").innerText = "--";
+    document.getElementById("skillsCount").innerText = "0";
+    document.getElementById("eligibilityStatus").innerText = "--";
+    document.getElementById("resultCount").innerText = "0 Results";
+
+    document.getElementById("eligibleTableBody").innerHTML = `
+        <tr>
+            <td colspan="6" class="empty-message">
+                Select a valid active student.
+            </td>
+        </tr>
+    `;
+}
+
+/* ================= DETAILED COMPANY TABLE ================= */
+
+function renderEligibleCompanies() {
+    const body = document.getElementById("eligibleTableBody");
+
+    const searchValue = document.getElementById("topSearch").value
+        .toLowerCase()
+        .trim();
+
+    const companiesToShow = selectedEligibleCompanies.filter(company => {
+        const name = (company.companyName || "").toLowerCase();
+        const skills = (company.requiredSkills || "").toLowerCase();
+
+        return name.includes(searchValue) || skills.includes(searchValue);
+    });
+
+    document.getElementById("resultCount").innerText =
+        `${companiesToShow.length} Results`;
+
+    if (selectedEligibleCompanies.length === 0) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-message">
+                    Select a student to see detailed company eligibility.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    if (companiesToShow.length === 0) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-message">
+                    No eligible company matched the current search.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = companiesToShow.map((company, index) => {
+        const companyName = company.companyName || "Company";
+        const companyLogo = companyName.substring(0, 3).toUpperCase();
+
+        const aptitudeCutoff =
+            company.aptitudeCutoff !== null &&
+            company.aptitudeCutoff !== undefined
+                ? `${company.aptitudeCutoff}%`
+                : "-";
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="company-cell">
+                        <span class="company-logo">${escapeHtml(companyLogo)}</span>
+
+                        <div>
+                            <div class="company-name">
+                                ${escapeHtml(companyName)}
+                            </div>
+                            <small>RecruitEase Partner</small>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <span class="cgpa-badge">
+                        ${company.minCgpa ?? "-"}
+                    </span>
+                </td>
+
+                <td>
+                    <div class="skill-tags">
+                        ${createSkillTags(company.requiredSkills)}
+                    </div>
+                </td>
+
+                <td>${aptitudeCutoff}</td>
+
+                <td>
+                    <span class="cgpa-badge">
+                        Eligible
+                    </span>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+/* ================= HELPERS ================= */
+
+function createSkillTags(skillsText) {
+    const skills = String(skillsText || "")
+        .split(",")
+        .map(skill => skill.trim())
+        .filter(skill => skill !== "");
+
+    if (skills.length === 0) {
+        return `<span class="skill-tag">Not Set</span>`;
+    }
+
+    return skills.map(skill => `
+        <span class="skill-tag">${escapeHtml(skill)}</span>
+    `).join("");
+}
+
+function getInitials(name) {
+    return String(name || "Student")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("");
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+loadEligibilityData();
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Issues - RecruitEase</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            color:#ffffff;
+            background:
+                radial-gradient(circle at 78% 10%,rgba(47,128,255,.14),transparent 28%),
+                radial-gradient(circle at 15% 90%,rgba(124,58,237,.14),transparent 30%),
+                #050816;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        .sidebar{
+            position:fixed;
+            top:0;
+            left:0;
+            bottom:0;
+            width:260px;
+            padding:26px 18px;
+            background:linear-gradient(180deg,#06182f,#04101f);
+            border-right:1px solid rgba(47,128,255,.18);
+        }
+
+        .brand{
+            margin-bottom:30px;
+            font-size:27px;
+            font-weight:800;
+        }
+
+        .brand span{
+            color:#2f80ff;
+        }
+
+        .sidebar a{
+            display:block;
+            margin:6px 0;
+            padding:12px 14px;
+            border-radius:12px;
+            color:#dbeafe;
+            text-decoration:none;
+            font-size:14px;
+            transition:.25s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active{
+            background:rgba(47,128,255,.16);
+            color:#ffffff;
+            transform:translateX(5px);
+        }
+
+        .main{
+            width:calc(100% - 260px);
+            margin-left:260px;
+            padding:36px;
+        }
+
+        .page-head{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:18px;
+            margin-bottom:26px;
+        }
+
+        .page-head h1{
+            font-size:31px;
+        }
+
+        .page-head p{
+            margin-top:6px;
+            color:#aebbd1;
+            font-size:14px;
+        }
+
+        .refresh-btn{
+            padding:12px 18px;
+            border:none;
+            border-radius:12px;
+            background:linear-gradient(90deg,#2563eb,#2f80ff);
+            color:#ffffff;
+            font-weight:700;
+            cursor:pointer;
+            transition:.25s;
+        }
+
+        .refresh-btn:hover{
+            transform:translateY(-3px);
+            box-shadow:0 14px 28px rgba(37,99,235,.32);
+        }
+
+        .stats{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+            margin-bottom:25px;
+        }
+
+        .stat-card{
+            padding:22px;
+            border:1px solid rgba(96,165,250,.20);
+            border-radius:18px;
+            background:#0b1730;
+            transition:.25s;
+        }
+
+        .stat-card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 18px 34px rgba(0,0,0,.26);
+        }
+
+        .stat-card p{
+            color:#aebbd1;
+            font-size:14px;
+        }
+
+        .stat-card h2{
+            margin-top:7px;
+            font-size:30px;
+        }
+
+        .pending h2{
+            color:#ffbf69;
+        }
+
+        .progress h2{
+            color:#64b5ff;
+        }
+
+        .resolved h2{
+            color:#53e69a;
+        }
+
+        .table-card{
+            overflow-x:auto;
+            border:1px solid rgba(96,165,250,.20);
+            border-radius:18px;
+            background:#0b1730;
+        }
+
+        table{
+            width:100%;
+            min-width:1050px;
+            border-collapse:collapse;
+        }
+
+        th,
+        td{
+            padding:16px;
+            border-bottom:1px solid rgba(255,255,255,.07);
+            text-align:left;
+            vertical-align:top;
+            font-size:14px;
+        }
+
+        th{
+            color:#98b9e9;
+            background:#0e1d38;
+            font-size:13px;
+        }
+
+        td{
+            color:#e8f0ff;
+        }
+
+        tr:hover td{
+            background:rgba(47,128,255,.06);
+        }
+
+        .issue-message{
+            max-width:280px;
+            color:#c4d2e8;
+            line-height:1.55;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:6px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .badge.pending{
+            color:#ffca78;
+            background:rgba(255,170,45,.15);
+        }
+
+        .badge.in-progress{
+            color:#77bfff;
+            background:rgba(59,130,246,.16);
+        }
+
+        .badge.resolved{
+            color:#67eca5;
+            background:rgba(34,197,94,.14);
+        }
+
+        .status-select{
+            min-width:130px;
+            padding:9px 10px;
+            border:1px solid #2d4f86;
+            border-radius:9px;
+            outline:none;
+            background:#0f172a;
+            color:#ffffff;
+            cursor:pointer;
+        }
+
+        .status-select:focus{
+            border-color:#2f80ff;
+            box-shadow:0 0 0 3px rgba(47,128,255,.12);
+        }
+
+        .empty-row{
+            padding:35px;
+            color:#aebbd1;
+            text-align:center;
+        }
+
+        @media(max-width:900px){
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                min-height:auto;
+            }
+
+            .main{
+                width:100%;
+                margin-left:0;
+                padding:24px 16px;
+            }
+
+            .stats{
+                grid-template-columns:1fr;
+            }
+
+            .page-head{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+        <a href="students.html">👥 All Students</a>
+        <a href="companies.html">🏢 Companies</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <a class="active" href="student-issues.html">
+            🧑‍🎓 Student Issues
+        </a>
+
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <div class="page-head">
+            <div>
+                <h1>🧑‍🎓 Student Issues</h1>
+                <p>Review student support requests and update their resolution status.</p>
+            </div>
+
+            <button class="refresh-btn" onclick="loadStudentIssues()">
+                ↻ Refresh Issues
+            </button>
+        </div>
+
+        <section class="stats">
+            <div class="stat-card pending">
+                <p>Pending Issues</p>
+                <h2 id="pendingCount">0</h2>
+            </div>
+
+            <div class="stat-card progress">
+                <p>In Progress</p>
+                <h2 id="progressCount">0</h2>
+            </div>
+
+            <div class="stat-card resolved">
+                <p>Resolved Issues</p>
+                <h2 id="resolvedCount">0</h2>
+            </div>
+        </section>
+
+        <section class="table-card">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Issue Type</th>
+                        <th>Issue Details</th>
+                        <th>Submitted At</th>
+                        <th>Status</th>
+                        <th>Update Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="issueTableBody">
+                    <tr>
+                        <td colspan="8" class="empty-row">
+                            Loading student issues...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    const adminUsername = localStorage.getItem("adminUsername");
+    const adminRole = localStorage.getItem("adminRole");
+
+    if (!adminUsername || !adminRole) {
+        alert("Please login as an approved admin first.");
+        window.location.href = "admin-login.html";
+    }
+
+    function adminLogout() {
+        localStorage.removeItem("adminUsername");
+        localStorage.removeItem("adminRole");
+    }
+
+    let allStudentIssues = [];
+
+    async function loadStudentIssues() {
+        const tableBody = document.getElementById("issueTableBody");
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-row">
+                    Loading student issues...
+                </td>
+            </tr>
+        `;
+
+        try {
+            const response = await fetch("/api/student-issues");
+
+            if (!response.ok) {
+                throw new Error("Unable to load student issues");
+            }
+
+            allStudentIssues = await response.json();
+
+            updateStats();
+            renderIssues();
+
+        } catch (error) {
+            console.error(error);
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="empty-row">
+                        ❌ Student issues load nahi hui. Backend check karo.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    function updateStats() {
+        const pending = allStudentIssues.filter(issue =>
+            String(issue.status || "").toLowerCase() === "pending"
+        ).length;
+
+        const inProgress = allStudentIssues.filter(issue =>
+            String(issue.status || "").toLowerCase() === "in progress"
+        ).length;
+
+        const resolved = allStudentIssues.filter(issue =>
+            String(issue.status || "").toLowerCase() === "resolved"
+        ).length;
+
+        document.getElementById("pendingCount").innerText = pending;
+        document.getElementById("progressCount").innerText = inProgress;
+        document.getElementById("resolvedCount").innerText = resolved;
+    }
+
+    function renderIssues() {
+        const tableBody = document.getElementById("issueTableBody");
+
+        if (allStudentIssues.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="empty-row">
+                        No student issues available.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        const sortedIssues = [...allStudentIssues].sort((a, b) => {
+            return Number(b.id) - Number(a.id);
+        });
+
+        tableBody.innerHTML = sortedIssues.map(issue => {
+            const status = String(issue.status || "Pending");
+            const statusClass = status
+                .toLowerCase()
+                .replaceAll(" ", "-");
+
+            return `
+                <tr>
+                    <td>#${issue.id}</td>
+
+                    <td>
+                        <b>${escapeHtml(issue.studentName)}</b>
+                    </td>
+
+                    <td>${escapeHtml(issue.studentEmail)}</td>
+
+                    <td>${escapeHtml(issue.issueType)}</td>
+
+                    <td class="issue-message">
+                        ${escapeHtml(issue.issueMessage)}
+                    </td>
+
+                    <td>${formatDate(issue.submittedAt)}</td>
+
+                    <td>
+                        <span class="badge ${statusClass}">
+                            ${escapeHtml(status)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <select
+                            class="status-select"
+                            onchange="updateIssueStatus(${issue.id}, this.value)"
+                        >
+                            <option value="Pending"
+                                ${status === "Pending" ? "selected" : ""}>
+                                Pending
+                            </option>
+
+                            <option value="In Progress"
+                                ${status === "In Progress" ? "selected" : ""}>
+                                In Progress
+                            </option>
+
+                            <option value="Resolved"
+                                ${status === "Resolved" ? "selected" : ""}>
+                                Resolved
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    async function updateIssueStatus(issueId, newStatus) {
+        try {
+            const response = await fetch(
+                "/api/student-issues/" + issueId + "/status/" +
+                encodeURIComponent(newStatus),
+                {
+                    method:"PUT"
+                }
+            );
+
+            const message = await response.text();
+
+            if (!response.ok) {
+                alert("❌ " + message);
+                loadStudentIssues();
+                return;
+            }
+
+            alert("✅ Issue status updated to " + newStatus + ".");
+
+            loadStudentIssues();
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Issue status update failed.");
+            loadStudentIssues();
+        }
+    }
+
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "-";
+        }
+
+        const date = new Date(dateValue);
+
+        if (isNaN(date)) {
+            return String(dateValue);
+        }
+
+        return date.toLocaleString("en-IN", {
+            day:"2-digit",
+            month:"short",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    loadStudentIssues();
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

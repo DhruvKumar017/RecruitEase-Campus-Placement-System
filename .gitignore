@@ -1,0 +1,18 @@
+# Secret configuration
+src/main/resources/application.properties
+.env
+
+# Build files
+target/
+
+# Uploaded student files
+uploads/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db

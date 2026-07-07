@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecruitEase Admin Dashboard</title>
+
+    <link rel="stylesheet" href="admin-dashboard.css">
+    <link rel="stylesheet" href="admin-notifications.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a class="active" href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Welcome back, Admin 👋</h1>
+                <p>Here's what's happening with your placement portal today.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    type="text"
+                    id="dashboardSearch"
+                    placeholder="Search students, companies..."
+                    onkeyup="dashboardSearch()"
+                >
+
+                <div class="notification-box">
+
+                    <button
+                        class="bell"
+                        id="notificationBell"
+                        type="button"
+                        onclick="toggleNotifications()"
+                        aria-label="Open notifications"
+                    >
+                        🔔
+                        <span id="notificationCount">0</span>
+                    </button>
+
+                    <div
+                        class="notification-dropdown"
+                        id="notificationDropdown"
+                    >
+                        <div class="notification-header">
+                            <h4>Live Notifications</h4>
+
+                            <div class="notification-header-actions">
+                                <button
+                                    type="button"
+                                    onclick="refreshNotifications()"
+                                >
+                                    ↻ Refresh
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onclick="markAllNotificationsRead()"
+                                >
+                                    ✓ Mark All Read
+                                </button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="notification-list"
+                            id="notificationList"
+                        >
+                            <div class="notification-loading">
+                                Loading notifications...
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button id="themeToggle" class="theme-btn" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <label for="profileUpload">
+                        <img
+                            id="adminPhoto"
+                            src="https://i.pravatar.cc/80?img=12"
+                            alt="Admin"
+                        >
+                    </label>
+
+                    <input
+                        type="file"
+                        id="profileUpload"
+                        accept="image/*"
+                        hidden
+                    >
+
+                    <div><b>Admin</b></div>
+                    <span>⌄</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="date-pill" id="liveClock">Loading time...</div>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue">🎓</div>
+
+                <div>
+                    <p>Total Students</p>
+                    <h2 id="studentCount">0</h2>
+                    <span>↗ Live data</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">🏢</div>
+
+                <div>
+                    <p>Total Companies</p>
+                    <h2 id="companyCount">0</h2>
+                    <span>↗ Live data</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">📅</div>
+
+                <div>
+                    <p>Total Drives</p>
+                    <h2 id="driveCount">0</h2>
+                    <span>↗ Live data</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">👤</div>
+
+                <div>
+                    <p>Placed Students</p>
+                    <h2 id="placedStudentCount">0</h2>
+                    <span>↗ Live data</span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="middle-grid">
+
+            <div class="panel big-panel">
+
+                <div class="panel-head">
+                    <h3>Placement Overview</h3>
+                    <button type="button">Live Data</button>
+                </div>
+
+                <div class="legend">
+                    <span><b class="dot blue-dot"></b>Applications</span>
+                    <span><b class="dot green-dot"></b>Tests Scheduled</span>
+                    <span><b class="dot purple-dot"></b>Placed</span>
+                </div>
+
+                <div class="line-chart">
+                    <canvas id="placementChart"></canvas>
+                </div>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="panel-head">
+                    <h3>Top Recruiting Companies</h3>
+
+                    <button
+                        type="button"
+                        onclick="window.location.href='companies.html'"
+                    >
+                        View All
+                    </button>
+                </div>
+
+                <div class="company-list" id="companyList">
+                    <p style="padding:20px;color:#9fb0c7;">
+                        Loading company data...
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+<script src="admin-auth.js"></script>
+
+<script>
+/* ================= ADMIN LOGIN SECURITY ================= */
+
+const adminUsername = localStorage.getItem("adminUsername");
+const adminRole = localStorage.getItem("adminRole");
+
+if (!adminUsername || !adminRole) {
+    alert("Please login as an approved admin first.");
+    window.location.href = "admin-login.html";
+}
+
+/* ================= DASHBOARD VARIABLES ================= */
+
+let placementChart = null;
+
+let dashboardStudents = [];
+let dashboardCompanies = [];
+let dashboardDrives = [];
+let dashboardApplications = [];
+
+let dashboardNotifications = [];
+
+/* ================= ADMIN LOGOUT ================= */
+
+function adminLogout() {
+    localStorage.removeItem("adminUsername");
+    localStorage.removeItem("adminRole");
+    localStorage.removeItem("adminToken");
+
+    window.location.href = "admin-login.html";
+}
+
+/* ================= COMMON API HELPER ================= */
+
+async function getJson(url, fallbackValue = []) {
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Unable to load " + url);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error(error);
+        return fallbackValue;
+    }
+}
+
+/* ================= LOAD DASHBOARD DATA ================= */
+
+async function loadDashboardData() {
+    const results = await Promise.all([
+        getJson("/api/students"),
+        getJson("/api/companies"),
+        getJson("/api/drives"),
+        getJson("/api/applications/all")
+    ]);
+
+    dashboardStudents = results[0];
+    dashboardCompanies = results[1];
+    dashboardDrives = results[2];
+    dashboardApplications = results[3];
+
+    document.getElementById("studentCount").innerText =
+        dashboardStudents.length;
+
+    document.getElementById("companyCount").innerText =
+        dashboardCompanies.length;
+
+    document.getElementById("driveCount").innerText =
+        dashboardDrives.length;
+
+    document.getElementById("placedStudentCount").innerText =
+        getPlacedStudentCount();
+
+    const companyRows = buildCompanyRows();
+
+    renderPlacementChart(companyRows);
+    renderTopCompanies(companyRows);
+}
+
+/* ================= PLACED STUDENT COUNT ================= */
+
+function getPlacedStudentCount() {
+    const placedStudentIds = new Set();
+
+    dashboardApplications.forEach(function(application) {
+        const status = normalizeStatus(application.status);
+
+        if (status === "placed" && application.studentId) {
+            placedStudentIds.add(application.studentId);
+        }
+    });
+
+    return placedStudentIds.size;
+}
+
+/* ================= COMPANY LIVE DATA ================= */
+
+function buildCompanyRows() {
+    const companyMap = new Map();
+
+    dashboardCompanies.forEach(function(company) {
+        const companyName = company.companyName || "Unknown Company";
+
+        companyMap.set(companyName.toLowerCase(), {
+            companyName: companyName,
+            applications: 0,
+            scheduledTests: 0,
+            placed: 0
+        });
+    });
+
+    dashboardApplications.forEach(function(application) {
+        const companyName =
+            application.companyName || "Unknown Company";
+
+        const mapKey = companyName.toLowerCase();
+
+        if (!companyMap.has(mapKey)) {
+            companyMap.set(mapKey, {
+                companyName: companyName,
+                applications: 0,
+                scheduledTests: 0,
+                placed: 0
+            });
+        }
+
+        const row = companyMap.get(mapKey);
+
+        row.applications++;
+
+        if (application.testPermission === "Allowed") {
+            row.scheduledTests++;
+        }
+
+        if (normalizeStatus(application.status) === "placed") {
+            row.placed++;
+        }
+    });
+
+    return Array.from(companyMap.values())
+        .sort(function(first, second) {
+            return second.applications - first.applications;
+        });
+}
+
+/* ================= CHART ================= */
+
+function renderPlacementChart(companyRows) {
+    let chartRows = companyRows
+        .filter(function(row) {
+            return row.applications > 0;
+        })
+        .slice(0, 5);
+
+    if (chartRows.length === 0) {
+        chartRows = [
+            {
+                companyName: "No Live Data",
+                applications: 0,
+                scheduledTests: 0,
+                placed: 0
+            }
+        ];
+    }
+
+    const labels = chartRows.map(function(row) {
+        return shortenCompanyName(row.companyName);
+    });
+
+    const applicationData = chartRows.map(function(row) {
+        return row.applications;
+    });
+
+    const scheduledData = chartRows.map(function(row) {
+        return row.scheduledTests;
+    });
+
+    const placedData = chartRows.map(function(row) {
+        return row.placed;
+    });
+
+    const chartElement = document.getElementById("placementChart");
+
+    if (placementChart) {
+        placementChart.destroy();
+    }
+
+    placementChart = new Chart(chartElement, {
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [
+                {
+                    label: "Applications",
+                    data: applicationData,
+                    borderColor: "#2563eb",
+                    backgroundColor: "rgba(37,99,235,.12)",
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: "Tests Scheduled",
+                    data: scheduledData,
+                    borderColor: "#22c55e",
+                    backgroundColor: "rgba(34,197,94,.10)",
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: "Placed",
+                    data: placedData,
+                    borderColor: "#8b5cf6",
+                    backgroundColor: "rgba(139,92,246,.10)",
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
+
+/* ================= TOP COMPANIES ================= */
+
+function renderTopCompanies(companyRows) {
+    const companyList = document.getElementById("companyList");
+
+    const rowsWithApplications = companyRows
+        .filter(function(row) {
+            return row.applications > 0;
+        })
+        .slice(0, 5);
+
+    if (rowsWithApplications.length === 0) {
+        companyList.innerHTML = `
+            <p style="padding:20px;color:#9fb0c7;">
+                No applications available yet.
+            </p>
+        `;
+        return;
+    }
+
+    const totalApplications = dashboardApplications.length || 1;
+
+    const highestApplicationCount =
+        Math.max(
+            ...rowsWithApplications.map(function(row) {
+                return row.applications;
+            }),
+            1
+        );
+
+    companyList.innerHTML = rowsWithApplications.map(function(row, index) {
+        const percentage =
+            ((row.applications / totalApplications) * 100).toFixed(1);
+
+        const progressWidth =
+            ((row.applications / highestApplicationCount) * 100).toFixed(0);
+
+        return `
+            <div>
+                <b>${index + 1}</b>
+
+                <span class="logo-text">
+                    ${escapeHtml(getCompanyCode(row.companyName))}
+                </span>
+
+                <p>
+                    ${escapeHtml(row.companyName)}
+                    <br>
+                    <small>${row.applications} Applications</small>
+                </p>
+
+                <i style="width:${progressWidth}%"></i>
+
+                <em>${percentage}%</em>
+            </div>
+        `;
+    }).join("");
+}
+
+/* ================= REAL NOTIFICATIONS ================= */
+
+async function loadNotifications() {
+    const notificationList = document.getElementById("notificationList");
+
+    notificationList.innerHTML = `
+        <div class="notification-loading">
+            Loading notifications...
+        </div>
+    `;
+
+    try {
+        const response = await fetch(
+            "/api/admin-notifications?adminUsername=" +
+            encodeURIComponent(adminUsername)
+        );
+
+        if (!response.ok) {
+            throw new Error("Notification API failed");
+        }
+
+        dashboardNotifications = await response.json();
+
+        renderNotifications();
+
+    } catch (error) {
+        console.error(error);
+
+        notificationList.innerHTML = `
+            <div class="notification-empty">
+                Notifications load nahi ho rahe.
+            </div>
+        `;
+
+        updateNotificationBadge(0);
+    }
+}
+
+function renderNotifications() {
+    const notificationList = document.getElementById("notificationList");
+
+    const unreadCount = dashboardNotifications.filter(function(notification) {
+        return !notification.read;
+    }).length;
+
+    updateNotificationBadge(unreadCount);
+
+    if (dashboardNotifications.length === 0) {
+        notificationList.innerHTML = `
+            <div class="notification-empty">
+                ✅ No new notifications.
+            </div>
+        `;
+        return;
+    }
+
+    notificationList.innerHTML = dashboardNotifications.map(function(notification) {
+        const unreadClass = notification.read ? "" : "unread";
+        const unreadDot = notification.read
+            ? ""
+            : `<span class="notification-unread-dot"></span>`;
+
+        const markReadButton = notification.read
+            ? ""
+            : `
+                <button
+                    type="button"
+                    class="mark-read-btn"
+                    data-notification-key="${escapeHtml(notification.notificationKey)}"
+                >
+                    Mark Read
+                </button>
+            `;
+
+        return `
+            <div
+                class="notification-item ${unreadClass}"
+                data-notification-key="${escapeHtml(notification.notificationKey)}"
+                data-target-page="${escapeHtml(notification.targetPage || "")}"
+            >
+                <div class="notification-icon">
+                    ${escapeHtml(notification.icon || "🔔")}
+                </div>
+
+                <div class="notification-content">
+                    <h5>${escapeHtml(notification.title || "Notification")}</h5>
+
+                    <p>${escapeHtml(notification.message || "")}</p>
+
+                    <div class="notification-bottom">
+                        <span class="notification-time">
+                            ${escapeHtml(getTimeAgo(notification.createdAt))}
+                        </span>
+
+                        ${markReadButton}
+                    </div>
+                </div>
+
+                ${unreadDot}
+            </div>
+        `;
+    }).join("");
+}
+
+function updateNotificationBadge(unreadCount) {
+    const notificationCount =
+        document.getElementById("notificationCount");
+
+    notificationCount.innerText = unreadCount;
+
+    notificationCount.style.display =
+        unreadCount > 0 ? "grid" : "none";
+}
+
+async function refreshNotifications() {
+    await loadNotifications();
+}
+
+async function markNotificationRead(notificationKey) {
+    try {
+        const response = await fetch(
+            "/api/admin-notifications/mark-read?" +
+            "adminUsername=" + encodeURIComponent(adminUsername) +
+            "&notificationKey=" + encodeURIComponent(notificationKey),
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Mark notification read failed");
+        }
+
+        await loadNotifications();
+
+    } catch (error) {
+        console.error(error);
+        alert("Notification read status update nahi hua.");
+    }
+}
+
+async function markAllNotificationsRead() {
+    try {
+        const response = await fetch(
+            "/api/admin-notifications/mark-all-read?" +
+            "adminUsername=" + encodeURIComponent(adminUsername),
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Mark all read failed");
+        }
+
+        await loadNotifications();
+
+    } catch (error) {
+        console.error(error);
+        alert("All notifications read nahi ho paaye.");
+    }
+}
+
+async function openNotification(notificationKey, targetPage) {
+    const notification = dashboardNotifications.find(function(item) {
+        return item.notificationKey === notificationKey;
+    });
+
+    if (notification && !notification.read) {
+        await markNotificationRead(notificationKey);
+    }
+
+    if (targetPage) {
+        window.location.href = targetPage;
+    }
+}
+
+function toggleNotifications() {
+    const dropdown = document.getElementById("notificationDropdown");
+
+    const isOpen = dropdown.style.display === "block";
+
+    dropdown.style.display = isOpen ? "none" : "block";
+
+    if (!isOpen) {
+        loadNotifications();
+    }
+}
+
+/* Notification click events */
+
+document.getElementById("notificationList").addEventListener(
+    "click",
+    function(event) {
+        const markReadButton = event.target.closest(".mark-read-btn");
+
+        if (markReadButton) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            markNotificationRead(
+                markReadButton.dataset.notificationKey
+            );
+
+            return;
+        }
+
+        const notificationItem =
+            event.target.closest(".notification-item");
+
+        if (!notificationItem) {
+            return;
+        }
+
+        const notificationKey =
+            notificationItem.dataset.notificationKey;
+
+        const targetPage =
+            notificationItem.dataset.targetPage;
+
+        openNotification(notificationKey, targetPage);
+    }
+);
+
+/* Close dropdown outside notification area */
+
+document.addEventListener("click", function(event) {
+    const notificationBox = event.target.closest(".notification-box");
+
+    if (!notificationBox) {
+        document.getElementById("notificationDropdown").style.display = "none";
+    }
+});
+
+/* ================= CLOCK ================= */
+
+function updateClock() {
+    const now = new Date();
+
+    document.getElementById("liveClock").innerText =
+        "📅 " +
+        now.toLocaleDateString("en-IN") +
+        "  ⏰ " +
+        now.toLocaleTimeString("en-IN");
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ================= PROFILE PHOTO ================= */
+
+const upload = document.getElementById("profileUpload");
+const adminPhoto = document.getElementById("adminPhoto");
+
+if (localStorage.getItem("recruiteaseAdminPhoto")) {
+    adminPhoto.src = localStorage.getItem("recruiteaseAdminPhoto");
+}
+
+upload.addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        adminPhoto.src = event.target.result;
+
+        localStorage.setItem(
+            "recruiteaseAdminPhoto",
+            event.target.result
+        );
+    };
+
+    reader.readAsDataURL(file);
+});
+
+/* ================= SEARCH ================= */
+
+function dashboardSearch() {
+    const value = document.getElementById("dashboardSearch").value
+        .toLowerCase()
+        .trim();
+
+    if (value.includes("student")) {
+        window.location.href = "students.html";
+
+    } else if (value.includes("company")) {
+        window.location.href = "companies.html";
+
+    } else if (value.includes("drive")) {
+        window.location.href = "placement-drives.html";
+
+    } else if (value.includes("application")) {
+        window.location.href = "applications-admin.html";
+
+    } else if (value.includes("aptitude") || value.includes("test")) {
+        window.location.href = "admin-aptitude-tests.html";
+
+    } else if (value.includes("interview")) {
+        window.location.href = "admin-interviews.html";
+
+    } else if (value.includes("placed")) {
+        window.location.href = "placed-students.html";
+
+    } else if (value.includes("eligibility")) {
+        window.location.href = "eligibility.html";
+
+    } else if (value.includes("issue") || value.includes("request")) {
+        window.location.href = "requests-issues.html";
+    }
+}
+
+/* ================= HELPERS ================= */
+
+function normalizeStatus(status) {
+    return String(status || "")
+        .trim()
+        .toLowerCase();
+}
+
+function shortenCompanyName(name) {
+    const cleanName = String(name || "Company");
+
+    return cleanName.length > 12
+        ? cleanName.substring(0, 12) + "..."
+        : cleanName;
+}
+
+function getCompanyCode(companyName) {
+    const cleanText = String(companyName || "COM")
+        .replace(/[^A-Za-z0-9]/g, "")
+        .toUpperCase();
+
+    return cleanText.substring(0, 3) || "COM";
+}
+
+function getTimeAgo(dateValue) {
+    if (!dateValue) {
+        return "Just now";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date)) {
+        return "Recently";
+    }
+
+    const difference = Date.now() - date.getTime();
+
+    if (difference < 0) {
+        return "Upcoming";
+    }
+
+    const minutes = Math.floor(difference / 60000);
+
+    if (minutes < 1) {
+        return "Just now";
+    }
+
+    if (minutes < 60) {
+        return minutes + " min ago";
+    }
+
+    const hours = Math.floor(minutes / 60);
+
+    if (hours < 24) {
+        return hours + " hour ago";
+    }
+
+    const days = Math.floor(hours / 24);
+
+    if (days === 1) {
+        return "Yesterday";
+    }
+
+    if (days < 30) {
+        return days + " days ago";
+    }
+
+    return date.toLocaleDateString("en-IN");
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/* ================= START ================= */
+
+loadDashboardData();
+loadNotifications();
+
+setInterval(function() {
+    loadNotifications();
+}, 60000);
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

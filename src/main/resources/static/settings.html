@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - RecruitEase</title>
+
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+
+<div class="settings-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a class="active" href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Settings ⚙️</h1>
+                <p>Manage system configurations and preferences.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    type="text"
+                    placeholder="Search settings..."
+                    onkeyup="searchSettings(this.value)"
+                >
+
+                <button
+                    class="bell"
+                    type="button"
+                    onclick="showNotifications()"
+                    title="Open Notifications"
+                >
+                    🔔
+                </button>
+
+                <button
+                    class="theme-btn"
+                    id="themeToggle"
+                    type="button"
+                >
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img
+                        id="topAdminPhoto"
+                        src="https://i.pravatar.cc/80?img=12"
+                        alt="Admin"
+                    >
+
+                    <b id="topAdminName">Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>System Settings</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Settings
+                </p>
+            </div>
+
+        </section>
+
+        <section class="settings-grid">
+
+            <div>
+
+                <div class="settings-tabs">
+
+                    <button
+                        class="active"
+                        data-tab="general"
+                        type="button"
+                        onclick="switchTab('general', this)"
+                    >
+                        ⚙ General Settings
+                    </button>
+
+                    <button
+                        data-tab="users"
+                        type="button"
+                        onclick="switchTab('users', this)"
+                    >
+                        👥 User Management
+                    </button>
+
+                    <button
+                        data-tab="email"
+                        type="button"
+                        onclick="switchTab('email', this)"
+                    >
+                        ✉ Email Settings
+                    </button>
+
+                    <button
+                        data-tab="notifications"
+                        type="button"
+                        onclick="switchTab('notifications', this)"
+                    >
+                        🔔 Notifications
+                    </button>
+
+                    <button
+                        data-tab="system"
+                        type="button"
+                        onclick="switchTab('system', this)"
+                    >
+                        🖥 System Settings
+                    </button>
+
+                    <button
+                        data-tab="backup"
+                        type="button"
+                        onclick="switchTab('backup', this)"
+                    >
+                        ☁ Backup & Restore
+                    </button>
+
+                </div>
+
+                <!-- GENERAL SETTINGS -->
+                <div class="settings-tab-panel" id="generalPanel">
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">ℹ</span>
+
+                            <div>
+                                <h3>General Information</h3>
+                                <p>Manage institute and placement portal details.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>Institute Name</label>
+                                <input id="instituteName">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Institute Code</label>
+                                <input id="instituteCode">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Address</label>
+                                <textarea id="instituteAddress"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <input id="contactEmail" type="email">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Contact Phone</label>
+                                <input id="contactPhone">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Website</label>
+                                <input id="website">
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="saveGeneralSettings()"
+                            >
+                                💾 Save Changes
+                            </button>
+                        </div>
+
+                    </section>
+
+                    <!-- ADMIN PROFILE -->
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">👤</span>
+
+                            <div>
+                                <h3>Admin Profile</h3>
+                                <p>Update your admin information across the portal.</p>
+                            </div>
+                        </div>
+
+                        <div class="admin-settings-grid">
+
+                            <div class="profile-summary">
+
+                                <label
+                                    for="adminPhotoUpload"
+                                    style="cursor:pointer;"
+                                    title="Click to change Admin photo"
+                                >
+                                    <img
+                                        id="adminProfilePhoto"
+                                        src="https://i.pravatar.cc/80?img=12"
+                                        alt="Admin Profile"
+                                    >
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="adminPhotoUpload"
+                                    accept="image/*"
+                                    hidden
+                                >
+
+                                <h4 id="profileDisplayName">Admin</h4>
+                                <p>Portal Administrator</p>
+                                <p id="profileDisplayEmail">Loading...</p>
+
+                            </div>
+
+                            <div>
+
+                                <h4 class="section-mini-title">
+                                    Profile Details
+                                </h4>
+
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input id="adminName">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input id="adminEmail" type="email">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input id="adminPhone">
+                                </div>
+
+                                <div class="form-actions">
+                                    <button
+                                        class="primary-btn"
+                                        type="button"
+                                        onclick="updateAdminProfile()"
+                                    >
+                                        👤 Update Profile
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div class="section-divider">
+
+                                <h4 class="section-mini-title">
+                                    Change Password
+                                </h4>
+
+                                <div class="form-group">
+                                    <label>Current Password</label>
+                                    <input
+                                        id="currentPassword"
+                                        type="password"
+                                        placeholder="Enter current password"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input
+                                        id="newPassword"
+                                        type="password"
+                                        placeholder="Minimum 6 characters"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    <input
+                                        id="confirmPassword"
+                                        type="password"
+                                        placeholder="Confirm new password"
+                                    >
+                                </div>
+
+                                <div class="form-actions">
+                                    <button
+                                        class="primary-btn"
+                                        type="button"
+                                        onclick="updatePassword()"
+                                    >
+                                        🔑 Update Password
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <!-- PREFERENCES -->
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">⚙</span>
+
+                            <div>
+                                <h3>Other Preferences</h3>
+                                <p>Set your personal language, timezone and dashboard preferences.</p>
+                            </div>
+                        </div>
+
+                        <div class="preferences-grid">
+
+                            <div>
+
+                                <div class="form-group">
+                                    <label>Language</label>
+
+                                    <select id="language">
+                                        <option value="English">English</option>
+                                        <option value="Hindi">Hindi</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Timezone</label>
+
+                                    <select id="timezone">
+                                        <option value="GMT+05:30 Asia/Kolkata">
+                                            (GMT+05:30) Asia/Kolkata
+                                        </option>
+
+                                        <option value="UTC">
+                                            UTC
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="toggle-list">
+
+                                <div class="toggle-row">
+                                    <span>Enable Dark Mode</span>
+
+                                    <label class="switch">
+                                        <input
+                                            id="darkModePreference"
+                                            type="checkbox"
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="toggle-row">
+                                    <span>Email Notifications</span>
+
+                                    <label class="switch">
+                                        <input
+                                            id="emailNotifications"
+                                            type="checkbox"
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="toggle-row">
+                                    <span>SMS Notifications</span>
+
+                                    <label class="switch">
+                                        <input
+                                            id="smsNotifications"
+                                            type="checkbox"
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                                <div class="toggle-row">
+                                    <span>Show Analytics on Dashboard</span>
+
+                                    <label class="switch">
+                                        <input
+                                            id="analyticsPreference"
+                                            type="checkbox"
+                                        >
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="savePreferences()"
+                            >
+                                💾 Save Preferences
+                            </button>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- USER MANAGEMENT -->
+                <div
+                    class="settings-tab-panel"
+                    id="usersPanel"
+                    style="display:none;"
+                >
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">👥</span>
+
+                            <div>
+                                <h3>User Management</h3>
+                                <p>Main Admin can create approved admin accounts directly.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>New Admin Name</label>
+                                <input
+                                    id="newAdminName"
+                                    placeholder="Enter admin name"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>New Admin Email</label>
+                                <input
+                                    id="newAdminEmail"
+                                    type="email"
+                                    placeholder="Enter admin email"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Role</label>
+
+                                <select id="newAdminRole">
+                                    <option value="Admin">Admin</option>
+                                    <option value="Placement Officer">
+                                        Placement Officer
+                                    </option>
+                                    <option value="Coordinator">
+                                        Coordinator
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Temporary Password</label>
+                                <input
+                                    id="newAdminPassword"
+                                    type="password"
+                                    placeholder="Minimum 6 characters"
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="addNewAdmin()"
+                            >
+                                ＋ Add New Admin
+                            </button>
+                        </div>
+
+                    </section>
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">🛡</span>
+
+                            <div>
+                                <h3>Portal Users</h3>
+                                <p>Real Main Admin and approved admin accounts.</p>
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="placed-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="adminUsersTable">
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;padding:18px;">
+                                            Loading users...
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- EMAIL SETTINGS -->
+                <div
+                    class="settings-tab-panel"
+                    id="emailPanel"
+                    style="display:none;"
+                >
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">✉</span>
+
+                            <div>
+                                <h3>Email Settings</h3>
+                                <p>Configure sender details used for placement portal emails.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>Sender Name</label>
+                                <input id="senderName">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Sender Email</label>
+                                <input id="senderEmail" type="email">
+                            </div>
+
+                            <div class="form-group">
+                                <label>SMTP Host</label>
+                                <input
+                                    id="smtpHost"
+                                    placeholder="smtp.example.com"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>SMTP Port</label>
+                                <input
+                                    id="smtpPort"
+                                    type="number"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Encryption</label>
+
+                                <select id="smtpEncryption">
+                                    <option value="TLS">TLS</option>
+                                    <option value="SSL">SSL</option>
+                                    <option value="None">None</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Reply-To</label>
+                                <input
+                                    id="replyToEmail"
+                                    type="email"
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="secondary-btn"
+                                type="button"
+                                onclick="sendTestEmail()"
+                            >
+                                ✉ Send Test Email
+                            </button>
+
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="saveEmailSettings()"
+                            >
+                                💾 Save Email Settings
+                            </button>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- NOTIFICATION SETTINGS -->
+                <div
+                    class="settings-tab-panel"
+                    id="notificationsPanel"
+                    style="display:none;"
+                >
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">🔔</span>
+
+                            <div>
+                                <h3>Notification Settings</h3>
+                                <p>Select which portal notification categories are enabled.</p>
+                            </div>
+                        </div>
+
+                        <div class="toggle-list">
+
+                            <div class="toggle-row">
+                                <span>New Student Registration</span>
+
+                                <label class="switch">
+                                    <input
+                                        id="notifyStudentRegister"
+                                        type="checkbox"
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <span>New Company Registration</span>
+
+                                <label class="switch">
+                                    <input
+                                        id="notifyCompanyAdd"
+                                        type="checkbox"
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <span>New Placement Application</span>
+
+                                <label class="switch">
+                                    <input
+                                        id="notifyApplication"
+                                        type="checkbox"
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <span>Aptitude Test Updates</span>
+
+                                <label class="switch">
+                                    <input
+                                        id="notifyTest"
+                                        type="checkbox"
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <span>Placement Confirmation</span>
+
+                                <label class="switch">
+                                    <input
+                                        id="notifyPlacement"
+                                        type="checkbox"
+                                    >
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="saveNotificationSettings()"
+                            >
+                                💾 Save Notification Settings
+                            </button>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- SYSTEM SETTINGS -->
+                <div
+                    class="settings-tab-panel"
+                    id="systemPanel"
+                    style="display:none;"
+                >
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">🖥</span>
+
+                            <div>
+                                <h3>System Settings</h3>
+                                <p>Configure placement portal system options.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>Placement Session</label>
+                                <input id="placementSession">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Default Application Status</label>
+
+                                <select id="defaultApplicationStatus">
+                                    <option value="Applied">Applied</option>
+                                    <option value="Under Review">
+                                        Under Review
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Maximum Resume Size (MB)</label>
+                                <input
+                                    id="maxResumeSize"
+                                    type="number"
+                                    min="1"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Student Registration</label>
+
+                                <select id="studentRegistrationMode">
+                                    <option value="Open">Open</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>System Announcement</label>
+                                <textarea id="systemAnnouncement"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="saveSystemSettings()"
+                            >
+                                💾 Save System Settings
+                            </button>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- BACKUP -->
+                <div
+                    class="settings-tab-panel"
+                    id="backupPanel"
+                    style="display:none;"
+                >
+
+                    <section class="settings-card">
+
+                        <div class="card-title">
+                            <span class="card-title-icon">☁</span>
+
+                            <div>
+                                <h3>Backup & Restore</h3>
+                                <p>Create a downloadable data backup summary.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label>Last Backup</label>
+                                <input
+                                    id="lastBackup"
+                                    value="No backup created yet"
+                                    readonly
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Backup Type</label>
+
+                                <select id="backupType">
+                                    <option value="Full System Summary">
+                                        Full System Summary
+                                    </option>
+                                    <option value="Student Data">
+                                        Student Data
+                                    </option>
+                                    <option value="Application Data">
+                                        Application Data
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Restore Backup File</label>
+                                <input
+                                    id="restoreFile"
+                                    type="file"
+                                    accept=".json,.csv"
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                class="secondary-btn"
+                                type="button"
+                                onclick="restoreBackup()"
+                            >
+                                ⤴ Restore Backup
+                            </button>
+
+                            <button
+                                class="primary-btn"
+                                type="button"
+                                onclick="createBackup()"
+                            >
+                                ⬇ Create Backup
+                            </button>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <aside class="right-column">
+
+                <section class="side-card">
+
+                    <h3>📊 System Overview</h3>
+
+                    <div class="overview-row">
+                        <span>👥 Total Students</span>
+                        <b id="overviewStudents">0</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>🏢 Total Companies</span>
+                        <b id="overviewCompanies">0</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>📅 Placement Drives</span>
+                        <b id="overviewDrives">0</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>📄 Applications</span>
+                        <b id="overviewApplications">0</b>
+                    </div>
+
+                    <div class="overview-row">
+                        <span>✅ Placed Students</span>
+                        <b id="overviewPlaced">0</b>
+                    </div>
+
+                    <a class="side-link" href="reports.html">
+                        View Detailed Report →
+                    </a>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>⚡ Quick Actions</h3>
+
+                    <button
+                        class="quick-action"
+                        type="button"
+                        onclick="switchTabByName('users')"
+                    >
+                        <span>👤 Add New Admin</span>
+                        <span>›</span>
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        type="button"
+                        onclick="switchTabByName('users')"
+                    >
+                        <span>👥 Manage Roles</span>
+                        <span>›</span>
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        type="button"
+                        onclick="showSystemLogs()"
+                    >
+                        <span>📋 System Logs</span>
+                        <span>›</span>
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        type="button"
+                        onclick="clearCache()"
+                    >
+                        <span>🧹 Clear Browser Cache</span>
+                        <span>›</span>
+                    </button>
+
+                    <button
+                        class="quick-action"
+                        type="button"
+                        onclick="switchTabByName('email')"
+                    >
+                        <span>✉ Email Settings</span>
+                        <span>›</span>
+                    </button>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>🗄 Data & Usage</h3>
+
+                    <div class="storage-info">
+                        Storage Used<br>
+                        <b>2.45 GB / 10 GB</b>
+                    </div>
+
+                    <div class="storage-bar">
+                        <span></span>
+                    </div>
+
+                    <div class="storage-info">24% Used</div>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>🛡 Security Status</h3>
+
+                    <div class="security-row">
+                        <span>Last Login</span>
+                        <b id="lastLogin">Current Session</b>
+                    </div>
+
+                    <div class="security-row">
+                        <span>IP Address</span>
+                        <b>Protected</b>
+                    </div>
+
+                    <div class="security-row">
+                        <span>Portal Security</span>
+                        <b style="color:#46e99f;">Active</b>
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="admin-auth.js"></script>
+<script src="settings.js"></script>
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

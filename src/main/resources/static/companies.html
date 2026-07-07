@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Companies - RecruitEase</title>
+
+    <link rel="stylesheet" href="companies.css">
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="companies-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a class="active" href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Company Management</h1>
+                <p>Manage all recruiting companies in your placement portal.</p>
+            </div>
+
+            <div class="top-actions">
+                <input
+                    class="dashboard-search"
+                    type="text"
+                    id="topSearch"
+                    placeholder="Search companies..."
+                    onkeyup="filterCompanies()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>3</span>
+                </button>
+
+                <button class="theme-btn" type="button" id="themeToggle">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img src="https://i.pravatar.cc/80?img=12" alt="Admin">
+                    <b>Admin</b>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE HEADER ================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>All Companies 🏢</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; All Companies
+                </p>
+            </div>
+
+            <button class="add-company-btn" type="button" onclick="toggleCompanyForm()">
+                ＋ Add New Company
+            </button>
+
+        </section>
+
+        <!-- ================= ADD COMPANY FORM ================= -->
+        <section class="add-company-panel" id="addCompanyPanel">
+
+            <div class="form-head">
+                <h3>Add New Company</h3>
+
+                <button class="close-form-btn" type="button" onclick="toggleCompanyForm()">
+                    ×
+                </button>
+            </div>
+
+            <form id="companyForm">
+
+                <div class="company-form-grid">
+
+                    <input
+                        type="text"
+                        id="companyName"
+                        placeholder="Company Name"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        step="0.1"
+                        id="minCgpa"
+                        placeholder="Minimum CGPA"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="requiredSkills"
+                        placeholder="Required Skills"
+                        required
+                    >
+
+                    <button class="save-company-btn" type="submit">
+                        Save Company
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">🏢</div>
+
+                <div>
+                    <p>Total Companies</p>
+                    <h3 id="totalCompanies">0</h3>
+                    <small>Registered Companies</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">✅</div>
+
+                <div>
+                    <p>Active Companies</p>
+                    <h3 id="activeCompanies">0</h3>
+                    <small>Available for Drives</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">📅</div>
+
+                <div>
+                    <p>Total Drives</p>
+                    <h3>18</h3>
+                    <small>Demo Data</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">🤝</div>
+
+                <div>
+                    <p>Hiring Partners</p>
+                    <h3 id="partnerCompanies">0</h3>
+                    <small>Campus Partners</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= COMPANY TABLE ================= -->
+        <section class="company-table-panel">
+
+            <div class="filter-bar">
+
+                <input
+                    class="filter-search"
+                    type="text"
+                    id="tableSearch"
+                    placeholder="Search by company name or skills..."
+                    onkeyup="filterCompanies()"
+                >
+
+                <select class="filter-select" id="cgpaFilter" onchange="filterCompanies()">
+                    <option value="">All CGPA</option>
+                    <option value="6">6.0 and Above</option>
+                    <option value="7">7.0 and Above</option>
+                    <option value="8">8.0 and Above</option>
+                </select>
+
+                <button class="clear-filter-btn" type="button" onclick="clearFilters()">
+                    ↻ Clear Filters
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="company-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company</th>
+                            <th>Minimum CGPA</th>
+                            <th>Required Skills</th>
+                            <th>Aptitude Cutoff</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="companyTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="table-footer">
+                <p id="tableCountText">Showing 0 companies</p>
+            </div>
+
+        </section>
+
+        <section class="info-card">
+            <span class="info-icon">i</span>
+
+            <p>
+                Manage registered companies here. You can add new companies,
+                view eligibility requirements, and remove company records.
+            </p>
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+    function toggleCompanyForm() {
+        document.getElementById("addCompanyPanel").classList.toggle("show");
+    }
+
+    async function loadCompanies() {
+        try {
+            const response = await fetch("/api/companies");
+            const companies = await response.json();
+
+            const tableBody = document.getElementById("companyTableBody");
+            tableBody.innerHTML = "";
+
+            companies.forEach(function(company, index) {
+
+                const companyName = company.companyName || "Company";
+                const firstLetter = companyName.substring(0, 3).toUpperCase();
+
+                const aptitudeCutoff =
+                    company.aptitudeCutoff !== null &&
+                    company.aptitudeCutoff !== undefined
+                        ? company.aptitudeCutoff + "%"
+                        : "-";
+
+                const row = `
+                    <tr
+                        data-name="${companyName.toLowerCase()}"
+                        data-skills="${(company.requiredSkills || "").toLowerCase()}"
+                        data-cgpa="${company.minCgpa || 0}"
+                    >
+                        <td>${index + 1}</td>
+
+                        <td>
+                            <div class="company-cell">
+                                <span class="company-logo">${firstLetter}</span>
+
+                                <div>
+                                    <div class="company-name">${companyName}</div>
+                                    <small>RecruitEase Partner</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>${company.minCgpa || "-"}</td>
+
+                        <td class="company-skills">
+                            ${company.requiredSkills || "-"}
+                        </td>
+
+                        <td>${aptitudeCutoff}</td>
+
+                        <td>
+                            <span class="active-badge">Active</span>
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+                                <button
+                                    class="view-btn"
+                                    type="button"
+                                    title="View Company"
+                                    onclick="viewCompany(
+                                        '${companyName}',
+                                        '${company.minCgpa}',
+                                        '${company.requiredSkills}'
+                                    )"
+                                >
+                                    👁
+                                </button>
+
+                                <button
+                                    class="delete-btn"
+                                    type="button"
+                                    title="Delete Company"
+                                    onclick="deleteCompany(${company.id}, '${companyName}')"
+                                >
+                                    🗑
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                tableBody.innerHTML += row;
+            });
+
+            updateCompanyStats(companies.length);
+            filterCompanies();
+
+        } catch (error) {
+            console.error("Error loading companies:", error);
+            alert("Companies load nahi ho rahi hain. Backend check karo.");
+        }
+    }
+
+    document.getElementById("companyForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const company = {
+            companyName: document.getElementById("companyName").value.trim(),
+            minCgpa: document.getElementById("minCgpa").value,
+            requiredSkills: document.getElementById("requiredSkills").value.trim()
+        };
+
+        try {
+            const response = await fetch("/api/companies/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(company)
+            });
+
+            if (!response.ok) {
+                alert("Company add nahi hui. Backend API check karo.");
+                return;
+            }
+
+            document.getElementById("companyForm").reset();
+            document.getElementById("addCompanyPanel").classList.remove("show");
+
+            await loadCompanies();
+
+            alert("Company added successfully.");
+
+        } catch (error) {
+            console.error("Error adding company:", error);
+            alert("Company add karte time error aaya.");
+        }
+    });
+
+    async function deleteCompany(id, companyName) {
+        const confirmed = confirm(
+            "Delete " + companyName + "?\n\nThis company record will be removed."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/companies/" + id, {
+                method: "DELETE"
+            });
+
+            if (!response.ok) {
+                alert("Company delete nahi hui. Backend check karo.");
+                return;
+            }
+
+            await loadCompanies();
+
+            alert(companyName + " deleted successfully.");
+
+        } catch (error) {
+            console.error("Error deleting company:", error);
+            alert("Company delete karte time error aaya.");
+        }
+    }
+
+    function viewCompany(companyName, minCgpa, requiredSkills) {
+        alert(
+            "Company Details\n\n" +
+            "Company Name: " + companyName + "\n" +
+            "Minimum CGPA: " + minCgpa + "\n" +
+            "Required Skills: " + requiredSkills
+        );
+    }
+
+    function filterCompanies() {
+        const topSearch = document.getElementById("topSearch").value.toLowerCase().trim();
+        const tableSearch = document.getElementById("tableSearch").value.toLowerCase().trim();
+        const searchValue = tableSearch || topSearch;
+
+        const selectedCgpa = document.getElementById("cgpaFilter").value;
+
+        const rows = document.querySelectorAll("#companyTableBody tr");
+        let visibleCount = 0;
+
+        rows.forEach(function(row) {
+            const name = row.dataset.name || "";
+            const skills = row.dataset.skills || "";
+            const cgpa = Number(row.dataset.cgpa || 0);
+
+            const matchesSearch =
+                name.includes(searchValue) ||
+                skills.includes(searchValue);
+
+            const matchesCgpa =
+                selectedCgpa === "" ||
+                cgpa >= Number(selectedCgpa);
+
+            if (matchesSearch && matchesCgpa) {
+                row.style.display = "";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+
+        document.getElementById("tableCountText").innerText =
+            "Showing " + visibleCount + " companies";
+    }
+
+    function clearFilters() {
+        document.getElementById("topSearch").value = "";
+        document.getElementById("tableSearch").value = "";
+        document.getElementById("cgpaFilter").value = "";
+
+        filterCompanies();
+    }
+
+    function updateCompanyStats(total) {
+        document.getElementById("totalCompanies").innerText = total;
+        document.getElementById("activeCompanies").innerText = total;
+        document.getElementById("partnerCompanies").innerText = total;
+    }
+
+    document.getElementById("themeToggle").addEventListener("click", function() {
+        const button = document.getElementById("themeToggle");
+
+        if (button.innerText === "🌙") {
+            button.innerText = "☀️";
+        } else {
+            button.innerText = "🌙";
+        }
+    });
+
+    loadCompanies();
+
+</script>
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+</body>
+</html>

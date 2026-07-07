@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Applications | RecruitEase</title>
+<link rel="stylesheet" href="student-portal.css">
+
+<style>
+    .application-details{
+        display:none;
+        width:100%;
+        margin-top:14px;
+        padding:14px;
+        border-radius:12px;
+        background:#0b1b34;
+        border:1px solid rgba(47,128,255,.22);
+        color:#d8e7ff;
+        line-height:1.8;
+        font-size:13px;
+    }
+
+    .application-details h4{
+        margin-bottom:8px;
+        color:#ffffff;
+    }
+
+    .application-meta{
+        display:flex;
+        gap:8px;
+        flex-wrap:wrap;
+        margin-top:8px;
+    }
+
+    .application-tag{
+        padding:4px 9px;
+        border-radius:20px;
+        background:rgba(47,128,255,.14);
+        color:#9bc5ff;
+        font-size:11px;
+    }
+
+    .qualified-tag{
+        background:rgba(22,199,132,.17);
+        color:#75efb0;
+    }
+
+    .failed-tag{
+        background:rgba(255,77,109,.17);
+        color:#ff9aaa;
+    }
+
+    .pending-tag{
+        background:rgba(255,159,28,.16);
+        color:#ffd48a;
+    }
+
+    .empty-app-message{
+        padding:28px;
+        text-align:center;
+        color:#9fb0c7;
+    }
+
+    .interview-request-btn{
+        background:#2563eb !important;
+    }
+
+    .interview-requested-btn{
+        background:#16a34a !important;
+        cursor:not-allowed !important;
+    }
+
+    .disabled-app-btn{
+        background:#475569 !important;
+        cursor:not-allowed !important;
+        opacity:.8;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="student-layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+        <p>Campus Placement System</p>
+
+        <a href="student-dashboard.html">🏠 Dashboard</a>
+        <a href="student-profile.html">👤 My Profile</a>
+        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+        <a class="active" href="student-applications.html">📄 Applications</a>
+        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="student-interviews.html">🎤 Interviews</a>
+        <a href="student-resume.html">📑 Resume Builder</a>
+        <a href="student-placement-drives.html">💼 Placement Drive</a>
+        <a href="student-notifications.html">🔔 Notifications</a>
+        <a href="student-settings.html">⚙ Settings</a>
+        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+        <div class="help-card">
+            <h4>Need Help?</h4>
+            <p>Contact your TPO</p>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <input
+                type="text"
+                id="applicationSearch"
+                placeholder="Search company, role or status..."
+                onkeyup="renderApplications()"
+            >
+
+            <div class="top-actions">
+
+                <button id="themeBtn" type="button">🌙</button>
+
+                <div class="bell">🔔<span>3</span></div>
+
+                <div class="user-box">
+                    <img
+                        id="topPhoto"
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        alt="Student"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                    >
+
+                    <div>
+                        <b id="topName">Student</b>
+                        <p id="topBranch">B.Tech CSE</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="details-card">
+
+            <h2>My Applications</h2>
+
+            <div class="info-grid">
+
+                <div>
+                    <label>Total Applications</label>
+                    <p id="totalApps">0</p>
+                </div>
+
+                <div>
+                    <label>Shortlisted</label>
+                    <p id="shortlistedApps">0</p>
+                </div>
+
+                <div>
+                    <label>Interviews</label>
+                    <p id="interviewApps">0</p>
+                </div>
+
+                <div>
+                    <label>Offers</label>
+                    <p id="offerApps">0</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="details-card" style="margin-top:24px;">
+
+            <h2>Application Status</h2>
+
+            <div class="application-list" id="applicationList">
+                <p class="empty-app-message">Loading real applications...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+const studentId = localStorage.getItem("studentId");
+
+let applications = [];
+let drives = [];
+let driveMap = {};
+let interviewEligibilityMap = {};
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+} else {
+    initializeApplications();
+}
+
+/* ================= INITIAL LOAD ================= */
+
+async function initializeApplications() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/students/" + studentId),
+            fetch("/api/applications/student/" + studentId),
+            fetch("/api/drives")
+        ]);
+
+        const studentResponse = responses[0];
+        const applicationsResponse = responses[1];
+        const drivesResponse = responses[2];
+
+        if (!studentResponse.ok) {
+            throw new Error("Student profile not found");
+        }
+
+        const student = await studentResponse.json();
+
+        document.getElementById("topName").innerText =
+            student.name || "Student";
+
+        document.getElementById("topBranch").innerText =
+            student.branch || "B.Tech CSE";
+
+        document.getElementById("topPhoto").src =
+            "/api/students/" + studentId + "/photo?t=" + Date.now();
+
+        if (applicationsResponse.ok) {
+            applications = await applicationsResponse.json();
+        }
+
+        if (drivesResponse.ok) {
+            drives = await drivesResponse.json();
+
+            drives.forEach(drive => {
+                driveMap[drive.id] = drive;
+            });
+        }
+
+        applications.sort((a, b) => Number(b.id) - Number(a.id));
+
+        await loadInterviewEligibility();
+
+        updateStats();
+        renderApplications();
+
+    } catch (error) {
+        console.error("Application load error:", error);
+
+        document.getElementById("applicationList").innerHTML = `
+            <p class="empty-app-message">
+                Applications load nahi hui. Backend check karo.
+            </p>
+        `;
+    }
+}
+
+/* ================= TEST + INTERVIEW STATUS ================= */
+
+async function loadInterviewEligibility() {
+    const requests = applications.map(async app => {
+        try {
+            const response = await fetch(
+                "/api/applications/" +
+                app.id +
+                "/interview-eligibility"
+            );
+
+            if (response.ok) {
+                interviewEligibilityMap[app.id] = await response.json();
+            }
+        } catch (error) {
+            console.log("Interview eligibility load failed for application:", app.id);
+        }
+    });
+
+    await Promise.all(requests);
+}
+
+function getInterviewEligibility(appId) {
+    return interviewEligibilityMap[appId] || {
+        testTaken: false,
+        qualified: false,
+        interviewRequested: false,
+        canApplyForInterview: false
+    };
+}
+
+/* ================= STATS ================= */
+
+function updateStats() {
+    const total = applications.length;
+
+    const shortlisted = applications.filter(app =>
+        normalizeStatus(app.status) === "shortlisted"
+    ).length;
+
+    const interviews = applications.filter(app =>
+        [
+            "interview",
+            "interview requested"
+        ].includes(normalizeStatus(app.status))
+    ).length;
+
+    const offers = applications.filter(app =>
+        ["selected", "placed"].includes(normalizeStatus(app.status))
+    ).length;
+
+    document.getElementById("totalApps").innerText = total;
+    document.getElementById("shortlistedApps").innerText = shortlisted;
+    document.getElementById("interviewApps").innerText = interviews;
+    document.getElementById("offerApps").innerText = offers;
+}
+
+/* ================= APPLICATION LIST ================= */
+
+function renderApplications() {
+    const search = document.getElementById("applicationSearch").value
+        .toLowerCase()
+        .trim();
+
+    const filteredApplications = applications.filter(app => {
+        const company = String(app.companyName || "").toLowerCase();
+        const role = String(app.role || "").toLowerCase();
+        const status = String(app.status || "").toLowerCase();
+
+        return (
+            company.includes(search) ||
+            role.includes(search) ||
+            status.includes(search)
+        );
+    });
+
+    const list = document.getElementById("applicationList");
+
+    if (filteredApplications.length === 0) {
+        list.innerHTML = `
+            <p class="empty-app-message">
+                No applications found.
+            </p>
+        `;
+        return;
+    }
+
+    list.innerHTML = filteredApplications.map(app => {
+        const drive = driveMap[app.driveId];
+        const eligibility = getInterviewEligibility(app.id);
+
+        const driveDate = drive
+            ? formatDate(drive.driveDate)
+            : "Drive date not available";
+
+        const packageText = drive
+            ? formatPackage(drive.packageLpa)
+            : "Package not available";
+
+        const mode = drive
+            ? drive.mode || "Not Set"
+            : "Company Application";
+
+        return `
+            <div class="application-card">
+
+                <div>
+                    <h3>${escapeHtml(app.companyName || "Company")}</h3>
+
+                    <p>
+                        ${escapeHtml(app.role || "Role not available")}
+                        • ${packageText}
+                    </p>
+
+                    <div class="application-meta">
+                        <span class="application-tag">📅 ${driveDate}</span>
+                        <span class="application-tag">💻 ${escapeHtml(mode)}</span>
+                        ${getTestResultTag(eligibility)}
+                    </div>
+                </div>
+
+                <span class="status ${getStatusClass(app.status)}">
+                    ${escapeHtml(app.status || "Applied")}
+                </span>
+
+                <button type="button" onclick="viewApplication(${app.id})">
+                    View
+                </button>
+
+                ${getInterviewButtonMarkup(app, eligibility)}
+
+                <div
+                    class="application-details"
+                    id="details${app.id}"
+                ></div>
+
+            </div>
+        `;
+    }).join("");
+}
+
+/* ================= INTERVIEW BUTTON ================= */
+
+function getInterviewButtonMarkup(app, eligibility) {
+    if (!eligibility.testTaken) {
+        return `
+            <button
+                class="disabled-app-btn"
+                type="button"
+                disabled
+            >
+                Test Pending
+            </button>
+        `;
+    }
+
+    if (!eligibility.qualified) {
+        return `
+            <button
+                class="disabled-app-btn"
+                type="button"
+                disabled
+            >
+                Cutoff Not Cleared
+            </button>
+        `;
+    }
+
+    if (eligibility.interviewRequested) {
+        return `
+            <button
+                class="interview-requested-btn"
+                type="button"
+                disabled
+            >
+                ✅ Interview Requested
+            </button>
+        `;
+    }
+
+    return `
+        <button
+            class="interview-request-btn"
+            type="button"
+            onclick="requestInterview(${app.id})"
+        >
+            Apply for Interview
+        </button>
+    `;
+}
+
+function getTestResultTag(eligibility) {
+    if (!eligibility.testTaken) {
+        return `
+            <span class="application-tag pending-tag">
+                📝 Test Pending
+            </span>
+        `;
+    }
+
+    const percentage = Number(eligibility.percentage || 0).toFixed(2);
+
+    if (eligibility.qualified) {
+        return `
+            <span class="application-tag qualified-tag">
+                ✅ Qualified ${percentage}%
+            </span>
+        `;
+    }
+
+    return `
+        <span class="application-tag failed-tag">
+            ❌ Not Qualified ${percentage}%
+        </span>
+    `;
+}
+
+/* ================= INTERVIEW REQUEST ================= */
+
+async function requestInterview(applicationId) {
+    const confirmed = confirm(
+        "Apply for Interview?\n\nYour request will be sent to the admin."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "/api/applications/" +
+            applicationId +
+            "/request-interview/" +
+            studentId,
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            const message = await response.text();
+            throw new Error(message);
+        }
+
+        alert("✅ Interview request submitted successfully.");
+
+        await initializeApplications();
+
+    } catch (error) {
+        console.error("Interview request error:", error);
+
+        alert(
+            error.message ||
+            "Interview request submit nahi hui."
+        );
+    }
+}
+
+/* ================= VIEW DETAILS ================= */
+
+function viewApplication(applicationId) {
+    const app = applications.find(item =>
+        Number(item.id) === Number(applicationId)
+    );
+
+    if (!app) {
+        return;
+    }
+
+    const box = document.getElementById("details" + applicationId);
+
+    if (box.style.display === "block") {
+        box.style.display = "none";
+        return;
+    }
+
+    const drive = driveMap[app.driveId];
+    const eligibility = getInterviewEligibility(applicationId);
+
+    const testDetails = eligibility.testTaken
+        ? `
+            <p><b>Test Marks:</b> ${eligibility.obtainedMarks ?? 0} / ${eligibility.totalMarks ?? 0}</p>
+            <p><b>Percentage:</b> ${Number(eligibility.percentage || 0).toFixed(2)}%</p>
+            <p><b>Company Cutoff:</b> ${Number(eligibility.companyCutoff || 0).toFixed(2)}%</p>
+            <p><b>Test Result:</b> ${eligibility.qualified ? "Qualified ✅" : "Not Qualified ❌"}</p>
+        `
+        : `
+            <p><b>Aptitude Test:</b> Not completed yet.</p>
+        `;
+
+    const interviewDetails = eligibility.interviewRequested
+        ? `
+            <p><b>Interview Request:</b> Submitted to Admin ✅</p>
+        `
+        : `
+            <p><b>Interview Request:</b> Not submitted</p>
+        `;
+
+    box.innerHTML = `
+        <h4>Application Details</h4>
+
+        <p><b>Application ID:</b> ${app.id}</p>
+        <p><b>Company:</b> ${escapeHtml(app.companyName || "-")}</p>
+        <p><b>Role:</b> ${escapeHtml(app.role || "-")}</p>
+        <p><b>Status:</b> ${escapeHtml(app.status || "Applied")}</p>
+
+        ${
+            drive
+                ? `
+                    <p><b>Drive Date:</b> ${formatDate(drive.driveDate)}</p>
+                    <p><b>Last Date:</b> ${formatDate(drive.lastDate)}</p>
+                    <p><b>Package:</b> ${formatPackage(drive.packageLpa)}</p>
+                    <p><b>Mode:</b> ${escapeHtml(drive.mode || "-")}</p>
+                    <p><b>Location:</b> ${escapeHtml(drive.location || "-")}</p>
+                `
+                : ""
+        }
+
+        ${testDetails}
+        ${interviewDetails}
+    `;
+
+    box.style.display = "block";
+}
+
+/* ================= HELPERS ================= */
+
+function getStatusClass(status) {
+    const value = normalizeStatus(status);
+
+    if (
+        value === "shortlisted" ||
+        value === "selected" ||
+        value === "placed"
+    ) {
+        return "success";
+    }
+
+    if (
+        value === "interview" ||
+        value === "interview requested"
+    ) {
+        return "interview";
+    }
+
+    return "pending";
+}
+
+function normalizeStatus(status) {
+    return String(status || "Applied")
+        .toLowerCase()
+        .trim();
+}
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "Not Set";
+    }
+
+    const date = new Date(dateValue + "T00:00:00");
+
+    if (isNaN(date)) {
+        return dateValue;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function formatPackage(value) {
+    if (value === null || value === undefined || value === "") {
+        return "Package Not Set";
+    }
+
+    return value + " LPA";
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function logout() {
+    localStorage.removeItem("studentId");
+}
+
+document.getElementById("themeBtn").addEventListener("click", function() {
+    document.body.classList.toggle("light");
+});
+
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

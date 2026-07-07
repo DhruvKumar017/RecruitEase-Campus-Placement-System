@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - RecruitEase</title>
+
+    <link rel="stylesheet" href="students.css">
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="students-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+         <a class="active" href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div class="topbar-title">
+                <h1>Student Management</h1>
+                <p>Manage all registered students in your placement portal.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    id="topSearch"
+                    type="text"
+                    placeholder="Search students..."
+                    onkeyup="applyTopSearch()"
+                >
+
+                <div class="student-notification-wrapper">
+                    <button class="bell" type="button" onclick="toggleNotify()">
+                        🔔
+                        <span>3</span>
+                    </button>
+
+                    <div class="student-notify-box" id="notifyBox">
+                        <h4>Notifications</h4>
+                        <p>👨 New student registered</p>
+                        <p>📄 Resume uploaded</p>
+                        <p>🏢 Company added</p>
+                    </div>
+                </div>
+
+                <button id="studentThemeToggle" class="student-theme-btn" type="button">
+                    🌙
+                </button>
+
+                <div class="student-admin-profile">
+                    <label for="adminPhotoUpload" title="Update Admin Photo">
+                        <img
+                            id="adminPhoto"
+                            src="https://i.pravatar.cc/80?img=12"
+                            alt="Admin"
+                        >
+                    </label>
+
+                    <input type="file" id="adminPhotoUpload" accept="image/*" hidden>
+
+                    <b id="adminDisplayName">Admin</b>
+                    <span>⌄</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="page-header">
+
+            <div>
+                <h2>All Students 👥</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; All Students
+                </p>
+            </div>
+
+            <a class="add-btn" href="student-register.html">
+                ＋ Add New Student
+            </a>
+
+        </section>
+
+        <!-- ================= FILTERS ================= -->
+        <section class="filter-card">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name, email, roll no..."
+                onkeyup="renderStudents()"
+            >
+
+            <select id="branchFilter" onchange="renderStudents()">
+                <option value="">All Branches</option>
+                <option value="cse">CSE</option>
+                <option value="it">IT</option>
+                <option value="ece">ECE</option>
+            </select>
+
+            <select id="cgpaFilter" onchange="renderStudents()">
+                <option value="">All CGPA</option>
+                <option value="7">7+</option>
+                <option value="8">8+</option>
+                <option value="9">9+</option>
+            </select>
+
+            <select id="statusFilter" onchange="renderStudents()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="blocked">Blocked</option>
+            </select>
+
+            <button type="button" onclick="renderStudents()">Filter</button>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+        <section class="stats">
+
+            <div class="stat">
+                <div class="icon blue">👥</div>
+
+                <div>
+                    <p>Total Students</p>
+                    <h2 id="totalStudents">0</h2>
+                    <small>Registered Students</small>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="icon green">✅</div>
+
+                <div>
+                    <p>Active Students</p>
+                    <h2 id="activeStudents">0</h2>
+                    <small>Currently Active</small>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="icon purple">💼</div>
+
+                <div>
+                    <p>Placed Students</p>
+                    <h2>342</h2>
+                    <small>Demo Data</small>
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="icon red">🚫</div>
+
+                <div>
+                    <p>Blocked Students</p>
+                    <h2 id="blockedStudents">0</h2>
+                    <small>Restricted Accounts</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= STUDENT TABLE ================= -->
+        <section class="table-card">
+
+            <div class="table-head">
+                <h2>Student List</h2>
+                <button type="button">⬇ Export</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Roll No</th>
+                            <th>Branch</th>
+                            <th>CGPA</th>
+                            <th>Skills</th>
+                            <th>Preferred Company</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="studentTable"></tbody>
+
+                </table>
+            </div>
+
+            <div class="footer">
+                <p id="entryText">Showing 0 entries</p>
+                <p>Privacy Policy | Terms of Use</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- ================= EDIT MODAL ================= -->
+<div class="modal" id="editModal">
+
+    <div class="modal-box">
+
+        <h2>Edit Student</h2>
+
+        <input type="hidden" id="editId">
+
+        <input id="editName" placeholder="Name">
+        <input id="editEmail" placeholder="Email">
+        <input id="editRoll" placeholder="Roll Number">
+        <input id="editBranch" placeholder="Branch">
+        <input id="editCgpa" placeholder="CGPA">
+        <input id="editSkills" placeholder="Skills">
+        <input id="editCompany" placeholder="Preferred Company">
+
+        <button class="save" onclick="updateStudent()">Update</button>
+        <button class="cancel" onclick="closeEdit()">Cancel</button>
+
+    </div>
+
+</div>
+
+<script>
+
+let students = [];
+
+/* ================= STUDENT DATA ================= */
+
+function loadStudents() {
+    fetch("/api/students")
+        .then(res => res.json())
+        .then(data => {
+            students = data;
+            renderStudents();
+        })
+        .catch(error => {
+            console.error("Student load error:", error);
+        });
+}
+
+function renderStudents() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const branch = document.getElementById("branchFilter").value.toLowerCase();
+    const cgpa = document.getElementById("cgpaFilter").value;
+    const status = document.getElementById("statusFilter").value;
+
+    const filtered = students.filter(s => {
+        const matchSearch =
+            (s.name || "").toLowerCase().includes(search) ||
+            (s.email || "").toLowerCase().includes(search) ||
+            (s.rollNumber || "").toLowerCase().includes(search);
+
+        const matchBranch =
+            branch === "" ||
+            (s.branch || "").toLowerCase() === branch;
+
+        const matchCgpa =
+            cgpa === "" ||
+            Number(s.cgpa) >= Number(cgpa);
+
+        const matchStatus =
+            status === "" ||
+            (status === "active" && !s.blocked) ||
+            (status === "blocked" && s.blocked);
+
+        return matchSearch && matchBranch && matchCgpa && matchStatus;
+    });
+
+    document.getElementById("totalStudents").innerText = students.length;
+
+    document.getElementById("activeStudents").innerText =
+        students.filter(s => !s.blocked).length;
+
+    document.getElementById("blockedStudents").innerText =
+        students.filter(s => s.blocked).length;
+
+    document.getElementById("entryText").innerText =
+        `Showing 1 to ${filtered.length} of ${filtered.length} entries`;
+
+    document.getElementById("studentTable").innerHTML = filtered.map(s => `
+        <tr>
+            <td>${s.id}</td>
+
+            <td>
+                <div class="name-cell">
+                    <img
+                        class="avatar"
+                        src="/api/students/${s.id}/photo"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                        alt="Student"
+                    >
+
+                    <b>${s.name || "-"}</b>
+                </div>
+            </td>
+
+            <td>${s.email || "-"}</td>
+            <td>${s.rollNumber || "-"}</td>
+            <td>${s.branch || "-"}</td>
+            <td><span class="cgpa">${s.cgpa || "-"}</span></td>
+            <td>${s.skills || "-"}</td>
+            <td>${s.preferredCompany || "-"}</td>
+
+            <td>
+                <span class="status ${s.blocked ? "blocked-status" : ""}">
+                    ${s.blocked ? "Blocked" : "Active"}
+                </span>
+            </td>
+
+            <td class="actions">
+                <button class="view" onclick="viewStudent(${s.id})">👁</button>
+                <button class="edit" onclick='openEdit(${JSON.stringify(s)})'>✎</button>
+                <button class="block" onclick="blockStudent(${s.id})">⊘</button>
+                <button class="unblock" onclick="unblockStudent(${s.id})">🔓</button>
+                <button class="delete" onclick="deleteStudent(${s.id})">🗑</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function applyTopSearch() {
+    document.getElementById("searchInput").value =
+        document.getElementById("topSearch").value;
+
+    renderStudents();
+}
+
+function viewStudent(id) {
+    window.location.href = "student-profile.html?id=" + id;
+}
+
+function openEdit(s) {
+    document.getElementById("editModal").style.display = "grid";
+
+    editId.value = s.id;
+    editName.value = s.name || "";
+    editEmail.value = s.email || "";
+    editRoll.value = s.rollNumber || "";
+    editBranch.value = s.branch || "";
+    editCgpa.value = s.cgpa || "";
+    editSkills.value = s.skills || "";
+    editCompany.value = s.preferredCompany || "";
+}
+
+function closeEdit() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+function updateStudent() {
+    const id = editId.value;
+
+    const student = {
+        name: editName.value,
+        email: editEmail.value,
+        rollNumber: editRoll.value,
+        branch: editBranch.value,
+        cgpa: parseFloat(editCgpa.value),
+        skills: editSkills.value,
+        preferredCompany: editCompany.value
+    };
+
+    fetch(`/api/students/${id}/update`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(student)
+    }).then(() => {
+        closeEdit();
+        loadStudents();
+    });
+}
+
+function blockStudent(id) {
+    fetch(`/api/students/${id}/block`, {
+        method: "PUT"
+    }).then(loadStudents);
+}
+
+function unblockStudent(id) {
+    fetch(`/api/students/${id}/unblock`, {
+        method: "PUT"
+    }).then(loadStudents);
+}
+
+function deleteStudent(id) {
+    if (confirm("Delete this student?")) {
+        fetch(`/api/students/${id}/delete`, {
+            method: "PUT"
+        }).then(loadStudents);
+    }
+}
+
+/* ================= NOTIFICATIONS ================= */
+
+function toggleNotify() {
+    const box = document.getElementById("notifyBox");
+
+    box.style.display =
+        box.style.display === "block" ? "none" : "block";
+}
+
+/* ================= SHARED ADMIN PHOTO + NAME ================= */
+
+function loadSharedAdminProfile() {
+    const adminPhoto = document.getElementById("adminPhoto");
+    const adminDisplayName = document.getElementById("adminDisplayName");
+
+    let adminProfile = {};
+
+    try {
+        adminProfile = JSON.parse(
+            localStorage.getItem("recruiteaseAdminProfile") || "{}"
+        );
+    } catch (error) {
+        adminProfile = {};
+    }
+
+    const savedPhoto = localStorage.getItem("recruiteaseAdminPhoto");
+
+    if (savedPhoto) {
+        adminPhoto.src = savedPhoto;
+    } else {
+        adminPhoto.src = "https://i.pravatar.cc/80?img=12";
+    }
+
+    adminDisplayName.innerText = adminProfile.name || "Admin";
+}
+
+const adminPhotoUpload = document.getElementById("adminPhotoUpload");
+const adminPhoto = document.getElementById("adminPhoto");
+
+adminPhotoUpload.addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const imageData = event.target.result;
+
+        adminPhoto.src = imageData;
+
+        /* Same key used by Settings page */
+        localStorage.setItem("recruiteaseAdminPhoto", imageData);
+    };
+
+    reader.readAsDataURL(file);
+});
+
+/* Settings page me photo/name update ho to current tab bhi update ho */
+window.addEventListener("storage", function(event) {
+    if (
+        event.key === "recruiteaseAdminPhoto" ||
+        event.key === "recruiteaseAdminProfile"
+    ) {
+        loadSharedAdminProfile();
+    }
+});
+
+/* ================= STUDENT PAGE THEME ================= */
+
+const studentThemeToggle = document.getElementById("studentThemeToggle");
+
+if (localStorage.getItem("studentTheme") === "dark") {
+    document.body.classList.add("student-dark");
+    studentThemeToggle.innerText = "☀️";
+}
+
+studentThemeToggle.addEventListener("click", function() {
+    document.body.classList.toggle("student-dark");
+
+    if (document.body.classList.contains("student-dark")) {
+        localStorage.setItem("studentTheme", "dark");
+        studentThemeToggle.innerText = "☀️";
+    } else {
+        localStorage.setItem("studentTheme", "light");
+        studentThemeToggle.innerText = "🌙";
+    }
+});
+
+loadSharedAdminProfile();
+loadStudents();
+
+</script>
+
+</body>
+</html>

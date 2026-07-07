@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aptitude Tests | RecruitEase</title>
+
+<link rel="stylesheet" href="student-portal.css">
+
+<style>
+    .test-card{
+        display:flex;
+        justify-content:space-between;
+        gap:18px;
+        align-items:center;
+        padding:20px;
+        margin-top:16px;
+        border-radius:16px;
+        background:#0b1b34;
+        border:1px solid rgba(47,128,255,.18);
+    }
+
+    .test-card h3{
+        color:#ffffff;
+        font-size:18px;
+    }
+
+    .test-card p{
+        margin-top:6px;
+        color:#a9bbd3;
+        font-size:13px;
+    }
+
+    .test-meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:12px;
+    }
+
+    .test-tag{
+        padding:5px 10px;
+        border-radius:20px;
+        color:#9ec7ff;
+        background:rgba(47,128,255,.14);
+        font-size:12px;
+        font-weight:600;
+    }
+
+    .test-tag.success{
+        color:#79edb4;
+        background:rgba(22,199,132,.15);
+    }
+
+    .test-tag.warning{
+        color:#ffd27a;
+        background:rgba(255,159,28,.15);
+    }
+
+    .test-tag.failed{
+        color:#ff9aaa;
+        background:rgba(255,77,109,.15);
+    }
+
+    .start-test-btn{
+        min-width:150px;
+        min-height:44px;
+        border:none;
+        border-radius:11px;
+        cursor:pointer;
+        color:#ffffff;
+        background:linear-gradient(135deg,#1e40af,#2563eb);
+        font-size:13px;
+        font-weight:700;
+    }
+
+    .start-test-btn:hover{
+        opacity:.9;
+    }
+
+    .disabled-test-btn{
+        min-width:150px;
+        min-height:44px;
+        border:none;
+        border-radius:11px;
+        color:#c5d1e2;
+        background:#334155;
+        font-size:12px;
+        font-weight:700;
+        cursor:not-allowed;
+    }
+
+    .test-window{
+        display:none;
+        margin-top:24px;
+        padding:24px;
+        border-radius:18px;
+        background:#081528;
+        border:1px solid rgba(47,128,255,.22);
+    }
+
+    .test-window-head{
+        display:flex;
+        justify-content:space-between;
+        gap:20px;
+        align-items:flex-start;
+        padding-bottom:18px;
+        margin-bottom:20px;
+        border-bottom:1px solid rgba(255,255,255,.09);
+    }
+
+    .test-window-head h2{
+        color:#ffffff;
+        font-size:22px;
+    }
+
+    .test-window-head p{
+        margin-top:6px;
+        color:#a9bbd3;
+        font-size:13px;
+    }
+
+    .close-test-btn{
+        border:1px solid rgba(47,128,255,.3);
+        border-radius:10px;
+        padding:9px 13px;
+        background:#0a1428;
+        color:#9ec7ff;
+        font-size:13px;
+        font-weight:700;
+        cursor:pointer;
+    }
+
+    .question-box{
+        margin-top:16px;
+        padding:18px;
+        border-radius:14px;
+        background:#0a1428;
+        border:1px solid rgba(47,128,255,.14);
+    }
+
+    .question-box h3{
+        color:#ffffff;
+        font-size:16px;
+        line-height:1.6;
+    }
+
+    .question-marks{
+        display:inline-block;
+        margin-top:8px;
+        padding:4px 9px;
+        border-radius:15px;
+        background:rgba(47,128,255,.14);
+        color:#9ec7ff;
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .options-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+        margin-top:16px;
+    }
+
+    .option-label{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:12px;
+        border-radius:10px;
+        color:#d9e7fa;
+        background:#0d203d;
+        border:1px solid rgba(47,128,255,.15);
+        cursor:pointer;
+        font-size:14px;
+    }
+
+    .option-label:hover{
+        border-color:#2f80ff;
+        background:#102a50;
+    }
+
+    .submit-test-btn{
+        min-height:48px;
+        margin-top:22px;
+        padding:0 22px;
+        border:none;
+        border-radius:12px;
+        cursor:pointer;
+        color:#ffffff;
+        background:linear-gradient(135deg,#0f766e,#16c784);
+        font-size:14px;
+        font-weight:700;
+    }
+
+    .empty-test-message{
+        padding:28px;
+        text-align:center;
+        color:#a9bbd3;
+    }
+
+    .qualified-result-card{
+        display:none;
+        margin-top:24px;
+        padding:26px;
+        border-radius:18px;
+        text-align:center;
+        background:linear-gradient(
+            135deg,
+            rgba(15,118,110,.28),
+            rgba(22,199,132,.12)
+        );
+        border:1px solid rgba(22,199,132,.42);
+    }
+
+    .qualified-result-icon{
+        font-size:44px;
+    }
+
+    .qualified-result-card h2{
+        margin-top:10px;
+        color:#7af0b6;
+        font-size:24px;
+    }
+
+    .qualified-result-card p{
+        margin:10px auto 0;
+        max-width:650px;
+        color:#d5e8df;
+        line-height:1.6;
+        font-size:14px;
+    }
+
+    .qualified-actions{
+        display:flex;
+        justify-content:center;
+        gap:12px;
+        flex-wrap:wrap;
+        margin-top:20px;
+    }
+
+    .apply-interview-btn,
+    .go-interview-btn{
+        min-height:46px;
+        padding:0 18px;
+        border:none;
+        border-radius:11px;
+        cursor:pointer;
+        color:#ffffff;
+        font-size:13px;
+        font-weight:700;
+    }
+
+    .apply-interview-btn{
+        background:linear-gradient(135deg,#0f766e,#16c784);
+    }
+
+    .go-interview-btn{
+        background:linear-gradient(135deg,#1e40af,#2563eb);
+    }
+
+    .apply-interview-btn:disabled{
+        cursor:not-allowed;
+        opacity:.65;
+    }
+
+    .interview-request-message{
+        min-height:20px;
+        margin-top:14px !important;
+        color:#8ef1bd !important;
+        font-weight:700;
+    }
+
+    @media(max-width:850px){
+        .test-card{
+            flex-direction:column;
+            align-items:flex-start;
+        }
+
+        .start-test-btn,
+        .disabled-test-btn{
+            width:100%;
+        }
+
+        .options-grid{
+            grid-template-columns:1fr;
+        }
+
+        .test-window-head{
+            flex-direction:column;
+        }
+
+        .qualified-actions button{
+            width:100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="student-layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+        <p>Campus Placement System</p>
+
+        <a href="student-dashboard.html">🏠 Dashboard</a>
+        <a href="student-profile.html">👤 My Profile</a>
+        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+        <a href="student-applications.html">📄 Applications</a>
+        <a class="active" href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="student-interviews.html">🎤 Interviews</a>
+        <a href="student-resume.html">📑 Resume Builder</a>
+        <a href="student-placement-drives.html">💼 Placement Drive</a>
+        <a href="student-notifications.html">🔔 Notifications</a>
+        <a href="student-settings.html">⚙ Settings</a>
+        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+        <div class="help-card">
+            <h4>Need Help?</h4>
+            <p>Contact your TPO</p>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <input
+                id="testSearch"
+                type="text"
+                placeholder="Search scheduled tests..."
+                onkeyup="renderScheduledTests()"
+            >
+
+            <div class="top-actions">
+
+                <button id="themeBtn" type="button">🌙</button>
+
+                <div class="bell">🔔<span>3</span></div>
+
+                <div class="user-box">
+                    <img
+                        id="topPhoto"
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        alt="Student"
+                    >
+
+                    <div>
+                        <b id="topName">Student</b>
+                        <p id="topBranch">B.Tech CSE</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="details-card">
+
+            <h2>My Aptitude Tests</h2>
+
+            <div class="info-grid">
+
+                <div>
+                    <label>Scheduled Tests</label>
+                    <p id="scheduledCount">0</p>
+                </div>
+
+                <div>
+                    <label>Completed Tests</label>
+                    <p id="completedCount">0</p>
+                </div>
+
+                <div>
+                    <label>Qualified</label>
+                    <p id="qualifiedCount">0</p>
+                </div>
+
+                <div>
+                    <label>Pending Tests</label>
+                    <p id="pendingCount">0</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="details-card" style="margin-top:24px;">
+
+            <h2>Scheduled Tests</h2>
+
+            <div id="scheduledTestList">
+                <p class="empty-test-message">Loading scheduled tests...</p>
+            </div>
+
+        </section>
+
+        <section class="test-window" id="testWindow">
+
+            <div class="test-window-head">
+
+                <div>
+                    <h2 id="activeTestName">Aptitude Test</h2>
+                    <p id="activeTestInfo">Test questions will appear here.</p>
+                </div>
+
+                <button class="close-test-btn" type="button" onclick="closeTestWindow()">
+                    ✕ Close Test
+                </button>
+
+            </div>
+
+            <div id="questionContainer"></div>
+
+            <button
+                id="submitTestButton"
+                class="submit-test-btn"
+                type="button"
+                onclick="submitTest()"
+            >
+                Submit Test
+            </button>
+
+        </section>
+
+        <!-- QUALIFIED STUDENT INTERFACE -->
+        <section class="qualified-result-card" id="qualifiedResultCard">
+
+            <div class="qualified-result-icon">🎉</div>
+
+            <h2>Congratulations! You Qualified</h2>
+
+            <p id="qualifiedResultSummary"></p>
+
+            <div class="qualified-actions">
+
+                <button
+                    id="applyInterviewButton"
+                    class="apply-interview-btn"
+                    type="button"
+                    onclick="applyForInterviewFromTest()"
+                >
+                    Apply for Interview
+                </button>
+
+                <button
+                    class="go-interview-btn"
+                    type="button"
+                    onclick="goToInterviewDashboard()"
+                >
+                    Go to Interview Dashboard
+                </button>
+
+            </div>
+
+            <p
+                id="interviewRequestMessage"
+                class="interview-request-message"
+            ></p>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+const studentId = localStorage.getItem("studentId");
+
+let scheduledApplications = [];
+let resultMap = {};
+let testMap = {};
+
+let activeApplication = null;
+let activeQuestions = [];
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+} else {
+    initializeStudentTests();
+}
+
+/* ================= LOAD DATA ================= */
+
+async function initializeStudentTests() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/students/" + studentId),
+            fetch("/api/applications/student/" + studentId + "/scheduled-tests"),
+            fetch("/api/test-results/student/" + studentId),
+            fetch("/api/aptitude-tests")
+        ]);
+
+        const studentResponse = responses[0];
+        const scheduledResponse = responses[1];
+        const resultResponse = responses[2];
+        const testsResponse = responses[3];
+
+        if (!studentResponse.ok) {
+            throw new Error("Student profile not found.");
+        }
+
+        const student = await studentResponse.json();
+
+        document.getElementById("topName").innerText =
+            student.name || "Student";
+
+        document.getElementById("topBranch").innerText =
+            student.branch || "B.Tech CSE";
+
+        document.getElementById("topPhoto").src =
+            "/api/students/" + studentId + "/photo?t=" + Date.now();
+
+        if (scheduledResponse.ok) {
+            scheduledApplications = await scheduledResponse.json();
+        }
+
+        if (resultResponse.ok) {
+            const results = await resultResponse.json();
+
+            resultMap = {};
+
+            results.forEach(result => {
+                resultMap[result.applicationId] = result;
+            });
+        }
+
+        if (testsResponse.ok) {
+            const tests = await testsResponse.json();
+
+            testMap = {};
+
+            tests.forEach(test => {
+                testMap[test.id] = test;
+            });
+        }
+
+        scheduledApplications.sort((a, b) =>
+            Number(b.id) - Number(a.id)
+        );
+
+        updateTestStats();
+        renderScheduledTests();
+
+    } catch (error) {
+        console.error("Student tests load error:", error);
+
+        document.getElementById("scheduledTestList").innerHTML = `
+            <p class="empty-test-message">
+                Scheduled tests load nahi ho rahe. Backend check karo.
+            </p>
+        `;
+    }
+}
+
+/* ================= TIME VALIDATION ================= */
+
+function normalizeTime(timeValue) {
+    if (!timeValue) {
+        return "";
+    }
+
+    const cleanTime = String(timeValue).trim();
+
+    return cleanTime.length === 5
+        ? cleanTime + ":00"
+        : cleanTime;
+}
+
+function getTestWindowStatus(app) {
+    if (!app.testDate || !app.testStartTime || !app.testEndTime) {
+        return {
+            canStart: false,
+            message: "Test timing not set"
+        };
+    }
+
+    const startDateTime = new Date(
+        `${app.testDate}T${normalizeTime(app.testStartTime)}`
+    );
+
+    const endDateTime = new Date(
+        `${app.testDate}T${normalizeTime(app.testEndTime)}`
+    );
+
+    const now = new Date();
+
+    if (
+        Number.isNaN(startDateTime.getTime()) ||
+        Number.isNaN(endDateTime.getTime())
+    ) {
+        return {
+            canStart: false,
+            message: "Invalid test schedule"
+        };
+    }
+
+    if (now < startDateTime) {
+        return {
+            canStart: false,
+            message: `Starts ${formatDate(app.testDate)} • ${formatTime(app.testStartTime)}`
+        };
+    }
+
+    if (now > endDateTime) {
+        return {
+            canStart: false,
+            message: "Test time expired"
+        };
+    }
+
+    return {
+        canStart: true,
+        message: "Test available now"
+    };
+}
+
+function getTestButtonMarkup(app, result) {
+    if (result) {
+        return `
+            <button class="disabled-test-btn" disabled>
+                Test Completed
+            </button>
+        `;
+    }
+
+    const testWindow = getTestWindowStatus(app);
+
+    if (!testWindow.canStart) {
+        return `
+            <button class="disabled-test-btn" disabled>
+                ${escapeHtml(testWindow.message)}
+            </button>
+        `;
+    }
+
+    return `
+        <button
+            class="start-test-btn"
+            type="button"
+            onclick="startTest(${app.id})"
+        >
+            Start Test
+        </button>
+    `;
+}
+
+/* ================= STATS ================= */
+
+function updateTestStats() {
+    const completed = scheduledApplications.filter(app =>
+        Boolean(resultMap[app.id])
+    ).length;
+
+    const qualified = scheduledApplications.filter(app => {
+        const result = resultMap[app.id];
+
+        return result &&
+            String(result.status || "").toLowerCase() === "qualified";
+    }).length;
+
+    document.getElementById("scheduledCount").innerText =
+        scheduledApplications.length;
+
+    document.getElementById("completedCount").innerText =
+        completed;
+
+    document.getElementById("qualifiedCount").innerText =
+        qualified;
+
+    document.getElementById("pendingCount").innerText =
+        scheduledApplications.length - completed;
+}
+
+/* ================= RENDER TEST LIST ================= */
+
+function renderScheduledTests() {
+    const search = document.getElementById("testSearch").value
+        .toLowerCase()
+        .trim();
+
+    const filteredTests = scheduledApplications.filter(app => {
+        const test = testMap[app.testId] || {};
+
+        const testName = String(test.testName || "").toLowerCase();
+        const companyName = String(app.companyName || "").toLowerCase();
+        const role = String(app.role || "").toLowerCase();
+        const testId = String(app.testId || "").toLowerCase();
+
+        return (
+            testName.includes(search) ||
+            companyName.includes(search) ||
+            role.includes(search) ||
+            testId.includes(search)
+        );
+    });
+
+    const container = document.getElementById("scheduledTestList");
+
+    if (filteredTests.length === 0) {
+        container.innerHTML = `
+            <p class="empty-test-message">
+                No scheduled tests found.
+            </p>
+        `;
+        return;
+    }
+
+    container.innerHTML = filteredTests.map(app => {
+        const test = testMap[app.testId] || {};
+        const result = resultMap[app.id];
+
+        const testName =
+            test.testName || `Test ID ${app.testId}`;
+
+        const duration =
+            test.duration
+                ? `${test.duration} min`
+                : "Duration not set";
+
+        const resultTag = getResultTag(result);
+
+        return `
+            <div class="test-card">
+
+                <div>
+                    <h3>${escapeHtml(testName)}</h3>
+
+                    <p>
+                        ${escapeHtml(app.companyName || "Company")}
+                        • ${escapeHtml(app.role || "Role")}
+                    </p>
+
+                    <div class="test-meta">
+
+                        <span class="test-tag">
+                            Assigned Test ID: ${app.testId}
+                        </span>
+
+                        <span class="test-tag">
+                            Application ID: ${app.id}
+                        </span>
+
+                        <span class="test-tag">
+                            📅 ${formatDate(app.testDate)}
+                        </span>
+
+                        <span class="test-tag">
+                            ⏰ ${formatTime(app.testStartTime)}
+                            - ${formatTime(app.testEndTime)}
+                        </span>
+
+                        <span class="test-tag">
+                            ⌛ ${duration}
+                        </span>
+
+                        ${resultTag}
+
+                    </div>
+                </div>
+
+                ${getTestButtonMarkup(app, result)}
+
+            </div>
+        `;
+    }).join("");
+}
+
+function getResultTag(result) {
+    if (!result) {
+        return `
+            <span class="test-tag warning">
+                📝 Not Attempted
+            </span>
+        `;
+    }
+
+    const percentage = Number(result.percentage || 0).toFixed(2);
+
+    if (String(result.status || "").toLowerCase() === "qualified") {
+        return `
+            <span class="test-tag success">
+                ✅ Qualified ${percentage}%
+            </span>
+        `;
+    }
+
+    return `
+        <span class="test-tag failed">
+            ❌ Not Qualified ${percentage}%
+        </span>
+    `;
+}
+
+/* ================= START TEST ================= */
+
+async function startTest(applicationId) {
+    const application = scheduledApplications.find(app =>
+        Number(app.id) === Number(applicationId)
+    );
+
+    if (!application) {
+        alert("Scheduled test not found.");
+        return;
+    }
+
+    const testWindow = getTestWindowStatus(application);
+
+    if (!testWindow.canStart) {
+        alert(testWindow.message);
+        renderScheduledTests();
+        return;
+    }
+
+    if (!application.testId) {
+        alert("Test ID is not assigned for this application.");
+        return;
+    }
+
+    hideQualifiedResult();
+
+    try {
+        const response = await fetch(
+            "/api/test-questions/student/" + application.testId
+        );
+
+        if (!response.ok) {
+            throw new Error("Questions load nahi hue.");
+        }
+
+        const questions = await response.json();
+
+        if (questions.length === 0) {
+            alert(
+                "Is Test ID ke questions abhi add nahi hue.\n\n" +
+                "Admin ko Test ID " + application.testId +
+                " par Manage Questions se MCQ add karne hain."
+            );
+            return;
+        }
+
+        activeApplication = application;
+        activeQuestions = questions;
+
+        const test = testMap[application.testId] || {};
+
+        document.getElementById("activeTestName").innerText =
+            test.testName || `Test ID ${application.testId}`;
+
+        document.getElementById("activeTestInfo").innerText =
+            `Assigned Test ID: ${application.testId} • ` +
+            `${application.companyName || "Company"} • ` +
+            `${questions.length} Questions`;
+
+        renderQuestions();
+
+        document.getElementById("testWindow").style.display = "block";
+
+        document.getElementById("testWindow").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    } catch (error) {
+        console.error("Questions load error:", error);
+        alert(error.message || "Questions load nahi ho rahe.");
+    }
+}
+
+/* ================= QUESTIONS ================= */
+
+function renderQuestions() {
+    const container = document.getElementById("questionContainer");
+
+    container.innerHTML = activeQuestions.map((question, index) => `
+        <div class="question-box">
+
+            <h3>
+                Q${index + 1}. ${escapeHtml(question.question)}
+            </h3>
+
+            <span class="question-marks">
+                ${question.marks || 1} Mark${Number(question.marks || 1) > 1 ? "s" : ""}
+            </span>
+
+            <div class="options-grid">
+
+                ${renderOption(question.id, "A", question.optionA)}
+                ${renderOption(question.id, "B", question.optionB)}
+                ${renderOption(question.id, "C", question.optionC)}
+                ${renderOption(question.id, "D", question.optionD)}
+
+            </div>
+
+        </div>
+    `).join("");
+}
+
+function renderOption(questionId, optionCode, optionText) {
+    return `
+        <label class="option-label">
+            <input
+                type="radio"
+                name="question_${questionId}"
+                value="${optionCode}"
+            >
+
+            <span>
+                <b>${optionCode}.</b>
+                ${escapeHtml(optionText)}
+            </span>
+        </label>
+    `;
+}
+
+/* ================= SUBMIT TEST ================= */
+
+async function submitTest() {
+    if (!activeApplication || activeQuestions.length === 0) {
+        alert("No active test found.");
+        return;
+    }
+
+    const testWindow = getTestWindowStatus(activeApplication);
+
+    if (!testWindow.canStart) {
+        alert(testWindow.message);
+        closeTestWindow();
+        renderScheduledTests();
+        return;
+    }
+
+    const answers = {};
+
+    for (const question of activeQuestions) {
+        const selected = document.querySelector(
+            `input[name="question_${question.id}"]:checked`
+        );
+
+        if (!selected) {
+            alert("Please answer all questions before submitting.");
+            return;
+        }
+
+        answers[question.id] = selected.value;
+    }
+
+    if (!confirm("Submit aptitude test?\n\nYou cannot change answers after submission.")) {
+        return;
+    }
+
+    const submitButton = document.getElementById("submitTestButton");
+
+    submitButton.disabled = true;
+    submitButton.innerText = "Submitting...";
+
+    const completedApplication = activeApplication;
+
+    try {
+        const payload = {
+            studentId: Number(studentId),
+            applicationId: Number(completedApplication.id),
+            testId: Number(completedApplication.testId),
+            companyId: Number(completedApplication.companyId),
+            answers: answers
+        };
+
+        const response = await fetch("/api/test-results/submit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        const result = await response.json();
+
+        closeTestWindow();
+        await initializeStudentTests();
+
+        const qualified =
+            String(result.status || "")
+                .trim()
+                .toLowerCase() === "qualified";
+
+        if (qualified) {
+            showQualifiedResult(result, completedApplication);
+            return;
+        }
+
+        alert(
+            "Test submitted successfully.\n\n" +
+            `Marks: ${result.obtainedMarks} / ${result.totalMarks}\n` +
+            `Percentage: ${Number(result.percentage || 0).toFixed(2)}%\n` +
+            `Result: ${result.status}`
+        );
+
+    } catch (error) {
+        console.error("Test submit error:", error);
+        alert(error.message || "Test submit nahi hua.");
+
+    } finally {
+        submitButton.disabled = false;
+        submitButton.innerText = "Submit Test";
+    }
+}
+
+/* ================= QUALIFIED INTERFACE ================= */
+
+function showQualifiedResult(result, application) {
+    const card = document.getElementById("qualifiedResultCard");
+
+    const percentage = Number(result.percentage || 0).toFixed(2);
+
+    card.dataset.applicationId = application.id;
+
+    document.getElementById("qualifiedResultSummary").innerText =
+        `You cleared the aptitude test for ${application.companyName || "the company"}. ` +
+        `Marks: ${result.obtainedMarks || 0} / ${result.totalMarks || 0} • ` +
+        `Percentage: ${percentage}%`;
+
+    document.getElementById("applyInterviewButton").disabled = false;
+    document.getElementById("applyInterviewButton").innerText =
+        "Apply for Interview";
+
+    document.getElementById("interviewRequestMessage").innerText = "";
+
+    card.style.display = "block";
+
+    card.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+function hideQualifiedResult() {
+    const card = document.getElementById("qualifiedResultCard");
+
+    card.style.display = "none";
+    card.dataset.applicationId = "";
+
+    document.getElementById("interviewRequestMessage").innerText = "";
+}
+
+async function applyForInterviewFromTest() {
+    const card = document.getElementById("qualifiedResultCard");
+
+    const applicationId = card.dataset.applicationId;
+
+    if (!applicationId) {
+        alert("Application details not found.");
+        return;
+    }
+
+    const applyButton = document.getElementById("applyInterviewButton");
+
+    applyButton.disabled = true;
+    applyButton.innerText = "Submitting Request...";
+
+    try {
+        const response = await fetch(
+            `/api/applications/${applicationId}/request-interview/${studentId}`,
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        applyButton.innerText = "Interview Request Submitted";
+
+        document.getElementById("interviewRequestMessage").innerText =
+            "✅ Interview request submitted successfully. Admin will review it.";
+
+        await initializeStudentTests();
+
+    } catch (error) {
+        console.error("Interview request error:", error);
+
+        applyButton.disabled = false;
+        applyButton.innerText = "Apply for Interview";
+
+        alert(error.message || "Interview request submit nahi hua.");
+    }
+}
+
+function goToInterviewDashboard() {
+    window.location.href = "student-interviews.html";
+}
+
+/* ================= HELPERS ================= */
+
+function closeTestWindow() {
+    document.getElementById("testWindow").style.display = "none";
+    document.getElementById("questionContainer").innerHTML = "";
+
+    activeApplication = null;
+    activeQuestions = [];
+}
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "Date Not Set";
+    }
+
+    const date = new Date(dateValue + "T00:00:00");
+
+    if (Number.isNaN(date.getTime())) {
+        return dateValue;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function formatTime(timeValue) {
+    if (!timeValue) {
+        return "-";
+    }
+
+    const time = normalizeTime(timeValue);
+
+    const date = new Date("2000-01-01T" + time);
+
+    if (Number.isNaN(date.getTime())) {
+        return timeValue;
+    }
+
+    return date.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    });
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function logout() {
+    localStorage.removeItem("studentId");
+}
+
+document.getElementById("themeBtn").addEventListener("click", function() {
+    document.body.classList.toggle("light");
+});
+
+/* Check scheduled window every 30 seconds */
+setInterval(() => {
+    renderScheduledTests();
+
+    if (activeApplication) {
+        const testWindow = getTestWindowStatus(activeApplication);
+
+        if (!testWindow.canStart) {
+            closeTestWindow();
+            alert(testWindow.message);
+        }
+    }
+}, 30000);
+
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

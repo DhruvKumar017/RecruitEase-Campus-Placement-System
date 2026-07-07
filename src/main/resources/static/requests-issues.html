@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests & Issues - RecruitEase</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:
+                radial-gradient(circle at 78% 10%,rgba(47,128,255,.14),transparent 28%),
+                radial-gradient(circle at 15% 90%,rgba(124,58,237,.14),transparent 30%),
+                #050816;
+            color:#ffffff;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        .sidebar{
+            position:fixed;
+            top:0;
+            left:0;
+            bottom:0;
+            width:260px;
+            padding:26px 18px;
+            background:linear-gradient(180deg,#06182f,#04101f);
+            border-right:1px solid rgba(47,128,255,.18);
+        }
+
+        .brand{
+            margin-bottom:30px;
+            font-size:27px;
+            font-weight:800;
+        }
+
+        .brand span{
+            color:#2f80ff;
+        }
+
+        .sidebar a{
+            display:block;
+            margin:6px 0;
+            padding:12px 14px;
+            border-radius:12px;
+            color:#dbeafe;
+            text-decoration:none;
+            font-size:14px;
+            transition:.25s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active{
+            background:rgba(47,128,255,.16);
+            color:#ffffff;
+            transform:translateX(5px);
+        }
+
+        .main{
+            width:calc(100% - 260px);
+            margin-left:260px;
+            padding:38px;
+        }
+
+        .page-head h1{
+            font-size:32px;
+            margin-bottom:8px;
+        }
+
+        .page-head p{
+            color:#aebbd1;
+            font-size:15px;
+        }
+
+        .request-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:24px;
+            max-width:1050px;
+            margin-top:34px;
+        }
+
+        .request-card{
+            position:relative;
+            min-height:300px;
+            padding:30px;
+            overflow:hidden;
+            border:1px solid rgba(96,165,250,.22);
+            border-radius:22px;
+            background:rgba(11,23,48,.92);
+            text-decoration:none;
+            color:#ffffff;
+            transition:.28s;
+        }
+
+        .request-card:hover{
+            transform:translateY(-9px);
+            border-color:rgba(90,154,255,.72);
+            box-shadow:
+                0 24px 42px rgba(0,0,0,.30),
+                0 0 26px rgba(47,128,255,.18);
+        }
+
+        .request-card::after{
+            content:"";
+            position:absolute;
+            width:190px;
+            height:190px;
+            right:-65px;
+            bottom:-80px;
+            border:1px solid rgba(124,58,237,.30);
+            border-radius:50%;
+        }
+
+        .card-icon{
+            width:74px;
+            height:74px;
+            display:grid;
+            place-items:center;
+            border-radius:20px;
+            font-size:35px;
+            background:linear-gradient(135deg,rgba(37,99,235,.45),rgba(124,58,237,.35));
+            box-shadow:0 12px 28px rgba(37,99,235,.20);
+        }
+
+        .request-card h2{
+            margin-top:24px;
+            font-size:24px;
+        }
+
+        .request-card p{
+            margin-top:11px;
+            max-width:390px;
+            color:#b8c7df;
+            font-size:14px;
+            line-height:1.7;
+        }
+
+        .open-link{
+            display:inline-block;
+            margin-top:25px;
+            color:#70b3ff;
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .admin-card .card-icon{
+            background:linear-gradient(135deg,rgba(79,70,229,.48),rgba(168,85,247,.35));
+        }
+
+        .student-card .card-icon{
+            background:linear-gradient(135deg,rgba(14,165,233,.42),rgba(34,197,94,.30));
+        }
+
+        @media(max-width:900px){
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                min-height:auto;
+            }
+
+            .main{
+                width:100%;
+                margin-left:0;
+                padding:28px 18px;
+            }
+
+            .request-grid{
+                grid-template-columns:1fr;
+            }
+        }
+    </style>
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+        <a href="students.html">👥 All Students</a>
+        <a href="companies.html">🏢 Companies</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a class="active" href="requests-issues.html">
+            🛟 Requests & Issues
+        </a>
+        <p class="menu-title">SYSTEM</p>
+        <a class="active" href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <section class="page-head">
+            <h1>🛟 Requests & Issues</h1>
+            <p>
+                Manage new admin access requests and student support issues
+                from one place.
+            </p>
+        </section>
+
+        <section class="request-grid">
+
+            <a class="request-card admin-card" href="admin-requests.html">
+                <div class="card-icon">🛡️</div>
+
+                <h2>Admin Access Requests</h2>
+
+                <p>
+                    Check requests from new admins. Approve verified staff
+                    members or reject invalid access requests.
+                </p>
+
+                <span class="open-link">Open Admin Requests →</span>
+            </a>
+
+            <a class="request-card student-card" href="student-issues.html">
+                <div class="card-icon">🧑‍🎓</div>
+
+                <h2>Student Issues</h2>
+
+                <p>
+                    View login problems, registration issues, application
+                    queries and other support requests submitted by students.
+                </p>
+
+                <span class="open-link">Open Student Issues →</span>
+            </a>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notifications | RecruitEase</title>
+<link rel="stylesheet" href="student-portal.css">
+</head>
+
+<body>
+<div class="student-layout">
+
+<aside class="sidebar">
+    <div class="brand">🎓 Recruit<span>Ease</span></div>
+    <p>Campus Placement System</p>
+
+    <a href="student-dashboard.html">🏠 Dashboard</a>
+    <a href="student-profile.html">👤 My Profile</a>
+    <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+    <a href="student-applications.html">📄 Applications</a>
+    <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="student-interviews.html">🎤 Interviews</a>
+    <a href="student-resume.html">📑 Resume Builder</a>
+    <a href="student-placement-drives.html">💼 Placement Drive</a>
+    <a class="active" href="student-notifications.html">🔔 Notifications</a>
+    <a href="student-settings.html">⚙ Settings</a>
+    <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+    <div class="help-card">
+        <h4>Need Help?</h4>
+        <p>Contact your TPO</p>
+    </div>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <input type="text" id="search" placeholder="Search notifications..." onkeyup="renderNotifications()">
+
+    <div class="top-actions">
+        <button>🌙</button>
+        <div class="bell">🔔<span id="notifyCount">5</span></div>
+
+        <div class="user-box">
+            <img id="topPhoto">
+            <div>
+                <b id="topName">Student</b>
+                <p id="topBranch">B.Tech CSE</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="details-card">
+    <h2>Notifications</h2>
+
+    <div class="info-grid">
+        <div><label>Total</label><p id="totalNotify">0</p></div>
+        <div><label>Unread</label><p id="unreadNotify">0</p></div>
+        <div><label>Placement</label><p>3</p></div>
+        <div><label>System</label><p>2</p></div>
+    </div>
+</section>
+
+<section class="details-card" style="margin-top:24px;">
+    <h2>Recent Updates</h2>
+    <div id="notificationList" class="application-list"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+
+if(!studentId){
+    window.location.href = "student-login.html";
+}
+
+function logout(){
+    localStorage.removeItem("studentId");
+}
+
+let notifications = [
+    {id:1, icon:"🏢", title:"TCS Drive Added", msg:"New Software Engineer drive is open for eligible students.", type:"Placement", status:"Unread"},
+    {id:2, icon:"📄", title:"Resume Reminder", msg:"Upload your latest resume before applying to companies.", type:"System", status:"Unread"},
+    {id:3, icon:"🎤", title:"Interview Scheduled", msg:"Your Infosys HR interview is scheduled for 24 May.", type:"Interview", status:"Read"},
+    {id:4, icon:"✅", title:"Application Shortlisted", msg:"You have been shortlisted for Wipro technical round.", type:"Placement", status:"Unread"},
+    {id:5, icon:"🧠", title:"Aptitude Test", msg:"TCS NQT practice test is available now.", type:"Test", status:"Read"}
+];
+
+function renderNotifications(){
+    const search = document.getElementById("search").value.toLowerCase();
+    const list = document.getElementById("notificationList");
+
+    let filtered = notifications.filter(n =>
+        n.title.toLowerCase().includes(search) ||
+        n.msg.toLowerCase().includes(search) ||
+        n.type.toLowerCase().includes(search)
+    );
+
+    document.getElementById("totalNotify").innerText = filtered.length;
+    document.getElementById("unreadNotify").innerText =
+        filtered.filter(n => n.status === "Unread").length;
+    document.getElementById("notifyCount").innerText =
+        notifications.filter(n => n.status === "Unread").length;
+
+    list.innerHTML = filtered.map(n => `
+        <div class="application-card">
+            <div>
+                <h3>${n.icon} ${n.title}</h3>
+                <p>${n.msg}</p>
+            </div>
+
+            <span class="status ${n.status === "Unread" ? "pending" : "success"}">
+                ${n.status}
+            </span>
+
+            <button onclick="markRead(${n.id})">Mark Read</button>
+        </div>
+    `).join("");
+}
+
+function markRead(id){
+    notifications = notifications.map(n =>
+        n.id === id ? {...n, status:"Read"} : n
+    );
+    renderNotifications();
+}
+
+fetch("/api/students/" + studentId)
+.then(res => res.json())
+.then(s => {
+    document.getElementById("topName").innerText = s.name;
+    document.getElementById("topBranch").innerText = s.branch;
+    document.getElementById("topPhoto").src =
+        "/api/students/" + studentId + "/photo?t=" + Date.now();
+});
+
+renderNotifications();
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

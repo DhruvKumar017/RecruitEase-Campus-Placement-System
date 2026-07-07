@@ -1,0 +1,192 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+.student-unified-sidebar{
+    width:265px;
+    min-height:100vh;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    z-index:50;
+
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+
+    padding:22px 17px;
+
+    background:linear-gradient(180deg,#06182f,#04101f);
+    border-right:1px solid rgba(47,128,255,.20);
+    font-family:"Poppins",sans-serif;
+}
+
+.student-unified-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:0 8px 20px;
+    border-bottom:1px solid rgba(255,255,255,.09);
+}
+
+.student-unified-brand-icon{
+    font-size:28px;
+}
+
+.student-unified-brand h2{
+    margin:0;
+    color:#ffffff;
+    font-size:25px;
+    font-weight:800;
+}
+
+.student-unified-brand h2 span{
+    color:#2f80ff;
+}
+
+.student-unified-brand p{
+    margin:2px 0 0;
+    color:#bfd0e8;
+    font-size:11px;
+}
+
+.student-unified-user{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    margin:20px 4px;
+}
+
+.student-unified-user img{
+    width:55px;
+    height:55px;
+    object-fit:cover;
+
+    border:2px solid #2f80ff;
+    border-radius:50%;
+    background:#19365d;
+}
+
+.student-unified-user b{
+    display:block;
+    color:#ffffff;
+    font-size:13px;
+}
+
+.student-unified-user p{
+    margin:4px 0 0;
+    color:#9fb0c7;
+    font-size:11px;
+}
+
+.student-unified-title{
+    margin:12px 8px 8px;
+    color:#8398b5;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.student-unified-sidebar a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    margin:3px 0;
+    padding:10px 13px;
+
+    border-radius:11px;
+
+    color:#d9e5f7;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:500;
+    transition:.2s;
+}
+
+.student-unified-sidebar a:hover,
+.student-unified-sidebar a.active{
+    color:#ffffff;
+    background:linear-gradient(135deg,#1e40af,#2563eb);
+    box-shadow:0 9px 20px rgba(37,99,235,.25);
+}
+
+.student-unified-help{
+    margin-top:auto;
+    padding:15px;
+
+    border:1px solid rgba(47,128,255,.28);
+    border-radius:15px;
+    background:rgba(47,128,255,.08);
+}
+
+.student-unified-help h4{
+    margin:0;
+    color:#ffffff;
+    font-size:14px;
+}
+
+.student-unified-help p{
+    margin:5px 0 0;
+    color:#b5c6dc;
+    font-size:11px;
+    line-height:1.55;
+}
+
+/* Har student page ka main content same sidebar width ke hisaab se align hoga */
+
+body .main,
+body .profile-main,
+body .student-settings-main{
+    margin-left:265px !important;
+    width:calc(100% - 265px) !important;
+}
+
+/* Light mode support */
+
+body.student-light-profile .student-unified-sidebar,
+body.student-light-theme .student-unified-sidebar,
+body.light .student-unified-sidebar{
+    background:linear-gradient(180deg,#e0efff,#c9deff);
+    border-right-color:#c7dbf5;
+}
+
+body.student-light-profile .student-unified-brand h2,
+body.student-light-theme .student-unified-brand h2,
+body.light .student-unified-brand h2,
+body.student-light-profile .student-unified-user b,
+body.student-light-theme .student-unified-user b,
+body.light .student-unified-user b{
+    color:#10213b;
+}
+
+body.student-light-profile .student-unified-sidebar a,
+body.student-light-theme .student-unified-sidebar a,
+body.light .student-unified-sidebar a{
+    color:#29435f;
+}
+
+body.student-light-profile .student-unified-sidebar a.active,
+body.student-light-profile .student-unified-sidebar a:hover,
+body.student-light-theme .student-unified-sidebar a.active,
+body.student-light-theme .student-unified-sidebar a:hover,
+body.light .student-unified-sidebar a.active,
+body.light .student-unified-sidebar a:hover{
+    color:#ffffff;
+}
+
+@media(max-width:900px){
+    .student-unified-sidebar{
+        width:100%;
+        min-height:auto;
+        position:relative;
+    }
+
+    body .main,
+    body .profile-main,
+    body .student-settings-main{
+        width:100% !important;
+        margin-left:0 !important;
+    }
+}

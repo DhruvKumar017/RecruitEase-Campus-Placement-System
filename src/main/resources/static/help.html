@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support - RecruitEase</title>
+
+    <link rel="stylesheet" href="help.css">
+</head>
+
+<body>
+
+<div class="help-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html">↪ Logout</a>
+
+        <a href="help.html" class="help-card active">
+            <h4>🛡️ Need Help?</h4>
+            <p>Get support, FAQs and quick guides.</p>
+        </a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Help & Support 🛟</h1>
+                <p>We are here to help you 24/7. Find answers or reach out to us.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    id="helpSearch"
+                    type="text"
+                    placeholder="Search for help articles..."
+                    onkeyup="searchHelp()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>5</span>
+                </button>
+
+                <div class="admin-profile">
+                    <img src="https://i.pravatar.cc/80?img=12" alt="Admin">
+                    <b>Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="help-content-grid">
+
+            <!-- ================= LEFT CONTENT ================= -->
+            <div class="left-content">
+
+                <!-- ================= HELP CATEGORIES ================= -->
+                <section class="help-panel">
+
+                    <h2>How can we help you?</h2>
+
+                    <div class="category-grid">
+
+                        <div class="category-card" onclick="openCategory('student')">
+                            <div class="category-icon category-blue">🎓</div>
+                            <h3>For Students</h3>
+                            <p>Application, tests, drives and placement help.</p>
+                            <span class="category-arrow">→</span>
+                        </div>
+
+                        <div class="category-card green" onclick="openCategory('admin')">
+                            <div class="category-icon category-green">🖥️</div>
+                            <h3>For Admins</h3>
+                            <p>Manage users, companies, drives and settings.</p>
+                            <span class="category-arrow">→</span>
+                        </div>
+
+                        <div class="category-card purple" onclick="openCategory('placement')">
+                            <div class="category-icon category-purple">🏢</div>
+                            <h3>Placement Cell</h3>
+                            <p>Information for placement cell and coordinators.</p>
+                            <span class="category-arrow">→</span>
+                        </div>
+
+                        <div class="category-card orange" onclick="openCategory('general')">
+                            <div class="category-icon category-orange">❓</div>
+                            <h3>General Help</h3>
+                            <p>General queries and frequently asked questions.</p>
+                            <span class="category-arrow">→</span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ================= FAQs ================= -->
+                <section class="help-panel" id="faqSection">
+
+                    <div class="faq-header">
+                        <h3>Frequently Asked Questions</h3>
+
+                        <button class="faq-link" type="button" onclick="openAllFaqs()">
+                            View All FAQs →
+                        </button>
+                    </div>
+
+                    <div class="faq-row">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span>How do I apply for a placement drive?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+
+                        <div class="faq-answer">
+                            Open the student dashboard, go to Eligible Companies or Placement Drives,
+                            select a company and click the Apply button. Your application status will
+                            appear in the Applications section.
+                        </div>
+                    </div>
+
+                    <div class="faq-row">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span>How can I update my profile information?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+
+                        <div class="faq-answer">
+                            Open your student profile page, click Edit Profile, update your personal,
+                            academic or skill information and save the changes.
+                        </div>
+                    </div>
+
+                    <div class="faq-row">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span>How do aptitude tests work?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+
+                        <div class="faq-answer">
+                            When the admin schedules an aptitude test, eligible students receive access
+                            according to the test date and time. Submit answers before the timer ends.
+                        </div>
+                    </div>
+
+                    <div class="faq-row">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span>How will I know if I am shortlisted?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+
+                        <div class="faq-answer">
+                            Your application status will change to Shortlisted, Selected or Rejected.
+                            You can check this from the Applications section of your dashboard.
+                        </div>
+                    </div>
+
+                    <div class="faq-row">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span>How can I reset my password?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+
+                        <div class="faq-answer">
+                            Contact the placement administrator or use the password reset option
+                            when it is enabled on the login page.
+                        </div>
+                    </div>
+
+                    <div class="faq-row">
+                        <button class="faq-question" type="button" onclick="toggleFaq(this)">
+                            <span>Whom should I contact for placement related queries?</span>
+                            <span class="faq-toggle">+</span>
+                        </button>
+
+                        <div class="faq-answer">
+                            Contact the Placement Cell through the phone number or email shown
+                            in the Contact Placement Cell card on this page.
+                        </div>
+                    </div>
+
+                    <div class="search-empty" id="searchEmpty">
+                        No FAQ found for this search.
+                    </div>
+
+                </section>
+
+                <!-- ================= STILL HAVE QUESTIONS ================= -->
+                <section class="help-panel">
+
+                    <div class="support-question-box">
+
+                        <div>
+                            <h3>Still have questions?</h3>
+
+                            <p>
+                                Check the FAQs above or send a support request.
+                                The placement support team will review your query.
+                            </p>
+
+                            <br>
+
+                            <button class="primary-btn" type="button" onclick="scrollToIssueForm()">
+                                ✉ Contact Support
+                            </button>
+                        </div>
+
+                        <div class="question-illustration">
+                            <div class="big-question">?</div>
+                            <h4>Need more support?</h4>
+                            <p>Describe your issue and submit a support ticket.</p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ================= REPORT ISSUE ================= -->
+                <section class="help-panel" id="issueFormSection">
+
+                    <h3>Report an Issue</h3>
+                    <p>Facing an issue? Tell us and we will review it as soon as possible.</p>
+
+                    <div class="issue-grid">
+
+                        <input id="ticketName" type="text" placeholder="👤 Your Name">
+
+                        <input id="ticketEmail" type="email" placeholder="✉ Your Email">
+
+                        <select id="ticketCategory">
+                            <option value="">Select Issue Category</option>
+                            <option value="Login Issue">Login Issue</option>
+                            <option value="Student Profile">Student Profile</option>
+                            <option value="Company / Drive">Company / Drive</option>
+                            <option value="Application Status">Application Status</option>
+                            <option value="Aptitude Test">Aptitude Test</option>
+                            <option value="Settings">Settings</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <textarea
+                            class="full-width"
+                            id="ticketDescription"
+                            placeholder="✎ Describe your issue in detail..."
+                        ></textarea>
+
+                    </div>
+
+                    <div class="issue-actions">
+                        <button class="primary-btn" type="button" onclick="submitTicket()">
+                            ✈ Submit Ticket
+                        </button>
+
+                        <span class="issue-note">
+                            Support tickets are saved in this browser demo.
+                        </span>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- ================= RIGHT CONTENT ================= -->
+            <aside class="right-content">
+
+                <section class="side-card">
+
+                    <h3>🎧 Contact Placement Cell</h3>
+
+                    <p>Reach out to the placement cell for any assistance.</p>
+
+                    <div class="contact-row">
+                        <span>☎</span>
+                        <span>+91 98765 43210</span>
+                    </div>
+
+                    <div class="contact-row">
+                        <span>✉</span>
+                        <span>placement@recruitease.com</span>
+                    </div>
+
+                    <div class="contact-row">
+                        <span>📍</span>
+                        <span>RecruitEase Institute of Technology, Noida, Uttar Pradesh - 201301</span>
+                    </div>
+
+                    <div class="contact-row">
+                        <span>◷</span>
+                        <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+                    </div>
+
+                    <button class="outline-btn" type="button" onclick="sendSupportEmail()">
+                        ✉ Send Email
+                    </button>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>📖 Quick Guides</h3>
+
+                    <p>Step-by-step guides for common tasks.</p>
+
+                    <button class="guide-row" type="button" onclick="showGuide('Apply for a Drive')">
+                        <span>📄 How to Apply for a Drive</span>
+                        <span>›</span>
+                    </button>
+
+                    <button class="guide-row" type="button" onclick="showGuide('Take Aptitude Test')">
+                        <span>📄 How to Take Aptitude Test</span>
+                        <span>›</span>
+                    </button>
+
+                    <button class="guide-row" type="button" onclick="showGuide('Update Profile')">
+                        <span>📄 Update Profile Information</span>
+                        <span>›</span>
+                    </button>
+
+                    <button class="guide-row" type="button" onclick="showGuide('Placement Process')">
+                        <span>📄 Placement Process Flow</span>
+                        <span>›</span>
+                    </button>
+
+                    <button class="guide-row" type="button" onclick="showGuide('Student Dashboard')">
+                        <span>📄 Student Dashboard Guide</span>
+                        <span>›</span>
+                    </button>
+
+                    <a class="view-guides" href="#faqSection">
+                        View All Guides →
+                    </a>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>🖥️ System Status</h3>
+
+                    <p>All systems are running smoothly.</p>
+
+                    <div class="system-status">
+                        ⦿ All Systems Operational
+                    </div>
+
+                    <p class="last-updated">
+                        Last Updated:
+                        <span id="systemUpdatedAt"></span>
+                    </p>
+
+                </section>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+function toggleFaq(button) {
+    const faqRow = button.parentElement;
+    faqRow.classList.toggle("open");
+}
+
+function openAllFaqs() {
+    document.querySelectorAll(".faq-row").forEach(row => {
+        row.classList.add("open");
+    });
+}
+
+function openCategory(category) {
+    const searchInput = document.getElementById("helpSearch");
+
+    const keywords = {
+        student: "apply",
+        admin: "profile",
+        placement: "shortlisted",
+        general: ""
+    };
+
+    searchInput.value = keywords[category] || "";
+    searchHelp();
+
+    document.getElementById("faqSection").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+function searchHelp() {
+    const searchValue = document.getElementById("helpSearch").value
+        .toLowerCase()
+        .trim();
+
+    const faqRows = document.querySelectorAll(".faq-row");
+    let found = 0;
+
+    faqRows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+
+        if (text.includes(searchValue)) {
+            row.style.display = "block";
+
+            if (searchValue !== "") {
+                row.classList.add("open");
+            }
+
+            found++;
+        } else {
+            row.style.display = "none";
+        }
+    });
+
+    document.getElementById("searchEmpty").style.display =
+        found === 0 ? "block" : "none";
+}
+
+function scrollToIssueForm() {
+    document.getElementById("issueFormSection").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+function submitTicket() {
+    const name = document.getElementById("ticketName").value.trim();
+    const email = document.getElementById("ticketEmail").value.trim();
+    const category = document.getElementById("ticketCategory").value;
+    const description = document.getElementById("ticketDescription").value.trim();
+
+    if (name === "" || email === "" || category === "" || description === "") {
+        alert("Please fill all support ticket details.");
+        return;
+    }
+
+    const ticket = {
+        id: "TKT-" + Date.now(),
+        name: name,
+        email: email,
+        category: category,
+        description: description,
+        createdAt: new Date().toLocaleString("en-IN"),
+        status: "Open"
+    };
+
+    const oldTickets = JSON.parse(
+        localStorage.getItem("recruiteaseSupportTickets") || "[]"
+    );
+
+    oldTickets.push(ticket);
+
+    localStorage.setItem(
+        "recruiteaseSupportTickets",
+        JSON.stringify(oldTickets)
+    );
+
+    document.getElementById("ticketName").value = "";
+    document.getElementById("ticketEmail").value = "";
+    document.getElementById("ticketCategory").value = "";
+    document.getElementById("ticketDescription").value = "";
+
+    alert(
+        "Support ticket submitted successfully.\n\nTicket ID: " + ticket.id
+    );
+}
+
+function sendSupportEmail() {
+    window.location.href =
+        "mailto:placement@recruitease.com?subject=RecruitEase%20Support%20Request";
+}
+
+function showGuide(guideName) {
+    const guides = {
+        "Apply for a Drive":
+            "1. Open Eligible Companies or Placement Drives.\n2. Choose a company.\n3. Check eligibility.\n4. Click Apply.\n5. Track status from Applications.",
+
+        "Take Aptitude Test":
+            "1. Open Student Test page on the scheduled date.\n2. Read instructions.\n3. Answer all questions.\n4. Submit before timer ends.\n5. Check result after evaluation.",
+
+        "Update Profile":
+            "1. Open profile section.\n2. Click Edit Profile.\n3. Update academic details, skills and contact information.\n4. Save changes.",
+
+        "Placement Process":
+            "Eligibility → Application → Aptitude Test → Shortlisting → Interview → Final Placement",
+
+        "Student Dashboard":
+            "Student dashboard helps you view eligible companies, applied jobs, test schedules, results and final placement updates."
+    };
+
+    alert(guideName + "\n\n" + guides[guideName]);
+}
+
+document.getElementById("systemUpdatedAt").innerText =
+    new Date().toLocaleString("en-IN");
+
+</script>
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+</body>
+</html>

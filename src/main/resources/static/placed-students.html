@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placed Students - RecruitEase</title>
+
+    <link rel="stylesheet" href="placed-students.css">
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="placed-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a class="active" href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Placed Students ✅</h1>
+                <p>Track and manage all successfully placed students.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    id="topSearch"
+                    type="text"
+                    placeholder="Search by name, company, role..."
+                    onkeyup="filterPlacedStudents()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>5</span>
+                </button>
+
+                <button class="theme-btn" id="themeToggle" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img src="https://i.pravatar.cc/80?img=12" alt="Admin">
+                    <b>Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE HEADER ================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>Placed Students List</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Placed Students
+                </p>
+            </div>
+
+            <button class="export-btn" type="button" onclick="exportPlacedStudents()">
+                ⬇ Export Report
+            </button>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">👥</div>
+
+                <div>
+                    <p>Total Placed</p>
+                    <h3 id="totalPlaced">0</h3>
+                    <small>All Time</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">💼</div>
+
+                <div>
+                    <p>This Year</p>
+                    <h3 id="placedThisYear">0</h3>
+                    <small>Placed Students</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">🏢</div>
+
+                <div>
+                    <p>Total Companies</p>
+                    <h3 id="totalCompanies">0</h3>
+                    <small>Recruited</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">₹</div>
+
+                <div>
+                    <p>Highest Package</p>
+                    <h3 id="highestPackage">--</h3>
+                    <small>Max Offered</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon teal-icon">📈</div>
+
+                <div>
+                    <p>Average Package</p>
+                    <h3 id="averagePackage">--</h3>
+                    <small>Overall Average</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= MAIN GRID ================= -->
+        <section class="placed-content-grid">
+
+            <div>
+
+                <!-- ================= FILTERS ================= -->
+                <section class="placed-panel">
+
+                    <div class="filter-bar">
+
+                        <input
+                            type="text"
+                            id="tableSearch"
+                            placeholder="Search by name, company or role..."
+                            onkeyup="filterPlacedStudents()"
+                        >
+
+                        <select id="companyFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Companies</option>
+                        </select>
+
+                        <select id="roleFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Roles</option>
+                        </select>
+
+                        <select id="branchFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Branches</option>
+                        </select>
+
+                        <select id="batchFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Batches</option>
+                        </select>
+
+                    </div>
+
+                    <div class="date-filter-row">
+
+                        <input type="date" id="fromDate" onchange="filterPlacedStudents()">
+                        <input type="date" id="toDate" onchange="filterPlacedStudents()">
+
+                        <button class="clear-filter-btn" type="button" onclick="clearFilters()">
+                            ↻ Clear Filters
+                        </button>
+
+                    </div>
+
+                    <!-- ================= TABLE ================= -->
+                    <div class="table-head">
+                        <h3>Placed Students List</h3>
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table class="placed-table">
+
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student</th>
+                                    <th>Roll Number</th>
+                                    <th>Branch</th>
+                                    <th>Company</th>
+                                    <th>Role</th>
+                                    <th>Package</th>
+                                    <th>Placed On</th>
+                                    <th>Offer Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="placedTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="table-footer">
+                        <p id="placedCountText">Showing 0 placed students</p>
+                        <p>RecruitEase Placement Management System</p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- ================= RIGHT SIDE CARDS ================= -->
+            <aside class="right-column">
+
+                <section class="side-card">
+
+                    <h3>Placement Overview</h3>
+
+                    <div class="overview-ring"></div>
+
+                    <div id="branchOverview"></div>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>Top Recruiting Companies</h3>
+
+                    <div id="topCompanies"></div>
+
+                    <button class="view-all-btn" type="button" onclick="window.location.href='companies.html'">
+                        View All Companies
+                    </button>
+
+                </section>
+
+                <section class="side-card">
+
+                    <h3>Placement Insights</h3>
+
+                    <div class="insight-row">
+                        <span>📋 Total Offers</span>
+                        <b id="insightTotalOffers">0</b>
+                    </div>
+
+                    <div class="insight-row">
+                        <span>✅ Offers Accepted</span>
+                        <b id="insightAccepted">0</b>
+                    </div>
+
+                    <div class="insight-row">
+                        <span>💰 Packages Recorded</span>
+                        <b id="insightPackages">0</b>
+                    </div>
+
+                    <div class="insight-row">
+                        <span>🎓 Placement Branches</span>
+                        <b id="insightBranches">0</b>
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+let placedStudents = [];
+
+async function loadPlacedStudents() {
+    try {
+        const response = await fetch("/api/applications/all");
+        const applications = await response.json();
+
+        const placedApplications = applications.filter(app =>
+            (app.status || "").toLowerCase() === "placed"
+        );
+
+        placedStudents = await Promise.all(
+            placedApplications.map(async app => {
+                let student = null;
+
+                try {
+                    const studentResponse = await fetch("/api/students/" + app.studentId);
+
+                    if (studentResponse.ok) {
+                        student = await studentResponse.json();
+                    }
+                } catch (error) {
+                    console.log("Student profile not found for ID:", app.studentId);
+                }
+
+                return {
+                    applicationId: app.id,
+                    studentId: app.studentId,
+                    studentName: student?.name || "Student ID " + app.studentId,
+                    studentEmail: student?.email || "Email not available",
+                    rollNumber: student?.rollNumber || "-",
+                    branch: student?.branch || "Not Set",
+                    batch: student?.batch || "Not Set",
+                    companyName: app.companyName || "Company Not Set",
+                    role: app.role || "Role Not Set",
+                    packageLpa: getPackageValue(app),
+                    placedOn: getPlacedDate(app),
+                    offerStatus: app.offerStatus || "Accepted"
+                };
+            })
+        );
+
+        populateFilters();
+        updatePlacedStats();
+        renderBranchOverview();
+        renderTopCompanies();
+        renderPlacementInsights();
+        renderPlacedStudents(placedStudents);
+
+    } catch (error) {
+        console.error("Placed students error:", error);
+
+        document.getElementById("placedTableBody").innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    Placed students load nahi ho rahe. Backend check karo.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function getPackageValue(app) {
+    const value =
+        app.packageLpa ||
+        app.package ||
+        app.ctc ||
+        app.offerPackage ||
+        0;
+
+    const parsedValue = parseFloat(value);
+
+    return isNaN(parsedValue) ? 0 : parsedValue;
+}
+
+function getPlacedDate(app) {
+    return app.placedOn || app.placementDate || app.updatedAt || "";
+}
+
+function renderPlacedStudents(data) {
+    const tableBody = document.getElementById("placedTableBody");
+
+    document.getElementById("placedCountText").innerText =
+        "Showing " + data.length + " of " + placedStudents.length + " placed students";
+
+    if (data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    No placed students found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = data.map((student, index) => `
+        <tr>
+            <td>${index + 1}</td>
+
+            <td>
+                <div class="student-cell">
+                    <img
+                        class="student-avatar"
+                        src="/api/students/${student.studentId}/photo"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                        alt="Student"
+                    >
+
+                    <div>
+                        <span class="primary-text">${escapeHtml(student.studentName)}</span>
+                        <span class="secondary-text">${escapeHtml(student.studentEmail)}</span>
+                    </div>
+                </div>
+            </td>
+
+            <td>${escapeHtml(student.rollNumber)}</td>
+            <td>${escapeHtml(student.branch)}</td>
+
+            <td>
+                <div class="company-cell">
+                    <span class="company-logo">
+                        ${escapeHtml(student.companyName.substring(0, 3).toUpperCase())}
+                    </span>
+
+                    <div>
+                        <span class="primary-text">${escapeHtml(student.companyName)}</span>
+                        <span class="secondary-text">RecruitEase Partner</span>
+                    </div>
+                </div>
+            </td>
+
+            <td>${escapeHtml(student.role)}</td>
+
+            <td>
+                <span class="package-value">
+                    ${student.packageLpa > 0 ? student.packageLpa.toFixed(2) + " LPA" : "Not Set"}
+                </span>
+            </td>
+
+            <td>${formatDate(student.placedOn)}</td>
+
+            <td>
+                <span class="offer-status">
+                    ${escapeHtml(student.offerStatus)}
+                </span>
+            </td>
+
+            <td>
+                <button
+                    class="view-btn"
+                    type="button"
+                    title="View Placement Details"
+                    onclick="viewPlacement(${student.applicationId})"
+                >
+                    👁
+                </button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function filterPlacedStudents() {
+    const topSearch = document.getElementById("topSearch").value.toLowerCase().trim();
+    const tableSearch = document.getElementById("tableSearch").value.toLowerCase().trim();
+    const searchValue = tableSearch || topSearch;
+
+    const company = document.getElementById("companyFilter").value;
+    const role = document.getElementById("roleFilter").value;
+    const branch = document.getElementById("branchFilter").value;
+    const batch = document.getElementById("batchFilter").value;
+
+    const fromDate = document.getElementById("fromDate").value;
+    const toDate = document.getElementById("toDate").value;
+
+    const filteredStudents = placedStudents.filter(student => {
+        const matchesSearch =
+            student.studentName.toLowerCase().includes(searchValue) ||
+            student.companyName.toLowerCase().includes(searchValue) ||
+            student.role.toLowerCase().includes(searchValue) ||
+            student.rollNumber.toLowerCase().includes(searchValue);
+
+        const matchesCompany =
+            company === "" || student.companyName === company;
+
+        const matchesRole =
+            role === "" || student.role === role;
+
+        const matchesBranch =
+            branch === "" || student.branch === branch;
+
+        const matchesBatch =
+            batch === "" || student.batch === batch;
+
+        const placementDate = normalizeDate(student.placedOn);
+
+        const matchesFromDate =
+            fromDate === "" ||
+            (placementDate !== "" && placementDate >= fromDate);
+
+        const matchesToDate =
+            toDate === "" ||
+            (placementDate !== "" && placementDate <= toDate);
+
+        return (
+            matchesSearch &&
+            matchesCompany &&
+            matchesRole &&
+            matchesBranch &&
+            matchesBatch &&
+            matchesFromDate &&
+            matchesToDate
+        );
+    });
+
+    renderPlacedStudents(filteredStudents);
+}
+
+function populateFilters() {
+    populateSelect("companyFilter", [...new Set(placedStudents.map(item => item.companyName))]);
+    populateSelect("roleFilter", [...new Set(placedStudents.map(item => item.role))]);
+    populateSelect("branchFilter", [...new Set(placedStudents.map(item => item.branch))]);
+    populateSelect("batchFilter", [...new Set(placedStudents.map(item => item.batch))]);
+}
+
+function populateSelect(selectId, values) {
+    const select = document.getElementById(selectId);
+    const previousValue = select.value;
+
+    const firstOption = select.options[0].outerHTML;
+
+    select.innerHTML = firstOption;
+
+    values
+        .filter(value => value && value !== "Not Set")
+        .sort()
+        .forEach(value => {
+            select.innerHTML += `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`;
+        });
+
+    select.value = previousValue;
+}
+
+function updatePlacedStats() {
+    const packages = placedStudents
+        .map(student => student.packageLpa)
+        .filter(packageValue => packageValue > 0);
+
+    const uniqueCompanies = new Set(
+        placedStudents.map(student => student.companyName)
+    ).size;
+
+    const currentYear = new Date().getFullYear();
+
+    const currentYearPlaced = placedStudents.filter(student => {
+        const date = new Date(student.placedOn);
+        return !isNaN(date) && date.getFullYear() === currentYear;
+    }).length;
+
+    const highestPackage =
+        packages.length > 0 ? Math.max(...packages) : 0;
+
+    const averagePackage =
+        packages.length > 0
+            ? packages.reduce((sum, value) => sum + value, 0) / packages.length
+            : 0;
+
+    document.getElementById("totalPlaced").innerText = placedStudents.length;
+    document.getElementById("placedThisYear").innerText = currentYearPlaced;
+    document.getElementById("totalCompanies").innerText = uniqueCompanies;
+
+    document.getElementById("highestPackage").innerText =
+        highestPackage > 0 ? highestPackage.toFixed(2) + " LPA" : "--";
+
+    document.getElementById("averagePackage").innerText =
+        averagePackage > 0 ? averagePackage.toFixed(2) + " LPA" : "--";
+}
+
+function renderBranchOverview() {
+    const branchCount = {};
+
+    placedStudents.forEach(student => {
+        const branch = student.branch || "Others";
+        branchCount[branch] = (branchCount[branch] || 0) + 1;
+    });
+
+    const total = placedStudents.length || 1;
+
+    const dotClasses = [
+        "dot-cse",
+        "dot-it",
+        "dot-ece",
+        "dot-me",
+        "dot-other"
+    ];
+
+    const branchRows = Object.entries(branchCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([branch, count], index) => `
+            <div class="overview-row">
+                <span>
+                    <i class="legend-dot ${dotClasses[index] || "dot-other"}"></i>
+                    ${escapeHtml(branch)}
+                </span>
+
+                <b>${Math.round((count / total) * 100)}%</b>
+            </div>
+        `)
+        .join("");
+
+    document.getElementById("branchOverview").innerHTML =
+        branchRows || `
+            <div class="overview-row">
+                <span>No branch data</span>
+                <b>0%</b>
+            </div>
+        `;
+}
+
+function renderTopCompanies() {
+    const companyCount = {};
+
+    placedStudents.forEach(student => {
+        companyCount[student.companyName] =
+            (companyCount[student.companyName] || 0) + 1;
+    });
+
+    const companyRows = Object.entries(companyCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([company, count], index) => `
+            <div class="company-rank">
+                <span class="rank-number">${index + 1}</span>
+
+                <span class="rank-logo">
+                    ${escapeHtml(company.substring(0, 3).toUpperCase())}
+                </span>
+
+                <span class="rank-company">${escapeHtml(company)}</span>
+
+                <span>${count} Students</span>
+            </div>
+        `)
+        .join("");
+
+    document.getElementById("topCompanies").innerHTML =
+        companyRows || `
+            <div class="company-rank">
+                <span>No company data available.</span>
+            </div>
+        `;
+}
+
+function renderPlacementInsights() {
+    const packageRecorded = placedStudents.filter(
+        student => student.packageLpa > 0
+    ).length;
+
+    const totalBranches = new Set(
+        placedStudents
+            .map(student => student.branch)
+            .filter(branch => branch && branch !== "Not Set")
+    ).size;
+
+    document.getElementById("insightTotalOffers").innerText = placedStudents.length;
+    document.getElementById("insightAccepted").innerText = placedStudents.length;
+    document.getElementById("insightPackages").innerText = packageRecorded;
+    document.getElementById("insightBranches").innerText = totalBranches;
+}
+
+function viewPlacement(applicationId) {
+    const student = placedStudents.find(
+        item => item.applicationId === applicationId
+    );
+
+    if (!student) {
+        alert("Placement details not found.");
+        return;
+    }
+
+    alert(
+        "Placement Details\n\n" +
+        "Student: " + student.studentName + "\n" +
+        "Company: " + student.companyName + "\n" +
+        "Role: " + student.role + "\n" +
+        "Package: " +
+        (student.packageLpa > 0 ? student.packageLpa.toFixed(2) + " LPA" : "Not Set") +
+        "\nOffer Status: " + student.offerStatus
+    );
+}
+
+function clearFilters() {
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+    document.getElementById("companyFilter").value = "";
+    document.getElementById("roleFilter").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("batchFilter").value = "";
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+
+    renderPlacedStudents(placedStudents);
+}
+
+function exportPlacedStudents() {
+    if (placedStudents.length === 0) {
+        alert("No placed student data available.");
+        return;
+    }
+
+    let csv =
+        "Student Name,Email,Roll Number,Branch,Company,Role,Package LPA,Placed On,Offer Status\n";
+
+    placedStudents.forEach(student => {
+        csv +=
+            `"${student.studentName}",` +
+            `"${student.studentEmail}",` +
+            `"${student.rollNumber}",` +
+            `"${student.branch}",` +
+            `"${student.companyName}",` +
+            `"${student.role}",` +
+            `"${student.packageLpa || ""}",` +
+            `"${student.placedOn || ""}",` +
+            `"${student.offerStatus}"\n`;
+    });
+
+    const file = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(file);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "placed-students-report.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "Not Set";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date)) {
+        return dateValue;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function normalizeDate(dateValue) {
+    if (!dateValue) {
+        return "";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date)) {
+        return "";
+    }
+
+    return date.toISOString().split("T")[0];
+}
+
+function escapeHtml(value) {
+    return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+document.getElementById("themeToggle").addEventListener("click", function() {
+    const button = document.getElementById("themeToggle");
+
+    button.innerText = button.innerText === "🌙" ? "☀️" : "🌙";
+});
+
+loadPlacedStudents();
+
+</script>
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+</body>
+</html>
