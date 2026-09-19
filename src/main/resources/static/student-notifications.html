@@ -72,71 +72,177 @@
 <script>
 const studentId = localStorage.getItem("studentId");
 
-if(!studentId){
+if (!studentId) {
     window.location.href = "student-login.html";
 }
 
-function logout(){
+function logout() {
     localStorage.removeItem("studentId");
 }
 
-let notifications = [
-    {id:1, icon:"🏢", title:"TCS Drive Added", msg:"New Software Engineer drive is open for eligible students.", type:"Placement", status:"Unread"},
-    {id:2, icon:"📄", title:"Resume Reminder", msg:"Upload your latest resume before applying to companies.", type:"System", status:"Unread"},
-    {id:3, icon:"🎤", title:"Interview Scheduled", msg:"Your Infosys HR interview is scheduled for 24 May.", type:"Interview", status:"Read"},
-    {id:4, icon:"✅", title:"Application Shortlisted", msg:"You have been shortlisted for Wipro technical round.", type:"Placement", status:"Unread"},
-    {id:5, icon:"🧠", title:"Aptitude Test", msg:"TCS NQT practice test is available now.", type:"Test", status:"Read"}
-];
+let notifications = [];
 
-function renderNotifications(){
+async function loadNotifications() {
+
+    try {
+
+        const response = await fetch("/api/student-notifications/student/" + studentId);
+
+        notifications = await response.json();
+
+        renderNotifications();
+
+    } catch (e) {
+
+        console.log(e);
+
+    }
+
+}
+
+function renderNotifications() {
+
     const search = document.getElementById("search").value.toLowerCase();
+
     const list = document.getElementById("notificationList");
 
-    let filtered = notifications.filter(n =>
-        n.title.toLowerCase().includes(search) ||
-        n.msg.toLowerCase().includes(search) ||
-        n.type.toLowerCase().includes(search)
+    const filtered = notifications.filter(n =>
+
+        (n.title || "").toLowerCase().includes(search) ||
+        (n.message || "").toLowerCase().includes(search) ||
+        (n.type || "").toLowerCase().includes(search)
+
     );
 
     document.getElementById("totalNotify").innerText = filtered.length;
-    document.getElementById("unreadNotify").innerText =
-        filtered.filter(n => n.status === "Unread").length;
-    document.getElementById("notifyCount").innerText =
-        notifications.filter(n => n.status === "Unread").length;
 
-    list.innerHTML = filtered.map(n => `
+    document.getElementById("unreadNotify").innerText =
+        filtered.filter(n => !n.readStatus).length;
+
+    list.innerHTML = "";
+
+    if(filtered.length==0){
+
+        list.innerHTML="<h3>No Notifications Found</h3>";
+
+        return;
+    }
+
+    filtered.forEach(n=>{
+
+        list.innerHTML+=`
+
         <div class="application-card">
+
             <div>
-                <h3>${n.icon} ${n.title}</h3>
-                <p>${n.msg}</p>
+
+                <h3>${getIcon(n.type)} ${n.title}</h3>
+
+                <p>${n.message}</p>
+
+                <small>${formatDate(n.createdAt)}</small>
+
             </div>
 
-            <span class="status ${n.status === "Unread" ? "pending" : "success"}">
-                ${n.status}
-            </span>
+            <div>
 
-            <button onclick="markRead(${n.id})">Mark Read</button>
+                <span class="status ${n.readStatus ? "success":"pending"}">
+
+                    ${n.readStatus ? "Read":"Unread"}
+
+                </span>
+
+                ${
+                    !n.readStatus
+                    ?
+                    `<button onclick="markRead(${n.id})">
+                        Mark Read
+                    </button>`
+                    :
+                    ""
+                }
+
+                <button onclick="deleteNotification(${n.id})">
+                    Delete
+                </button>
+
+            </div>
+
         </div>
-    `).join("");
+
+        `;
+
+    });
+
 }
 
-function markRead(id){
-    notifications = notifications.map(n =>
-        n.id === id ? {...n, status:"Read"} : n
-    );
-    renderNotifications();
+function getIcon(type){
+
+    if(type==="PLACEMENT") return "🏢";
+
+    if(type==="INTERVIEW") return "🎤";
+
+    if(type==="APTITUDE") return "🧠";
+
+    if(type==="APPLICATION") return "📄";
+
+    return "🔔";
+
 }
 
-fetch("/api/students/" + studentId)
-.then(res => res.json())
-.then(s => {
-    document.getElementById("topName").innerText = s.name;
-    document.getElementById("topBranch").innerText = s.branch;
-    document.getElementById("topPhoto").src =
-        "/api/students/" + studentId + "/photo?t=" + Date.now();
+function formatDate(date){
+
+    if(!date) return "";
+
+    return new Date(date).toLocaleString();
+
+}
+
+async function markRead(id){
+
+    await fetch("/api/student-notifications/"+id+"/read",{
+
+        method:"PUT"
+
+    });
+
+    loadNotifications();
+
+}
+
+async function deleteNotification(id){
+
+    if(!confirm("Delete notification?")) return;
+
+    await fetch("/api/student-notifications/"+id,{
+
+        method:"DELETE"
+
+    });
+
+    loadNotifications();
+
+}
+
+fetch("/api/students/"+studentId)
+
+.then(r=>r.json())
+
+.then(student=>{
+
+    document.getElementById("topName").innerText=student.name;
+
+    document.getElementById("topBranch").innerText=student.branch;
+
+    document.getElementById("topPhoto").src=
+    "/api/students/"+studentId+"/photo?t="+Date.now();
+
 });
 
-renderNotifications();
+loadNotifications();
+
+setInterval(loadNotifications,5000);
+
 </script>
 
 <script src="student-sidebar.js"></script>

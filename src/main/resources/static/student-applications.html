@@ -1,179 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Applications | RecruitEase</title>
-<link rel="stylesheet" href="student-portal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - RecruitEase</title>
 
-<style>
-    .application-details{
-        display:none;
-        width:100%;
-        margin-top:14px;
-        padding:14px;
-        border-radius:12px;
-        background:#0b1b34;
-        border:1px solid rgba(47,128,255,.22);
-        color:#d8e7ff;
-        line-height:1.8;
-        font-size:13px;
-    }
-
-    .application-details h4{
-        margin-bottom:8px;
-        color:#ffffff;
-    }
-
-    .application-meta{
-        display:flex;
-        gap:8px;
-        flex-wrap:wrap;
-        margin-top:8px;
-    }
-
-    .application-tag{
-        padding:4px 9px;
-        border-radius:20px;
-        background:rgba(47,128,255,.14);
-        color:#9bc5ff;
-        font-size:11px;
-    }
-
-    .qualified-tag{
-        background:rgba(22,199,132,.17);
-        color:#75efb0;
-    }
-
-    .failed-tag{
-        background:rgba(255,77,109,.17);
-        color:#ff9aaa;
-    }
-
-    .pending-tag{
-        background:rgba(255,159,28,.16);
-        color:#ffd48a;
-    }
-
-    .empty-app-message{
-        padding:28px;
-        text-align:center;
-        color:#9fb0c7;
-    }
-
-    .interview-request-btn{
-        background:#2563eb !important;
-    }
-
-    .interview-requested-btn{
-        background:#16a34a !important;
-        cursor:not-allowed !important;
-    }
-
-    .disabled-app-btn{
-        background:#475569 !important;
-        cursor:not-allowed !important;
-        opacity:.8;
-    }
-</style>
+    <link rel="stylesheet" href="student-applications.css">
 </head>
 
 <body>
 
-<div class="student-layout">
+<div class="student-applications-layout">
 
-    <aside class="sidebar">
-        <div class="brand">🎓 Recruit<span>Ease</span></div>
-        <p>Campus Placement System</p>
+    <!-- Common sidebar student-sidebar.js automatically replace karega -->
+    <aside class="sidebar"></aside>
 
-        <a href="student-dashboard.html">🏠 Dashboard</a>
-        <a href="student-profile.html">👤 My Profile</a>
-        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
-        <a class="active" href="student-applications.html">📄 Applications</a>
-        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
-        <a href="student-interviews.html">🎤 Interviews</a>
-        <a href="student-resume.html">📑 Resume Builder</a>
-        <a href="student-placement-drives.html">💼 Placement Drive</a>
-        <a href="student-notifications.html">🔔 Notifications</a>
-        <a href="student-settings.html">⚙ Settings</a>
-        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+    <main class="student-applications-main">
 
-        <div class="help-card">
-            <h4>Need Help?</h4>
-            <p>Contact your TPO</p>
-        </div>
-    </aside>
+        <!-- ================= TOP BAR ================= -->
 
-    <main class="main">
+        <header class="applications-topbar">
 
-        <header class="topbar">
+            <button class="applications-menu-btn" type="button">
+                ☰
+            </button>
 
             <input
+                id="topSearch"
+                class="applications-top-search"
                 type="text"
-                id="applicationSearch"
-                placeholder="Search company, role or status..."
-                onkeyup="renderApplications()"
+                placeholder="Search anything..."
+                onkeyup="applyTopSearch()"
             >
 
-            <div class="top-actions">
+            <div class="applications-top-actions">
 
-                <button id="themeBtn" type="button">🌙</button>
+                <button
+                    id="themeButton"
+                    class="applications-icon-btn"
+                    type="button"
+                    onclick="toggleTheme()"
+                    title="Change theme"
+                >
+                    🌙
+                </button>
 
-                <div class="bell">🔔<span>3</span></div>
 
-                <div class="user-box">
-                    <img
-                        id="topPhoto"
-                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                        alt="Student"
-                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
-                    >
+                <div class="applications-top-profile">
+
+                    <img id="topPhoto" alt="Student Photo">
 
                     <div>
                         <b id="topName">Student</b>
-                        <p id="topBranch">B.Tech CSE</p>
+                        <p id="topBranch">Student Portal</p>
                     </div>
+
+                    <span>⌄</span>
                 </div>
 
             </div>
 
         </header>
 
-        <section class="details-card">
+        <!-- ================= HEADING ================= -->
 
-            <h2>My Applications</h2>
+        <section class="applications-heading">
 
-            <div class="info-grid">
+            <div class="applications-heading-left">
 
-                <div>
-                    <label>Total Applications</label>
-                    <p id="totalApps">0</p>
-                </div>
+                <div class="applications-heading-icon">📄</div>
 
                 <div>
-                    <label>Shortlisted</label>
-                    <p id="shortlistedApps">0</p>
-                </div>
+                    <h1>My Applications</h1>
 
-                <div>
-                    <label>Interviews</label>
-                    <p id="interviewApps">0</p>
-                </div>
-
-                <div>
-                    <label>Offers</label>
-                    <p id="offerApps">0</p>
+                    <div class="applications-breadcrumb">
+                        <a href="student-dashboard.html">Dashboard</a>
+                        <span>›</span>
+                        <b>My Applications</b>
+                    </div>
                 </div>
 
             </div>
 
         </section>
 
-        <section class="details-card" style="margin-top:24px;">
+        <!-- ================= STATS ================= -->
 
-            <h2>Application Status</h2>
+        <section class="applications-stats">
 
-            <div class="application-list" id="applicationList">
-                <p class="empty-app-message">Loading real applications...</p>
+            <article class="applications-stat-card">
+                <div class="applications-stat-icon stat-blue">📄</div>
+
+                <div>
+                    <h2 id="totalApps">0</h2>
+                    <p>Total Applications</p>
+                    <small>All time applied</small>
+                </div>
+            </article>
+
+            <article class="applications-stat-card">
+                <div class="applications-stat-icon stat-green">✓</div>
+
+                <div>
+                    <h2 id="shortlistedApps">0</h2>
+                    <p>Shortlisted</p>
+                    <small>You are shortlisted</small>
+                </div>
+            </article>
+
+            <article class="applications-stat-card">
+                <div class="applications-stat-icon stat-yellow">◷</div>
+
+                <div>
+                    <h2 id="reviewApps">0</h2>
+                    <p>Under Review</p>
+                    <small>Application under review</small>
+                </div>
+            </article>
+
+            <article class="applications-stat-card">
+                <div class="applications-stat-icon stat-purple">♧</div>
+
+                <div>
+                    <h2 id="interviewApps">0</h2>
+                    <p>Interview Scheduled</p>
+                    <small>Upcoming interview</small>
+                </div>
+            </article>
+
+            <article class="applications-stat-card">
+                <div class="applications-stat-icon stat-red">✕</div>
+
+                <div>
+                    <h2 id="notSelectedApps">0</h2>
+                    <p>Not Selected</p>
+                    <small>Keep trying</small>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- ================= FILTERS ================= -->
+
+        <section class="applications-filter-card">
+
+            <div class="applications-filter-search">
+                <span>⌕</span>
+
+                <input
+                    id="applicationSearch"
+                    type="text"
+                    placeholder="Search by company, role or drive..."
+                    onkeyup="renderApplications()"
+                >
+            </div>
+
+            <select id="statusFilter" onchange="renderApplications()">
+                <option value="">All Status</option>
+                <option value="applied">Applied</option>
+                <option value="shortlisted">Shortlisted</option>
+                <option value="test scheduled">Test Scheduled</option>
+                <option value="interview requested">Interview Requested</option>
+                <option value="interview">Interview Scheduled</option>
+                <option value="selected">Selected</option>
+                <option value="placed">Placed</option>
+                <option value="rejected">Not Selected</option>
+            </select>
+
+            <select id="typeFilter" onchange="renderApplications()">
+                <option value="">All Type</option>
+                <option value="drive">Drive</option>
+                <option value="company">Company Application</option>
+            </select>
+
+            <button
+                class="applications-reset-btn"
+                type="button"
+                onclick="resetFilters()"
+            >
+                ↻ Reset Filters
+            </button>
+
+        </section>
+
+        <!-- ================= APPLICATION TABLE ================= -->
+
+        <section class="applications-table-card">
+
+            <div class="applications-table-title">
+                <h2>☷ Applications List</h2>
+            </div>
+
+            <div class="applications-table-wrapper">
+
+                <table class="applications-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company</th>
+                            <th>Role</th>
+                            <th>Type</th>
+                            <th>Applied On</th>
+                            <th>Drive Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="applicationTableBody">
+                        <tr>
+                            <td colspan="8" class="applications-loading">
+                                Loading real applications...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="applications-table-footer">
+
+                <p id="applicationsEntryText">
+                    Showing 0 applications
+                </p>
+
+                <div class="applications-pagination">
+                    <button type="button" disabled>‹</button>
+                    <button class="active-page" type="button">1</button>
+                    <button type="button" disabled>›</button>
+                </div>
+
             </div>
 
         </section>
@@ -182,9 +240,31 @@
 
 </div>
 
-<script>
+<!-- ================= DETAILS MODAL ================= -->
 
+<div class="application-modal" id="applicationModal">
+
+    <div class="application-modal-box">
+
+        <button
+            class="application-modal-close"
+            type="button"
+            onclick="closeApplicationModal()"
+        >
+            ×
+        </button>
+
+        <div id="applicationModalContent"></div>
+
+    </div>
+
+</div>
+
+<script>
 const studentId = localStorage.getItem("studentId");
+
+const applicationsThemeKey =
+    "recruiteaseStudentApplicationsTheme_" + studentId;
 
 let applications = [];
 let drives = [];
@@ -212,22 +292,31 @@ async function initializeApplications() {
         const drivesResponse = responses[2];
 
         if (!studentResponse.ok) {
-            throw new Error("Student profile not found");
+            throw new Error("Student profile not found.");
         }
 
         const student = await studentResponse.json();
+
+        const studentInfo = [
+            student.branch || "Student",
+            student.year || ""
+        ].filter(Boolean).join(" · ");
 
         document.getElementById("topName").innerText =
             student.name || "Student";
 
         document.getElementById("topBranch").innerText =
-            student.branch || "B.Tech CSE";
+            studentInfo || "Student Portal";
 
-        document.getElementById("topPhoto").src =
-            "/api/students/" + studentId + "/photo?t=" + Date.now();
+        setPhoto(
+            "topPhoto",
+            "/api/students/" + studentId + "/photo?t=" + Date.now()
+        );
 
         if (applicationsResponse.ok) {
             applications = await applicationsResponse.json();
+        } else {
+            applications = [];
         }
 
         if (drivesResponse.ok) {
@@ -238,7 +327,9 @@ async function initializeApplications() {
             });
         }
 
-        applications.sort((a, b) => Number(b.id) - Number(a.id));
+        applications.sort((a, b) =>
+            Number(b.id) - Number(a.id)
+        );
 
         await loadInterviewEligibility();
 
@@ -248,12 +339,47 @@ async function initializeApplications() {
     } catch (error) {
         console.error("Application load error:", error);
 
-        document.getElementById("applicationList").innerHTML = `
-            <p class="empty-app-message">
-                Applications load nahi hui. Backend check karo.
-            </p>
+        document.getElementById("applicationTableBody").innerHTML = `
+            <tr>
+                <td colspan="8" class="applications-loading">
+                    Applications load nahi hui. Backend check karo.
+                </td>
+            </tr>
         `;
     }
+}
+
+/* ================= STUDENT TOP PROFILE ================= */
+
+function defaultAvatar() {
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
+            <rect width="100%" height="100%" fill="#1d4ed8"/>
+            <text x="50%" y="53%"
+                dominant-baseline="middle"
+                text-anchor="middle"
+                font-family="Arial"
+                font-size="70"
+                font-weight="bold"
+                fill="white">
+                ST
+            </text>
+        </svg>
+    `);
+}
+
+function setPhoto(id, url) {
+    const image = document.getElementById(id);
+
+    if (!image) {
+        return;
+    }
+
+    image.onerror = function() {
+        image.src = defaultAvatar();
+    };
+
+    image.src = url || defaultAvatar();
 }
 
 /* ================= TEST + INTERVIEW STATUS ================= */
@@ -268,10 +394,15 @@ async function loadInterviewEligibility() {
             );
 
             if (response.ok) {
-                interviewEligibilityMap[app.id] = await response.json();
+                interviewEligibilityMap[app.id] =
+                    await response.json();
             }
+
         } catch (error) {
-            console.log("Interview eligibility load failed for application:", app.id);
+            console.log(
+                "Interview eligibility load failed:",
+                app.id
+            );
         }
     });
 
@@ -296,149 +427,408 @@ function updateStats() {
         normalizeStatus(app.status) === "shortlisted"
     ).length;
 
-    const interviews = applications.filter(app =>
+    const review = applications.filter(app =>
         [
-            "interview",
-            "interview requested"
+            "applied",
+            "test scheduled",
+            "under review"
         ].includes(normalizeStatus(app.status))
     ).length;
 
-    const offers = applications.filter(app =>
-        ["selected", "placed"].includes(normalizeStatus(app.status))
+    const interviews = applications.filter(app =>
+        [
+            "interview",
+            "interview requested",
+            "interview scheduled"
+        ].includes(normalizeStatus(app.status))
+    ).length;
+
+    const notSelected = applications.filter(app =>
+        [
+            "rejected",
+            "not selected"
+        ].includes(normalizeStatus(app.status))
     ).length;
 
     document.getElementById("totalApps").innerText = total;
     document.getElementById("shortlistedApps").innerText = shortlisted;
+    document.getElementById("reviewApps").innerText = review;
     document.getElementById("interviewApps").innerText = interviews;
-    document.getElementById("offerApps").innerText = offers;
+    document.getElementById("notSelectedApps").innerText =
+        notSelected;
 }
 
-/* ================= APPLICATION LIST ================= */
+/* ================= TABLE RENDER ================= */
 
 function renderApplications() {
-    const search = document.getElementById("applicationSearch").value
-        .toLowerCase()
-        .trim();
+    const search = normalize(
+        document.getElementById("applicationSearch").value
+    );
+
+    const statusFilter = normalize(
+        document.getElementById("statusFilter").value
+    );
+
+    const typeFilter = normalize(
+        document.getElementById("typeFilter").value
+    );
 
     const filteredApplications = applications.filter(app => {
-        const company = String(app.companyName || "").toLowerCase();
-        const role = String(app.role || "").toLowerCase();
-        const status = String(app.status || "").toLowerCase();
+        const company = normalize(app.companyName);
+        const role = normalize(app.role);
+        const status = normalizeStatus(app.status);
 
-        return (
+        const appType = app.driveId
+            ? "drive"
+            : "company";
+
+        const matchesSearch =
+            !search ||
             company.includes(search) ||
             role.includes(search) ||
-            status.includes(search)
+            status.includes(search);
+
+        const matchesStatus =
+            !statusFilter ||
+            status === statusFilter ||
+            (
+                statusFilter === "interview" &&
+                (
+                    status === "interview requested" ||
+                    status === "interview scheduled" ||
+                    status === "interview"
+                )
+            ) ||
+            (
+                statusFilter === "rejected" &&
+                (
+                    status === "rejected" ||
+                    status === "not selected"
+                )
+            );
+
+        const matchesType =
+            !typeFilter ||
+            appType === typeFilter;
+
+        return (
+            matchesSearch &&
+            matchesStatus &&
+            matchesType
         );
     });
 
-    const list = document.getElementById("applicationList");
+    const tableBody =
+        document.getElementById("applicationTableBody");
 
     if (filteredApplications.length === 0) {
-        list.innerHTML = `
-            <p class="empty-app-message">
-                No applications found.
-            </p>
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="applications-loading">
+                    No applications found.
+                </td>
+            </tr>
         `;
+
+        document.getElementById("applicationsEntryText").innerText =
+            "Showing 0 applications";
+
         return;
     }
 
-    list.innerHTML = filteredApplications.map(app => {
-        const drive = driveMap[app.driveId];
-        const eligibility = getInterviewEligibility(app.id);
+    tableBody.innerHTML = filteredApplications.map(
+        function(app, index) {
+            const drive = driveMap[app.driveId];
 
-        const driveDate = drive
-            ? formatDate(drive.driveDate)
-            : "Drive date not available";
+            const appliedOn = app.createdAt
+                ? formatDateTime(app.createdAt)
+                : "Not available";
 
-        const packageText = drive
-            ? formatPackage(drive.packageLpa)
-            : "Package not available";
+            const driveDate = drive
+                ? formatDate(drive.driveDate)
+                : "-";
 
-        const mode = drive
-            ? drive.mode || "Not Set"
-            : "Company Application";
+            const applicationType = drive
+                ? "Drive"
+                : "Company";
 
-        return `
-            <div class="application-card">
+            return `
+                <tr>
+                    <td>${index + 1}</td>
 
-                <div>
-                    <h3>${escapeHtml(app.companyName || "Company")}</h3>
+                    <td>
+                        <div class="application-company-cell">
 
-                    <p>
-                        ${escapeHtml(app.role || "Role not available")}
-                        • ${packageText}
-                    </p>
+                            <div class="application-company-logo">
+                                ${escapeHtml(
+                                    companyInitials(app.companyName)
+                                )}
+                            </div>
 
-                    <div class="application-meta">
-                        <span class="application-tag">📅 ${driveDate}</span>
-                        <span class="application-tag">💻 ${escapeHtml(mode)}</span>
-                        ${getTestResultTag(eligibility)}
-                    </div>
-                </div>
+                            <div>
+                                <b>${escapeHtml(
+                                    app.companyName || "Company"
+                                )}</b>
 
-                <span class="status ${getStatusClass(app.status)}">
-                    ${escapeHtml(app.status || "Applied")}
-                </span>
+                                <p>${escapeHtml(
+                                    drive?.jobRole ||
+                                    app.role ||
+                                    "Application"
+                                )}</p>
+                            </div>
 
-                <button type="button" onclick="viewApplication(${app.id})">
-                    View
-                </button>
+                        </div>
+                    </td>
 
-                ${getInterviewButtonMarkup(app, eligibility)}
+                    <td>
+                        ${escapeHtml(
+                            app.role || "Not available"
+                        )}
+                    </td>
 
-                <div
-                    class="application-details"
-                    id="details${app.id}"
-                ></div>
+                    <td>
+                        <span class="application-type-badge ${
+                            applicationType === "Drive"
+                                ? "drive-type"
+                                : "company-type"
+                        }">
+                            ${applicationType}
+                        </span>
+                    </td>
 
-            </div>
-        `;
-    }).join("");
+                    <td>${escapeHtml(appliedOn)}</td>
+
+                    <td>${escapeHtml(driveDate)}</td>
+
+                    <td>
+                        ${getStatusHtml(app.status)}
+                    </td>
+
+                    <td>
+                        <button
+                            class="application-view-btn"
+                            type="button"
+                            onclick="viewApplication(${app.id})"
+                        >
+                            👁 View
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+    ).join("");
+
+    document.getElementById("applicationsEntryText").innerText =
+        `Showing 1 to ${filteredApplications.length} of ${applications.length} applications`;
 }
 
-/* ================= INTERVIEW BUTTON ================= */
+function getStatusHtml(status) {
+    const value = normalizeStatus(status);
 
-function getInterviewButtonMarkup(app, eligibility) {
+    let cssClass = "status-applied";
+    let label = status || "Applied";
+
+    if (
+        value === "shortlisted" ||
+        value === "selected" ||
+        value === "placed"
+    ) {
+        cssClass = "status-success";
+
+    } else if (
+        value === "interview" ||
+        value === "interview requested" ||
+        value === "interview scheduled"
+    ) {
+        cssClass = "status-interview";
+
+    } else if (
+        value === "rejected" ||
+        value === "not selected"
+    ) {
+        cssClass = "status-rejected";
+
+    } else if (
+        value === "test scheduled" ||
+        value === "under review"
+    ) {
+        cssClass = "status-review";
+    }
+
+    return `
+        <span class="application-status ${cssClass}">
+            ${escapeHtml(label)}
+        </span>
+    `;
+}
+
+/* ================= VIEW APPLICATION MODAL ================= */
+
+function viewApplication(applicationId) {
+    const app = applications.find(item =>
+        Number(item.id) === Number(applicationId)
+    );
+
+    if (!app) {
+        return;
+    }
+
+    const drive = driveMap[app.driveId];
+    const eligibility =
+        getInterviewEligibility(applicationId);
+
+    const modal = document.getElementById("applicationModal");
+    const content =
+        document.getElementById("applicationModalContent");
+
+    const testHtml = getTestDetailsHtml(eligibility);
+    const interviewHtml =
+        getInterviewDetailsHtml(app, eligibility);
+
+    content.innerHTML = `
+        <div class="application-modal-heading">
+            <div class="application-modal-company-icon">
+                ${escapeHtml(companyInitials(app.companyName))}
+            </div>
+
+            <div>
+                <h2>${escapeHtml(app.companyName || "Company")}</h2>
+                <p>${escapeHtml(app.role || "Application")}</p>
+            </div>
+        </div>
+
+        <div class="application-modal-status">
+            ${getStatusHtml(app.status)}
+        </div>
+
+        <div class="application-detail-grid">
+
+            <div>
+                <span>Application ID</span>
+                <b>#${app.id}</b>
+            </div>
+
+            <div>
+                <span>Applied On</span>
+                <b>${escapeHtml(
+                    app.createdAt
+                        ? formatDateTime(app.createdAt)
+                        : "Not available"
+                )}</b>
+            </div>
+
+            <div>
+                <span>Drive Date</span>
+                <b>${escapeHtml(
+                    drive
+                        ? formatDate(drive.driveDate)
+                        : "Not available"
+                )}</b>
+            </div>
+
+            <div>
+                <span>Package</span>
+                <b>${escapeHtml(
+                    drive
+                        ? formatPackage(drive.packageLpa)
+                        : "Not available"
+                )}</b>
+            </div>
+
+            <div>
+                <span>Mode</span>
+                <b>${escapeHtml(
+                    drive?.mode || "Not available"
+                )}</b>
+            </div>
+
+            <div>
+                <span>Location</span>
+                <b>${escapeHtml(
+                    drive?.location || "Not available"
+                )}</b>
+            </div>
+
+        </div>
+
+        <section class="application-modal-section">
+            <h3>🧠 Aptitude Test Status</h3>
+            ${testHtml}
+        </section>
+
+        <section class="application-modal-section">
+            <h3>🎤 Interview Status</h3>
+            ${interviewHtml}
+        </section>
+    `;
+
+    modal.style.display = "grid";
+}
+
+function getTestDetailsHtml(eligibility) {
     if (!eligibility.testTaken) {
         return `
-            <button
-                class="disabled-app-btn"
-                type="button"
-                disabled
-            >
-                Test Pending
-            </button>
+            <p class="modal-empty-text">
+                Aptitude test is not completed yet.
+            </p>
+        `;
+    }
+
+    const percentage =
+        Number(eligibility.percentage || 0).toFixed(2);
+
+    return `
+        <div class="test-result-box">
+            <p><b>Marks:</b> ${eligibility.obtainedMarks ?? 0} / ${eligibility.totalMarks ?? 0}</p>
+            <p><b>Percentage:</b> ${percentage}%</p>
+            <p><b>Company Cutoff:</b> ${Number(
+                eligibility.companyCutoff || 0
+            ).toFixed(2)}%</p>
+
+            <p>
+                <b>Result:</b>
+                ${
+                    eligibility.qualified
+                        ? " Qualified ✅"
+                        : " Not Qualified ❌"
+                }
+            </p>
+        </div>
+    `;
+}
+
+function getInterviewDetailsHtml(app, eligibility) {
+    if (!eligibility.testTaken) {
+        return `
+            <p class="modal-empty-text">
+                Complete aptitude test first to apply for interview.
+            </p>
         `;
     }
 
     if (!eligibility.qualified) {
         return `
-            <button
-                class="disabled-app-btn"
-                type="button"
-                disabled
-            >
-                Cutoff Not Cleared
-            </button>
+            <p class="modal-empty-text error-text">
+                Aptitude cutoff clear nahi hua.
+            </p>
         `;
     }
 
     if (eligibility.interviewRequested) {
         return `
-            <button
-                class="interview-requested-btn"
-                type="button"
-                disabled
-            >
-                ✅ Interview Requested
-            </button>
+            <p class="modal-success-text">
+                Interview request admin ko bhej di gayi hai ✅
+            </p>
         `;
     }
 
     return `
+        <p class="modal-empty-text">
+            You are eligible to apply for an interview.
+        </p>
+
         <button
-            class="interview-request-btn"
+            class="application-interview-btn"
             type="button"
             onclick="requestInterview(${app.id})"
         >
@@ -447,30 +837,9 @@ function getInterviewButtonMarkup(app, eligibility) {
     `;
 }
 
-function getTestResultTag(eligibility) {
-    if (!eligibility.testTaken) {
-        return `
-            <span class="application-tag pending-tag">
-                📝 Test Pending
-            </span>
-        `;
-    }
-
-    const percentage = Number(eligibility.percentage || 0).toFixed(2);
-
-    if (eligibility.qualified) {
-        return `
-            <span class="application-tag qualified-tag">
-                ✅ Qualified ${percentage}%
-            </span>
-        `;
-    }
-
-    return `
-        <span class="application-tag failed-tag">
-            ❌ Not Qualified ${percentage}%
-        </span>
-    `;
+function closeApplicationModal() {
+    document.getElementById("applicationModal").style.display =
+        "none";
 }
 
 /* ================= INTERVIEW REQUEST ================= */
@@ -495,13 +864,17 @@ async function requestInterview(applicationId) {
             }
         );
 
+        const text = await response.text();
+
         if (!response.ok) {
-            const message = await response.text();
-            throw new Error(message);
+            throw new Error(
+                text || "Interview request submit nahi hui."
+            );
         }
 
-        alert("✅ Interview request submitted successfully.");
+        alert("Interview request submitted successfully.");
 
+        closeApplicationModal();
         await initializeApplications();
 
     } catch (error) {
@@ -514,100 +887,71 @@ async function requestInterview(applicationId) {
     }
 }
 
-/* ================= VIEW DETAILS ================= */
+/* ================= FILTERS ================= */
 
-function viewApplication(applicationId) {
-    const app = applications.find(item =>
-        Number(item.id) === Number(applicationId)
+function applyTopSearch() {
+    document.getElementById("applicationSearch").value =
+        document.getElementById("topSearch").value;
+
+    renderApplications();
+}
+
+function resetFilters() {
+    document.getElementById("applicationSearch").value = "";
+    document.getElementById("topSearch").value = "";
+    document.getElementById("statusFilter").value = "";
+    document.getElementById("typeFilter").value = "";
+
+    renderApplications();
+}
+
+/* ================= THEME ================= */
+
+function applyTheme(theme) {
+    document.body.classList.toggle(
+        "student-applications-light",
+        theme === "light"
     );
 
-    if (!app) {
-        return;
-    }
+    document.getElementById("themeButton").innerText =
+        theme === "light" ? "☀️" : "🌙";
+}
 
-    const box = document.getElementById("details" + applicationId);
+function loadTheme() {
+    const theme =
+        localStorage.getItem(applicationsThemeKey) || "dark";
 
-    if (box.style.display === "block") {
-        box.style.display = "none";
-        return;
-    }
+    applyTheme(theme);
+}
 
-    const drive = driveMap[app.driveId];
-    const eligibility = getInterviewEligibility(applicationId);
+function toggleTheme() {
+    const currentTheme = document.body.classList.contains(
+        "student-applications-light"
+    )
+        ? "light"
+        : "dark";
 
-    const testDetails = eligibility.testTaken
-        ? `
-            <p><b>Test Marks:</b> ${eligibility.obtainedMarks ?? 0} / ${eligibility.totalMarks ?? 0}</p>
-            <p><b>Percentage:</b> ${Number(eligibility.percentage || 0).toFixed(2)}%</p>
-            <p><b>Company Cutoff:</b> ${Number(eligibility.companyCutoff || 0).toFixed(2)}%</p>
-            <p><b>Test Result:</b> ${eligibility.qualified ? "Qualified ✅" : "Not Qualified ❌"}</p>
-        `
-        : `
-            <p><b>Aptitude Test:</b> Not completed yet.</p>
-        `;
+    const nextTheme =
+        currentTheme === "dark"
+            ? "light"
+            : "dark";
 
-    const interviewDetails = eligibility.interviewRequested
-        ? `
-            <p><b>Interview Request:</b> Submitted to Admin ✅</p>
-        `
-        : `
-            <p><b>Interview Request:</b> Not submitted</p>
-        `;
+    localStorage.setItem(
+        applicationsThemeKey,
+        nextTheme
+    );
 
-    box.innerHTML = `
-        <h4>Application Details</h4>
-
-        <p><b>Application ID:</b> ${app.id}</p>
-        <p><b>Company:</b> ${escapeHtml(app.companyName || "-")}</p>
-        <p><b>Role:</b> ${escapeHtml(app.role || "-")}</p>
-        <p><b>Status:</b> ${escapeHtml(app.status || "Applied")}</p>
-
-        ${
-            drive
-                ? `
-                    <p><b>Drive Date:</b> ${formatDate(drive.driveDate)}</p>
-                    <p><b>Last Date:</b> ${formatDate(drive.lastDate)}</p>
-                    <p><b>Package:</b> ${formatPackage(drive.packageLpa)}</p>
-                    <p><b>Mode:</b> ${escapeHtml(drive.mode || "-")}</p>
-                    <p><b>Location:</b> ${escapeHtml(drive.location || "-")}</p>
-                `
-                : ""
-        }
-
-        ${testDetails}
-        ${interviewDetails}
-    `;
-
-    box.style.display = "block";
+    applyTheme(nextTheme);
 }
 
 /* ================= HELPERS ================= */
 
-function getStatusClass(status) {
-    const value = normalizeStatus(status);
-
-    if (
-        value === "shortlisted" ||
-        value === "selected" ||
-        value === "placed"
-    ) {
-        return "success";
-    }
-
-    if (
-        value === "interview" ||
-        value === "interview requested"
-    ) {
-        return "interview";
-    }
-
-    return "pending";
+function normalize(value) {
+    return String(value || "").trim().toLowerCase();
 }
 
 function normalizeStatus(status) {
-    return String(status || "Applied")
-        .toLowerCase()
-        .trim();
+    return normalize(status || "Applied");
 }
 
 function formatDate(dateValue) {
@@ -615,25 +959,65 @@ function formatDate(dateValue) {
         return "Not Set";
     }
 
-    const date = new Date(dateValue + "T00:00:00");
+    try {
+        const date = new Date(dateValue + "T00:00:00");
 
-    if (isNaN(date)) {
+        if (isNaN(date)) {
+            return dateValue;
+        }
+
+        return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
+    } catch (error) {
         return dateValue;
     }
+}
 
-    return date.toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-    });
+function formatDateTime(dateTimeValue) {
+    if (!dateTimeValue) {
+        return "Not available";
+    }
+
+    try {
+        const date = new Date(dateTimeValue);
+
+        if (isNaN(date)) {
+            return dateTimeValue;
+        }
+
+        return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
+    } catch (error) {
+        return dateTimeValue;
+    }
 }
 
 function formatPackage(value) {
     if (value === null || value === undefined || value === "") {
-        return "Package Not Set";
+        return "Not available";
     }
 
-    return value + " LPA";
+    return "₹ " + value + " LPA";
+}
+
+function companyInitials(companyName) {
+    const words = String(companyName || "RE")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    return words
+        .slice(0, 2)
+        .map(word => word.charAt(0).toUpperCase())
+        .join("") || "RE";
 }
 
 function escapeHtml(value) {
@@ -645,16 +1029,10 @@ function escapeHtml(value) {
         .replaceAll("'", "&#039;");
 }
 
-function logout() {
-    localStorage.removeItem("studentId");
-}
-
-document.getElementById("themeBtn").addEventListener("click", function() {
-    document.body.classList.toggle("light");
-});
-
+loadTheme();
 </script>
 
 <script src="student-sidebar.js"></script>
+
 </body>
 </html>

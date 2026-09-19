@@ -6,6 +6,24 @@
     <title>My Profile - RecruitEase</title>
 
     <link rel="stylesheet" href="student-profile.css">
+
+    <!-- Admin View me API token ke saath request jayegi -->
+    <script src="admin-auth.js"></script>
+
+    <style>
+        body.admin-student-view .profile-sidebar{
+            display:none;
+        }
+
+        body.admin-student-view .profile-main{
+            width:100%;
+            margin-left:0;
+        }
+
+        body.admin-student-view .profile-topbar{
+            display:none;
+        }
+    </style>
 </head>
 
 <body>
@@ -47,12 +65,7 @@
         <p class="menu-title">ACCOUNT</p>
 
         <a href="student-settings.html">⚙ Settings</a>
-        <a href="student-login.html" onclick="logout()">↪ Logout</a>
-
-        <div class="help-box">
-            <h4>🎧 Need Help?</h4>
-            <p>Contact your TPO for placement support.</p>
-        </div>
+        <a href="#" onclick="logout(); return false;">↪ Logout</a>
 
     </aside>
 
@@ -80,11 +93,6 @@
                     🌙
                 </button>
 
-                <button class="icon-button" type="button" title="Notifications">
-                    🔔
-                    <span class="notification-count">3</span>
-                </button>
-
                 <div class="top-profile">
                     <img id="topPhoto" alt="Student Photo">
 
@@ -101,16 +109,27 @@
         <section class="page-heading">
 
             <div>
-                <h1>My Profile 👤</h1>
-                <p>View your real personal and placement profile details.</p>
+                <h1 id="profilePageTitle">My Profile 👤</h1>
+                <p id="profilePageSubtitle">
+                    View your real personal and placement profile details.
+                </p>
             </div>
 
             <div class="page-buttons">
-                <button class="primary-btn" type="button" onclick="goToSettings()">
+                <button
+                    id="editProfileButton"
+                    class="primary-btn"
+                    type="button"
+                    onclick="goToSettings()"
+                >
                     ✎ Edit Profile
                 </button>
 
-                <button class="secondary-btn" type="button" onclick="downloadProfilePdf()">
+                <button
+                    class="secondary-btn"
+                    type="button"
+                    onclick="downloadProfilePdf()"
+                >
                     ⬇ Download Profile PDF
                 </button>
             </div>
@@ -119,12 +138,15 @@
 
         <section class="profile-grid">
 
-            <!-- MAIN PROFILE -->
             <section class="card">
 
                 <div class="profile-hero">
 
-                    <img id="mainPhoto" class="profile-main-photo" alt="Student Photo">
+                    <img
+                        id="mainPhoto"
+                        class="profile-main-photo"
+                        alt="Student Photo"
+                    >
 
                     <div class="profile-hero-content">
                         <h2>
@@ -138,7 +160,12 @@
                         <p>✉ <span>Email:</span> <b id="profileEmail">Not added</b></p>
                         <p>☎ <span>Mobile:</span> <b id="profileMobile">Not added</b></p>
 
-                        <button class="secondary-btn change-photo-btn" type="button" onclick="goToSettings()">
+                        <button
+                            id="changePhotoButton"
+                            class="secondary-btn change-photo-btn"
+                            type="button"
+                            onclick="goToSettings()"
+                        >
                             📸 Change Photo
                         </button>
                     </div>
@@ -147,7 +174,6 @@
 
             </section>
 
-            <!-- OVERVIEW -->
             <section class="card">
 
                 <div class="card-heading">
@@ -195,7 +221,6 @@
 
             </section>
 
-            <!-- LOWER CARDS -->
             <section class="lower-grid">
 
                 <article class="card">
@@ -296,7 +321,6 @@
 
             </section>
 
-            <!-- ABOUT -->
             <section class="card about-card">
 
                 <div class="card-heading">
@@ -321,8 +345,21 @@
 </div>
 
 <script>
-const studentId = localStorage.getItem("studentId");
-const profileThemeKey = "recruiteaseStudentProfileTheme_" + studentId;
+const profileParams = new URLSearchParams(window.location.search);
+
+const requestedStudentId = profileParams.get("id");
+
+const isAdminView =
+    profileParams.get("adminView") === "true" &&
+    !!localStorage.getItem("adminUsername") &&
+    !!localStorage.getItem("adminRole");
+
+const studentId = isAdminView
+    ? requestedStudentId
+    : localStorage.getItem("studentId");
+
+const profileThemeKey =
+    "recruiteaseStudentProfileTheme_" + studentId;
 
 let studentData = null;
 
@@ -330,12 +367,21 @@ if (!studentId) {
     window.location.href = "student-login.html";
 }
 
+if (isAdminView) {
+    document.body.classList.add("admin-student-view");
+}
+
 function defaultAvatar() {
     return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
         <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
             <rect width="100%" height="100%" fill="#1d4ed8"/>
-            <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle"
-                  font-family="Arial" font-size="70" font-weight="bold" fill="white">
+            <text x="50%" y="53%"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                  font-family="Arial"
+                  font-size="70"
+                  font-weight="bold"
+                  fill="white">
                 ST
             </text>
         </svg>
@@ -377,11 +423,23 @@ function toUrl(value) {
         return "#";
     }
 
-    if (text.startsWith("http://") || text.startsWith("https://")) {
+    if (
+        text.startsWith("http://") ||
+        text.startsWith("https://")
+    ) {
         return text;
     }
 
     return "https://" + text;
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 function renderSkills(skillsValue) {
@@ -400,7 +458,7 @@ function renderSkills(skillsValue) {
     if (skills.length === 0) {
         skillsWrap.innerHTML = `
             <div class="empty-note">
-                No skills added yet. Update your profile settings to add skills.
+                No skills added yet.
             </div>
         `;
         return;
@@ -409,15 +467,6 @@ function renderSkills(skillsValue) {
     skillsWrap.innerHTML = skills.map(function(skill) {
         return `<span class="skill-chip">${escapeHtml(skill)}</span>`;
     }).join("");
-}
-
-function escapeHtml(value) {
-    return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
 }
 
 function buildAboutText(student) {
@@ -441,11 +490,29 @@ function buildAboutText(student) {
 
     if (skills) {
         text += ` Skills added: ${skills}.`;
-    } else {
-        text += " Skills can be added from the Settings page.";
     }
 
     return text;
+}
+
+function applyAdminViewUi() {
+    if (!isAdminView) {
+        return;
+    }
+
+    document.getElementById("profilePageTitle").innerText =
+        "Student Profile 👤";
+
+    document.getElementById("profilePageSubtitle").innerText =
+        "Viewing student details from Admin Portal.";
+
+    const editButton =
+        document.getElementById("editProfileButton");
+
+    editButton.innerText = "← Back to All Students";
+
+    document.getElementById("changePhotoButton").style.display =
+        "none";
 }
 
 async function loadProfile() {
@@ -511,17 +578,11 @@ async function loadProfile() {
         const githubElement =
             document.getElementById("contactGithub");
 
-        linkedinElement.innerText =
-            linkedin || "Not added";
+        linkedinElement.innerText = linkedin || "Not added";
+        githubElement.innerText = github || "Not added";
 
-        githubElement.innerText =
-            github || "Not added";
-
-        linkedinElement.href =
-            linkedin ? toUrl(linkedin) : "#";
-
-        githubElement.href =
-            github ? toUrl(github) : "#";
+        linkedinElement.href = linkedin ? toUrl(linkedin) : "#";
+        githubElement.href = github ? toUrl(github) : "#";
 
         if (!linkedin) {
             linkedinElement.removeAttribute("target");
@@ -536,6 +597,8 @@ async function loadProfile() {
         document.getElementById("aboutText").innerText =
             buildAboutText(studentData);
 
+        applyAdminViewUi();
+
     } catch (error) {
         console.error(error);
         alert("Profile load nahi ho raha. Backend check karo.");
@@ -543,6 +606,11 @@ async function loadProfile() {
 }
 
 function goToSettings() {
+    if (isAdminView) {
+        window.location.href = "students.html";
+        return;
+    }
+
     window.location.href = "student-settings.html";
 }
 
@@ -585,7 +653,7 @@ function searchProfile() {
 
     if (value.includes("skill")) {
         document.getElementById("skillsWrap").scrollIntoView({
-            behavior:"smooth"
+            behavior: "smooth"
         });
 
     } else if (
@@ -594,7 +662,7 @@ function searchProfile() {
         value.includes("contact")
     ) {
         document.querySelector(".contact-list").scrollIntoView({
-            behavior:"smooth"
+            behavior: "smooth"
         });
 
     } else if (
@@ -602,7 +670,7 @@ function searchProfile() {
         value.includes("academic")
     ) {
         document.querySelector(".info-list").scrollIntoView({
-            behavior:"smooth"
+            behavior: "smooth"
         });
 
     } else if (
@@ -614,6 +682,11 @@ function searchProfile() {
 }
 
 function logout() {
+    if (isAdminView) {
+        window.location.href = "students.html";
+        return;
+    }
+
     localStorage.removeItem("studentId");
     window.location.href = "student-login.html";
 }

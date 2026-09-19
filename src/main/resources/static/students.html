@@ -25,21 +25,21 @@
             </div>
         </div>
 
-         <a class="active" href="admin-dashboard.html">▦ Dashboard</a>
+        <a href="admin-dashboard.html">▦ Dashboard</a>
 
         <p class="menu-title">STUDENTS</p>
-        <a href="students.html">👥 All Students</a>
+        <a class="active" href="students.html">👥 All Students</a>
         <a href="deleted-students.html">🗑️ Deleted Students</a>
 
         <p class="menu-title">COMPANIES</p>
         <a href="companies.html">🏢 All Companies</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
 
         <p class="menu-title">PLACEMENTS</p>
-        <a href="eligibility.html">🏆 Eligibility</a>
-        <a href="placement-drives.html">📅 Placement Drives</a>
         <a href="applications-admin.html">📄 Applications</a>
-        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="eligibility.html">🏆 Eligibility</a>
         <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
         <a href="placed-students.html">✅ Placed Students</a>
         <a href="reports.html">📊 Reports & Analytics</a>
         <a href="requests-issues.html">🛟 Requests & Issues</a>
@@ -47,6 +47,7 @@
         <p class="menu-title">SYSTEM</p>
         <a href="settings.html">⚙️ Settings</a>
         <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
 
     </aside>
 
@@ -269,47 +270,67 @@
 </div>
 
 <script>
-
 let students = [];
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
 
 /* ================= STUDENT DATA ================= */
 
 function loadStudents() {
     fetch("/api/students")
-        .then(res => res.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Students load nahi hue.");
+            }
+
+            return response.json();
+        })
         .then(data => {
-            students = data;
+            students = data || [];
             renderStudents();
         })
         .catch(error => {
             console.error("Student load error:", error);
+            alert("Students load nahi ho rahe. Backend check karo.");
         });
 }
 
 function renderStudents() {
-    const search = document.getElementById("searchInput").value.toLowerCase();
-    const branch = document.getElementById("branchFilter").value.toLowerCase();
+    const search = document.getElementById("searchInput").value
+        .toLowerCase()
+        .trim();
+
+    const branch = document.getElementById("branchFilter").value
+        .toLowerCase();
+
     const cgpa = document.getElementById("cgpaFilter").value;
     const status = document.getElementById("statusFilter").value;
 
-    const filtered = students.filter(s => {
+    const filtered = students.filter(student => {
         const matchSearch =
-            (s.name || "").toLowerCase().includes(search) ||
-            (s.email || "").toLowerCase().includes(search) ||
-            (s.rollNumber || "").toLowerCase().includes(search);
+            (student.name || "").toLowerCase().includes(search) ||
+            (student.email || "").toLowerCase().includes(search) ||
+            (student.rollNumber || "").toLowerCase().includes(search);
 
         const matchBranch =
             branch === "" ||
-            (s.branch || "").toLowerCase() === branch;
+            (student.branch || "").toLowerCase() === branch;
 
         const matchCgpa =
             cgpa === "" ||
-            Number(s.cgpa) >= Number(cgpa);
+            Number(student.cgpa) >= Number(cgpa);
 
         const matchStatus =
             status === "" ||
-            (status === "active" && !s.blocked) ||
-            (status === "blocked" && s.blocked);
+            (status === "active" && !student.blocked) ||
+            (status === "blocked" && student.blocked);
 
         return matchSearch && matchBranch && matchCgpa && matchStatus;
     });
@@ -317,50 +338,52 @@ function renderStudents() {
     document.getElementById("totalStudents").innerText = students.length;
 
     document.getElementById("activeStudents").innerText =
-        students.filter(s => !s.blocked).length;
+        students.filter(student => !student.blocked).length;
 
     document.getElementById("blockedStudents").innerText =
-        students.filter(s => s.blocked).length;
+        students.filter(student => student.blocked).length;
 
     document.getElementById("entryText").innerText =
-        `Showing 1 to ${filtered.length} of ${filtered.length} entries`;
+        filtered.length === 0
+            ? "Showing 0 entries"
+            : `Showing 1 to ${filtered.length} of ${filtered.length} entries`;
 
-    document.getElementById("studentTable").innerHTML = filtered.map(s => `
+    document.getElementById("studentTable").innerHTML = filtered.map(student => `
         <tr>
-            <td>${s.id}</td>
+            <td>${student.id}</td>
 
             <td>
                 <div class="name-cell">
                     <img
                         class="avatar"
-                        src="/api/students/${s.id}/photo"
+                        src="/api/students/${student.id}/photo"
                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
                         alt="Student"
                     >
 
-                    <b>${s.name || "-"}</b>
+                    <b>${escapeHtml(student.name || "-")}</b>
                 </div>
             </td>
 
-            <td>${s.email || "-"}</td>
-            <td>${s.rollNumber || "-"}</td>
-            <td>${s.branch || "-"}</td>
-            <td><span class="cgpa">${s.cgpa || "-"}</span></td>
-            <td>${s.skills || "-"}</td>
-            <td>${s.preferredCompany || "-"}</td>
+            <td>${escapeHtml(student.email || "-")}</td>
+            <td>${escapeHtml(student.rollNumber || "-")}</td>
+            <td>${escapeHtml(student.branch || "-")}</td>
+            <td><span class="cgpa">${escapeHtml(student.cgpa ?? "-")}</span></td>
+            <td>${escapeHtml(student.skills || "-")}</td>
+            <td>${escapeHtml(student.preferredCompany || "-")}</td>
 
             <td>
-                <span class="status ${s.blocked ? "blocked-status" : ""}">
-                    ${s.blocked ? "Blocked" : "Active"}
+                <span class="status ${student.blocked ? "blocked-status" : ""}">
+                    ${student.blocked ? "Blocked" : "Active"}
                 </span>
             </td>
 
             <td class="actions">
-                <button class="view" onclick="viewStudent(${s.id})">👁</button>
-                <button class="edit" onclick='openEdit(${JSON.stringify(s)})'>✎</button>
-                <button class="block" onclick="blockStudent(${s.id})">⊘</button>
-                <button class="unblock" onclick="unblockStudent(${s.id})">🔓</button>
-                <button class="delete" onclick="deleteStudent(${s.id})">🗑</button>
+                <button class="view" onclick="viewStudent(${student.id})">👁</button>
+                <button class="edit" onclick="openEditById(${student.id})">✎</button>
+                <button class="block" onclick="blockStudent(${student.id})">⊘</button>
+                <button class="unblock" onclick="unblockStudent(${student.id})">🔓</button>
+                <button class="delete" onclick="deleteStudent(${student.id})">🗑</button>
             </td>
         </tr>
     `).join("");
@@ -373,21 +396,40 @@ function applyTopSearch() {
     renderStudents();
 }
 
+/* ================= ADMIN VIEW STUDENT PROFILE ================= */
+
 function viewStudent(id) {
-    window.location.href = "student-profile.html?id=" + id;
+    window.location.href =
+        "student-profile.html?id=" +
+        encodeURIComponent(id) +
+        "&adminView=true";
 }
 
-function openEdit(s) {
+/* ================= EDIT STUDENT ================= */
+
+function openEditById(id) {
+    const student = students.find(item => item.id === id);
+
+    if (!student) {
+        alert("Student data nahi mila.");
+        return;
+    }
+
+    openEdit(student);
+}
+
+function openEdit(student) {
     document.getElementById("editModal").style.display = "grid";
 
-    editId.value = s.id;
-    editName.value = s.name || "";
-    editEmail.value = s.email || "";
-    editRoll.value = s.rollNumber || "";
-    editBranch.value = s.branch || "";
-    editCgpa.value = s.cgpa || "";
-    editSkills.value = s.skills || "";
-    editCompany.value = s.preferredCompany || "";
+    document.getElementById("editId").value = student.id;
+    document.getElementById("editName").value = student.name || "";
+    document.getElementById("editEmail").value = student.email || "";
+    document.getElementById("editRoll").value = student.rollNumber || "";
+    document.getElementById("editBranch").value = student.branch || "";
+    document.getElementById("editCgpa").value = student.cgpa || "";
+    document.getElementById("editSkills").value = student.skills || "";
+    document.getElementById("editCompany").value =
+        student.preferredCompany || "";
 }
 
 function closeEdit() {
@@ -395,16 +437,16 @@ function closeEdit() {
 }
 
 function updateStudent() {
-    const id = editId.value;
+    const id = document.getElementById("editId").value;
 
     const student = {
-        name: editName.value,
-        email: editEmail.value,
-        rollNumber: editRoll.value,
-        branch: editBranch.value,
-        cgpa: parseFloat(editCgpa.value),
-        skills: editSkills.value,
-        preferredCompany: editCompany.value
+        name: document.getElementById("editName").value.trim(),
+        email: document.getElementById("editEmail").value.trim(),
+        rollNumber: document.getElementById("editRoll").value.trim(),
+        branch: document.getElementById("editBranch").value.trim(),
+        cgpa: parseFloat(document.getElementById("editCgpa").value) || 0,
+        skills: document.getElementById("editSkills").value.trim(),
+        preferredCompany: document.getElementById("editCompany").value.trim()
     };
 
     fetch(`/api/students/${id}/update`, {
@@ -413,10 +455,19 @@ function updateStudent() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(student)
-    }).then(() => {
-        closeEdit();
-        loadStudents();
-    });
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Student update failed.");
+            }
+
+            closeEdit();
+            loadStudents();
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Student update nahi hua.");
+        });
 }
 
 function blockStudent(id) {
@@ -432,11 +483,13 @@ function unblockStudent(id) {
 }
 
 function deleteStudent(id) {
-    if (confirm("Delete this student?")) {
-        fetch(`/api/students/${id}/delete`, {
-            method: "PUT"
-        }).then(loadStudents);
+    if (!confirm("Delete this student?")) {
+        return;
     }
+
+    fetch(`/api/students/${id}/delete`, {
+        method: "PUT"
+    }).then(loadStudents);
 }
 
 /* ================= NOTIFICATIONS ================= */
@@ -466,17 +519,20 @@ function loadSharedAdminProfile() {
 
     const savedPhoto = localStorage.getItem("recruiteaseAdminPhoto");
 
-    if (savedPhoto) {
-        adminPhoto.src = savedPhoto;
-    } else {
-        adminPhoto.src = "https://i.pravatar.cc/80?img=12";
-    }
+    adminPhoto.src = savedPhoto ||
+        "https://i.pravatar.cc/80?img=12";
 
-    adminDisplayName.innerText = adminProfile.name || "Admin";
+    adminDisplayName.innerText =
+        adminProfile.name ||
+        localStorage.getItem("adminUsername") ||
+        "Admin";
 }
 
-const adminPhotoUpload = document.getElementById("adminPhotoUpload");
-const adminPhoto = document.getElementById("adminPhoto");
+const adminPhotoUpload =
+    document.getElementById("adminPhotoUpload");
+
+const adminPhoto =
+    document.getElementById("adminPhoto");
 
 adminPhotoUpload.addEventListener("change", function() {
     const file = this.files[0];
@@ -492,14 +548,15 @@ adminPhotoUpload.addEventListener("change", function() {
 
         adminPhoto.src = imageData;
 
-        /* Same key used by Settings page */
-        localStorage.setItem("recruiteaseAdminPhoto", imageData);
+        localStorage.setItem(
+            "recruiteaseAdminPhoto",
+            imageData
+        );
     };
 
     reader.readAsDataURL(file);
 });
 
-/* Settings page me photo/name update ho to current tab bhi update ho */
 window.addEventListener("storage", function(event) {
     if (
         event.key === "recruiteaseAdminPhoto" ||
@@ -509,9 +566,10 @@ window.addEventListener("storage", function(event) {
     }
 });
 
-/* ================= STUDENT PAGE THEME ================= */
+/* ================= THEME ================= */
 
-const studentThemeToggle = document.getElementById("studentThemeToggle");
+const studentThemeToggle =
+    document.getElementById("studentThemeToggle");
 
 if (localStorage.getItem("studentTheme") === "dark") {
     document.body.classList.add("student-dark");
@@ -532,7 +590,6 @@ studentThemeToggle.addEventListener("click", function() {
 
 loadSharedAdminProfile();
 loadStudents();
-
 </script>
 
 </body>

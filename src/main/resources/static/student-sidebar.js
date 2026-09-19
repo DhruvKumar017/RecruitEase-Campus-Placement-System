@@ -73,15 +73,6 @@
         `);
     }
 
-    function escapeHtml(value) {
-        return String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
     function loadSidebarCss() {
         const alreadyLoaded = document.querySelector(
             'link[href="student-sidebar.css"]'
@@ -153,7 +144,7 @@
                     ⚙ Settings
                 </a>
 
-                <a href="student-login.html" onclick="unifiedStudentLogout(event)">
+                <a href="#" onclick="unifiedStudentLogout(event)">
                     ↪ Logout
                 </a>
 
@@ -260,6 +251,16 @@
     };
 
     document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+
+        const isAdminView =
+            params.get("adminView") === "true";
+
+        /* Admin View me student sidebar kabhi nahi lagegi */
+        if (isAdminView) {
+            return;
+        }
+
         loadSidebarCss();
         replaceOldSidebar();
         loadStudentSidebarData();
