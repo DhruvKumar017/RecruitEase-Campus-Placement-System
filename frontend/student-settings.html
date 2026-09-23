@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Settings - RecruitEase</title>
+
+    <link rel="stylesheet" href="student-settings.css">
+</head>
+
+<body>
+
+<div class="student-settings-layout">
+
+    <aside class="student-settings-sidebar">
+
+        <div class="student-settings-brand">
+            <div style="font-size:28px;">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Student Portal</p>
+            </div>
+        </div>
+
+        <div class="sidebar-student">
+            <img id="sidebarPhoto" class="sidebar-photo" alt="Student Photo">
+
+            <div>
+                <b id="sidebarName">Student</b>
+                <p id="sidebarStudentInfo">Loading...</p>
+            </div>
+        </div>
+
+        <p class="sidebar-menu-title">MAIN MENU</p>
+
+        <a href="student-dashboard.html">🏠 Dashboard</a>
+        <a href="student-profile.html">👤 My Profile</a>
+        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+        <a href="student-placement-drives.html">💼 Placement Drives</a>
+        <a href="student-applications.html">📄 My Applications</a>
+        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="student-interviews.html">🎤 Interviews</a>
+        <a href="student-resume.html">📑 Resume Builder</a>
+        <a href="student-notifications.html">🔔 Notifications</a>
+
+        <p class="sidebar-menu-title">ACCOUNT</p>
+
+        <a class="active" href="student-settings.html">⚙ Settings</a>
+        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+        <div class="student-help-card">
+            <h4>🎧 Need Help?</h4>
+            <p>Contact your TPO for placement support.</p>
+        </div>
+
+    </aside>
+
+    <main class="student-settings-main">
+
+        <header class="student-settings-topbar">
+
+            <input
+                id="settingsSearch"
+                class="student-search"
+                type="text"
+                placeholder="Search settings..."
+                onkeyup="searchSettings()"
+            >
+
+            <div class="student-top-actions">
+
+                <button
+                    class="student-icon-btn"
+                    type="button"
+                    onclick="toggleTheme()"
+                    id="themeButton"
+                    title="Change Theme"
+                >
+                    🌙
+                </button>
+
+                <div class="student-top-profile">
+                    <img id="topPhoto" alt="Student Photo">
+
+                    <div>
+                        <b id="topName">Student</b>
+                        <p id="topBranch">Student Portal</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="settings-title">
+            <h1>Settings ⚙️</h1>
+            <p>Manage your account and application preferences.</p>
+        </section>
+
+        <section class="student-settings-grid">
+
+            <!-- ACCOUNT SETTINGS -->
+            <section class="settings-card">
+
+                <div class="card-heading">
+                    <div class="heading-icon">👤</div>
+
+                    <div>
+                        <h2>Account Settings</h2>
+                        <p>Update your personal and placement profile information.</p>
+                    </div>
+                </div>
+
+                <div class="settings-form-grid">
+
+                    <div class="settings-form-group">
+                        <label>Username</label>
+
+                        <div class="input-shell">
+                            <span>👤</span>
+                            <input id="username" type="text" placeholder="Username">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Full Name</label>
+
+                        <div class="input-shell">
+                            <span>♙</span>
+                            <input id="name" type="text" placeholder="Full Name">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Email</label>
+
+                        <div class="input-shell">
+                            <span>✉</span>
+                            <input id="email" type="email" placeholder="Email">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Mobile</label>
+
+                        <div class="input-shell">
+                            <span>☎</span>
+                            <input id="mobile" type="text" placeholder="Mobile Number">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Year</label>
+
+                        <select id="year">
+                            <option value="">Select Year</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Address</label>
+
+                        <div class="input-shell">
+                            <span>📍</span>
+                            <input id="address" type="text" placeholder="Address">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Skills</label>
+
+                        <div class="input-shell">
+                            <span>⌨</span>
+                            <input id="skills" type="text" placeholder="Java, SQL, HTML, CSS">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Preferred Company</label>
+
+                        <div class="input-shell">
+                            <span>▦</span>
+                            <input id="preferredCompany" type="text" placeholder="Google, Microsoft">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>LinkedIn Profile</label>
+
+                        <div class="input-shell">
+                            <span>in</span>
+                            <input id="linkedin" type="text" placeholder="linkedin.com/in/username">
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>GitHub Profile</label>
+
+                        <div class="input-shell">
+                            <span>◉</span>
+                            <input id="github" type="text" placeholder="github.com/username">
+                        </div>
+                    </div>
+
+                    <div class="form-info-box">
+                        ⓘ Keep your details updated to improve placement eligibility visibility.
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="primary-btn" type="button" onclick="saveProfile()">
+                            💾 Save Profile
+                        </button>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PHOTO -->
+            <section class="settings-card">
+
+                <div class="card-heading">
+                    <div class="heading-icon">📸</div>
+
+                    <div>
+                        <h2>Profile Photo</h2>
+                        <p>Upload a clear professional photo.</p>
+                    </div>
+                </div>
+
+                <div class="profile-photo-preview">
+                    <img id="profilePhoto" alt="Profile Photo">
+
+                    <p>JPG, PNG or WEBP image recommended.</p>
+
+                    <input
+                        class="hidden-input"
+                        id="photoInput"
+                        type="file"
+                        accept="image/*"
+                    >
+
+                    <button class="secondary-btn" type="button" onclick="choosePhoto()">
+                        ⬆ Upload New Photo
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- PASSWORD -->
+            <section class="settings-card password-section">
+
+                <div class="card-heading">
+                    <div class="heading-icon">🔒</div>
+
+                    <div>
+                        <h2>Change Password</h2>
+                        <p>Use a strong password to keep your account secure.</p>
+                    </div>
+                </div>
+
+                <div class="password-grid">
+
+                    <div class="settings-form-group">
+                        <label>Current Password</label>
+
+                        <div class="password-input-wrap">
+                            <input id="oldPassword" type="password" placeholder="Current password">
+                            <button class="password-toggle" type="button" onclick="togglePassword('oldPassword')">◉</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>New Password</label>
+
+                        <div class="password-input-wrap">
+                            <input id="newPassword" type="password" placeholder="Minimum 6 characters">
+                            <button class="password-toggle" type="button" onclick="togglePassword('newPassword')">◉</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label>Confirm Password</label>
+
+                        <div class="password-input-wrap">
+                            <input id="confirmPassword" type="password" placeholder="Confirm new password">
+                            <button class="password-toggle" type="button" onclick="togglePassword('confirmPassword')">◉</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-actions" style="margin-top:16px;">
+                    <button class="primary-btn" type="button" onclick="changePassword()">
+                        🔐 Update Password
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- SECURITY TIPS -->
+            <section class="settings-card security-card">
+
+                <div class="card-heading">
+                    <div class="heading-icon">🛡</div>
+
+                    <div>
+                        <h2>Security Tips</h2>
+                        <p>Keep your placement account protected.</p>
+                    </div>
+                </div>
+
+                <div class="security-tips">
+                    <div class="security-tip">
+                        <span class="security-check">✓</span>
+                        Never share your password with anyone.
+                    </div>
+
+                    <div class="security-tip">
+                        <span class="security-check">✓</span>
+                        Use a strong and unique password.
+                    </div>
+
+                    <div class="security-tip">
+                        <span class="security-check">✓</span>
+                        Logout from shared public devices.
+                    </div>
+
+                    <div class="security-tip">
+                        <span class="security-check">✓</span>
+                        Keep email and mobile details updated.
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- RESUME -->
+            <section class="settings-card">
+
+                <div class="card-heading">
+                    <div class="heading-icon">📄</div>
+
+                    <div>
+                        <h2>Resume</h2>
+                        <p>Keep your latest placement resume uploaded.</p>
+                    </div>
+                </div>
+
+                <div class="resume-file-box">
+                    <div class="resume-file-icon">PDF</div>
+
+                    <div>
+                        <b id="resumeTitle">No resume uploaded</b>
+                        <p id="resumeInfo">Upload PDF, DOC or DOCX file.</p>
+                    </div>
+                </div>
+
+                <input
+                    class="hidden-input"
+                    id="resumeInput"
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                >
+
+                <div class="resume-action-row">
+                    <button class="secondary-btn" type="button" onclick="chooseResume()">
+                        ⬆ Upload New Resume
+                    </button>
+
+                    <button class="primary-btn" type="button" onclick="downloadResume()">
+                        ⬇ Download Resume
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- PREFERENCES -->
+            <section class="settings-card preference-card" id="preferencesSection">
+
+                <div class="card-heading">
+                    <div class="heading-icon">⚙</div>
+
+                    <div>
+                        <h2>Preferences</h2>
+                        <p>These preferences save in this browser for your student account.</p>
+                    </div>
+                </div>
+
+                <div class="preference-row">
+                    <div>
+                        <b>Portal Theme</b>
+                        <p>Choose your preferred dashboard appearance.</p>
+                    </div>
+
+                    <select id="themePreference">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+
+                    <div></div>
+
+                    <button class="secondary-btn" type="button" onclick="savePreferences()">
+                        Save
+                    </button>
+                </div>
+
+                <div class="preference-row">
+                    <div>
+                        <b>Placement Notifications</b>
+                        <p>Receive drive and application related alerts.</p>
+                    </div>
+
+                    <div></div>
+
+                    <label class="toggle-switch">
+                        <input id="placementNotifications" type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+
+                    <button class="secondary-btn" type="button" onclick="savePreferences()">
+                        Save
+                    </button>
+                </div>
+
+                <div class="preference-row">
+                    <div>
+                        <b>Test Notifications</b>
+                        <p>Get alerts for aptitude test schedule and results.</p>
+                    </div>
+
+                    <div></div>
+
+                    <label class="toggle-switch">
+                        <input id="testNotifications" type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+
+                    <button class="secondary-btn" type="button" onclick="savePreferences()">
+                        Save
+                    </button>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+const preferenceKey = "recruiteaseStudentPreferences_" + studentId;
+
+let currentStudent = null;
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+}
+
+function defaultAvatar() {
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
+            <rect width="100%" height="100%" fill="#1d4ed8"/>
+            <text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle"
+                  font-family="Arial" font-size="70" font-weight="bold" fill="white">
+                ST
+            </text>
+        </svg>
+    `);
+}
+
+function setPhoto(imageId, imageUrl) {
+    const image = document.getElementById(imageId);
+
+    if (!image) {
+        return;
+    }
+
+    image.onerror = function() {
+        image.src = defaultAvatar();
+    };
+
+    image.src = imageUrl || defaultAvatar();
+}
+
+async function getResponseData(response) {
+    const text = await response.text();
+
+    try {
+        return text ? JSON.parse(text) : null;
+    } catch (error) {
+        return text;
+    }
+}
+
+async function loadStudent() {
+    try {
+        const studentResponse = await fetch("/api/students/" + studentId);
+
+        if (!studentResponse.ok) {
+            throw new Error("Student profile load nahi hua.");
+        }
+
+        currentStudent = await studentResponse.json();
+
+        document.getElementById("name").value = currentStudent.name || "";
+        document.getElementById("email").value = currentStudent.email || "";
+        document.getElementById("mobile").value = currentStudent.mobile || "";
+        document.getElementById("year").value = currentStudent.year || "";
+        document.getElementById("address").value = currentStudent.address || "";
+        document.getElementById("skills").value = currentStudent.skills || "";
+        document.getElementById("preferredCompany").value =
+            currentStudent.preferredCompany || "";
+        document.getElementById("linkedin").value = currentStudent.linkedin || "";
+        document.getElementById("github").value = currentStudent.github || "";
+
+        const photoUrl = "/api/students/" + studentId + "/photo?t=" + Date.now();
+
+        setPhoto("sidebarPhoto", photoUrl);
+        setPhoto("topPhoto", photoUrl);
+        setPhoto("profilePhoto", photoUrl);
+
+  const studentInfo = [
+    currentStudent.branch || "Student",
+    currentStudent.year || ""
+].filter(Boolean).join(" · ");
+
+/* Top profile */
+const topName = document.getElementById("topName");
+const topBranch = document.getElementById("topBranch");
+
+if (topName) {
+    topName.innerText = currentStudent.name || "Student";
+}
+
+if (topBranch) {
+    topBranch.innerText = studentInfo || "Student Portal";
+}
+
+/* Common sidebar student-sidebar.js se aata hai */
+const unifiedSidebarName = document.getElementById(
+    "unifiedSidebarName"
+);
+
+const unifiedSidebarInfo = document.getElementById(
+    "unifiedSidebarInfo"
+);
+
+if (unifiedSidebarName) {
+    unifiedSidebarName.innerText =
+        currentStudent.name || "Student";
+}
+
+if (unifiedSidebarInfo) {
+    unifiedSidebarInfo.innerText =
+        studentInfo || "RecruitEase Student";
+}
+
+        document.getElementById("resumeTitle").innerText =
+            currentStudent.resumeFileName || "No resume uploaded";
+
+        document.getElementById("resumeInfo").innerText =
+            currentStudent.resumeFileName
+                ? "Your current resume is ready for download."
+                : "Upload PDF, DOC or DOCX file.";
+
+        const loginResponse = await fetch(
+            "/api/student-login/by-student/" + studentId
+        );
+
+        if (loginResponse.ok) {
+            const login = await loginResponse.json();
+
+            document.getElementById("username").value =
+                login.username || "";
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Student settings load nahi ho rahi. Backend check karo.");
+    }
+}
+
+async function saveProfile() {
+    const username = document.getElementById("username").value.trim();
+
+    if (username.length < 3) {
+        alert("Username minimum 3 characters ka hona chahiye.");
+        return;
+    }
+
+    const profileData = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        mobile: document.getElementById("mobile").value.trim(),
+        year: document.getElementById("year").value,
+        address: document.getElementById("address").value.trim(),
+        skills: document.getElementById("skills").value.trim(),
+        preferredCompany: document.getElementById("preferredCompany").value.trim(),
+        linkedin: document.getElementById("linkedin").value.trim(),
+        github: document.getElementById("github").value.trim()
+    };
+
+    if (!profileData.name || !profileData.email) {
+        alert("Full Name aur Email required hain.");
+        return;
+    }
+
+    try {
+        const profileResponse = await fetch(
+            "/api/students/" + studentId + "/update-profile",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(profileData)
+            }
+        );
+
+        if (!profileResponse.ok) {
+            throw new Error("Profile update failed.");
+        }
+
+        const usernameResponse = await fetch(
+            "/api/student-login/" + studentId + "/update-username",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username
+                })
+            }
+        );
+
+        const usernameResult = await getResponseData(usernameResponse);
+
+        if (!usernameResponse.ok) {
+            throw new Error(
+                usernameResult.message || "Username update failed."
+            );
+        }
+
+        alert("Profile aur username successfully update ho gaye.");
+        loadStudent();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Profile update nahi hua.");
+    }
+}
+
+function choosePhoto() {
+    document.getElementById("photoInput").click();
+}
+
+document.getElementById("photoInput").addEventListener("change", async function() {
+    const file = this.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select a valid image file.");
+        this.value = "";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch(
+            "/api/students/" + studentId + "/upload-photo",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Photo upload failed.");
+        }
+
+        alert("Profile photo uploaded successfully.");
+        this.value = "";
+        loadStudent();
+
+    } catch (error) {
+        console.error(error);
+        alert("Photo upload nahi hua.");
+    }
+});
+
+function chooseResume() {
+    document.getElementById("resumeInput").click();
+}
+
+document.getElementById("resumeInput").addEventListener("change", async function() {
+    const file = this.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const allowedExtensions = [".pdf", ".doc", ".docx"];
+    const lowerName = file.name.toLowerCase();
+
+    const validFile = allowedExtensions.some(function(extension) {
+        return lowerName.endsWith(extension);
+    });
+
+    if (!validFile) {
+        alert("Only PDF, DOC or DOCX resume upload karo.");
+        this.value = "";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch(
+            "/api/students/" + studentId + "/upload-resume",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Resume upload failed.");
+        }
+
+        alert("Resume uploaded successfully.");
+        this.value = "";
+        loadStudent();
+
+    } catch (error) {
+        console.error(error);
+        alert("Resume upload nahi hua.");
+    }
+});
+
+function downloadResume() {
+    if (!currentStudent || !currentStudent.resumeFileName) {
+        alert("Pehle resume upload karo.");
+        return;
+    }
+
+    window.open("/api/students/" + studentId + "/resume", "_blank");
+}
+
+async function changePassword() {
+    const oldPassword = document.getElementById("oldPassword").value.trim();
+    const newPassword = document.getElementById("newPassword").value.trim();
+    const confirmPassword =
+        document.getElementById("confirmPassword").value.trim();
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+        alert("Please fill all password fields.");
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert("New password aur confirm password match nahi kar rahe.");
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        alert("New password minimum 6 characters ka hona chahiye.");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "/api/student-login/" + studentId + "/change-password",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    oldPassword: oldPassword,
+                    password: newPassword
+                })
+            }
+        );
+
+        const result = await getResponseData(response);
+
+        if (!response.ok) {
+            throw new Error(
+                result.message || "Current password incorrect hai."
+            );
+        }
+
+        alert("Password updated successfully.");
+
+        document.getElementById("oldPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Password update nahi hua.");
+    }
+}
+
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+
+    input.type = input.type === "password"
+        ? "text"
+        : "password";
+}
+
+function loadPreferences() {
+    const defaults = {
+        theme: "dark",
+        placementNotifications: true,
+        testNotifications: true
+    };
+
+    const savedPreferences = JSON.parse(
+        localStorage.getItem(preferenceKey) || "null"
+    );
+
+    const preferences = {
+        ...defaults,
+        ...(savedPreferences || {})
+    };
+
+    document.getElementById("themePreference").value =
+        preferences.theme;
+
+    document.getElementById("placementNotifications").checked =
+        preferences.placementNotifications;
+
+    document.getElementById("testNotifications").checked =
+        preferences.testNotifications;
+
+    applyTheme(preferences.theme);
+}
+
+function savePreferences() {
+    const preferences = {
+        theme: document.getElementById("themePreference").value,
+        placementNotifications:
+            document.getElementById("placementNotifications").checked,
+        testNotifications:
+            document.getElementById("testNotifications").checked
+    };
+
+    localStorage.setItem(
+        preferenceKey,
+        JSON.stringify(preferences)
+    );
+
+    applyTheme(preferences.theme);
+
+    alert("Preferences browser me save ho gayi.");
+}
+
+function applyTheme(theme) {
+    document.body.classList.toggle(
+        "student-light-theme",
+        theme === "light"
+    );
+
+    document.getElementById("themeButton").innerText =
+        theme === "light" ? "☀️" : "🌙";
+}
+
+function toggleTheme() {
+    const currentTheme = document.body.classList.contains(
+        "student-light-theme"
+    ) ? "light" : "dark";
+
+    const nextTheme = currentTheme === "dark"
+        ? "light"
+        : "dark";
+
+    document.getElementById("themePreference").value = nextTheme;
+
+    savePreferences();
+}
+
+function searchSettings() {
+    const text = document.getElementById("settingsSearch").value
+        .toLowerCase()
+        .trim();
+
+    if (text.includes("password")) {
+        document.getElementById("oldPassword").focus();
+
+    } else if (text.includes("resume")) {
+        document.getElementById("resumeInput").focus();
+
+    } else if (text.includes("username")) {
+        document.getElementById("username").focus();
+
+    } else if (text.includes("photo")) {
+        document.getElementById("photoInput").focus();
+
+    } else if (text.includes("theme") || text.includes("notification")) {
+        document.getElementById("preferencesSection").scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+}
+
+function logout() {
+    localStorage.removeItem("studentId");
+    window.location.href = "student-login.html";
+}
+
+loadPreferences();
+loadStudent();
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

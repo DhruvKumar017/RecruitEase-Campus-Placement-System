@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Drives - RecruitEase</title>
+
+    <link rel="stylesheet" href="student-placement-drives.css">
+</head>
+
+<body>
+
+<div class="student-placement-layout">
+
+    <!-- student-sidebar.js isko common sidebar se replace karega -->
+    <aside class="sidebar"></aside>
+
+    <main class="student-placement-main">
+
+        <header class="placement-topbar">
+
+            <button class="menu-button" type="button">☰</button>
+
+            <input
+                id="topSearch"
+                class="placement-top-search"
+                type="text"
+                placeholder="Search drives, companies..."
+                onkeyup="applyTopSearch()"
+            >
+
+            <div class="placement-top-actions">
+
+                <button
+                    id="themeButton"
+                    class="placement-icon-btn"
+                    type="button"
+                    onclick="toggleTheme()"
+                    title="Change Theme"
+                >
+                    🌙
+                </button>
+
+                <div class="placement-top-profile">
+                    <img id="topPhoto" alt="Student Photo">
+
+                    <div>
+                        <b id="topName">Student</b>
+                        <p id="topInfo">Student Portal</p>
+                    </div>
+
+                    <span>⌄</span>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="placement-page-heading">
+
+            <div class="placement-heading-left">
+                <div class="placement-heading-icon">💼</div>
+
+                <div>
+                    <h1>Placement Drives</h1>
+                    <p>Explore and apply for placement opportunities.</p>
+
+                    <div class="placement-breadcrumb">
+                        <a href="student-dashboard.html">Dashboard</a>
+                        <span>›</span>
+                        <b>Placement Drives</b>
+                    </div>
+                </div>
+            </div>
+
+            <a class="my-applications-btn" href="student-applications.html">
+                📄 My Applications
+            </a>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+
+        <section class="placement-stats">
+
+            <article class="placement-stat-card">
+                <div class="stat-icon stat-blue">📅</div>
+
+                <div>
+                    <h2 id="activeDriveCount">0</h2>
+                    <p>Active Drives</p>
+                    <small>Currently Open</small>
+                </div>
+            </article>
+
+            <article class="placement-stat-card">
+                <div class="stat-icon stat-green">✓</div>
+
+                <div>
+                    <h2 id="appliedDriveCount">0</h2>
+                    <p>Applied Drives</p>
+                    <small>You have applied</small>
+                </div>
+            </article>
+
+            <article class="placement-stat-card">
+                <div class="stat-icon stat-purple">⌛</div>
+
+                <div>
+                    <h2 id="upcomingDriveCount">0</h2>
+                    <p>Upcoming Drives</p>
+                    <small>Starting Soon</small>
+                </div>
+            </article>
+
+            <article class="placement-stat-card">
+                <div class="stat-icon stat-yellow">🏆</div>
+
+                <div>
+                    <h2 id="eligibleDriveCount">0</h2>
+                    <p>Eligible Drives</p>
+                    <small>Ready to Apply</small>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- ================= FILTER ================= -->
+
+        <section class="placement-filter-card">
+
+            <div class="placement-filter-search">
+                <input
+                    id="driveSearch"
+                    type="text"
+                    placeholder="Search by company name..."
+                    onkeyup="renderDrives()"
+                >
+                <span>⌕</span>
+            </div>
+
+            <select id="branchFilter" onchange="renderDrives()">
+                <option value="">All Branches</option>
+            </select>
+
+            <select id="yearFilter" onchange="renderDrives()">
+                <option value="">All Years</option>
+                <option value="eligible">Eligible Only</option>
+                <option value="applied">Applied Only</option>
+            </select>
+
+            <select id="statusFilter" onchange="renderDrives()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="applied">Applied</option>
+                <option value="not-eligible">Not Eligible</option>
+            </select>
+
+            <button class="filter-button" type="button" onclick="renderDrives()">
+                ⚱ Filter
+            </button>
+
+        </section>
+
+        <!-- ================= DRIVE TABLE ================= -->
+
+        <section class="placement-table-card">
+
+            <div class="placement-table-wrapper">
+
+                <table class="placement-table">
+
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Drive Name</th>
+                            <th>Eligibility</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>CTC</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="driveTableBody">
+                        <tr>
+                            <td colspan="8" class="drive-loading">
+                                Loading placement drives...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="placement-table-footer">
+                <p id="driveEntryText">Showing 0 drives</p>
+
+                <div class="placement-pagination">
+                    <button type="button" disabled>‹</button>
+                    <button class="active-page" type="button">1</button>
+                    <button type="button" disabled>›</button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+
+const placementThemeKey =
+    "recruiteaseStudentPlacementTheme_" + studentId;
+
+let placementDrives = [];
+let currentStudent = null;
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function defaultAvatar() {
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220">
+            <rect width="100%" height="100%" fill="#1d4ed8"/>
+            <text x="50%" y="53%"
+                dominant-baseline="middle"
+                text-anchor="middle"
+                font-family="Arial"
+                font-size="70"
+                font-weight="bold"
+                fill="white">
+                ST
+            </text>
+        </svg>
+    `);
+}
+
+function setPhoto(id, url) {
+    const image = document.getElementById(id);
+
+    if (!image) {
+        return;
+    }
+
+    image.onerror = function () {
+        image.src = defaultAvatar();
+    };
+
+    image.src = url || defaultAvatar();
+}
+
+function normalize(value) {
+    return String(value || "").trim().toLowerCase();
+}
+
+function isActiveDrive(drive) {
+    const status = normalize(drive.status);
+
+    return status === "active" || status === "open";
+}
+
+function isUpcomingDrive(drive) {
+    return !isActiveDrive(drive) && !drive.alreadyApplied;
+}
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "-";
+    }
+
+    try {
+        const date = new Date(dateValue + "T00:00:00");
+
+        return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
+    } catch (error) {
+        return dateValue;
+    }
+}
+
+function companyInitials(companyName) {
+    const words = String(companyName || "RE")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+    return words
+        .slice(0, 2)
+        .map(word => word.charAt(0).toUpperCase())
+        .join("") || "RE";
+}
+
+async function loadTopStudentData() {
+    try {
+        const response = await fetch("/api/students/" + studentId);
+
+        if (!response.ok) {
+            throw new Error("Student load failed.");
+        }
+
+        currentStudent = await response.json();
+
+        const info = [
+            currentStudent.branch || "Student",
+            currentStudent.year || ""
+        ].filter(Boolean).join(" · ");
+
+        document.getElementById("topName").innerText =
+            currentStudent.name || "Student";
+
+        document.getElementById("topInfo").innerText =
+            info || "Student Portal";
+
+        setPhoto(
+            "topPhoto",
+            "/api/students/" + studentId + "/photo?t=" + Date.now()
+        );
+
+    } catch (error) {
+        console.error("Top student data error:", error);
+        setPhoto("topPhoto", defaultAvatar());
+    }
+}
+
+async function loadPlacementDrives() {
+    try {
+        const response = await fetch(
+            "/api/student-placement-drives/" + studentId
+        );
+
+        const responseText = await response.text();
+
+        let result;
+
+        try {
+            result = responseText ? JSON.parse(responseText) : null;
+        } catch (error) {
+            result = responseText;
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                result?.message ||
+                result ||
+                "Placement drives load nahi ho rahi."
+            );
+        }
+
+        placementDrives = Array.isArray(result) ? result : [];
+
+        fillBranchFilter();
+        renderDrives();
+
+    } catch (error) {
+        console.error("Placement drives error:", error);
+
+        document.getElementById("driveTableBody").innerHTML = `
+            <tr>
+                <td colspan="8" class="drive-loading">
+                    ${escapeHtml(
+                        error.message ||
+                        "Placement drives load nahi ho rahi."
+                    )}
+                </td>
+            </tr>
+        `;
+    }
+}
+
+function fillBranchFilter() {
+    const branchFilter = document.getElementById("branchFilter");
+
+    const selectedValue = branchFilter.value;
+
+    const branches = [
+        ...new Set(
+            placementDrives
+                .map(drive => drive.branch)
+                .filter(Boolean)
+                .map(branch => branch.trim())
+        )
+    ];
+
+    branchFilter.innerHTML = `
+        <option value="">All Branches</option>
+        ${branches.map(branch => `
+            <option value="${escapeHtml(normalize(branch))}">
+                ${escapeHtml(branch)}
+            </option>
+        `).join("")}
+    `;
+
+    branchFilter.value = selectedValue;
+}
+
+function updateStats() {
+    const active = placementDrives.filter(isActiveDrive).length;
+
+    const applied = placementDrives.filter(
+        drive => drive.alreadyApplied
+    ).length;
+
+    const upcoming = placementDrives.filter(isUpcomingDrive).length;
+
+    const eligible = placementDrives.filter(
+        drive => drive.eligible && !drive.alreadyApplied
+    ).length;
+
+    document.getElementById("activeDriveCount").innerText = active;
+    document.getElementById("appliedDriveCount").innerText = applied;
+    document.getElementById("upcomingDriveCount").innerText = upcoming;
+    document.getElementById("eligibleDriveCount").innerText = eligible;
+}
+
+function getFilteredDrives() {
+    const search = normalize(
+        document.getElementById("driveSearch").value
+    );
+
+    const branch = normalize(
+        document.getElementById("branchFilter").value
+    );
+
+    const quickFilter = normalize(
+        document.getElementById("yearFilter").value
+    );
+
+    const status = normalize(
+        document.getElementById("statusFilter").value
+    );
+
+    return placementDrives.filter(drive => {
+        const matchesSearch =
+            !search ||
+            normalize(drive.companyName).includes(search) ||
+            normalize(drive.jobRole).includes(search) ||
+            normalize(drive.skills).includes(search);
+
+        const matchesBranch =
+            !branch ||
+            normalize(drive.branch).includes(branch) ||
+            branch.includes(normalize(drive.branch));
+
+        let matchesQuickFilter = true;
+
+        if (quickFilter === "eligible") {
+            matchesQuickFilter =
+                drive.eligible && !drive.alreadyApplied;
+
+        } else if (quickFilter === "applied") {
+            matchesQuickFilter = drive.alreadyApplied;
+        }
+
+        let matchesStatus = true;
+
+        if (status === "active") {
+            matchesStatus = isActiveDrive(drive);
+
+        } else if (status === "upcoming") {
+            matchesStatus = isUpcomingDrive(drive);
+
+        } else if (status === "applied") {
+            matchesStatus = drive.alreadyApplied;
+
+        } else if (status === "not-eligible") {
+            matchesStatus = !drive.eligible;
+        }
+
+        return (
+            matchesSearch &&
+            matchesBranch &&
+            matchesQuickFilter &&
+            matchesStatus
+        );
+    });
+}
+
+function getStatusHtml(drive) {
+    if (drive.alreadyApplied) {
+        return `<span class="drive-status applied-status">Applied</span>`;
+    }
+
+    if (isActiveDrive(drive)) {
+        return `<span class="drive-status active-status">Active</span>`;
+    }
+
+    return `<span class="drive-status upcoming-status">Upcoming</span>`;
+}
+
+function getActionHtml(drive) {
+    const id = Number(drive.driveId);
+
+    if (drive.alreadyApplied) {
+        return `
+            <button
+                class="drive-action applied-action"
+                type="button"
+                disabled
+            >
+                ✓ Applied
+            </button>
+        `;
+    }
+
+    if (drive.canApply) {
+        return `
+            <button
+                class="drive-action apply-action"
+                type="button"
+                onclick="applyForDrive(${id})"
+            >
+                Apply Now
+            </button>
+        `;
+    }
+
+    if (!isActiveDrive(drive)) {
+        return `
+            <button
+                class="drive-action notify-action"
+                type="button"
+                onclick="notifyForDrive(${id})"
+            >
+                Notify Me
+            </button>
+        `;
+    }
+
+    return `
+        <button
+            class="drive-action disabled-action"
+            type="button"
+            disabled
+            title="${escapeHtml(drive.eligibilityReason || "Not eligible")}"
+        >
+            Not Eligible
+        </button>
+    `;
+}
+
+function renderDrives() {
+    const drives = getFilteredDrives();
+
+    updateStats();
+
+    const tableBody = document.getElementById("driveTableBody");
+
+    if (drives.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="drive-loading">
+                    No placement drives found.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("driveEntryText").innerText =
+            "Showing 0 drives";
+
+        return;
+    }
+
+    tableBody.innerHTML = drives.map(drive => {
+        const eligibilityText = `
+            ${escapeHtml(drive.branch || "All Branches")}
+            <br>
+            <small>${escapeHtml(
+                drive.minCgpa != null
+                    ? "Min CGPA " + drive.minCgpa
+                    : "CGPA not specified"
+            )}</small>
+        `;
+
+        const dateText = `
+            ${escapeHtml(formatDate(drive.driveDate))}
+            <br>
+            <small>Last: ${escapeHtml(
+                formatDate(drive.lastDate)
+            )}</small>
+        `;
+
+        const reasonHtml = !drive.canApply && !drive.alreadyApplied
+            ? `
+                <div
+                    class="eligibility-reason"
+                    title="${escapeHtml(drive.eligibilityReason || "")}"
+                >
+                    ${escapeHtml(drive.eligibilityReason || "")}
+                </div>
+            `
+            : "";
+
+        return `
+            <tr>
+                <td>
+                    <div class="company-cell">
+                        <div class="company-logo">
+                            ${escapeHtml(companyInitials(drive.companyName))}
+                        </div>
+
+                        <div>
+                            <b>${escapeHtml(drive.companyName || "-")}</b>
+                            <p>${escapeHtml(
+                                drive.skills || "Placement Drive"
+                            )}</p>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <b>${escapeHtml(drive.jobRole || "-")}</b>
+                    <p class="mode-chip">
+                        ${escapeHtml(drive.mode || "Drive")}
+                    </p>
+                </td>
+
+                <td>
+                    <div class="eligibility-cell">
+                        ${eligibilityText}
+                        ${reasonHtml}
+                    </div>
+                </td>
+
+                <td>${dateText}</td>
+
+                <td>${escapeHtml(drive.location || "Online")}</td>
+
+                <td>
+                    <span class="ctc-text">
+                        ₹ ${escapeHtml(
+                            drive.packageLpa != null
+                                ? drive.packageLpa + " LPA"
+                                : "-"
+                        )}
+                    </span>
+                </td>
+
+                <td>
+                    ${getStatusHtml(drive)}
+                </td>
+
+                <td>
+                    ${getActionHtml(drive)}
+                </td>
+            </tr>
+        `;
+    }).join("");
+
+    document.getElementById("driveEntryText").innerText =
+        `Showing 1 to ${drives.length} of ${placementDrives.length} drives`;
+}
+
+function applyTopSearch() {
+    document.getElementById("driveSearch").value =
+        document.getElementById("topSearch").value;
+
+    renderDrives();
+}
+
+async function applyForDrive(driveId) {
+    const drive = placementDrives.find(
+        item => Number(item.driveId) === Number(driveId)
+    );
+
+    if (!drive || !drive.canApply) {
+        alert(
+            drive?.eligibilityReason ||
+            "You are not eligible for this placement drive."
+        );
+
+        return;
+    }
+
+    const confirmed = confirm(
+        `Apply for ${drive.companyName} - ${drive.jobRole}?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/student-placement-drives/${studentId}/${driveId}/apply`,
+            {
+                method: "POST"
+            }
+        );
+
+        const responseText = await response.text();
+
+        let result;
+
+        try {
+            result = responseText ? JSON.parse(responseText) : null;
+        } catch (error) {
+            result = responseText;
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                result?.message ||
+                result ||
+                "Application submit nahi hui."
+            );
+        }
+
+        alert(
+            result?.message ||
+            "Application submitted successfully."
+        );
+
+        loadPlacementDrives();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Application submit nahi hui.");
+    }
+}
+
+function notifyForDrive(driveId) {
+    const notifiedDrives = JSON.parse(
+        localStorage.getItem("recruiteaseDriveNotifications") || "[]"
+    );
+
+    if (!notifiedDrives.includes(driveId)) {
+        notifiedDrives.push(driveId);
+
+        localStorage.setItem(
+            "recruiteaseDriveNotifications",
+            JSON.stringify(notifiedDrives)
+        );
+    }
+
+    alert(
+        "Notification preference saved. Drive Active hote hi aapko portal par update dikhega."
+    );
+}
+
+function applyTheme(theme) {
+    document.body.classList.toggle(
+        "student-placement-light",
+        theme === "light"
+    );
+
+    document.getElementById("themeButton").innerText =
+        theme === "light" ? "☀️" : "🌙";
+}
+
+function loadTheme() {
+    const theme =
+        localStorage.getItem(placementThemeKey) || "dark";
+
+    applyTheme(theme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.body.classList.contains(
+        "student-placement-light"
+    )
+        ? "light"
+        : "dark";
+
+    const nextTheme =
+        currentTheme === "dark" ? "light" : "dark";
+
+    localStorage.setItem(placementThemeKey, nextTheme);
+
+    applyTheme(nextTheme);
+}
+
+loadTheme();
+loadTopStudentData();
+loadPlacementDrives();
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

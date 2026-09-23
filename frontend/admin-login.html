@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - RecruitEase</title>
+
+    <link rel="stylesheet" href="admin-login.css">
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <section class="left-panel">
+
+        <div class="brand">
+            🎓 Recruit<span>Ease</span>
+        </div>
+
+        <p class="brand-sub">Campus Placement Management System</p>
+
+        <div class="welcome">
+            <h1>
+                Welcome Back,<br>
+                <span>Admin!</span> 🛡️
+            </h1>
+
+            <p>
+                Login to manage students, companies, placement drives,
+                aptitude tests, applications and complete campus placement analytics.
+            </p>
+        </div>
+
+        <div class="features">
+
+            <div>
+                <span>👥</span>
+                <div>
+                    <h3>Student Management</h3>
+                    <p>Manage student profiles and eligibility details.</p>
+                </div>
+            </div>
+
+            <div>
+                <span>🏢</span>
+                <div>
+                    <h3>Company Management</h3>
+                    <p>Add companies, job roles and placement criteria.</p>
+                </div>
+            </div>
+
+            <div>
+                <span>📊</span>
+                <div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Track applications, tests and placed students.</p>
+                </div>
+            </div>
+
+            <div>
+                <span>📅</span>
+                <div>
+                    <h3>Placement Updates</h3>
+                    <p>Manage drives, interviews and placement status.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="right-panel">
+
+        <div class="login-card">
+
+            <div class="login-icon">🛡️</div>
+
+            <h2>Admin Login</h2>
+            <p>Login to continue to your admin account</p>
+
+            <form id="loginForm">
+
+                <div class="input-box">
+                    <span>👤</span>
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Admin Name"
+                        required
+                    >
+                </div>
+
+                <div class="input-box">
+                    <span>🔒</span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        required
+                    >
+
+                    <b id="togglePassword">👁</b>
+                </div>
+
+                <div class="options">
+                    <label>
+                        <input
+                            id="rememberMe"
+                            type="checkbox"
+                            checked
+                        >
+                        Remember me
+                    </label>
+
+                    <a href="admin-forgot-password.html">
+                        Forgot Password?
+                    </a>
+                </div>
+
+                <button id="loginButton" type="submit">
+                    Login <span>→</span>
+                </button>
+
+            </form>
+
+            <div class="divider">
+                <span></span>
+                OR
+                <span></span>
+            </div>
+
+            <a class="admin-link" href="student-login.html">
+                🎓 Login as Student
+            </a>
+
+            <p class="contact">
+                Need admin access?
+                <a href="admin-request.html">
+                    Request Admin Access
+                </a>
+            </p>
+
+        </div>
+
+        <div class="trust-row">
+            <span>🛡 Secure Admin Access</span>
+            <span>🔒 Protected Data</span>
+            <span>📊 Placement Management</span>
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("loginButton");
+
+loginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (username === "" || password === "") {
+        alert("Please enter Admin Name and Password.");
+        return;
+    }
+
+    loginButton.disabled = true;
+    loginButton.innerHTML = "Logging in...";
+
+    try {
+        const response = await fetch("/api/admin-login/login", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+        const responseText = await response.text();
+
+        let result = null;
+
+        try {
+            result = JSON.parse(responseText);
+        } catch (error) {
+            result = responseText;
+        }
+
+        if (!response.ok) {
+            const errorMessage =
+                typeof result === "string"
+                    ? result
+                    : (result.message || "Login failed.");
+
+            alert("❌ " + errorMessage);
+            return;
+        }
+
+        if (!result || !result.token) {
+            alert("❌ Login token nahi mila. Backend check karo.");
+            return;
+        }
+
+        localStorage.setItem("adminUsername", result.username);
+        localStorage.setItem("adminRole", result.role);
+        localStorage.setItem("adminToken", result.token);
+
+        alert("✅ Login successful. Welcome " + result.username + "!");
+
+        window.location.href = "admin-dashboard.html";
+
+    } catch (error) {
+        console.error("Admin login error:", error);
+
+        alert("❌ Login failed. Backend check karo.");
+
+    } finally {
+        loginButton.disabled = false;
+        loginButton.innerHTML = 'Login <span>→</span>';
+    }
+});
+
+document.getElementById("togglePassword").addEventListener(
+    "click",
+    function() {
+        const passwordInput = document.getElementById("password");
+
+        passwordInput.type =
+            passwordInput.type === "password"
+                ? "text"
+                : "password";
+    }
+);
+</script>
+
+</body>
+</html>

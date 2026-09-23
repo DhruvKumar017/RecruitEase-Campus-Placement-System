@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blocked Students</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Blocked Students</h1>
+
+    <a href="admin-dashboard.html">
+        <button>Back to Dashboard</button>
+    </a>
+
+    <br><br>
+
+    <table id="blockedTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Roll No</th>
+                <th>Branch</th>
+                <th>CGPA</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody></tbody>
+    </table>
+
+</div>
+
+<script>
+function loadBlockedStudents() {
+    fetch("/api/students/blocked")
+    .then(response => response.json())
+    .then(data => {
+        let tbody = document.querySelector("#blockedTable tbody");
+        tbody.innerHTML = "";
+
+        if (data.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='7'>No blocked students found</td></tr>";
+            return;
+        }
+
+        data.forEach(student => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.rollNumber}</td>
+                    <td>${student.branch}</td>
+                    <td>${student.cgpa}</td>
+                    <td>
+                        <button onclick="unblockStudent(${student.id})">Unblock</button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+
+function unblockStudent(id) {
+    fetch("/api/students/" + id + "/unblock", {
+        method: "PUT"
+    })
+    .then(() => {
+        alert("Student Unblocked Successfully");
+        loadBlockedStudents();
+    });
+}
+
+loadBlockedStudents();
+</script>
+
+</body>
+</html>

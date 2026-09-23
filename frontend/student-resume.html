@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Resume Builder | RecruitEase</title>
+<link rel="stylesheet" href="student-portal.css">
+</head>
+
+<body>
+<div class="student-layout">
+
+<aside class="sidebar">
+    <div class="brand">🎓 Recruit<span>Ease</span></div>
+    <p>Campus Placement System</p>
+
+    <a href="student-dashboard.html">🏠 Dashboard</a>
+    <a href="student-profile.html">👤 My Profile</a>
+    <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+    <a href="student-applications.html">📄 Applications</a>
+    <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="student-interviews.html">🎤 Interviews</a>
+    <a class="active" href="student-resume.html">📑 Resume Builder</a>
+    <a href="student-placement-drives.html">💼 Placement Drive</a>
+    <a href="student-notifications.html">🔔 Notifications</a>
+    <a href="student-settings.html">⚙ Settings</a>
+    <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+    <div class="help-card">
+        <h4>Need Help?</h4>
+        <p>Contact your TPO</p>
+    </div>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <input type="text" placeholder="Search resume tips...">
+
+    <div class="top-actions">
+        <div class="user-box">
+            <img id="topPhoto" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+            <div>
+                <b id="topName">Student</b>
+                <p id="topBranch">B.Tech CSE</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="details-card">
+    <h2>Resume Builder</h2>
+
+    <div class="info-grid">
+        <div><label>ATS Score</label><p>82%</p></div>
+        <div><label>Resume Status</label><p id="resumeStatus">Checking...</p></div>
+        <div><label>Missing Skills</label><p>DSA, Projects</p></div>
+        <div><label>Profile Match</label><p>Good</p></div>
+    </div>
+</section>
+
+<section class="details-card" style="margin-top:24px;">
+    <h2>Manage Resume</h2>
+
+    <div class="resume-builder-box">
+        <div class="resume-preview">
+            <div class="resume-icon">📄</div>
+            <h3 id="resumeTitle">No Resume Selected</h3>
+            <p>Upload your latest resume in PDF format.</p>
+        </div>
+
+        <div class="resume-actions">
+            <input type="file" id="resumeInput" accept=".pdf,.doc,.docx">
+            <button onclick="uploadResume()">Upload / Replace Resume</button>
+            <button class="green-action" onclick="downloadResume()">Download Resume</button>
+        </div>
+    </div>
+</section>
+
+<section class="details-card" style="margin-top:24px;">
+    <h2>Resume Tips</h2>
+
+    <div class="application-list">
+        <div class="application-card">
+            <div>
+                <h3>Use strong project descriptions</h3>
+                <p>Mention tech stack, database, backend, APIs and your contribution.</p>
+            </div>
+            <span class="status success">Recommended</span>
+        </div>
+
+        <div class="application-card">
+            <div>
+                <h3>Add measurable achievements</h3>
+                <p>Example: Improved dashboard loading speed by 40%.</p>
+            </div>
+            <span class="status pending">Important</span>
+        </div>
+
+        <div class="application-card">
+            <div>
+                <h3>Keep resume ATS friendly</h3>
+                <p>Use simple fonts, clear headings and avoid unnecessary images.</p>
+            </div>
+            <span class="status interview">ATS</span>
+        </div>
+    </div>
+</section>
+
+</main>
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+
+if(!studentId){
+    window.location.href = "student-login.html";
+}
+
+function logout(){
+    localStorage.removeItem("studentId");
+}
+
+fetch("/api/students/" + studentId)
+.then(res => res.json())
+.then(s => {
+    document.getElementById("topName").innerText = s.name;
+    document.getElementById("topBranch").innerText = s.branch;
+    document.getElementById("topPhoto").src = "/api/students/" + studentId + "/photo?t=" + Date.now();
+
+    if(s.resumeFileName){
+        document.getElementById("resumeStatus").innerText = "Uploaded";
+        document.getElementById("resumeTitle").innerText = s.resumeFileName;
+    }else{
+        document.getElementById("resumeStatus").innerText = "Not Uploaded";
+    }
+});
+
+function uploadResume(){
+    const file = document.getElementById("resumeInput").files[0];
+
+    if(!file){
+        alert("Please select resume first");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/api/students/" + studentId + "/upload-resume", {
+        method:"POST",
+        body:formData
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert("Resume uploaded successfully");
+        location.reload();
+    });
+}
+
+function downloadResume(){
+    window.open("/api/students/" + studentId + "/resume");
+}
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

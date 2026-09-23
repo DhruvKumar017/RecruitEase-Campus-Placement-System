@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Help Center - RecruitEase</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            color:#ffffff;
+            background:
+                radial-gradient(circle at 15% 10%,rgba(47,128,255,.20),transparent 28%),
+                radial-gradient(circle at 85% 90%,rgba(124,58,237,.20),transparent 30%),
+                #050816;
+            display:grid;
+            place-items:center;
+            padding:28px;
+        }
+
+        .help-card{
+            width:100%;
+            max-width:720px;
+            padding:40px;
+            border:1px solid rgba(96,165,250,.25);
+            border-radius:26px;
+            background:rgba(13,19,37,.90);
+            box-shadow:0 30px 80px rgba(0,0,0,.55);
+        }
+
+        .logo{
+            text-align:center;
+            font-size:30px;
+            font-weight:800;
+            margin-bottom:30px;
+        }
+
+        .logo span{
+            color:#2f80ff;
+        }
+
+        .help-icon{
+            width:82px;
+            height:82px;
+            margin:0 auto 18px;
+            display:grid;
+            place-items:center;
+            border-radius:50%;
+            font-size:40px;
+            background:linear-gradient(135deg,#2563eb,#7c3aed);
+            box-shadow:0 15px 35px rgba(47,128,255,.30);
+        }
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#aebbd1;
+            margin-bottom:28px;
+        }
+
+        label{
+            display:block;
+            margin:16px 0 8px;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        input,
+        select,
+        textarea{
+            width:100%;
+            padding:15px 16px;
+            outline:none;
+            border:1px solid #263a5f;
+            border-radius:14px;
+            background:#0f172a;
+            color:#ffffff;
+            font-size:15px;
+        }
+
+        textarea{
+            min-height:125px;
+            resize:vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus{
+            border-color:#2f80ff;
+            box-shadow:0 0 0 4px rgba(47,128,255,.12);
+        }
+
+        select option{
+            background:#0f172a;
+            color:#ffffff;
+        }
+
+        button{
+            width:100%;
+            height:56px;
+            margin-top:24px;
+            border:none;
+            border-radius:14px;
+            background:linear-gradient(90deg,#2563eb,#2f80ff);
+            color:#ffffff;
+            font-size:17px;
+            font-weight:800;
+            cursor:pointer;
+            transition:.25s;
+            box-shadow:0 15px 35px rgba(37,99,235,.28);
+        }
+
+        button:hover{
+            transform:translateY(-4px);
+            box-shadow:0 22px 45px rgba(37,99,235,.40);
+        }
+
+        .back-link{
+            display:block;
+            margin-top:22px;
+            color:#79b2ff;
+            text-align:center;
+            text-decoration:none;
+            font-weight:600;
+        }
+
+        .back-link:hover{
+            color:#c084fc;
+        }
+
+        @media(max-width:600px){
+            body{
+                padding:16px;
+            }
+
+            .help-card{
+                padding:28px 20px;
+            }
+
+            h1{
+                font-size:25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="help-card">
+
+        <div class="logo">🎓 Recruit<span>Ease</span></div>
+
+        <div class="help-icon">🛟</div>
+
+        <h1>Student Help Center</h1>
+
+        <p class="subtitle">
+            Login problem, registration issue, password issue ya koi placement query submit karo.
+        </p>
+
+        <form id="helpForm">
+
+            <label for="studentName">Your Name</label>
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Enter your full name"
+                required
+            >
+
+            <label for="studentEmail">Email Address</label>
+            <input
+                type="email"
+                id="studentEmail"
+                placeholder="Enter your email address"
+                required
+            >
+
+            <label for="issueType">Issue Type</label>
+            <select id="issueType" required>
+                <option value="">Select your issue</option>
+                <option>Unable to Login</option>
+                <option>Forgot Password</option>
+                <option>Registration Issue</option>
+                <option>Profile Update Issue</option>
+                <option>Placement / Application Query</option>
+                <option>Other Issue</option>
+            </select>
+
+            <label for="issueMessage">Describe Your Issue</label>
+            <textarea
+                id="issueMessage"
+                placeholder="Write your issue clearly..."
+                required
+            ></textarea>
+
+            <button type="submit">Submit Issue →</button>
+
+        </form>
+
+        <a class="back-link" href="student-login.html">
+            ← Back to Student Login
+        </a>
+
+    </main>
+
+    <script>
+document.getElementById("helpForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const issueData = {
+        studentName: document.getElementById("studentName").value.trim(),
+        studentEmail: document.getElementById("studentEmail").value.trim(),
+        issueType: document.getElementById("issueType").value,
+        issueMessage: document.getElementById("issueMessage").value.trim()
+    };
+
+    try {
+        const response = await fetch("/api/student-issues", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(issueData)
+        });
+
+        const message = await response.text();
+
+        if (!response.ok) {
+            alert("❌ " + message);
+            return;
+        }
+
+        alert(
+            "✅ Your issue has been submitted successfully. " +
+            "Admin / TPO will review it soon."
+        );
+
+        document.getElementById("helpForm").reset();
+
+        window.location.href = "student-login.html";
+
+    } catch (error) {
+        console.error("Student issue submit error:", error);
+
+        alert("❌ Issue submit nahi hua. Backend check karo.");
+    }
+});
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

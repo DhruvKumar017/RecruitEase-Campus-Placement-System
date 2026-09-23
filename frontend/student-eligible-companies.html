@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eligible Companies - RecruitEase</title>
+<link rel="stylesheet" href="student-eligible-companies.css">
+</head>
+
+<body>
+
+<div class="student-layout">
+
+<aside class="sidebar">
+    <div class="brand">🎓 Recruit<span>Ease</span></div>
+    <p>Campus Placement System</p>
+
+    <a href="student-dashboard.html">🏠 Dashboard</a>
+    <a href="student-profile.html">👤 My Profile</a>
+    <a class="active" href="student-eligible-companies.html">🏢 Eligible Companies</a>
+    <a href="student-applications.html">📄 Applications</a>
+    <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="student-interviews.html">🎤 Interviews</a>
+    <a href="student-resume.html">📑 Resume Builder</a>
+    <a href="student-placement-drives.html">💼 Placement Drive</a>
+    <a href="student-notifications.html">🔔 Notifications</a>
+    <a href="student-settings.html">⚙ Settings</a>
+    <a href="student-login.html" onclick="logout()">↪ Logout</a>
+</aside>
+
+<main class="main">
+
+<header class="companies-topbar">
+    <div>
+        <h1>Eligible Companies</h1>
+        <p>Companies matched with your CGPA and skills</p>
+    </div>
+
+    <input type="text" id="companySearch" placeholder="Search company or skill..." onkeyup="renderCompanies()">
+</header>
+
+<section class="summary-grid">
+    <div class="summary-card">
+        <span>🏢</span>
+        <div>
+            <h2 id="totalEligible">0</h2>
+            <p>Eligible Companies</p>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <span>💰</span>
+        <div>
+            <h2>7.5</h2>
+            <p>Avg Package LPA</p>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <span>✅</span>
+        <div>
+            <h2>100%</h2>
+            <p>Profile Match</p>
+        </div>
+    </div>
+</section>
+
+<section class="company-section">
+
+    <div class="section-head">
+        <h2>Recommended Companies</h2>
+        <button onclick="renderCompanies()">Refresh</button>
+    </div>
+
+    <div class="company-grid" id="companyGrid"></div>
+
+</section>
+
+</main>
+
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+let companies = [];
+let appliedCompanies = [];
+
+if(!studentId){
+    window.location.href = "student-login.html";
+}
+
+function logout(){
+    localStorage.removeItem("studentId");
+}
+
+function companyLogo(name){
+    if(!name) return "🏢";
+    const n = name.toLowerCase();
+
+    if(n.includes("tcs")) return "TCS";
+    if(n.includes("infosys")) return "INFY";
+    if(n.includes("wipro")) return "WIP";
+    if(n.includes("accenture")) return "ACN";
+    if(n.includes("cognizant")) return "CTS";
+
+    return name.substring(0,3).toUpperCase();
+}
+
+function packageAmount(name){
+    if(!name) return "6.0 LPA";
+    const n = name.toLowerCase();
+
+    if(n.includes("tcs")) return "7.0 LPA";
+    if(n.includes("infosys")) return "6.5 LPA";
+    if(n.includes("wipro")) return "6.0 LPA";
+    if(n.includes("accenture")) return "8.0 LPA";
+    if(n.includes("cognizant")) return "7.5 LPA";
+
+    return "6.0 LPA";
+}
+
+function renderCompanies(){
+    const search = document.getElementById("companySearch").value.toLowerCase();
+    const grid = document.getElementById("companyGrid");
+
+    let filtered = companies.filter(company => {
+        return (company.companyName || "").toLowerCase().includes(search) ||
+               (company.requiredSkills || "").toLowerCase().includes(search);
+    });
+
+    document.getElementById("totalEligible").innerText = filtered.length;
+
+    if(filtered.length === 0){
+        grid.innerHTML = `
+            <div class="empty-card">
+                <h2>No companies found</h2>
+                <p>Try searching with another skill or company name.</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(company => `
+        <div class="company-card">
+
+            <div class="company-header">
+                <div class="company-logo">${companyLogo(company.companyName)}</div>
+                <div>
+                    <h3>${company.companyName}</h3>
+                    <p>Campus Hiring Partner</p>
+                </div>
+                <span class="match-badge">Eligible</span>
+            </div>
+
+            <div class="company-info">
+                <div>
+                    <small>Package</small>
+                    <b>${packageAmount(company.companyName)}</b>
+                </div>
+
+                <div>
+                    <small>Min CGPA</small>
+                    <b>${company.minCgpa}</b>
+                </div>
+
+                <div>
+                    <small>Mode</small>
+                    <b>Online</b>
+                </div>
+            </div>
+
+            <div class="skills-box">
+                <small>Required Skills</small>
+                <p>${company.requiredSkills}</p>
+            </div>
+
+            <div class="company-actions">
+                ${
+                    appliedCompanies.includes(company.id)
+                    ? `<button class="applied-btn" disabled>Applied ✓</button>`
+                    : `<button onclick="applyCompany(${company.id})">Apply Now</button>`
+                }
+                <a href="#">View Details</a>
+            </div>
+
+        </div>
+    `).join("");
+}
+
+fetch("/api/students/" + studentId + "/eligible-companies")
+.then(res => res.json())
+.then(data => {
+    companies = data;
+    loadAppliedCompanies();
+});
+
+function loadAppliedCompanies(){
+    fetch("/api/applications/student/" + studentId)
+    .then(res => res.json())
+    .then(data => {
+        appliedCompanies = data.map(a => a.companyId);
+        renderCompanies();
+    });
+}
+
+function applyCompany(companyId){
+
+    fetch("/api/applications/apply/" + studentId + "/" + companyId,{
+        method:"POST"
+    })
+    .then(res => {
+        if(!res.ok){
+            throw new Error("Failed");
+        }
+        return res.json();
+    })
+    .then(data => {
+
+        if(data.status === "Applied"){
+            alert("✅ Application submitted successfully.");
+        }else{
+            alert("Already Applied");
+        }
+
+       renderCompanies();
+
+    })
+    .catch(err=>{
+        console.log(err);
+        alert("Unable to apply.");
+    });
+
+}
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

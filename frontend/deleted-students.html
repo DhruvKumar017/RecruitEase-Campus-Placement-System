@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deleted Students - RecruitEase</title>
+
+    <link rel="stylesheet" href="deleted-students.css">
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="deleted-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a class="active" href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div class="topbar-title">
+                <h1>Deleted Students</h1>
+                <p>View, restore, and permanently remove deleted student accounts.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <div class="search-box">
+                    <span>⌕</span>
+
+                    <input
+                        type="text"
+                        id="topSearch"
+                        placeholder="Search students..."
+                        onkeyup="filterStudents()"
+                    >
+                </div>
+
+                <button class="bell" type="button" onclick="showNotifications()">
+                    🔔
+                    <span>3</span>
+                </button>
+
+                <button class="theme-btn" id="themeToggle" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img
+                        id="sharedAdminPhoto"
+                        src="https://i.pravatar.cc/80?img=12"
+                        alt="Admin"
+                    >
+
+                    <b id="sharedAdminName">Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="page-header">
+
+            <div>
+                <h2>Deleted Students <span>🗑️</span></h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Deleted Students
+                </p>
+            </div>
+
+            <button
+                class="report-btn"
+                type="button"
+                onclick="downloadDeletedStudentsReport()"
+            >
+                📄 Deleted Students Report
+            </button>
+
+        </section>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">👥</div>
+
+                <div>
+                    <p>Total Deleted</p>
+                    <h3 id="totalDeleted">0</h3>
+                    <small>Live Database Data</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red-icon">📅</div>
+
+                <div>
+                    <p>Deleted This Month</p>
+                    <h3 id="deletedThisMonth">0</h3>
+                    <small>Date-tracked Records</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">👤</div>
+
+                <div>
+                    <p>Can Be Restored</p>
+                    <h3 id="canRestore">0</h3>
+                    <small>Available Accounts</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">📊</div>
+
+                <div>
+                    <p>Average CGPA</p>
+                    <h3 id="averageCgpa">0.00</h3>
+                    <small>Deleted Students</small>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="table-panel">
+
+            <div class="filter-bar">
+
+                <div class="filter-search">
+                    <span>⌕</span>
+
+                    <input
+                        type="text"
+                        id="tableSearch"
+                        placeholder="Search by name, email, roll no..."
+                        onkeyup="filterStudents()"
+                    >
+                </div>
+
+                <select class="filter-select" id="batchFilter" onchange="filterStudents()">
+                    <option value="">All Batches</option>
+                </select>
+
+                <select class="filter-select" id="departmentFilter" onchange="filterStudents()">
+                    <option value="">All Departments</option>
+                </select>
+
+                <select class="filter-select" id="cgpaFilter" onchange="filterStudents()">
+                    <option value="">All CGPA</option>
+                    <option value="7">7.0+</option>
+                    <option value="8">8.0+</option>
+                    <option value="9">9.0+</option>
+                </select>
+
+                <button class="clear-filter-btn" type="button" onclick="clearFilters()">
+                    ↻ Clear Filters
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="deleted-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Student</th>
+                            <th>Roll No.</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Batch</th>
+                            <th>CGPA</th>
+                            <th>Deleted On</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="deletedStudentsBody"></tbody>
+
+                </table>
+
+            </div>
+
+            <div class="table-footer">
+                <p id="tableCountText">Showing 0 entries</p>
+
+                <div class="pagination">
+                    <button type="button">‹</button>
+                    <button type="button" class="active">1</button>
+                    <button type="button">›</button>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="info-card">
+            <span class="info-icon">i</span>
+
+            <p>
+                Restore button student ko active Students page me wapas le jayega.
+                Permanent Delete button student record ko database se remove kar dega.
+            </p>
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    const adminUsername = localStorage.getItem("adminUsername");
+    const adminRole = localStorage.getItem("adminRole");
+
+    if (!adminUsername || !adminRole) {
+        alert("Please login as an approved admin first.");
+        window.location.href = "admin-login.html";
+    }
+
+    let deletedStudents = [];
+    let filteredDeletedStudents = [];
+
+    async function loadDeletedStudents() {
+        const body = document.getElementById("deletedStudentsBody");
+
+        try {
+            const response = await fetch("/api/students/deleted");
+
+            if (!response.ok) {
+                throw new Error("Deleted students load failed");
+            }
+
+            deletedStudents = await response.json();
+
+            deletedStudents.sort(function (first, second) {
+                return Number(second.id || 0) - Number(first.id || 0);
+            });
+
+            populateFilters();
+            updateStats();
+            filterStudents();
+
+        } catch (error) {
+            console.error(error);
+
+            body.innerHTML = `
+                <tr>
+                    <td colspan="10" class="empty-row">
+                        Deleted students data load nahi ho raha.
+                        Backend run aur API check karo.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    function populateFilters() {
+        const batchFilter = document.getElementById("batchFilter");
+        const departmentFilter = document.getElementById("departmentFilter");
+
+        const oldBatch = batchFilter.value;
+        const oldDepartment = departmentFilter.value;
+
+        const batches = [...new Set(
+            deletedStudents
+                .map(function (student) {
+                    return student.year;
+                })
+                .filter(function (value) {
+                    return value && String(value).trim() !== "";
+                })
+        )].sort();
+
+        const departments = [...new Set(
+            deletedStudents
+                .map(function (student) {
+                    return student.branch;
+                })
+                .filter(function (value) {
+                    return value && String(value).trim() !== "";
+                })
+        )].sort();
+
+        batchFilter.innerHTML = `<option value="">All Batches</option>`;
+
+        batches.forEach(function (batch) {
+            batchFilter.innerHTML += `
+                <option value="${escapeHtml(batch)}">
+                    ${escapeHtml(batch)}
+                </option>
+            `;
+        });
+
+        departmentFilter.innerHTML = `<option value="">All Departments</option>`;
+
+        departments.forEach(function (department) {
+            departmentFilter.innerHTML += `
+                <option value="${escapeHtml(department)}">
+                    ${escapeHtml(department)}
+                </option>
+            `;
+        });
+
+        batchFilter.value = oldBatch;
+        departmentFilter.value = oldDepartment;
+    }
+
+    function filterStudents() {
+        const topSearch = document.getElementById("topSearch").value
+            .toLowerCase()
+            .trim();
+
+        const tableSearch = document.getElementById("tableSearch").value
+            .toLowerCase()
+            .trim();
+
+        const searchValue = tableSearch || topSearch;
+
+        const selectedBatch = document.getElementById("batchFilter").value;
+        const selectedDepartment = document.getElementById("departmentFilter").value;
+        const selectedCgpa = document.getElementById("cgpaFilter").value;
+
+        filteredDeletedStudents = deletedStudents.filter(function (student) {
+            const name = String(student.name || "").toLowerCase();
+            const email = String(student.email || "").toLowerCase();
+            const rollNumber = String(student.rollNumber || "").toLowerCase();
+
+            const matchesSearch =
+                name.includes(searchValue) ||
+                email.includes(searchValue) ||
+                rollNumber.includes(searchValue);
+
+            const matchesBatch =
+                selectedBatch === "" ||
+                String(student.year || "") === selectedBatch;
+
+            const matchesDepartment =
+                selectedDepartment === "" ||
+                String(student.branch || "") === selectedDepartment;
+
+            const matchesCgpa =
+                selectedCgpa === "" ||
+                Number(student.cgpa || 0) >= Number(selectedCgpa);
+
+            return (
+                matchesSearch &&
+                matchesBatch &&
+                matchesDepartment &&
+                matchesCgpa
+            );
+        });
+
+        renderDeletedStudents();
+    }
+
+    function clearFilters() {
+        document.getElementById("topSearch").value = "";
+        document.getElementById("tableSearch").value = "";
+        document.getElementById("batchFilter").value = "";
+        document.getElementById("departmentFilter").value = "";
+        document.getElementById("cgpaFilter").value = "";
+
+        filterStudents();
+    }
+
+    function renderDeletedStudents() {
+        const body = document.getElementById("deletedStudentsBody");
+
+        document.getElementById("tableCountText").innerText =
+            `Showing ${filteredDeletedStudents.length} of ${deletedStudents.length} entries`;
+
+        if (filteredDeletedStudents.length === 0) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="10" class="empty-row">
+                        No deleted students found.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        body.innerHTML = filteredDeletedStudents.map(function (student, index) {
+            return `
+                <tr>
+                    <td>${index + 1}</td>
+
+                    <td>
+                        <div class="student-cell">
+                            <span class="student-avatar ${getAvatarClass(index)}">
+                                ${getInitials(student.name)}
+                            </span>
+
+                            <span class="student-name">
+                                ${escapeHtml(student.name || "Not Available")}
+                            </span>
+                        </div>
+                    </td>
+
+                    <td>${escapeHtml(student.rollNumber || "-")}</td>
+                    <td>${escapeHtml(student.email || "-")}</td>
+                    <td>${escapeHtml(student.branch || "Not Set")}</td>
+                    <td>${escapeHtml(student.year || "Not Set")}</td>
+                    <td>${student.cgpa ?? "-"}</td>
+                    <td>${formatDeletedDate(student)}</td>
+                    <td class="reason">${escapeHtml(student.deleteReason || "Not recorded")}</td>
+
+                    <td>
+                        <div class="action-buttons">
+
+                            <button
+                                class="restore-btn"
+                                type="button"
+                                title="Restore Student"
+                                onclick="restoreStudent(${Number(student.id)}, '${escapeForJs(student.name)}')"
+                            >
+                                ↻
+                            </button>
+
+                            <button
+                                class="delete-btn"
+                                type="button"
+                                title="Delete Permanently"
+                                onclick="deleteStudentPermanently(${Number(student.id)}, '${escapeForJs(student.name)}')"
+                            >
+                                🗑
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    function updateStats() {
+        const total = deletedStudents.length;
+
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+
+        const deletedThisMonth = deletedStudents.filter(function (student) {
+            const dateValue =
+                student.deletedAt ||
+                student.deletedOn ||
+                student.updatedAt;
+
+            if (!dateValue) {
+                return false;
+            }
+
+            const deletedDate = new Date(dateValue);
+
+            return (
+                !isNaN(deletedDate) &&
+                deletedDate.getMonth() === currentMonth &&
+                deletedDate.getFullYear() === currentYear
+            );
+        }).length;
+
+        const cgpaValues = deletedStudents
+            .map(function (student) {
+                return Number(student.cgpa);
+            })
+            .filter(function (value) {
+                return !isNaN(value) && value > 0;
+            });
+
+        const averageCgpa = cgpaValues.length > 0
+            ? cgpaValues.reduce(function (sum, value) {
+                return sum + value;
+            }, 0) / cgpaValues.length
+            : 0;
+
+        document.getElementById("totalDeleted").innerText = total;
+        document.getElementById("deletedThisMonth").innerText = deletedThisMonth;
+        document.getElementById("canRestore").innerText = total;
+        document.getElementById("averageCgpa").innerText = averageCgpa.toFixed(2);
+    }
+
+    async function restoreStudent(studentId, studentName) {
+        const confirmed = confirm(
+            `Restore ${studentName} to active students?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/api/students/${studentId}/restore`,
+                {
+                    method: "PUT"
+                }
+            );
+
+            if (!response.ok) {
+                const message = await response.text();
+                throw new Error(message || "Restore failed");
+            }
+
+            alert(`${studentName} restored successfully.`);
+            await loadDeletedStudents();
+
+        } catch (error) {
+            console.error(error);
+            alert("Student restore nahi hua. StudentController ka restore API check karna padega.");
+        }
+    }
+
+    async function deleteStudentPermanently(studentId, studentName) {
+        const confirmed = confirm(
+            `Permanently delete ${studentName}?\n\nThis action cannot be undone.`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/api/students/${studentId}/permanent`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+            if (!response.ok) {
+                const message = await response.text();
+                throw new Error(message || "Permanent delete failed");
+            }
+
+            alert(`${studentName} permanently deleted.`);
+            await loadDeletedStudents();
+
+        } catch (error) {
+            console.error(error);
+            alert("Permanent delete nahi hua. StudentController ka permanent delete API check karna padega.");
+        }
+    }
+
+    function downloadDeletedStudentsReport() {
+        const reportData = filteredDeletedStudents.length > 0
+            ? filteredDeletedStudents
+            : deletedStudents;
+
+        if (reportData.length === 0) {
+            alert("Export ke liye deleted students data nahi hai.");
+            return;
+        }
+
+        let csvContent =
+            "Student Name,Roll Number,Email,Department,Batch,CGPA,Deleted On,Reason\n";
+
+        reportData.forEach(function (student) {
+            csvContent +=
+                `"${csvSafe(student.name)}",` +
+                `"${csvSafe(student.rollNumber)}",` +
+                `"${csvSafe(student.email)}",` +
+                `"${csvSafe(student.branch)}",` +
+                `"${csvSafe(student.year)}",` +
+                `"${student.cgpa ?? ""}",` +
+                `"${csvSafe(formatDeletedDate(student))}",` +
+                `"${csvSafe(student.deleteReason || "Not recorded")}"\n`;
+        });
+
+        const file = new Blob(
+            [csvContent],
+            {
+                type: "text/csv"
+            }
+        );
+
+        const fileUrl = URL.createObjectURL(file);
+        const downloadLink = document.createElement("a");
+
+        downloadLink.href = fileUrl;
+        downloadLink.download = "deleted-students-report.csv";
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+
+        URL.revokeObjectURL(fileUrl);
+    }
+
+    function showNotifications() {
+        alert(
+            "Notifications\n\n" +
+            "• Deleted student data database se load hota hai.\n" +
+            "• Restore aur Permanent Delete actions available hain."
+        );
+    }
+
+    function adminLogoutFromDeletedPage() {
+        localStorage.removeItem("adminUsername");
+        localStorage.removeItem("adminRole");
+
+        window.location.href = "index.html";
+    }
+
+    function getInitials(name) {
+        const parts = String(name || "Student")
+            .trim()
+            .split(/\s+/);
+
+        return parts
+            .slice(0, 2)
+            .map(function (part) {
+                return part.charAt(0).toUpperCase();
+            })
+            .join("");
+    }
+
+    function getAvatarClass(index) {
+        const classes = [
+            "avatar-purple",
+            "avatar-blue",
+            "avatar-green",
+            "avatar-orange",
+            "avatar-violet",
+            "avatar-teal"
+        ];
+
+        return classes[index % classes.length];
+    }
+
+    function formatDeletedDate(student) {
+        const dateValue =
+            student.deletedAt ||
+            student.deletedOn ||
+            student.updatedAt;
+
+        if (!dateValue) {
+            return "Not recorded";
+        }
+
+        const date = new Date(dateValue);
+
+        if (isNaN(date)) {
+            return String(dateValue);
+        }
+
+        return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function escapeForJs(value) {
+        return String(value ?? "")
+            .replaceAll("\\", "\\\\")
+            .replaceAll("'", "\\'")
+            .replaceAll("\n", " ");
+    }
+
+    function csvSafe(value) {
+        return String(value ?? "")
+            .replaceAll('"', '""');
+    }
+
+    loadDeletedStudents();
+</script>
+
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

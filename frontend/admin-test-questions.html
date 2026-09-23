@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Test Questions | RecruitEase</title>
+
+<link rel="stylesheet" href="admin-test-questions.css">
+
+<style>
+    .test-id-selector{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:20px;
+        margin-bottom:16px;
+        padding:18px 20px;
+        border-radius:18px;
+        background:#081528;
+        border:1px solid rgba(47,128,255,.16);
+    }
+
+    .test-id-selector h2{
+        color:#ffffff;
+        font-size:19px;
+        margin:0;
+    }
+
+    .test-id-selector p{
+        margin-top:5px;
+        color:#9fb0c7;
+        font-size:13px;
+    }
+
+    .test-id-actions{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+    }
+
+    .test-id-actions input,
+    .test-id-actions select,
+    .copy-question-box select{
+        width:210px;
+        height:46px;
+        padding:0 13px;
+        border:1px solid rgba(47,128,255,.24);
+        border-radius:11px;
+        outline:none;
+        color:#ffffff;
+        background:#0a1428;
+        font-size:14px;
+    }
+
+    .test-id-actions select option,
+    .copy-question-box select option{
+        background:#0a1428;
+        color:#ffffff;
+    }
+
+    .load-test-btn{
+        height:46px;
+        padding:0 17px;
+        border:none;
+        border-radius:11px;
+        cursor:pointer;
+        color:#ffffff;
+        background:linear-gradient(135deg,#1e40af,#2563eb);
+        font-size:14px;
+        font-weight:700;
+    }
+
+    .selected-test-message{
+        display:none;
+        margin-bottom:16px;
+        padding:11px 13px;
+        border-radius:10px;
+        background:rgba(22,199,132,.12);
+        border:1px solid rgba(22,199,132,.22);
+        color:#76efb3;
+        font-size:13px;
+        font-weight:600;
+    }
+
+    .copy-question-box{
+        display:flex;
+        justify-content:space-between;
+        align-items:end;
+        gap:16px;
+        margin-bottom:22px;
+        padding:17px 20px;
+        border-radius:16px;
+        background:#081528;
+        border:1px solid rgba(22,199,132,.20);
+    }
+
+    .copy-question-box h3{
+        margin:0;
+        color:#ffffff;
+        font-size:16px;
+    }
+
+    .copy-question-box p{
+        margin:5px 0 0;
+        color:#9fb0c7;
+        font-size:13px;
+    }
+
+    .copy-question-actions{
+        display:flex;
+        align-items:end;
+        gap:10px;
+        flex-wrap:wrap;
+    }
+
+    .copy-question-actions label{
+        display:block;
+        margin-bottom:7px;
+        color:#bcd0eb;
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .copy-question-btn{
+        height:46px;
+        padding:0 17px;
+        border:none;
+        border-radius:11px;
+        cursor:pointer;
+        color:#ffffff;
+        background:linear-gradient(135deg,#0f766e,#16c784);
+        font-size:13px;
+        font-weight:700;
+        white-space:nowrap;
+    }
+
+    .copy-question-btn:hover,
+    .load-test-btn:hover{
+        opacity:.9;
+    }
+
+    @media(max-width:900px){
+        .test-id-selector,
+        .copy-question-box{
+            flex-direction:column;
+            align-items:flex-start;
+        }
+
+        .test-id-actions,
+        .copy-question-actions{
+            width:100%;
+        }
+
+        .test-id-actions input,
+        .test-id-actions select,
+        .load-test-btn,
+        .copy-question-box select,
+        .copy-question-btn{
+            width:100%;
+        }
+    }
+</style>
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">🎓 Recruit<span>Ease</span></div>
+
+        <a href="admin-dashboard.html">⌂ Dashboard</a>
+        <a href="students.html">👥 Students</a>
+        <a href="companies.html">🏢 Companies</a>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a class="active" href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="index.html">↪ Logout</a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Manage Questions</h1>
+                <p>Add, delete or copy MCQ questions for generated Test IDs.</p>
+            </div>
+
+            <a class="add-btn" href="admin-aptitude-tests.html">
+                ← Back to Tests
+            </a>
+
+        </div>
+
+        <section class="test-id-selector">
+
+            <div>
+                <h2>Select Generated Test ID</h2>
+                <p>Jis student ke test me questions add karne hain, uska Test ID load karo.</p>
+            </div>
+
+            <div class="test-id-actions">
+
+                <input
+                    id="testIdInput"
+                    type="number"
+                    min="1"
+                    placeholder="Enter Test ID"
+                >
+
+                <select id="testIdSelect" onchange="selectTestFromDropdown()">
+                    <option value="">Select Test ID</option>
+                </select>
+
+                <button
+                    class="load-test-btn"
+                    type="button"
+                    onclick="loadSelectedTest()"
+                >
+                    Load Test
+                </button>
+
+            </div>
+
+        </section>
+
+        <p id="selectedTestMessage" class="selected-test-message"></p>
+
+        <section class="copy-question-box">
+
+            <div>
+                <h3>📋 Copy Questions to Current Test</h3>
+                <p>
+                    Current selected Test ID me kisi dusri Test ID ke all questions copy honge.
+                </p>
+            </div>
+
+            <div class="copy-question-actions">
+
+                <div>
+                    <label>Copy Questions From Test ID</label>
+
+                    <select id="sourceTestIdSelect">
+                        <option value="">Select Source Test ID</option>
+                    </select>
+                </div>
+
+                <button
+                    class="copy-question-btn"
+                    type="button"
+                    onclick="copyQuestionsToCurrentTest()"
+                >
+                    Copy Questions
+                </button>
+
+            </div>
+
+        </section>
+
+        <div class="content">
+
+            <div class="stats">
+
+                <div class="stat">
+                    <div class="icon blue">🧠</div>
+
+                    <div>
+                        <p>Selected Test ID</p>
+                        <h2 id="selectedTestIdText">--</h2>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="icon green">❓</div>
+
+                    <div>
+                        <p>Total Questions</p>
+                        <h2 id="questionCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="icon purple">✅</div>
+
+                    <div>
+                        <p>Total Marks</p>
+                        <h2 id="totalMarks">0</h2>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="icon orange">📅</div>
+
+                    <div>
+                        <p>Status</p>
+                        <h2 id="testStatusText">Not Selected</h2>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-card">
+
+                <div class="table-head">
+                    <h2>Add Question</h2>
+
+                    <button type="button" onclick="clearForm()">
+                        Clear
+                    </button>
+                </div>
+
+                <div class="question-form">
+
+                    <input type="hidden" id="editQuestionId">
+
+                    <label>Question</label>
+                    <textarea
+                        id="question"
+                        placeholder="Enter question here..."
+                    ></textarea>
+
+                    <div class="question-grid">
+
+                        <div>
+                            <label>Option A</label>
+                            <input id="optionA" placeholder="Enter option A">
+                        </div>
+
+                        <div>
+                            <label>Option B</label>
+                            <input id="optionB" placeholder="Enter option B">
+                        </div>
+
+                        <div>
+                            <label>Option C</label>
+                            <input id="optionC" placeholder="Enter option C">
+                        </div>
+
+                        <div>
+                            <label>Option D</label>
+                            <input id="optionD" placeholder="Enter option D">
+                        </div>
+
+                        <div>
+                            <label>Correct Answer</label>
+
+                            <select id="correctAnswer">
+                                <option value="">Select Correct Answer</option>
+                                <option value="A">Option A</option>
+                                <option value="B">Option B</option>
+                                <option value="C">Option C</option>
+                                <option value="D">Option D</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Marks</label>
+                            <input
+                                id="marks"
+                                type="number"
+                                min="1"
+                                placeholder="Marks"
+                                value="1"
+                            >
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="save question-save-btn"
+                        type="button"
+                        onclick="saveQuestion()"
+                    >
+                        Save Question
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="table-card" style="margin-top:24px;">
+
+                <div class="table-head">
+                    <h2>Question List</h2>
+
+                    <button type="button" onclick="loadQuestions()">
+                        Refresh
+                    </button>
+                </div>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Question</th>
+                            <th>Options</th>
+                            <th>Correct</th>
+                            <th>Marks</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="questionTable">
+                        <tr>
+                            <td colspan="6">Select a Test ID first.</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+
+let activeTestId = null;
+let allTests = [];
+
+async function initializePage() {
+    await loadAvailableTests();
+
+    const savedTestId = localStorage.getItem("selectedTestId");
+
+    if (savedTestId) {
+        document.getElementById("testIdInput").value = savedTestId;
+        loadSelectedTest();
+    }
+}
+
+async function loadAvailableTests() {
+    try {
+        const response = await fetch("/api/aptitude-tests");
+
+        if (!response.ok) {
+            throw new Error("Tests load nahi hue.");
+        }
+
+        allTests = await response.json();
+
+        renderTestDropdowns();
+
+    } catch (error) {
+        console.error(error);
+        alert("Aptitude tests load nahi ho rahe.");
+    }
+}
+
+function renderTestDropdowns() {
+    const testSelect = document.getElementById("testIdSelect");
+    const sourceSelect = document.getElementById("sourceTestIdSelect");
+
+    const selectedTargetId = testSelect.value;
+    const selectedSourceId = sourceSelect.value;
+
+    testSelect.innerHTML = `
+        <option value="">Select Test ID</option>
+    `;
+
+    sourceSelect.innerHTML = `
+        <option value="">Select Source Test ID</option>
+    `;
+
+    allTests.forEach(test => {
+        const testName = escapeHtml(test.testName || "Aptitude Test");
+
+        testSelect.innerHTML += `
+            <option value="${test.id}">
+                Test ID: ${test.id} - ${testName}
+            </option>
+        `;
+
+        if (Number(test.id) !== Number(activeTestId)) {
+            sourceSelect.innerHTML += `
+                <option value="${test.id}">
+                    Test ID: ${test.id} - ${testName}
+                </option>
+            `;
+        }
+    });
+
+    if (selectedTargetId) {
+        testSelect.value = selectedTargetId;
+    }
+
+    if (selectedSourceId) {
+        sourceSelect.value = selectedSourceId;
+    }
+}
+
+function selectTestFromDropdown() {
+    const selectedId = document.getElementById("testIdSelect").value;
+
+    if (selectedId) {
+        document.getElementById("testIdInput").value = selectedId;
+    }
+}
+
+async function loadSelectedTest() {
+    const enteredId = document.getElementById("testIdInput").value.trim();
+
+    if (enteredId === "") {
+        alert("Generated Test ID enter ya select karo.");
+        return;
+    }
+
+    const testId = Number(enteredId);
+
+    const selectedTest = allTests.find(test =>
+        Number(test.id) === testId
+    );
+
+    if (!selectedTest) {
+        alert("Ye Test ID database me nahi mili.");
+        return;
+    }
+
+    activeTestId = testId;
+
+    localStorage.setItem("selectedTestId", testId);
+
+    document.getElementById("selectedTestIdText").innerText = testId;
+
+    document.getElementById("testStatusText").innerText =
+        selectedTest.status || "Active";
+
+    document.getElementById("testIdSelect").value = testId;
+
+    document.getElementById("selectedTestMessage").innerText =
+        `✅ Test ID ${testId} selected: ${
+            selectedTest.testName || "Aptitude Test"
+        }`;
+
+    document.getElementById("selectedTestMessage").style.display = "block";
+
+    renderTestDropdowns();
+
+    document.getElementById("testIdSelect").value = testId;
+
+    await loadQuestions();
+}
+
+async function loadQuestions() {
+    const table = document.getElementById("questionTable");
+
+    if (!activeTestId) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="6">Select a Test ID first.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "/api/test-questions/" + activeTestId
+        );
+
+        if (!response.ok) {
+            throw new Error("Questions load nahi hue.");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("questionCount").innerText = data.length;
+
+        let totalMarks = 0;
+
+        data.forEach(question => {
+            totalMarks += Number(question.marks || 0);
+        });
+
+        document.getElementById("totalMarks").innerText = totalMarks;
+
+        if (data.length === 0) {
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6">
+                        No questions added for Test ID ${activeTestId}.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        table.innerHTML = data.map(question => `
+            <tr>
+                <td>${question.id}</td>
+
+                <td class="question-text">
+                    ${escapeHtml(question.question)}
+                </td>
+
+                <td>
+                    <div class="question-option-box">
+                        <span>A. ${escapeHtml(question.optionA)}</span>
+                        <span>B. ${escapeHtml(question.optionB)}</span>
+                        <span>C. ${escapeHtml(question.optionC)}</span>
+                        <span>D. ${escapeHtml(question.optionD)}</span>
+                    </div>
+                </td>
+
+                <td>${escapeHtml(question.correctAnswer)}</td>
+                <td>${question.marks || 1}</td>
+
+                <td>
+                    <div class="action-btns">
+                        <button
+                            class="edit-q"
+                            type="button"
+                            onclick="editQuestion(${question.id})"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            class="delete-q"
+                            type="button"
+                            onclick="deleteQuestion(${question.id})"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join("");
+
+    } catch (error) {
+        console.error(error);
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="6">
+                    Questions load nahi ho rahe. Backend check karo.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+async function saveQuestion() {
+    if (!activeTestId) {
+        alert("Pehle Generated Test ID select karo.");
+        return;
+    }
+
+    const questionText = document.getElementById("question").value.trim();
+    const optionA = document.getElementById("optionA").value.trim();
+    const optionB = document.getElementById("optionB").value.trim();
+    const optionC = document.getElementById("optionC").value.trim();
+    const optionD = document.getElementById("optionD").value.trim();
+    const correctAnswer = document.getElementById("correctAnswer").value;
+    const marks = document.getElementById("marks").value;
+
+    if (
+        questionText === "" ||
+        optionA === "" ||
+        optionB === "" ||
+        optionC === "" ||
+        optionD === "" ||
+        correctAnswer === "" ||
+        marks === ""
+    ) {
+        alert("Please fill all question details.");
+        return;
+    }
+
+    if (Number(marks) <= 0) {
+        alert("Marks must be greater than 0.");
+        return;
+    }
+
+    const questionData = {
+        testId: activeTestId,
+        question: questionText,
+        optionA: optionA,
+        optionB: optionB,
+        optionC: optionC,
+        optionD: optionD,
+        correctAnswer: correctAnswer,
+        marks: Number(marks)
+    };
+
+    try {
+        const response = await fetch("/api/test-questions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(questionData)
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        alert(`Question saved for Test ID ${activeTestId}.`);
+
+        clearForm();
+        await loadQuestions();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Question save nahi ho raha.");
+    }
+}
+
+async function copyQuestionsToCurrentTest() {
+    const sourceTestId =
+        document.getElementById("sourceTestIdSelect").value;
+
+    if (!activeTestId) {
+        alert("Pehle Target Test ID load karo.");
+        return;
+    }
+
+    if (!sourceTestId) {
+        alert("Source Test ID select karo.");
+        return;
+    }
+
+    if (Number(sourceTestId) === Number(activeTestId)) {
+        alert("Source aur Target Test ID same nahi ho sakti.");
+        return;
+    }
+
+    const confirmed = confirm(
+        `Copy all questions?\n\n` +
+        `Source Test ID: ${sourceTestId}\n` +
+        `Target Test ID: ${activeTestId}\n\n` +
+        `Original questions delete nahi honge.`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/test-questions/copy?sourceTestId=${sourceTestId}&targetTestId=${activeTestId}`,
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        const result = await response.json();
+
+        alert(
+            `Questions copied successfully.\n\n` +
+            `Copied: ${result.copiedQuestions}\n` +
+            `Skipped duplicates: ${result.skippedDuplicates}`
+        );
+
+        document.getElementById("sourceTestIdSelect").value = "";
+
+        await loadQuestions();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Questions copy nahi ho paaye.");
+    }
+}
+
+async function deleteQuestion(id) {
+    const confirmed = confirm("Delete this question?");
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/test-questions/" + id, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        await loadQuestions();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Question delete nahi ho raha.");
+    }
+}
+
+function editQuestion(id) {
+    alert(
+        "Edit feature abhi backend me available nahi hai.\n\n" +
+        "Question ID: " + id
+    );
+}
+
+function clearForm() {
+    document.getElementById("editQuestionId").value = "";
+    document.getElementById("question").value = "";
+    document.getElementById("optionA").value = "";
+    document.getElementById("optionB").value = "";
+    document.getElementById("optionC").value = "";
+    document.getElementById("optionD").value = "";
+    document.getElementById("correctAnswer").value = "";
+    document.getElementById("marks").value = 1;
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+initializePage();
+
+</script>
+
+</body>
+</html>

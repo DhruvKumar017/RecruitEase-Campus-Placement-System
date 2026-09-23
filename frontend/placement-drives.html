@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Drives - RecruitEase</title>
+
+    <link rel="stylesheet" href="placement-drives.css">
+    <script src="admin-auth.js"></script>
+</head>
+
+<body>
+
+<div class="drives-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="students.html">👥 All Students</a>
+        <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="companies.html">🏢 All Companies</a>
+        <a class="active" href="placement-drives.html">📅 Placement Drives</a>
+        
+         <p class="menu-title">PLACEMENTS</p>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="eligibility.html">🏆 Eligibility</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="placed-students.html">✅ Placed Students</a>
+        <a href="reports.html">📊 Reports & Analytics</a>
+        <a href="requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="settings.html">⚙️ Settings</a>
+        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Placement Drives</h1>
+                <p>Schedule and manage campus recruitment drives.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="dashboard-search"
+                    type="text"
+                    id="topSearch"
+                    placeholder="Search drives..."
+                    onkeyup="filterDrives()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>3</span>
+                </button>
+
+                <button class="theme-btn" type="button">
+                    🌙
+                </button>
+
+                <div class="admin-profile">
+                    <img
+                        id="topAdminPhoto"
+                        src="https://i.pravatar.cc/80?img=12"
+                        alt="Admin"
+                    >
+
+                    <b id="topAdminName">Admin</b>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE HEADER ================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>All Placement Drives 📅</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Placement Drives
+                </p>
+            </div>
+
+            <button class="add-drive-btn" type="button" onclick="toggleDriveForm()">
+                ＋ Schedule New Drive
+            </button>
+
+        </section>
+
+        <!-- ================= ADD / EDIT DRIVE FORM ================= -->
+        <section class="add-drive-panel" id="addDrivePanel">
+
+            <div class="form-head">
+                <h3 id="driveFormTitle">Schedule New Placement Drive</h3>
+
+                <button class="close-form-btn" type="button" onclick="resetDriveForm()">
+                    ×
+                </button>
+            </div>
+
+            <form id="driveForm">
+
+                <div class="drive-form-grid">
+
+                    <select id="companyName" required onchange="fillCompanyRequirements()">
+                        <option value="">Select Company</option>
+                    </select>
+
+                    <input
+                        type="text"
+                        id="jobRole"
+                        placeholder="Job Role"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="packageLpa"
+                        placeholder="Package (LPA)"
+                        step="0.1"
+                        min="0"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="minCgpa"
+                        placeholder="Minimum CGPA"
+                        step="0.1"
+                        min="0"
+                        max="10"
+                        required
+                    >
+
+                    <input
+                        type="date"
+                        id="driveDate"
+                        required
+                    >
+
+                    <input
+                        type="date"
+                        id="lastDate"
+                        required
+                    >
+
+                    <select id="mode" required>
+                        <option value="">Select Mode</option>
+                        <option value="Offline">Offline</option>
+                        <option value="Online">Online</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="Location / Meeting Link"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="branch"
+                        placeholder="Eligible Branches (Example: CSE, IT)"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="skills"
+                        placeholder="Required Skills"
+                    >
+
+                    <input
+                        type="number"
+                        id="vacancy"
+                        placeholder="Number of Vacancies"
+                        min="1"
+                        required
+                    >
+
+                    <select id="driveStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="Upcoming">Upcoming</option>
+                        <option value="Active">Active</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+
+                    <button class="save-drive-btn" id="saveDriveButton" type="submit">
+                        Save Drive
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">📅</div>
+
+                <div>
+                    <p>Total Drives</p>
+                    <h3 id="totalDrives">0</h3>
+                    <small>Live Database Data</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">🚀</div>
+
+                <div>
+                    <p>Active Drives</p>
+                    <h3 id="activeDrives">0</h3>
+                    <small>Currently Running</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange-icon">⏳</div>
+
+                <div>
+                    <p>Upcoming Drives</p>
+                    <h3 id="upcomingDrives">0</h3>
+                    <small>Scheduled Drives</small>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon">✅</div>
+
+                <div>
+                    <p>Completed Drives</p>
+                    <h3 id="completedDrives">0</h3>
+                    <small>Finished Drives</small>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= DRIVE TABLE ================= -->
+        <section class="drives-table-panel">
+
+            <div class="filter-bar">
+
+                <input
+                    class="filter-search"
+                    type="text"
+                    id="tableSearch"
+                    placeholder="Search company or job role..."
+                    onkeyup="filterDrives()"
+                >
+
+                <select class="filter-select" id="statusFilter" onchange="filterDrives()">
+                    <option value="">All Status</option>
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Active">Active</option>
+                    <option value="Completed">Completed</option>
+                </select>
+
+                <button class="clear-filter-btn" type="button" onclick="clearFilters()">
+                    ↻ Clear Filters
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="drives-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company</th>
+                            <th>Job Role</th>
+                            <th>Package</th>
+                            <th>Minimum CGPA</th>
+                            <th>Drive Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="driveTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center; padding:28px;">
+                                Loading live placement drives...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="table-footer">
+                <p id="tableCountText">Showing 0 drives</p>
+            </div>
+
+        </section>
+
+        <section class="info-card">
+            <span class="info-icon">i</span>
+
+            <p>
+                Placement Drives are connected with the database. Add, edit and delete actions
+                will update the real MySQL records.
+            </p>
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+let drives = [];
+let filteredDrives = [];
+let companies = [];
+let editingDriveId = null;
+
+/* ================= LOAD COMPANIES FOR DROPDOWN ================= */
+
+async function loadCompaniesForDropdown() {
+    try {
+        const response = await fetch("/api/companies");
+
+        if (!response.ok) {
+            throw new Error("Companies not loaded");
+        }
+
+        companies = await response.json();
+
+        const companySelect = document.getElementById("companyName");
+        const selectedCompany = companySelect.value;
+
+        companySelect.innerHTML = `
+            <option value="">Select Company</option>
+        `;
+
+        companies.forEach(company => {
+            companySelect.innerHTML += `
+                <option value="${escapeHtml(company.companyName)}">
+                    ${escapeHtml(company.companyName)}
+                </option>
+            `;
+        });
+
+        companySelect.value = selectedCompany;
+
+    } catch (error) {
+        console.error("Company dropdown error:", error);
+    }
+}
+
+/* ================= LOAD REAL DRIVES ================= */
+
+async function loadDrives() {
+    const tableBody = document.getElementById("driveTableBody");
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="8" style="text-align:center; padding:28px;">
+                Loading live placement drives...
+            </td>
+        </tr>
+    `;
+
+    try {
+        const response = await fetch("/api/drives");
+
+        if (!response.ok) {
+            throw new Error("Drives load failed");
+        }
+
+        drives = await response.json();
+
+        drives.sort((firstDrive, secondDrive) => {
+            return Number(secondDrive.id) - Number(firstDrive.id);
+        });
+
+        updateDriveStats();
+        filterDrives();
+
+    } catch (error) {
+        console.error("Drive load error:", error);
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:28px;">
+                    Placement Drives load nahi ho rahi hain. Backend check karo.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+/* ================= RENDER TABLE ================= */
+
+function renderDrives() {
+    const tableBody = document.getElementById("driveTableBody");
+
+    document.getElementById("tableCountText").innerText =
+        `Showing ${filteredDrives.length} of ${drives.length} drives`;
+
+    if (filteredDrives.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:28px;">
+                    No placement drives found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = filteredDrives.map((drive, index) => {
+
+        const companyName = drive.companyName || "Company";
+        const companyLogo = companyName.substring(0, 3).toUpperCase();
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="company-cell">
+                        <span class="company-logo">${escapeHtml(companyLogo)}</span>
+
+                        <div>
+                            <div class="company-name">
+                                ${escapeHtml(companyName)}
+                            </div>
+                            <small>RecruitEase Partner</small>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="job-role">
+                    ${escapeHtml(drive.jobRole || "-")}
+                </td>
+
+                <td>
+                    ${formatPackage(drive.packageLpa)}
+                </td>
+
+                <td>
+                    ${drive.minCgpa ?? "-"}
+                </td>
+
+                <td>
+                    <div class="date-box">
+                        <b>${formatDate(drive.driveDate)}</b>
+                        <small>Last Date: ${formatDate(drive.lastDate)}</small>
+                    </div>
+                </td>
+
+                <td>
+                    <span class="status-badge ${getStatusClass(drive.status)}">
+                        ${escapeHtml(drive.status || "Upcoming")}
+                    </span>
+                </td>
+
+                <td>
+                    <div class="action-buttons">
+
+                        <button
+                            class="view-btn"
+                            type="button"
+                            title="View Drive"
+                            onclick="viewDrive(${drive.id})"
+                        >
+                            👁
+                        </button>
+
+                        <button
+                            class="edit-btn"
+                            type="button"
+                            title="Edit Drive"
+                            onclick="editDrive(${drive.id})"
+                        >
+                            ✏️
+                        </button>
+
+                        <button
+                            class="delete-btn"
+                            type="button"
+                            title="Delete Drive"
+                            onclick="deleteDrive(${drive.id})"
+                        >
+                            🗑
+                        </button>
+
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+/* ================= FILTER ================= */
+
+function filterDrives() {
+    const topSearch = document.getElementById("topSearch").value
+        .toLowerCase()
+        .trim();
+
+    const tableSearch = document.getElementById("tableSearch").value
+        .toLowerCase()
+        .trim();
+
+    const searchValue = tableSearch || topSearch;
+
+    const selectedStatus = document.getElementById("statusFilter").value;
+
+    filteredDrives = drives.filter(drive => {
+        const company = (drive.companyName || "").toLowerCase();
+        const role = (drive.jobRole || "").toLowerCase();
+        const status = drive.status || "";
+
+        const matchesSearch =
+            company.includes(searchValue) ||
+            role.includes(searchValue);
+
+        const matchesStatus =
+            selectedStatus === "" ||
+            status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    renderDrives();
+}
+
+function clearFilters() {
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+    document.getElementById("statusFilter").value = "";
+
+    filterDrives();
+}
+
+/* ================= STATS ================= */
+
+function updateDriveStats() {
+    const active = drives.filter(drive =>
+        (drive.status || "").toLowerCase() === "active"
+    ).length;
+
+    const upcoming = drives.filter(drive =>
+        (drive.status || "").toLowerCase() === "upcoming"
+    ).length;
+
+    const completed = drives.filter(drive =>
+        (drive.status || "").toLowerCase() === "completed"
+    ).length;
+
+    document.getElementById("totalDrives").innerText = drives.length;
+    document.getElementById("activeDrives").innerText = active;
+    document.getElementById("upcomingDrives").innerText = upcoming;
+    document.getElementById("completedDrives").innerText = completed;
+}
+
+/* ================= ADD / EDIT FORM ================= */
+
+function toggleDriveForm() {
+    const panel = document.getElementById("addDrivePanel");
+
+    panel.classList.toggle("show");
+
+    if (!panel.classList.contains("show")) {
+        resetDriveForm();
+    }
+}
+
+function resetDriveForm() {
+    editingDriveId = null;
+
+    document.getElementById("driveForm").reset();
+    document.getElementById("driveFormTitle").innerText =
+        "Schedule New Placement Drive";
+
+    document.getElementById("saveDriveButton").innerText =
+        "Save Drive";
+
+    document.getElementById("addDrivePanel").classList.remove("show");
+}
+
+function fillCompanyRequirements() {
+    const companyName = document.getElementById("companyName").value;
+
+    const company = companies.find(item =>
+        item.companyName === companyName
+    );
+
+    if (!company) {
+        return;
+    }
+
+    document.getElementById("minCgpa").value =
+        company.minCgpa ?? "";
+
+    document.getElementById("skills").value =
+        company.requiredSkills || "";
+}
+
+document.getElementById("driveForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const drive = {
+        companyName: document.getElementById("companyName").value.trim(),
+        jobRole: document.getElementById("jobRole").value.trim(),
+        packageLpa: Number(document.getElementById("packageLpa").value),
+        minCgpa: Number(document.getElementById("minCgpa").value),
+        driveDate: document.getElementById("driveDate").value,
+        lastDate: document.getElementById("lastDate").value,
+        mode: document.getElementById("mode").value,
+        location: document.getElementById("location").value.trim(),
+        branch: document.getElementById("branch").value.trim(),
+        skills: document.getElementById("skills").value.trim(),
+        vacancy: Number(document.getElementById("vacancy").value),
+        status: document.getElementById("driveStatus").value
+    };
+
+    if (
+        drive.companyName === "" ||
+        drive.jobRole === "" ||
+        drive.driveDate === "" ||
+        drive.lastDate === "" ||
+        drive.status === ""
+    ) {
+        alert("Please fill all required drive details.");
+        return;
+    }
+
+    try {
+        const url = editingDriveId
+            ? `/api/drives/${editingDriveId}`
+            : "/api/drives";
+
+        const method = editingDriveId ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(drive)
+        });
+
+        if (!response.ok) {
+            throw new Error("Drive save failed");
+        }
+
+        alert(
+            editingDriveId
+                ? "Placement drive updated successfully."
+                : "Placement drive added successfully."
+        );
+
+        resetDriveForm();
+        loadDrives();
+
+    } catch (error) {
+        console.error("Drive save error:", error);
+        alert("Placement drive save nahi hui. Backend check karo.");
+    }
+});
+
+/* ================= VIEW ================= */
+
+function viewDrive(id) {
+    const drive = drives.find(item => Number(item.id) === Number(id));
+
+    if (!drive) {
+        return;
+    }
+
+    alert(
+        "Placement Drive Details\n\n" +
+        "Company: " + (drive.companyName || "-") + "\n" +
+        "Job Role: " + (drive.jobRole || "-") + "\n" +
+        "Package: " + formatPackage(drive.packageLpa) + "\n" +
+        "Minimum CGPA: " + (drive.minCgpa ?? "-") + "\n" +
+        "Drive Date: " + formatDate(drive.driveDate) + "\n" +
+        "Last Date: " + formatDate(drive.lastDate) + "\n" +
+        "Mode: " + (drive.mode || "-") + "\n" +
+        "Location: " + (drive.location || "-") + "\n" +
+        "Branches: " + (drive.branch || "-") + "\n" +
+        "Skills: " + (drive.skills || "-") + "\n" +
+        "Vacancies: " + (drive.vacancy ?? "-") + "\n" +
+        "Status: " + (drive.status || "-")
+    );
+}
+
+/* ================= EDIT ================= */
+
+function editDrive(id) {
+    const drive = drives.find(item => Number(item.id) === Number(id));
+
+    if (!drive) {
+        return;
+    }
+
+    editingDriveId = drive.id;
+
+    const companySelect = document.getElementById("companyName");
+
+    const alreadyExists = [...companySelect.options].some(option =>
+        option.value === drive.companyName
+    );
+
+    if (!alreadyExists && drive.companyName) {
+        companySelect.innerHTML += `
+            <option value="${escapeHtml(drive.companyName)}">
+                ${escapeHtml(drive.companyName)}
+            </option>
+        `;
+    }
+
+    companySelect.value = drive.companyName || "";
+    document.getElementById("jobRole").value = drive.jobRole || "";
+    document.getElementById("packageLpa").value = drive.packageLpa ?? "";
+    document.getElementById("minCgpa").value = drive.minCgpa ?? "";
+    document.getElementById("driveDate").value = drive.driveDate || "";
+    document.getElementById("lastDate").value = drive.lastDate || "";
+    document.getElementById("mode").value = drive.mode || "";
+    document.getElementById("location").value = drive.location || "";
+    document.getElementById("branch").value = drive.branch || "";
+    document.getElementById("skills").value = drive.skills || "";
+    document.getElementById("vacancy").value = drive.vacancy ?? "";
+    document.getElementById("driveStatus").value = drive.status || "";
+
+    document.getElementById("driveFormTitle").innerText =
+        "Edit Placement Drive";
+
+    document.getElementById("saveDriveButton").innerText =
+        "Update Drive";
+
+    document.getElementById("addDrivePanel").classList.add("show");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+/* ================= DELETE ================= */
+
+async function deleteDrive(id) {
+    const drive = drives.find(item => Number(item.id) === Number(id));
+
+    if (!drive) {
+        return;
+    }
+
+    const confirmed = confirm(
+        `Delete ${drive.companyName} placement drive?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/drives/${id}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error("Drive delete failed");
+        }
+
+        alert("Placement drive deleted successfully.");
+
+        loadDrives();
+
+    } catch (error) {
+        console.error("Drive delete error:", error);
+        alert("Placement drive delete nahi hui. Backend check karo.");
+    }
+}
+
+/* ================= HELPERS ================= */
+
+function getStatusClass(status) {
+    const value = String(status || "").toLowerCase();
+
+    if (value === "active") {
+        return "status-active";
+    }
+
+    if (value === "completed") {
+        return "status-completed";
+    }
+
+    return "status-upcoming";
+}
+
+function formatDate(value) {
+    if (!value) {
+        return "Not Set";
+    }
+
+    const date = new Date(value + "T00:00:00");
+
+    if (isNaN(date)) {
+        return value;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function formatPackage(value) {
+    if (value === null || value === undefined || value === "") {
+        return "-";
+    }
+
+    return "₹" + value + " LPA";
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/* ================= INITIAL LOAD ================= */
+
+loadCompaniesForDropdown();
+loadDrives();
+
+</script>
+
+<script src="admin-profile.js"></script>
+<script src="admin-toolbar.js"></script>
+
+</body>
+</html>

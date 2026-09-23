@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notifications | RecruitEase</title>
+<link rel="stylesheet" href="student-portal.css">
+</head>
+
+<body>
+<div class="student-layout">
+
+<aside class="sidebar">
+    <div class="brand">🎓 Recruit<span>Ease</span></div>
+    <p>Campus Placement System</p>
+
+    <a href="student-dashboard.html">🏠 Dashboard</a>
+    <a href="student-profile.html">👤 My Profile</a>
+    <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+    <a href="student-applications.html">📄 Applications</a>
+    <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="student-interviews.html">🎤 Interviews</a>
+    <a href="student-resume.html">📑 Resume Builder</a>
+    <a href="student-placement-drives.html">💼 Placement Drive</a>
+    <a class="active" href="student-notifications.html">🔔 Notifications</a>
+    <a href="student-settings.html">⚙ Settings</a>
+    <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+    <div class="help-card">
+        <h4>Need Help?</h4>
+        <p>Contact your TPO</p>
+    </div>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <input type="text" id="search" placeholder="Search notifications..." onkeyup="renderNotifications()">
+
+    <div class="top-actions">
+        <button>🌙</button>
+        <div class="bell">🔔<span id="notifyCount">5</span></div>
+
+        <div class="user-box">
+            <img id="topPhoto">
+            <div>
+                <b id="topName">Student</b>
+                <p id="topBranch">B.Tech CSE</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="details-card">
+    <h2>Notifications</h2>
+
+    <div class="info-grid">
+        <div><label>Total</label><p id="totalNotify">0</p></div>
+        <div><label>Unread</label><p id="unreadNotify">0</p></div>
+        <div><label>Placement</label><p>3</p></div>
+        <div><label>System</label><p>2</p></div>
+    </div>
+</section>
+
+<section class="details-card" style="margin-top:24px;">
+    <h2>Recent Updates</h2>
+    <div id="notificationList" class="application-list"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+}
+
+function logout() {
+    localStorage.removeItem("studentId");
+}
+
+let notifications = [];
+
+async function loadNotifications() {
+
+    try {
+
+        const response = await fetch("/api/student-notifications/student/" + studentId);
+
+        notifications = await response.json();
+
+        renderNotifications();
+
+    } catch (e) {
+
+        console.log(e);
+
+    }
+
+}
+
+function renderNotifications() {
+
+    const search = document.getElementById("search").value.toLowerCase();
+
+    const list = document.getElementById("notificationList");
+
+    const filtered = notifications.filter(n =>
+
+        (n.title || "").toLowerCase().includes(search) ||
+        (n.message || "").toLowerCase().includes(search) ||
+        (n.type || "").toLowerCase().includes(search)
+
+    );
+
+    document.getElementById("totalNotify").innerText = filtered.length;
+
+    document.getElementById("unreadNotify").innerText =
+        filtered.filter(n => !n.readStatus).length;
+
+    list.innerHTML = "";
+
+    if(filtered.length==0){
+
+        list.innerHTML="<h3>No Notifications Found</h3>";
+
+        return;
+    }
+
+    filtered.forEach(n=>{
+
+        list.innerHTML+=`
+
+        <div class="application-card">
+
+            <div>
+
+                <h3>${getIcon(n.type)} ${n.title}</h3>
+
+                <p>${n.message}</p>
+
+                <small>${formatDate(n.createdAt)}</small>
+
+            </div>
+
+            <div>
+
+                <span class="status ${n.readStatus ? "success":"pending"}">
+
+                    ${n.readStatus ? "Read":"Unread"}
+
+                </span>
+
+                ${
+                    !n.readStatus
+                    ?
+                    `<button onclick="markRead(${n.id})">
+                        Mark Read
+                    </button>`
+                    :
+                    ""
+                }
+
+                <button onclick="deleteNotification(${n.id})">
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function getIcon(type){
+
+    if(type==="PLACEMENT") return "🏢";
+
+    if(type==="INTERVIEW") return "🎤";
+
+    if(type==="APTITUDE") return "🧠";
+
+    if(type==="APPLICATION") return "📄";
+
+    return "🔔";
+
+}
+
+function formatDate(date){
+
+    if(!date) return "";
+
+    return new Date(date).toLocaleString();
+
+}
+
+async function markRead(id){
+
+    await fetch("/api/student-notifications/"+id+"/read",{
+
+        method:"PUT"
+
+    });
+
+    loadNotifications();
+
+}
+
+async function deleteNotification(id){
+
+    if(!confirm("Delete notification?")) return;
+
+    await fetch("/api/student-notifications/"+id,{
+
+        method:"DELETE"
+
+    });
+
+    loadNotifications();
+
+}
+
+fetch("/api/students/"+studentId)
+
+.then(r=>r.json())
+
+.then(student=>{
+
+    document.getElementById("topName").innerText=student.name;
+
+    document.getElementById("topBranch").innerText=student.branch;
+
+    document.getElementById("topPhoto").src=
+    "/api/students/"+studentId+"/photo?t="+Date.now();
+
+});
+
+loadNotifications();
+
+setInterval(loadNotifications,5000);
+
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

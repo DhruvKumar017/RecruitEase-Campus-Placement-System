@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Login - RecruitEase</title>
+<link rel="stylesheet" href="student-login.css">
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="left-panel">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+        <p class="brand-sub">Campus Placement Management System</p>
+
+        <div class="welcome">
+            <h1>Welcome Back,<br><span>Future Achiever!</span> 👋</h1>
+            <p>Login to access your personalized dashboard, check eligible companies, upload resume, and explore placement opportunities.</p>
+        </div>
+
+        <div class="features">
+            <div><span>🏢</span><div><h3>Eligible Companies</h3><p>Find companies that match your profile</p></div></div>
+            <div><span>📄</span><div><h3>Resume Management</h3><p>Upload and manage your resume easily</p></div></div>
+            <div><span>👤</span><div><h3>Profile Settings</h3><p>Update your profile and skills</p></div></div>
+            <div><span>🔔</span><div><h3>Placement Updates</h3><p>Get notified about new opportunities</p></div></div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="login-card">
+            <div class="login-icon">🎓</div>
+            <h2>Student Login</h2>
+            <p>Login to continue to your account</p>
+
+            <form id="loginForm">
+
+                <div class="input-box">
+                    <span>👤</span>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+
+                <div class="input-box">
+                    <span>🔒</span>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <b onclick="togglePassword()">👁</b>
+                </div>
+
+                <div class="options">
+                    <label>
+                        <input type="checkbox">
+                        Remember me
+                    </label>
+
+                    <a href="forgot-password.html">Forgot Password?</a>
+                </div>
+
+                <button type="submit">Login <span>→</span></button>
+            </form>
+
+            <div class="divider"><span></span>OR<span></span></div>
+
+            <a class="admin-link" href="admin-login.html">🛡 Login as Admin</a>
+
+            <p class="contact">
+                Need Help?
+                <a href="student-help.html">Contact TPO / Raise an Issue</a>
+            </p>
+        </div>
+
+        <div class="trust-row">
+            <span>🛡 Secure Login</span>
+            <span>🔒 Your data is safe</span>
+            <span>👥 Trusted by students</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const loginData = {
+        username: document.getElementById("username").value.trim(),
+        password: document.getElementById("password").value.trim()
+    };
+
+    try {
+        const response = await fetch("/api/student-login/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(loginData)
+        });
+
+        const text = await response.text();
+
+        if (!text || !response.ok) {
+            alert("Invalid Username or Password");
+            return;
+        }
+
+        const result = JSON.parse(text);
+
+        if (!result || !result.studentId) {
+            alert("Invalid Username or Password");
+            return;
+        }
+
+        localStorage.setItem("studentId", result.studentId);
+
+        window.location.href = "student-dashboard.html";
+
+    } catch (error) {
+        alert("Server error. Please start Spring Boot and try again.");
+    }
+});
+
+</script>
+
+</body>
+</html>

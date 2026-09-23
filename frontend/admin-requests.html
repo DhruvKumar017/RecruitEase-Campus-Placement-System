@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Requests - RecruitEase</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:#050816;
+            color:#ffffff;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        .sidebar{
+            width:260px;
+            min-height:100vh;
+            position:fixed;
+            left:0;
+            top:0;
+            padding:26px 18px;
+            background:linear-gradient(180deg,#06182f,#04101f);
+            border-right:1px solid rgba(47,128,255,.18);
+        }
+
+        .brand{
+            margin-bottom:30px;
+            font-size:27px;
+            font-weight:800;
+        }
+
+        .brand span{
+            color:#2f80ff;
+        }
+
+        .sidebar a{
+            display:block;
+            margin:6px 0;
+            padding:12px 14px;
+            border-radius:12px;
+            color:#dbeafe;
+            text-decoration:none;
+            font-size:14px;
+            transition:.25s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active{
+            background:rgba(47,128,255,.16);
+            color:#ffffff;
+            transform:translateX(5px);
+        }
+
+        .main{
+            width:calc(100% - 260px);
+            margin-left:260px;
+            padding:34px;
+            background:
+                radial-gradient(circle at 80% 10%,rgba(47,128,255,.12),transparent 27%),
+                radial-gradient(circle at 20% 90%,rgba(124,58,237,.12),transparent 28%),
+                #050816;
+        }
+
+        .page-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            margin-bottom:28px;
+        }
+
+        .page-head h1{
+            font-size:30px;
+        }
+
+        .page-head p{
+            margin-top:6px;
+            color:#aebbd1;
+            font-size:14px;
+        }
+
+        .refresh-btn{
+            padding:12px 18px;
+            border:none;
+            border-radius:12px;
+            background:linear-gradient(90deg,#2563eb,#2f80ff);
+            color:#ffffff;
+            font-weight:700;
+            cursor:pointer;
+            transition:.25s;
+        }
+
+        .refresh-btn:hover{
+            transform:translateY(-3px);
+            box-shadow:0 14px 28px rgba(37,99,235,.32);
+        }
+
+        .stats{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+            margin-bottom:24px;
+        }
+
+        .stat-card{
+            padding:22px;
+            border:1px solid rgba(96,165,250,.20);
+            border-radius:18px;
+            background:#0b1730;
+            transition:.25s;
+        }
+
+        .stat-card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 18px 34px rgba(0,0,0,.26);
+        }
+
+        .stat-card p{
+            color:#aebbd1;
+            font-size:14px;
+        }
+
+        .stat-card h2{
+            margin-top:7px;
+            font-size:30px;
+        }
+
+        .pending h2{
+            color:#ffbb55;
+        }
+
+        .approved h2{
+            color:#51e69b;
+        }
+
+        .rejected h2{
+            color:#ff7e8d;
+        }
+
+        .table-card{
+            overflow-x:auto;
+            border:1px solid rgba(96,165,250,.20);
+            border-radius:18px;
+            background:#0b1730;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:980px;
+        }
+
+        th,
+        td{
+            padding:16px;
+            border-bottom:1px solid rgba(255,255,255,.07);
+            text-align:left;
+            font-size:14px;
+        }
+
+        th{
+            color:#98b9e9;
+            background:#0e1d38;
+            font-size:13px;
+        }
+
+        td{
+            color:#e8f0ff;
+        }
+
+        tr:hover td{
+            background:rgba(47,128,255,.06);
+        }
+
+        .message-cell{
+            max-width:260px;
+            color:#c4d2e8;
+            line-height:1.5;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:6px 10px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .badge.pending{
+            color:#ffca78;
+            background:rgba(255,170,45,.15);
+        }
+
+        .badge.approved{
+            color:#67eca5;
+            background:rgba(34,197,94,.14);
+        }
+
+        .badge.rejected{
+            color:#ff93a0;
+            background:rgba(239,68,68,.14);
+        }
+
+        .action-buttons{
+            display:flex;
+            gap:8px;
+        }
+
+        .approve-btn,
+        .reject-btn{
+            padding:8px 11px;
+            border:none;
+            border-radius:9px;
+            color:#ffffff;
+            cursor:pointer;
+            font-weight:700;
+            transition:.2s;
+        }
+
+        .approve-btn{
+            background:#169b5c;
+        }
+
+        .reject-btn{
+            background:#d53c50;
+        }
+
+        .approve-btn:hover,
+        .reject-btn:hover{
+            transform:translateY(-2px);
+            filter:brightness(1.1);
+        }
+
+        .disabled-text{
+            color:#9fb0c7;
+            font-size:13px;
+        }
+
+        .empty-row{
+            padding:35px;
+            color:#aebbd1;
+            text-align:center;
+        }
+
+        @media(max-width:900px){
+            .sidebar{
+                position:relative;
+                width:100%;
+                min-height:auto;
+            }
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .main{
+                width:100%;
+                margin-left:0;
+                padding:24px 16px;
+            }
+
+            .stats{
+                grid-template-columns:1fr;
+            }
+
+            .page-head{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+
+        <a href="admin-dashboard.html">▦ Dashboard</a>
+        <a href="students.html">👥 All Students</a>
+        <a href="companies.html">🏢 Companies</a>
+        <a href="placement-drives.html">📅 Placement Drives</a>
+        <a href="applications-admin.html">📄 Applications</a>
+        <a href="admin-interviews.html">🎤 Interviews</a>
+        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+
+        <a class="active" href="admin-requests.html">
+            🛡️ Admin Requests
+        </a>
+
+        <a href="help.html">❓ Help Center</a>
+        <a href="index.html">↪ Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <div class="page-head">
+            <div>
+                <h1>🛡️ New Admin Access Requests</h1>
+                <p>Approve only verified staff members for RecruitEase admin access.</p>
+            </div>
+
+            <button class="refresh-btn" onclick="loadAdminRequests()">
+                ↻ Refresh Requests
+            </button>
+        </div>
+
+        <section class="stats">
+            <div class="stat-card pending">
+                <p>Pending Requests</p>
+                <h2 id="pendingCount">0</h2>
+            </div>
+
+            <div class="stat-card approved">
+                <p>Approved Requests</p>
+                <h2 id="approvedCount">0</h2>
+            </div>
+
+            <div class="stat-card rejected">
+                <p>Rejected Requests</p>
+                <h2 id="rejectedCount">0</h2>
+            </div>
+        </section>
+
+        <section class="table-card">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Applicant</th>
+                        <th>Email / Phone</th>
+                        <th>Department</th>
+                        <th>Requested Username</th>
+                        <th>Reason</th>
+                        <th>Requested At</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="requestTableBody">
+                    <tr>
+                        <td colspan="9" class="empty-row">
+                            Loading admin requests...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    let allAdminRequests = [];
+
+    async function loadAdminRequests() {
+        const tableBody = document.getElementById("requestTableBody");
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty-row">
+                    Loading admin requests...
+                </td>
+            </tr>
+        `;
+
+        try {
+            const response = await fetch("/api/admin-requests");
+
+            if (!response.ok) {
+                throw new Error("Unable to load admin requests");
+            }
+
+            allAdminRequests = await response.json();
+
+            updateStats();
+            renderRequests();
+
+        } catch (error) {
+            console.error(error);
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="empty-row">
+                        ❌ Requests load nahi hui. Backend check karo.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    function updateStats() {
+        const pending = allAdminRequests.filter(item =>
+            String(item.status).toLowerCase() === "pending"
+        ).length;
+
+        const approved = allAdminRequests.filter(item =>
+            String(item.status).toLowerCase() === "approved"
+        ).length;
+
+        const rejected = allAdminRequests.filter(item =>
+            String(item.status).toLowerCase() === "rejected"
+        ).length;
+
+        document.getElementById("pendingCount").innerText = pending;
+        document.getElementById("approvedCount").innerText = approved;
+        document.getElementById("rejectedCount").innerText = rejected;
+    }
+
+    function renderRequests() {
+        const tableBody = document.getElementById("requestTableBody");
+
+        if (allAdminRequests.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="empty-row">
+                        No admin access requests available.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        const sortedRequests = [...allAdminRequests].sort((a, b) => {
+            return Number(b.id) - Number(a.id);
+        });
+
+        tableBody.innerHTML = sortedRequests.map(request => {
+            const status = String(request.status || "Pending");
+            const lowerStatus = status.toLowerCase();
+
+            return `
+                <tr>
+                    <td>#${request.id}</td>
+
+                    <td>
+                        <b>${escapeHtml(request.fullName)}</b>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(request.email)}
+                        <br>
+                        <small>${escapeHtml(request.phoneNumber || "-")}</small>
+                    </td>
+
+                    <td>${escapeHtml(request.department || "-")}</td>
+
+                    <td>
+                        <b>${escapeHtml(request.requestedUsername)}</b>
+                    </td>
+
+                    <td class="message-cell">
+                        ${escapeHtml(request.reason || "-")}
+                    </td>
+
+                    <td>${formatDate(request.requestedAt)}</td>
+
+                    <td>
+                        <span class="badge ${lowerStatus}">
+                            ${escapeHtml(status)}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${
+                            lowerStatus === "pending"
+                                ? `
+                                    <div class="action-buttons">
+                                        <button
+                                            class="approve-btn"
+                                            onclick="updateRequestStatus(${request.id}, 'approve')"
+                                        >
+                                            ✓ Approve
+                                        </button>
+
+                                        <button
+                                            class="reject-btn"
+                                            onclick="updateRequestStatus(${request.id}, 'reject')"
+                                        >
+                                            ✕ Reject
+                                        </button>
+                                    </div>
+                                `
+                                : `<span class="disabled-text">Action completed</span>`
+                        }
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    async function updateRequestStatus(requestId, action) {
+        const actionText = action === "approve" ? "approve" : "reject";
+
+        const confirmed = confirm(
+            "Are you sure you want to " + actionText + " this admin request?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "/api/admin-requests/" + requestId + "/" + action,
+                {
+                    method: "PUT"
+                }
+            );
+
+            const message = await response.text();
+
+            if (!response.ok) {
+                alert("❌ " + message);
+                return;
+            }
+
+            alert(
+                action === "approve"
+                    ? "✅ Admin request approved successfully."
+                    : "❌ Admin request rejected."
+            );
+
+            loadAdminRequests();
+
+        } catch (error) {
+            console.error(error);
+            alert("❌ Status update failed. Backend check karo.");
+        }
+    }
+
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "-";
+        }
+
+        const date = new Date(dateValue);
+
+        if (isNaN(date)) {
+            return String(dateValue);
+        }
+
+        return date.toLocaleString("en-IN", {
+            day:"2-digit",
+            month:"short",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    loadAdminRequests();
+</script>
+
+</body>
+</html>

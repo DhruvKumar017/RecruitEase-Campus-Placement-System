@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration | RecruitEase</title>
+
+<link rel="stylesheet" href="student-register.css">
+
+<style>
+    .password-wrapper{
+        position:relative;
+        width:100%;
+    }
+
+    .password-wrapper input{
+        width:100%;
+        box-sizing:border-box;
+        padding-right:52px;
+    }
+
+    .toggle-password-btn{
+        position:absolute;
+        top:50%;
+        right:12px;
+        transform:translateY(-50%);
+        border:none;
+        background:transparent;
+        color:#8fa6c8;
+        cursor:pointer;
+        font-size:18px;
+        padding:4px;
+    }
+
+    .toggle-password-btn:hover{
+        color:#ffffff;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="register-page">
+
+    <div class="left-panel">
+
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+        <p class="tagline">Campus Placement System</p>
+
+        <h1>Welcome,<br>Future <span>Achiever!</span> 🚀</h1>
+
+        <p class="desc">
+            Create your account and take the first step towards your dream career.
+        </p>
+
+        <div class="feature">
+            🛡️
+            <div>
+                <b>Secure & Verified</b>
+                <p>Your data is protected and secure</p>
+            </div>
+        </div>
+
+        <div class="feature">
+            📊
+            <div>
+                <b>Career Opportunities</b>
+                <p>Access top placement opportunities</p>
+            </div>
+        </div>
+
+        <div class="feature">
+            👥
+            <div>
+                <b>Placement Support</b>
+                <p>Get guidance from placement cell</p>
+            </div>
+        </div>
+
+        <div class="quote">
+            <h2>“</h2>
+            <p>The best way to predict<br>your future is to create it.</p>
+            <span>– Abraham Lincoln</span>
+        </div>
+
+    </div>
+
+    <div class="right-panel">
+
+        <div class="form-head">
+            <div class="icon">👤+</div>
+
+            <div>
+                <h2>Student Registration</h2>
+                <p>Fill in your details to create a new account</p>
+            </div>
+        </div>
+
+        <form class="register-form" onsubmit="registerStudent(event)">
+
+            <div class="input-group">
+                <label>Full Name <span>*</span></label>
+                <input
+                    id="fullName"
+                    type="text"
+                    placeholder="👤 Enter your full name"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Email Address <span>*</span></label>
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="✉️ Enter your email address"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Username <span>*</span></label>
+                <input
+                    id="username"
+                    type="text"
+                    placeholder="👤 Create username"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number <span>*</span></label>
+                <input
+                    id="mobile"
+                    type="text"
+                    maxlength="10"
+                    placeholder="📞 Enter your phone number"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Password <span>*</span></label>
+
+                <div class="password-wrapper">
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="🔒 Create a strong password"
+                        required
+                    >
+
+                    <button
+                        class="toggle-password-btn"
+                        type="button"
+                        onclick="togglePassword('password', this)"
+                        title="Show password"
+                    >
+                        👁
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Confirm Password <span>*</span></label>
+
+                <div class="password-wrapper">
+                    <input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="🔒 Confirm your password"
+                        required
+                    >
+
+                    <button
+                        class="toggle-password-btn"
+                        type="button"
+                        onclick="togglePassword('confirmPassword', this)"
+                        title="Show password"
+                    >
+                        👁
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Date of Birth <span>*</span></label>
+                <input
+                    id="dob"
+                    type="date"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Roll Number <span>*</span></label>
+                <input
+                    id="rollNumber"
+                    type="text"
+                    placeholder="🪪 Enter your roll number"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Branch <span>*</span></label>
+
+                <select id="branch" required>
+                    <option value="">Select your branch</option>
+                    <option value="CSE">CSE</option>
+                    <option value="IT">IT</option>
+                    <option value="ECE">ECE</option>
+                    <option value="ME">ME</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>CGPA <span>*</span></label>
+                <input
+                    id="cgpa"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="10"
+                    placeholder="📘 Enter your CGPA"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Skills <span>*</span></label>
+                <input
+                    id="skills"
+                    type="text"
+                    placeholder="💻 Java, SQL, HTML, CSS"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Preferred Company</label>
+                <input
+                    id="preferredCompany"
+                    type="text"
+                    placeholder="🧾 TCS, Infosys, Wipro"
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Year of Study <span>*</span></label>
+
+                <select id="year" required>
+                    <option value="">Select your year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Gender <span>*</span></label>
+
+                <select id="gender" required>
+                    <option value="">Select your gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group full">
+                <label>College / University <span>*</span></label>
+                <input
+                    id="college"
+                    type="text"
+                    placeholder="🏫 Enter your college or university name"
+                    required
+                >
+            </div>
+
+            <div class="terms full">
+                <input id="terms" type="checkbox">
+                <p>
+                    I agree to the
+                    <a href="#">Terms & Conditions</a>
+                    and
+                    <a href="#">Privacy Policy</a>
+                </p>
+            </div>
+
+            <button id="registerButton" type="submit" class="register-btn">
+                👤+ Create Account
+            </button>
+
+            <p class="login-text">
+                Already have an account?
+                <a href="student-login.html">Login here</a>
+            </p>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+function getValue(id) {
+    return document.getElementById(id).value.trim();
+}
+
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+        input.type = "text";
+        button.innerText = "🙈";
+        button.title = "Hide password";
+    } else {
+        input.type = "password";
+        button.innerText = "👁";
+        button.title = "Show password";
+    }
+}
+
+async function registerStudent(event) {
+    event.preventDefault();
+
+    const name = getValue("fullName");
+    const email = getValue("email");
+    const username = getValue("username");
+    const mobile = getValue("mobile");
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const dob = getValue("dob");
+    const rollNumber = getValue("rollNumber");
+    const branch = getValue("branch");
+    const cgpa = getValue("cgpa");
+    const skills = getValue("skills");
+    const preferredCompany = getValue("preferredCompany");
+    const year = getValue("year");
+    const gender = getValue("gender");
+    const college = getValue("college");
+    const termsAccepted = document.getElementById("terms").checked;
+
+    if (
+        !name ||
+        !email ||
+        !username ||
+        !mobile ||
+        !password ||
+        !confirmPassword ||
+        !dob ||
+        !rollNumber ||
+        !branch ||
+        !cgpa ||
+        !skills ||
+        !year ||
+        !gender ||
+        !college
+    ) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(mobile)) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+    }
+
+    if (password.length < 6) {
+        alert("Password must contain at least 6 characters.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert("Password and Confirm Password do not match.");
+        return;
+    }
+
+    if (!termsAccepted) {
+        alert("Please accept Terms & Conditions.");
+        return;
+    }
+
+    const registerButton = document.getElementById("registerButton");
+
+    registerButton.disabled = true;
+    registerButton.innerText = "Creating Account...";
+
+    const student = {
+        name: name,
+        email: email,
+        username: username,
+        mobile: mobile,
+        password: password,
+        dob: dob,
+        rollNumber: rollNumber,
+        branch: branch,
+        cgpa: parseFloat(cgpa),
+        skills: skills,
+        preferredCompany: preferredCompany,
+        year: year,
+        gender: gender,
+        college: college
+    };
+
+    try {
+        const response = await fetch("/api/students/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(student)
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        await response.json();
+
+        alert(
+            "Account created successfully!\n\n" +
+            "Now login using your username and password."
+        );
+
+        window.location.href = "student-login.html";
+
+    } catch (error) {
+        console.error("Registration error:", error);
+
+        alert(
+            error.message ||
+            "Registration failed. Please try again."
+        );
+
+    } finally {
+        registerButton.disabled = false;
+        registerButton.innerText = "👤+ Create Account";
+    }
+}
+
+</script>
+</body>
+</html>

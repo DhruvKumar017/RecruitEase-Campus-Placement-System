@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Online Aptitude Test | RecruitEase</title>
+<link rel="stylesheet" href="student-portal.css">
+
+<style>
+.test-wrapper{
+    max-width:1100px;
+    margin:auto;
+}
+
+.test-header{
+    background:#081528;
+    border:1px solid rgba(47,128,255,.2);
+    border-radius:20px;
+    padding:24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+}
+
+.timer-box{
+    background:#0b1830;
+    padding:14px 22px;
+    border-radius:14px;
+    font-size:22px;
+    font-weight:800;
+    color:#38bdf8;
+}
+
+.question-card{
+    background:#081528;
+    border:1px solid rgba(47,128,255,.2);
+    border-radius:22px;
+    padding:30px;
+}
+
+.question-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+    color:#9fb0c7;
+}
+
+.question-card h2{
+    margin-bottom:24px;
+    line-height:1.5;
+}
+
+.option{
+    background:#0b1830;
+    border:1px solid rgba(47,128,255,.18);
+    padding:16px;
+    border-radius:14px;
+    margin-bottom:14px;
+    cursor:pointer;
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.option:hover{
+    border-color:#2f80ff;
+}
+
+.option input{
+    transform:scale(1.2);
+}
+
+.test-actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:24px;
+}
+
+.test-actions button,
+.submit-btn{
+    padding:14px 28px;
+    border:none;
+    border-radius:12px;
+    background:#2f80ff;
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.submit-btn{
+    background:#16a34a;
+}
+
+.progress-box{
+    margin-bottom:20px;
+}
+
+.progress-bar{
+    width:100%;
+    height:10px;
+    background:#0b1830;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:#2f80ff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="student-layout">
+
+<aside class="sidebar">
+    <div class="brand">🎓 Recruit<span>Ease</span></div>
+    <p>Campus Placement System</p>
+
+    <a href="student-dashboard.html">🏠 Dashboard</a>
+    <a href="student-profile.html">👤 My Profile</a>
+    <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+    <a href="student-applications.html">📄 Applications</a>
+    <a class="active" href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="student-interviews.html">🎤 Interviews</a>
+    <a href="student-resume.html">📑 Resume Builder</a>
+    <a href="student-placement-drives.html">💼 Placement Drive</a>
+    <a href="student-notifications.html">🔔 Notifications</a>
+    <a href="student-settings.html">⚙ Settings</a>
+    <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+    <div class="help-card">
+        <h4>Need Help?</h4>
+        <p>Contact your TPO</p>
+    </div>
+</aside>
+
+<main class="main">
+
+<div class="test-wrapper">
+
+    <div class="test-header">
+        <div>
+            <h1>Online Aptitude Test</h1>
+            <p id="testInfo">Loading test...</p>
+        </div>
+
+        <div class="timer-box" id="timerBox">
+            00:00
+        </div>
+    </div>
+
+    <div class="progress-box">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="question-card">
+
+        <div class="question-top">
+            <span id="questionNumber">Question 1 of 0</span>
+            <span id="marksText">Marks: 1</span>
+        </div>
+
+        <h2 id="questionText">Loading question...</h2>
+
+        <label class="option">
+            <input type="radio" name="answer" value="A">
+            <span id="optionA">Option A</span>
+        </label>
+
+        <label class="option">
+            <input type="radio" name="answer" value="B">
+            <span id="optionB">Option B</span>
+        </label>
+
+        <label class="option">
+            <input type="radio" name="answer" value="C">
+            <span id="optionC">Option C</span>
+        </label>
+
+        <label class="option">
+            <input type="radio" name="answer" value="D">
+            <span id="optionD">Option D</span>
+        </label>
+
+        <div class="test-actions">
+            <button onclick="prevQuestion()">Previous</button>
+
+            <div>
+                <button onclick="nextQuestion()">Next</button>
+                <button class="submit-btn" onclick="submitTest()">Submit Test</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</main>
+</div>
+
+<script>
+const studentId = localStorage.getItem("studentId");
+const testId = localStorage.getItem("currentTestId");
+const applicationId = localStorage.getItem("currentApplicationId");
+
+if(!studentId || !testId || !applicationId){
+    alert("Invalid test session.");
+    window.location.href = "student-aptitude-tests.html";
+}
+
+function logout(){
+    localStorage.removeItem("studentId");
+}
+let questions = [];
+let currentIndex = 0;
+let answers = {};
+
+function loadQuestions(){
+
+    fetch("/api/test-questions/student/" + testId)
+    .then(res => res.json())
+    .then(data => {
+
+        questions = data;
+
+        if(questions.length === 0){
+            alert("No questions found for this test.");
+            window.location.href = "student-aptitude-tests.html";
+            return;
+        }
+
+        document.getElementById("testInfo").innerText =
+            "Test ID: " + testId + " • Total Questions: " + questions.length;
+
+        showQuestion();
+    });
+}
+
+function showQuestion(){
+
+    const q = questions[currentIndex];
+
+    document.getElementById("questionNumber").innerText =
+        "Question " + (currentIndex + 1) + " of " + questions.length;
+
+    document.getElementById("marksText").innerText =
+        "Marks: " + (q.marks || 1);
+
+    document.getElementById("questionText").innerText = q.question;
+    document.getElementById("optionA").innerText = q.optionA;
+    document.getElementById("optionB").innerText = q.optionB;
+    document.getElementById("optionC").innerText = q.optionC;
+    document.getElementById("optionD").innerText = q.optionD;
+
+    document.querySelectorAll("input[name='answer']").forEach(radio => {
+        radio.checked = answers[q.id] === radio.value;
+    });
+
+    const progress = ((currentIndex + 1) / questions.length) * 100;
+    document.getElementById("progressFill").style.width = progress + "%";
+}
+
+document.querySelectorAll("input[name='answer']").forEach(radio => {
+    radio.addEventListener("change", function(){
+        const q = questions[currentIndex];
+        answers[q.id] = this.value;
+    });
+});
+
+function nextQuestion(){
+    if(currentIndex < questions.length - 1){
+        currentIndex++;
+        showQuestion();
+    }
+}
+
+function prevQuestion(){
+    if(currentIndex > 0){
+        currentIndex--;
+        showQuestion();
+    }
+}
+
+loadQuestions();
+async function submitTest(){
+
+    if(!confirm("Are you sure you want to submit the test?")){
+        return;
+    }
+
+    const payload = {
+
+        studentId: Number(studentId),
+
+        applicationId: Number(applicationId),
+
+        testId: Number(testId),
+
+        companyId: Number(localStorage.getItem("companyId")),
+
+        answers: answers
+
+    };
+
+    const response = await fetch("/api/test-results/submit",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body: JSON.stringify(payload)
+
+    });
+
+    const result = await response.json();
+
+    alert(
+        "Test Submitted Successfully\n\n" +
+        "Percentage : " + result.percentage + "%\n" +
+        "Status : " + result.status
+    );
+
+    window.location.href="student-aptitude-tests.html";
+
+}
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>

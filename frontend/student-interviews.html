@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interviews | RecruitEase</title>
+
+<link rel="stylesheet" href="student-portal.css">
+
+<style>
+    .interview-empty{
+        padding:30px;
+        text-align:center;
+        color:#9fb0c7;
+    }
+
+    .interview-status{
+        min-width:120px;
+        padding:8px 12px;
+        border-radius:20px;
+        text-align:center;
+        font-size:12px;
+        font-weight:700;
+    }
+
+    .status-pending{
+        color:#ffd27a;
+        background:rgba(255,159,28,.16);
+    }
+
+    .status-scheduled{
+        color:#d4c0ff;
+        background:rgba(139,92,246,.20);
+    }
+
+    .status-completed,
+    .status-selected,
+    .status-placed{
+        color:#78efb3;
+        background:rgba(22,199,132,.18);
+    }
+
+    .status-rejected{
+        color:#ff9aaa;
+        background:rgba(255,77,109,.16);
+    }
+
+    .interview-action-btn{
+        min-width:95px;
+        min-height:42px;
+        border:none;
+        border-radius:10px;
+        cursor:pointer;
+        color:#ffffff;
+        background:linear-gradient(135deg,#1e40af,#2563eb);
+        font-size:13px;
+        font-weight:700;
+    }
+
+    .interview-action-btn.secondary{
+        background:#17345f;
+        border:1px solid rgba(47,128,255,.35);
+        color:#9fc6ff;
+    }
+
+    .interview-request-note{
+        margin-top:7px;
+        color:#9fb0c7;
+        font-size:12px;
+    }
+
+    @media(max-width:800px){
+        .application-card{
+            flex-direction:column;
+            align-items:flex-start !important;
+        }
+
+        .interview-action-btn{
+            width:100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="student-layout">
+
+    <aside class="sidebar">
+        <div class="brand">🎓 Recruit<span>Ease</span></div>
+        <p>Campus Placement System</p>
+
+        <a href="student-dashboard.html">🏠 Dashboard</a>
+        <a href="student-profile.html">👤 My Profile</a>
+        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
+        <a href="student-applications.html">📄 Applications</a>
+        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a class="active" href="student-interviews.html">🎤 Interviews</a>
+        <a href="student-resume.html">📑 Resume Builder</a>
+        <a href="student-placement-drives.html">💼 Placement Drive</a>
+        <a href="student-notifications.html">🔔 Notifications</a>
+        <a href="student-settings.html">⚙ Settings</a>
+        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+
+        <div class="help-card">
+            <h4>Need Help?</h4>
+            <p>Contact your TPO</p>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <input
+                id="interviewSearch"
+                type="text"
+                placeholder="Search interviews..."
+                onkeyup="renderInterviews()"
+            >
+
+            <div class="top-actions">
+
+                <button id="themeBtn" type="button">🌙</button>
+
+
+                <div class="user-box">
+                    <img
+                        id="topPhoto"
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        alt="Student"
+                    >
+
+                    <div>
+                        <b id="topName">Student</b>
+                        <p id="topBranch">B.Tech CSE</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="details-card">
+
+            <h2>Interview Schedule</h2>
+
+            <div class="info-grid">
+
+                <div>
+                    <label>Total Interviews</label>
+                    <p id="totalInterviewCount">0</p>
+                </div>
+
+                <div>
+                    <label>Upcoming</label>
+                    <p id="upcomingInterviewCount">0</p>
+                </div>
+
+                <div>
+                    <label>Pending</label>
+                    <p id="pendingInterviewCount">0</p>
+                </div>
+
+                <div>
+                    <label>Placed</label>
+                    <p id="placedInterviewCount">0</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="details-card" style="margin-top:24px;">
+
+            <h2>My Interview Requests & Schedule</h2>
+
+            <div class="application-list" id="interviewList">
+                <p class="interview-empty">Loading interviews...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+const studentId = localStorage.getItem("studentId");
+
+let studentInterviews = [];
+let studentApplicationsMap = {};
+
+if (!studentId) {
+    window.location.href = "student-login.html";
+} else {
+    initializeInterviewPage();
+}
+
+async function initializeInterviewPage() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/students/" + studentId),
+            fetch("/api/interview-requests/student/" + studentId),
+            fetch("/api/applications/student/" + studentId)
+        ]);
+
+        if (!responses[0].ok) {
+            throw new Error("Student profile not found.");
+        }
+
+        if (!responses[1].ok || !responses[2].ok) {
+            throw new Error("Interview data load nahi hua.");
+        }
+
+        const student = await responses[0].json();
+
+        studentInterviews = await responses[1].json();
+
+        const applications = await responses[2].json();
+
+        studentApplicationsMap = {};
+
+        applications.forEach(application => {
+            studentApplicationsMap[application.id] = application;
+        });
+
+        document.getElementById("topName").innerText =
+            student.name || "Student";
+
+        document.getElementById("topBranch").innerText =
+            student.branch || "B.Tech CSE";
+
+        document.getElementById("topPhoto").src =
+            "/api/students/" + studentId + "/photo?t=" + Date.now();
+
+        studentInterviews.sort((first, second) =>
+            getInterviewSortTime(first) - getInterviewSortTime(second)
+        );
+
+        updateInterviewStats();
+        renderInterviews();
+
+    } catch (error) {
+        console.error(error);
+
+        document.getElementById("interviewList").innerHTML = `
+            <p class="interview-empty">
+                Interview data load nahi ho raha. Backend check karo.
+            </p>
+        `;
+    }
+}
+
+function getEffectiveStatus(interview) {
+    const application =
+        studentApplicationsMap[interview.applicationId];
+
+    const applicationStatus = normalizeStatus(application?.status);
+
+    if (applicationStatus === "placed") {
+        return "placed";
+    }
+
+    if (applicationStatus === "selected") {
+        return "selected";
+    }
+
+    if (applicationStatus === "rejected") {
+        return "rejected";
+    }
+
+    return normalizeStatus(interview.interviewStatus);
+}
+
+function updateInterviewStats() {
+    const total = studentInterviews.length;
+
+    const upcoming = studentInterviews.filter(interview =>
+        isUpcomingInterview(interview)
+    ).length;
+
+    const pending = studentInterviews.filter(interview =>
+        getEffectiveStatus(interview) === "pending"
+    ).length;
+
+    const placed = studentInterviews.filter(interview =>
+        getEffectiveStatus(interview) === "placed"
+    ).length;
+
+    document.getElementById("totalInterviewCount").innerText = total;
+    document.getElementById("upcomingInterviewCount").innerText = upcoming;
+    document.getElementById("pendingInterviewCount").innerText = pending;
+    document.getElementById("placedInterviewCount").innerText = placed;
+    document.getElementById("notificationCount").innerText = pending;
+}
+
+function renderInterviews() {
+    const search = document.getElementById("interviewSearch").value
+        .toLowerCase()
+        .trim();
+
+    const filteredInterviews = studentInterviews.filter(interview => {
+        const companyName = String(interview.companyName || "")
+            .toLowerCase();
+
+        const status = getEffectiveStatus(interview);
+
+        const interviewMode = String(interview.interviewMode || "")
+            .toLowerCase();
+
+        return (
+            companyName.includes(search) ||
+            status.includes(search) ||
+            interviewMode.includes(search)
+        );
+    });
+
+    const interviewList = document.getElementById("interviewList");
+
+    if (filteredInterviews.length === 0) {
+        interviewList.innerHTML = `
+            <p class="interview-empty">
+                No interview request or scheduled interview found.
+            </p>
+        `;
+        return;
+    }
+
+    interviewList.innerHTML = filteredInterviews.map(interview => {
+        const status = getEffectiveStatus(interview);
+
+        return `
+            <div class="application-card">
+
+                <div>
+                    <h3>
+                        ${escapeHtml(interview.companyName || "Company")} Interview
+                    </h3>
+
+                    <p>${escapeHtml(getScheduleText(interview, status))}</p>
+
+                    ${getInterviewRemarkMarkup(interview, status)}
+                </div>
+
+                <span class="interview-status ${getInterviewStatusClass(status)}">
+                    ${escapeHtml(getInterviewStatusText(status))}
+                </span>
+
+                ${getInterviewActionMarkup(interview, status)}
+
+            </div>
+        `;
+    }).join("");
+}
+
+function getScheduleText(interview, status) {
+    if (status === "placed") {
+        return "Congratulations! You have been directly placed by the admin.";
+    }
+
+    if (status === "selected") {
+        return "Congratulations! You are selected after the interview.";
+    }
+
+    if (status === "rejected") {
+        return "Interview process completed.";
+    }
+
+    if (status === "completed") {
+        return "Interview completed. Wait for final decision.";
+    }
+
+    if (status === "pending") {
+        return "Interview request submitted. Waiting for admin schedule.";
+    }
+
+    return (
+        `${formatDate(interview.interviewDate)} • ` +
+        `${formatTime(interview.interviewTime)} • ` +
+        `${interview.interviewMode || "Online"}`
+    );
+}
+
+function getInterviewRemarkMarkup(interview, status) {
+    if (status === "placed") {
+        return `
+            <p class="interview-request-note">
+                Final Status: Placed Student ✅
+            </p>
+        `;
+    }
+
+    if (!interview.adminRemark) {
+        return "";
+    }
+
+    return `
+        <p class="interview-request-note">
+            Admin Note: ${escapeHtml(interview.adminRemark)}
+        </p>
+    `;
+}
+
+function getInterviewActionMarkup(interview, status) {
+    if (
+        status === "scheduled" &&
+        isValidHttpLink(interview.interviewLink)
+    ) {
+        return `
+            <button
+                class="interview-action-btn"
+                type="button"
+                onclick="joinInterview(${interview.id})"
+            >
+                Join
+            </button>
+        `;
+    }
+
+    return `
+        <button
+            class="interview-action-btn secondary"
+            type="button"
+            onclick="showInterviewDetails(${interview.id})"
+        >
+            Details
+        </button>
+    `;
+}
+
+function getInterviewStatusClass(status) {
+    if (status === "scheduled") return "status-scheduled";
+    if (status === "completed") return "status-completed";
+    if (status === "selected") return "status-selected";
+    if (status === "placed") return "status-placed";
+    if (status === "rejected") return "status-rejected";
+
+    return "status-pending";
+}
+
+function getInterviewStatusText(status) {
+    if (status === "scheduled") return "Scheduled";
+    if (status === "completed") return "Completed";
+    if (status === "selected") return "Selected";
+    if (status === "placed") return "Placed";
+    if (status === "rejected") return "Rejected";
+
+    return "Request Pending";
+}
+
+function joinInterview(interviewId) {
+    const interview = studentInterviews.find(item =>
+        Number(item.id) === Number(interviewId)
+    );
+
+    if (!interview || !isValidHttpLink(interview.interviewLink)) {
+        alert("Interview link is not available.");
+        return;
+    }
+
+    window.open(
+        interview.interviewLink,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+function showInterviewDetails(interviewId) {
+    const interview = studentInterviews.find(item =>
+        Number(item.id) === Number(interviewId)
+    );
+
+    if (!interview) {
+        alert("Interview details not found.");
+        return;
+    }
+
+    const status = getEffectiveStatus(interview);
+
+    alert(
+        `Company: ${interview.companyName || "-"}\n` +
+        `Status: ${getInterviewStatusText(status)}\n` +
+        `Date: ${formatDate(interview.interviewDate)}\n` +
+        `Time: ${formatTime(interview.interviewTime)}\n` +
+        `Mode: ${interview.interviewMode || "-"}\n` +
+        `Admin Note: ${interview.adminRemark || "-"}`
+    );
+}
+
+function isUpcomingInterview(interview) {
+    if (getEffectiveStatus(interview) !== "scheduled") {
+        return false;
+    }
+
+    if (!interview.interviewDate || !interview.interviewTime) {
+        return false;
+    }
+
+    const dateTime = new Date(
+        `${interview.interviewDate}T${normalizeTime(interview.interviewTime)}`
+    );
+
+    return !Number.isNaN(dateTime.getTime()) &&
+        dateTime >= new Date();
+}
+
+function getInterviewSortTime(interview) {
+    if (!interview.interviewDate || !interview.interviewTime) {
+        return Number.MAX_SAFE_INTEGER;
+    }
+
+    const dateTime = new Date(
+        `${interview.interviewDate}T${normalizeTime(interview.interviewTime)}`
+    );
+
+    return Number.isNaN(dateTime.getTime())
+        ? Number.MAX_SAFE_INTEGER
+        : dateTime.getTime();
+}
+
+function normalizeTime(timeValue) {
+    if (!timeValue) {
+        return "00:00:00";
+    }
+
+    const time = String(timeValue).trim();
+
+    return time.length === 5
+        ? time + ":00"
+        : time;
+}
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "Not scheduled yet";
+    }
+
+    const date = new Date(dateValue + "T00:00:00");
+
+    if (Number.isNaN(date.getTime())) {
+        return dateValue;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function formatTime(timeValue) {
+    if (!timeValue) {
+        return "-";
+    }
+
+    const date = new Date(
+        "2000-01-01T" + normalizeTime(timeValue)
+    );
+
+    if (Number.isNaN(date.getTime())) {
+        return timeValue;
+    }
+
+    return date.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    });
+}
+
+function isValidHttpLink(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
+    }
+}
+
+function normalizeStatus(status) {
+    return String(status || "PENDING")
+        .trim()
+        .toLowerCase();
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function logout() {
+    localStorage.removeItem("studentId");
+}
+
+document.getElementById("themeBtn").addEventListener("click", function() {
+    document.body.classList.toggle("light");
+});
+
+</script>
+
+<script src="student-sidebar.js"></script>
+</body>
+</html>
