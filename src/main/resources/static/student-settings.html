@@ -131,6 +131,14 @@
                             <input id="name" type="text" placeholder="Full Name">
                         </div>
                     </div>
+                    <div class="settings-form-group">
+    <label>Roll Number</label>
+
+    <div class="input-shell">
+        <span>🪪</span>
+        <input id="rollNumber" type="text" placeholder="Enter Roll Number">
+                          </div>
+                       </div>
 
                     <div class="settings-form-group">
                         <label>Email</label>
@@ -161,6 +169,24 @@
                             <option value="4th Year">4th Year</option>
                         </select>
                     </div>
+                    <div class="settings-form-group">
+    <label>Branch</label>
+
+    <div class="input-shell">
+        <span>🎓</span>
+        <input id="branch" type="text" placeholder="Enter Branch e.g. CSE">
+    </div>
+</div>
+
+<div class="settings-form-group">
+    <label>CGPA</label>
+
+    <div class="input-shell">
+        <span>⭐</span>
+        <input id="cgpa" type="number" step="0.01" min="0" max="10"
+               placeholder="Enter CGPA">
+    </div>
+</div>
 
                     <div class="settings-form-group">
                         <label>Address</label>
@@ -510,9 +536,15 @@ async function loadStudent() {
         currentStudent = await studentResponse.json();
 
         document.getElementById("name").value = currentStudent.name || "";
+        document.getElementById("rollNumber").value = currentStudent.rollNumber || "";
         document.getElementById("email").value = currentStudent.email || "";
         document.getElementById("mobile").value = currentStudent.mobile || "";
         document.getElementById("year").value = currentStudent.year || "";
+        document.getElementById("branch").value = currentStudent.branch || "";
+document.getElementById("cgpa").value =
+    currentStudent.cgpa !== null && currentStudent.cgpa !== undefined
+        ? currentStudent.cgpa
+        : "";
         document.getElementById("address").value = currentStudent.address || "";
         document.getElementById("skills").value = currentStudent.skills || "";
         document.getElementById("preferredCompany").value =
@@ -594,12 +626,16 @@ async function saveProfile() {
         alert("Username minimum 3 characters ka hona chahiye.");
         return;
     }
+    const cgpaValue = document.getElementById("cgpa").value.trim();
 
     const profileData = {
         name: document.getElementById("name").value.trim(),
+        rollNumber: document.getElementById("rollNumber").value.trim(),
         email: document.getElementById("email").value.trim(),
         mobile: document.getElementById("mobile").value.trim(),
         year: document.getElementById("year").value,
+        branch: document.getElementById("branch").value.trim(),
+        cgpa: cgpaValue === "" ? null : Number(cgpaValue),
         address: document.getElementById("address").value.trim(),
         skills: document.getElementById("skills").value.trim(),
         preferredCompany: document.getElementById("preferredCompany").value.trim(),

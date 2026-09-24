@@ -334,6 +334,9 @@ public class StudentController {
 
         student.setName(updatedStudent.getName());
         student.setEmail(updatedStudent.getEmail());
+        student.setRollNumber(updatedStudent.getRollNumber());
+        student.setBranch(updatedStudent.getBranch());
+        student.setCgpa(updatedStudent.getCgpa());
         student.setSkills(updatedStudent.getSkills());
         student.setPreferredCompany(updatedStudent.getPreferredCompany());
 
