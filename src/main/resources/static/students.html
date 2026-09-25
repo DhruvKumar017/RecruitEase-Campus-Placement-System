@@ -186,8 +186,8 @@
 
                 <div>
                     <p>Placed Students</p>
-                    <h2>342</h2>
-                    <small>Demo Data</small>
+<h2 id="placedStudents">0</h2>
+<small>Live Placement Data</small>
                 </div>
             </div>
 
@@ -299,6 +299,36 @@ function loadStudents() {
         .catch(error => {
             console.error("Student load error:", error);
             alert("Students load nahi ho rahe. Backend check karo.");
+        });
+}
+function loadPlacedStudents() {
+    fetch("/api/applications/all")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Applications load nahi hui.");
+            }
+
+            return response.json();
+        })
+        .then(applications => {
+
+            const placedStudentIds = new Set(
+                (applications || [])
+                    .filter(app =>
+                        String(app.status || "")
+                            .trim()
+                            .toLowerCase() === "placed"
+                    )
+                    .map(app => app.studentId)
+                    .filter(id => id != null)
+            );
+
+            document.getElementById("placedStudents").textContent =
+                placedStudentIds.size;
+        })
+        .catch(error => {
+            console.error("Placed students load error:", error);
+            document.getElementById("placedStudents").textContent = "0";
         });
 }
 
@@ -590,6 +620,7 @@ studentThemeToggle.addEventListener("click", function() {
 
 loadSharedAdminProfile();
 loadStudents();
+loadPlacedStudents();
 </script>
 
 </body>
