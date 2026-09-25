@@ -213,9 +213,21 @@
                     </div>
 
                     <div class="overview-row">
-                        <span>📄 Resume</span>
-                        <b id="overviewResume">Not uploaded</b>
-                    </div>
+    <span>📄 Resume</span>
+
+    <div>
+        <b id="overviewResume">Not uploaded</b>
+
+        <button
+            id="viewResumeButton"
+            type="button"
+            onclick="viewStudentResume()"
+            style="display:none; margin-left:10px;"
+        >
+            View Resume
+        </button>
+    </div>
+</div>
 
                 </div>
 
@@ -560,6 +572,14 @@ async function loadProfile() {
             studentData.resumeFileName,
             "Not uploaded"
         );
+        const viewResumeButton =
+    document.getElementById("viewResumeButton");
+
+if (studentData.resumeFileName) {
+    viewResumeButton.style.display = "inline-block";
+} else {
+    viewResumeButton.style.display = "none";
+}
 
         setText("academicCgpa", studentData.cgpa);
         setText("academicBranch", studentData.branch);
@@ -690,7 +710,17 @@ function logout() {
     localStorage.removeItem("studentId");
     window.location.href = "student-login.html";
 }
+function viewStudentResume() {
+    if (!studentId) {
+        alert("Student ID nahi mila.");
+        return;
+    }
 
+    window.open(
+        "/api/students/" + studentId + "/resume",
+        "_blank"
+    );
+}
 loadTheme();
 loadProfile();
 </script>
