@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -29,6 +31,8 @@ import com.recruitease.entity.StudentLogin;
 import com.recruitease.repository.CompanyRepository;
 import com.recruitease.repository.StudentLoginRepository;
 import com.recruitease.repository.StudentRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 @RestController
 @RequestMapping("/api/students")
@@ -410,53 +414,62 @@ public class StudentController {
     /* ================= UPLOAD STUDENT PHOTO ================= */
 
     @PostMapping("/{id}/upload-photo")
-    public Student uploadStudentPhoto(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file
-    ) throws IOException {
+public Student uploadStudentPhoto(
+        @PathVariable Long id,
+        @RequestParam("file") MultipartFile file
+) throws IOException {
 
-        Student student = studentRepository.findById(id).orElse(null);
-
-        if (student == null) {
-            return null;
-        }
-
-        File uploadFolder = new File(PHOTO_UPLOAD_DIR);
-
-        if (!uploadFolder.exists()) {
-            uploadFolder.mkdirs();
-        }
-
-        String fileName = "student_" + id + "_" + file.getOriginalFilename();
-
-        Path filePath = Paths.get(PHOTO_UPLOAD_DIR + fileName);
-
-        Files.write(filePath, file.getBytes());
-
-        student.setPhotoFileName(fileName);
-
-        return studentRepository.save(student);
+    Student student = studentRepository.findById(id).orElse(null);
+    if (student == null) {
+        return null;
     }
+
+    if (file.isEmpty() || file.getContentType() == null
+            || !file.getContentType().startsWith("image/")) {
+        throw new IOException("Please select a valid image");
+    }
+
+    Cloudinary cloudinary = new Cloudinary();
+    String publicId = "recruitease/student-photos/student_" + id + "_" + UUID.randomUUID();
+
+    Map<?, ?> result = cloudinary.uploader().upload(
+            file.getBytes(),
+            ObjectUtils.asMap("public_id", publicId, "resource_type", "image")
+    );
+
+    student.setPhotoFileName("cloudinary:" + result.get("public_id"));
+    return studentRepository.save(student);
+}
 
     /* ================= GET STUDENT PHOTO ================= */
 
     @GetMapping("/{id}/photo")
-    public ResponseEntity<Resource> getStudentPhoto(@PathVariable Long id) {
+public ResponseEntity<Resource> getStudentPhoto(@PathVariable Long id) {
 
-        Student student = studentRepository.findById(id).orElse(null);
+    Student student = studentRepository.findById(id).orElse(null);
 
-        if (student == null || student.getPhotoFileName() == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        File file = new File(PHOTO_UPLOAD_DIR + student.getPhotoFileName());
-
-        if (!file.exists()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Resource resource = new FileSystemResource(file);
-
-        return ResponseEntity.ok().body(resource);
+    if (student == null || student.getPhotoFileName() == null) {
+        return ResponseEntity.notFound().build();
     }
+
+    String photoRef = student.getPhotoFileName();
+
+    if (photoRef.startsWith("cloudinary:")) {
+        String publicId = photoRef.substring("cloudinary:".length());
+        String photoUrl = "https://res.cloudinary.com/impw3dnv/image/upload/" + publicId;
+
+        return ResponseEntity.status(302)
+                .header("Location", photoUrl)
+                .build();
+    }
+
+    // Purani local photos ke liye existing behaviour
+    File file = new File(PHOTO_UPLOAD_DIR + photoRef);
+    if (!file.exists()) {
+        return ResponseEntity.notFound().build();
+    }
+
+    Resource resource = new FileSystemResource(file);
+    return ResponseEntity.ok().body(resource);
+}
 }
