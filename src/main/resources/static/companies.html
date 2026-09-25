@@ -178,8 +178,8 @@
 
                 <div>
                     <p>Total Drives</p>
-                    <h3>18</h3>
-                    <small>Demo Data</small>
+<h3 id="totalDrives">0</h3>
+<small>Live Placement Drives</small>
                 </div>
             </div>
 
@@ -481,6 +481,23 @@
         document.getElementById("activeCompanies").innerText = total;
         document.getElementById("partnerCompanies").innerText = total;
     }
+    async function loadTotalDrives() {
+    try {
+        const response = await fetch("/api/drives");
+
+        if (!response.ok) {
+            throw new Error("Drives load failed");
+        }
+
+        const drives = await response.json();
+
+        document.getElementById("totalDrives").innerText = drives.length;
+
+    } catch (error) {
+        console.error("Error loading total drives:", error);
+        document.getElementById("totalDrives").innerText = "0";
+    }
+}
 
     document.getElementById("themeToggle").addEventListener("click", function() {
         const button = document.getElementById("themeToggle");
@@ -493,6 +510,7 @@
     });
 
     loadCompanies();
+    loadTotalDrives();
 
 </script>
 
