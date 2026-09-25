@@ -356,60 +356,97 @@ public class StudentController {
     /* ================= UPLOAD RESUME ================= */
 
     @PostMapping("/{id}/upload-resume")
-    public Student uploadResume(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file
-    ) throws IOException {
+public Student uploadResume(
+        @PathVariable Long id,
+        @RequestParam("file") MultipartFile file
+) throws IOException {
 
-        Student student = studentRepository.findById(id).orElse(null);
+    Student student = studentRepository.findById(id).orElse(null);
 
-        if (student == null) {
-            return null;
-        }
-
-        File uploadFolder = new File(UPLOAD_DIR);
-
-        if (!uploadFolder.exists()) {
-            uploadFolder.mkdirs();
-        }
-
-        String fileName = "student_" + id + "_" + file.getOriginalFilename();
-
-        Path filePath = Paths.get(UPLOAD_DIR + fileName);
-
-        Files.write(filePath, file.getBytes());
-
-        student.setResumeFileName(fileName);
-
-        return studentRepository.save(student);
+    if (student == null) {
+        return null;
     }
+
+    if (file.isEmpty()) {
+        throw new IOException("Please select a resume file");
+    }
+
+    String originalFileName = file.getOriginalFilename() == null
+            ? "resume"
+            : file.getOriginalFilename();
+
+    String safeFileName =
+            originalFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+    Cloudinary cloudinary = new Cloudinary();
+
+    String publicId =
+            "recruitease/resumes/student_"
+            + id
+            + "_"
+            + UUID.randomUUID()
+            + "_"
+            + safeFileName;
+
+    Map<?, ?> result = cloudinary.uploader().upload(
+            file.getBytes(),
+            ObjectUtils.asMap(
+                    "public_id", publicId,
+                    "resource_type", "raw"
+            )
+    );
+
+    student.setResumeFileName(
+            "cloudinary-raw:" + result.get("public_id")
+    );
+
+    return studentRepository.save(student);
+}
 
     /* ================= DOWNLOAD RESUME ================= */
 
-    @GetMapping("/{id}/resume")
-    public ResponseEntity<Resource> downloadResume(@PathVariable Long id) {
+   @GetMapping("/{id}/resume")
+public ResponseEntity<?> downloadResume(@PathVariable Long id) {
 
-        Student student = studentRepository.findById(id).orElse(null);
+    Student student = studentRepository.findById(id).orElse(null);
 
-        if (student == null || student.getResumeFileName() == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        File file = new File(UPLOAD_DIR + student.getResumeFileName());
-
-        if (!file.exists()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Resource resource = new FileSystemResource(file);
-
-        return ResponseEntity.ok()
-                .header(
-                        "Content-Disposition",
-                        "attachment; filename=" + student.getResumeFileName()
-                )
-                .body(resource);
+    if (student == null || student.getResumeFileName() == null) {
+        return ResponseEntity.notFound().build();
     }
+
+    String resumeRef = student.getResumeFileName();
+
+    // New Cloudinary resumes
+    if (resumeRef.startsWith("cloudinary-raw:")) {
+
+        String publicId =
+                resumeRef.substring("cloudinary-raw:".length());
+
+        String resumeUrl =
+                "https://res.cloudinary.com/impw3dnv/raw/upload/"
+                + publicId;
+
+        return ResponseEntity.status(302)
+                .header("Location", resumeUrl)
+                .build();
+    }
+
+    // Old local resumes ke liye fallback
+    File file = new File(UPLOAD_DIR + resumeRef);
+
+    if (!file.exists()) {
+        return ResponseEntity.notFound().build();
+    }
+
+    Resource resource = new FileSystemResource(file);
+
+    return ResponseEntity.ok()
+            .header(
+                    "Content-Disposition",
+                    "attachment; filename=\"" + resumeRef + "\""
+            )
+            .body(resource);
+}
 
     /* ================= UPLOAD STUDENT PHOTO ================= */
 
