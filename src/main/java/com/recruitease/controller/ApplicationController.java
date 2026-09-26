@@ -527,13 +527,19 @@ public ResponseEntity<?> updateApplicationStatus(
         dto.setTestEndTime(application.getTestEndTime());
         dto.setTestPermission(application.getTestPermission());
 
-        Student student = studentRepository
-                .findById(application.getStudentId())
-                .orElse(null);
+        Student student = null;
 
-        if (student != null) {
-            dto.setStudentName(student.getName());
-        }
+if (application.getStudentId() != null) {
+    student = studentRepository
+            .findById(application.getStudentId())
+            .orElse(null);
+}
+
+if (student != null) {
+    dto.setStudentName(student.getName());
+} else {
+    dto.setStudentName("Unknown Student");
+}
 
         Company company = getCompanyForApplication(application);
         dto.setCompanyCutoff(getCompanyCutoff(company));
