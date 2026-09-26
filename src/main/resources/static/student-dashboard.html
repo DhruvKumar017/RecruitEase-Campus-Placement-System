@@ -8,229 +8,819 @@
 
 <body>
 
-<div class="student-layout">
+<div class="student-dashboard-shell">
 
-    <aside class="sidebar">
-        <div class="brand">🎓 Recruit<span>Ease</span></div>
-        <p>Campus Placement System</p>
+    <main class="main premium-dashboard">
 
-        <a class="active" href="student-dashboard.html">🏠 Dashboard</a>
-        <a href="student-profile.html">👤 My Profile</a>
-        <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
-        <a href="student-applications.html">📄 Applications</a>
-        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
-        <a href="student-interviews.html">🎤 Interviews</a>
-        <a href="student-resume.html">📑 Resume Builder</a>
-        <a href="student-placement-drives.html">💼 Placement Drive</a>
-        <a href="student-notifications.html">🔔 Notifications</a>
-        <a href="student-settings.html">⚙ Settings</a>
-        <a href="student-login.html" onclick="logout()">↪ Logout</a>
+        <!-- ================= TOP HERO ================= -->
 
-        <div class="help-card">
-            <h4>Need Help?</h4>
-            <p>Contact your TPO</p>
-        </div>
-    </aside>
+        <section class="premium-hero">
 
-    <main class="main">
+            <div class="premium-hero-overlay"></div>
 
-        <header class="topbar">
+            <header class="premium-topbar">
 
-            <input
-                type="text"
-                id="dashboardDriveSearch"
-                placeholder="Search for companies, roles, drives..."
-                onkeyup="filterUpcomingDrives()"
-            >
+                <div class="premium-search-wrap">
 
-            <div class="top-actions">
+                    <span class="premium-search-icon">
+                        &#9906;
+                    </span>
 
-                <button id="themeBtn">🌙</button>
-
-                <div class="user-box">
-                    <img
-                        id="topPhoto"
-                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                        alt="Student"
-                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                    <input
+                        type="text"
+                        id="dashboardDriveSearch"
+                        placeholder="Search companies, roles, drives or resources..."
+                        onkeyup="filterUpcomingDrives()"
                     >
 
+                    <span class="search-shortcut">
+                        Ctrl + K
+                    </span>
+
+                </div>
+
+                <div class="premium-top-actions">
+
+                    <div
+                        class="premium-bell"
+                        onclick="toggleStudentNotifications()"
+                    >
+                        &#9679;
+
+                        <span
+                            id="topNotificationBadge"
+                            class="premium-bell-badge"
+                        >
+                            3
+                        </span>
+
+                        <div
+                            class="student-notification-box"
+                            id="studentNotificationBox"
+                        >
+
+                            <div class="notification-popup-head">
+                                <h4>Notifications</h4>
+
+                                <a href="student-notifications.html">
+                                    View all
+                                </a>
+                            </div>
+
+                            <div id="dashboardNotificationList">
+
+                                <p class="notification-loading">
+                                    Loading notifications...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        id="themeBtn"
+                        class="premium-theme-button"
+                        type="button"
+                        title="Change Theme"
+                    >
+                        &#9788;
+                    </button>
+
+                    <div class="premium-top-user">
+
+                        <img
+                            id="topPhoto"
+                            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                            alt="Student"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                        >
+
+                        <div>
+                            <b id="topName">
+                                Student
+                            </b>
+
+                            <p id="topBranch">
+                                B.Tech CSE
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <div class="premium-hero-content">
+
+                <div class="premium-hero-copy">
+
+                    <span class="hero-small-label">
+                        GOOD EVENING
+                    </span>
+
+                    <h1>
+                        <span id="welcomeName">
+                            Student
+                        </span>
+                        <span class="hero-wave">
+                            &#128075;
+                        </span>
+                    </h1>
+
+                    <p>
+                        Stay consistent. Every application brings you
+                        closer to your dream career.
+                    </p>
+
+                    <div class="hero-quote">
+                        <span class="quote-mark">
+                            &ldquo;
+                        </span>
+
+                        <div>
+                            <strong>
+                                Discipline today,
+                            </strong>
+
+                            <span>
+                                placement tomorrow.
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="hero-message">
+
+                    <span>Learn.</span>
+                    <span>Apply.</span>
+                    <span>Grow.</span>
+
+                    <strong>
+                        Get Placed.
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= LIVE STATS ================= -->
+
+        <section class="premium-stats-grid">
+
+            <a
+                href="student-eligible-companies.html"
+                class="premium-stat-card stat-blue"
+            >
+
+                <div class="premium-stat-icon">
+                    &#9638;
+                </div>
+
+                <div class="premium-stat-content">
+
+                    <span class="premium-stat-title">
+                        Eligible Companies
+                    </span>
+
+                    <h2 id="eligibleCount">
+                        0
+                    </h2>
+
+                    <p>
+                        Based on your profile &amp; criteria
+                    </p>
+
+                </div>
+
+                <div class="premium-stat-arrow">
+                    &rarr;
+                </div>
+
+            </a>
+
+
+            <a
+                href="student-applications.html"
+                class="premium-stat-card stat-green"
+            >
+
+                <div class="premium-stat-icon">
+                    &#9636;
+                </div>
+
+                <div class="premium-stat-content">
+
+                    <span class="premium-stat-title">
+                        Applications Sent
+                    </span>
+
+                    <h2 id="applicationCount">
+                        0
+                    </h2>
+
+                    <p id="applicationStatText">
+                        Track your applications
+                    </p>
+
+                </div>
+
+                <div class="premium-stat-arrow">
+                    &rarr;
+                </div>
+
+            </a>
+
+
+            <a
+                href="student-interviews.html"
+                class="premium-stat-card stat-orange"
+            >
+
+                <div class="premium-stat-icon">
+                    &#9719;
+                </div>
+
+                <div class="premium-stat-content">
+
+                    <span class="premium-stat-title">
+                        Interviews Scheduled
+                    </span>
+
+                    <h2 id="interviewCount">
+                        0
+                    </h2>
+
+                    <p id="interviewStatText">
+                        No upcoming interview
+                    </p>
+
+                </div>
+
+                <div class="premium-stat-arrow">
+                    &rarr;
+                </div>
+
+            </a>
+
+
+            <a
+                href="student-aptitude-tests.html"
+                class="premium-stat-card stat-purple"
+            >
+
+                <div class="premium-stat-icon">
+                    &#10003;
+                </div>
+
+                <div class="premium-stat-content">
+
+                    <span class="premium-stat-title">
+                        Aptitude Test Status
+                    </span>
+
+                    <h2 id="aptitudeStatusCount">
+                        0
+                    </h2>
+
+                    <p id="aptitudeStatText">
+                        Check your aptitude tests
+                    </p>
+
+                </div>
+
+                <div class="premium-stat-arrow">
+                    &rarr;
+                </div>
+
+            </a>
+
+        </section>
+
+
+        <!-- ================= MAIN DASHBOARD ================= -->
+
+        <section class="premium-dashboard-grid">
+
+
+            <!-- ================= UPCOMING DRIVES ================= -->
+
+            <section class="premium-panel premium-drives-panel">
+
+                <div class="premium-panel-head">
+
                     <div>
-                        <b id="topName">Student</b>
-                        <p id="topBranch">B.Tech CSE</p>
-                    </div>
-                </div>
 
-            </div>
+                        <div class="panel-title-row">
 
-        </header>
+                            <span class="panel-title-icon">
+                                &#9638;
+                            </span>
 
-        <section class="hero-card">
-            <div>
-                <h1>Welcome back, <span id="welcomeName">Student</span>! 👋</h1>
-                <p>Track your placement journey and unlock new opportunities.</p>
-            </div>
+                            <h2>
+                                Upcoming Placement Drives
+                            </h2>
 
-            <div class="hero-emoji">👨‍💻</div>
-        </section>
+                        </div>
 
-        <section class="stats-grid">
-
-            <div class="stat-card">
-                <div class="stat-icon blue">💼</div>
-                <h2 id="eligibleCount">0</h2>
-                <p>Eligible Companies</p>
-                <a href="student-eligible-companies.html">View all →</a>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon green">📄</div>
-                <h2>8</h2>
-                <p>Applications</p>
-                <a href="student-applications.html">View all →</a>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon purple">📅</div>
-                <h2 id="upcomingDriveCount">0</h2>
-                <p>Upcoming Drives</p>
-                <a href="student-placement-drives.html">View all →</a>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon orange">📈</div>
-                <h2>92%</h2>
-                <p>Profile Strength</p>
-                <a href="student-settings.html">Improve →</a>
-            </div>
-
-        </section>
-
-        <section class="dashboard-grid">
-
-            <!-- ================= REAL UPCOMING DRIVES ================= -->
-            <div class="panel drives-panel">
-
-                <div class="panel-head">
-                    <h3>Upcoming Placement Drives</h3>
-                    <a href="student-placement-drives.html">View all</a>
-                </div>
-
-                <div id="upcomingDrivesList">
-
-                    <div class="drive">
-                        <p style="padding:12px; color:#9fb0c7;">
-                            Loading upcoming placement drives...
+                        <p>
+                            Opportunities selected according to your
+                            eligibility and profile.
                         </p>
+
+                    </div>
+
+                    <div class="drive-head-actions">
+
+                        <span class="live-drive-counter">
+
+                            <span id="upcomingDriveCount">
+                                0
+                            </span>
+
+                            Live Drives
+
+                        </span>
+
+                        <a
+                            href="student-placement-drives.html"
+                            class="premium-view-link"
+                        >
+                            View All Drives
+                            &rarr;
+                        </a>
+
                     </div>
 
                 </div>
 
-            </div>
 
-            <div class="panel profile-panel">
-
-                <div class="panel-head">
-                    <h3>My Profile</h3>
-                    <a href="student-settings.html">Edit</a>
-                </div>
-
-                <img
-                    id="profilePhoto"
-                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                    alt="Student"
-                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                <div
+                    id="upcomingDrivesList"
+                    class="premium-drive-list"
                 >
 
-                <h2 id="profileName">Student</h2>
-                <p id="profileEmail">email@example.com</p>
-                <p id="profileInfo">B.Tech CSE</p>
+                    <div class="premium-loading-state">
 
-                <a class="profile-btn" href="student-profile.html">View Profile →</a>
-            </div>
+                        <div class="loading-orb"></div>
 
-            <div class="panel resume-panel">
-                <h3>Resume Status</h3>
-                <div class="resume-ok">✅</div>
-                <h4>Your resume is good to go!</h4>
-                <p>Upload or update your latest resume.</p>
-                <button onclick="location.href='student-settings.html'">
-                    View / Update Resume
-                </button>
-            </div>
+                        <div>
+                            <strong>
+                                Loading placement drives
+                            </strong>
 
-            <div class="panel small-panel">
+                            <p>
+                                Finding opportunities matching
+                                your profile...
+                            </p>
+                        </div>
 
-                <div class="panel-head">
-                    <h3>Application Status</h3>
-                    <a href="student-applications.html">View all</a>
+                    </div>
+
                 </div>
 
-                <div class="donut-box">
+            </section>
 
-                    <div class="donut">
-                        14
-                        <br>
-                        <span>Total</span>
+
+            <!-- ================= QUICK ACCESS ================= -->
+
+            <aside class="premium-right-column">
+
+                <section class="premium-panel quick-access-panel">
+
+                    <div class="premium-panel-head compact-head">
+
+                        <div>
+
+                            <div class="panel-title-row">
+
+                                <span class="panel-title-icon">
+                                    &#10022;
+                                </span>
+
+                                <h2>
+                                    My Career Access
+                                </h2>
+
+                            </div>
+
+                            <p>
+                                Everything important,
+                                one click away.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="premium-access-grid">
+
+                        <a
+                            href="student-profile.html"
+                            class="premium-access-card profile-access"
+                        >
+
+                            <div class="access-icon">
+                                &#9679;
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    View My Profile
+                                </strong>
+
+                                <span>
+                                    Check personal and academic details
+                                </span>
+
+                            </div>
+
+                            <span class="access-arrow">
+                                &rarr;
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="#"
+                            class="premium-access-card resume-access"
+                            onclick="openStudentResume(event)"
+                        >
+
+                            <div class="access-icon">
+                                &#9636;
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    View Resume
+                                </strong>
+
+                                <span id="dashboardResumeText">
+                                    View your uploaded resume
+                                </span>
+
+                            </div>
+
+                            <span class="access-arrow">
+                                &rarr;
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="student-notifications.html"
+                            class="premium-access-card notification-access"
+                        >
+
+                            <div class="access-icon">
+                                &#9679;
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Notifications
+                                </strong>
+
+                                <span id="dashboardNotificationText">
+                                    Check important updates
+                                </span>
+
+                            </div>
+
+                            <span
+                                id="quickNotificationBadge"
+                                class="access-count"
+                            >
+                                0
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= PROFILE ================= -->
+
+                <section class="premium-panel student-profile-card">
+
+                    <div class="premium-panel-head compact-head">
+
+                        <div>
+
+                            <div class="panel-title-row">
+
+                                <span class="panel-title-icon">
+                                    &#9679;
+                                </span>
+
+                                <h2>
+                                    Student Profile
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="student-settings.html"
+                            class="premium-view-link"
+                        >
+                            Edit
+                        </a>
+
+                    </div>
+
+
+                    <div class="student-profile-summary">
+
+                        <img
+                            id="profilePhoto"
+                            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                            alt="Student"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                        >
+
+                        <div class="student-profile-data">
+
+                            <h3 id="profileName">
+                                Student
+                            </h3>
+
+                            <p id="profileEmail">
+                                email@example.com
+                            </p>
+
+                            <span id="profileInfo">
+                                B.Tech CSE
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="dashboard-profile-progress">
+
+                        <div class="dashboard-profile-progress-head">
+
+                            <span>
+                                Profile Completion
+                            </span>
+
+                            <strong id="dashboardProfilePercent">
+                                0%
+                            </strong>
+
+                        </div>
+
+                        <div class="dashboard-profile-progress-track">
+
+                            <div
+                                id="dashboardProfileProgressBar"
+                                class="dashboard-profile-progress-bar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="student-profile.html"
+                        class="premium-profile-button"
+                    >
+                        View Full Profile
+                        &rarr;
+                    </a>
+
+                </section>
+
+            </aside>
+
+        </section>
+
+
+        <!-- ================= NOTIFICATIONS ================= -->
+
+        <section class="dashboard-bottom-grid">
+
+            <section class="premium-panel dashboard-notification-panel">
+
+                <div class="premium-panel-head">
+
+                    <div>
+
+                        <div class="panel-title-row">
+
+                            <span class="panel-title-icon">
+                                &#9679;
+                            </span>
+
+                            <h2>
+                                Latest Updates
+                            </h2>
+
+                        </div>
+
+                        <p>
+                            Important placement alerts and activity.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="student-notifications.html"
+                        class="premium-view-link"
+                    >
+                        View All
+                        &rarr;
+                    </a>
+
+                </div>
+
+
+                <div id="premiumNotificationList">
+
+                    <div class="premium-notification-empty">
+
+                        <div class="loading-orb small"></div>
+
+                        <p>
+                            Loading latest updates...
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= RESUME CARD ================= -->
+
+            <section class="premium-panel premium-resume-card">
+
+                <div class="resume-card-glow"></div>
+
+                <div class="resume-card-content">
+
+                    <div class="resume-document-icon">
+                        &#9636;
                     </div>
 
                     <div>
-                        <p>🟢 8 Applied</p>
-                        <p>🔵 3 Shortlisted</p>
-                        <p>🟣 2 Interview</p>
-                        <p>🟠 1 Offer</p>
+
+                        <span class="resume-card-label">
+                            MY RESUME
+                        </span>
+
+                        <h2 id="resumeDashboardTitle">
+                            Resume Ready
+                        </h2>
+
+                        <p id="resumeDashboardSubtitle">
+                            Keep your latest resume ready
+                            for placement opportunities.
+                        </p>
+
                     </div>
 
                 </div>
+
+
+                <div class="resume-card-actions">
+
+                    <button
+                        type="button"
+                        class="resume-view-button"
+                        onclick="openStudentResume(event)"
+                    >
+                        View Resume
+                    </button>
+
+                    <button
+                        type="button"
+                        class="resume-manage-button"
+                        onclick="location.href='student-settings.html'"
+                    >
+                        Manage
+                    </button>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= SUCCESS BANNER ================= -->
+
+        <section class="placement-success-banner">
+
+            <div class="success-banner-content">
+
+                <span class="success-mini-label">
+                    RECRUITEASE PLACEMENT JOURNEY
+                </span>
+
+                <h2>
+                    You&apos;re on the Right Track!
+                    <span>
+                        &#128640;
+                    </span>
+                </h2>
+
+                <p>
+                    Complete your profile, apply consistently,
+                    prepare well and move closer to your dream placement.
+                </p>
 
             </div>
 
-            <div class="panel small-panel">
 
-                <div class="panel-head">
-                    <h3>Aptitude Test Performance</h3>
-                    <a href="student-aptitude-tests.html">View all</a>
+            <div class="success-road">
+
+                <div class="success-step completed">
+
+                    <span>
+                        &#10003;
+                    </span>
+
+                    <p>
+                        Build Profile
+                    </p>
+
                 </div>
 
-                <div class="fake-graph">
-                    <span>Jan</span>
-                    <span>Feb</span>
-                    <span>Mar</span>
-                    <span>Apr</span>
-                    <span>May</span>
+                <div class="success-line completed"></div>
+
+                <div class="success-step completed">
+
+                    <span>
+                        &#10003;
+                    </span>
+
+                    <p>
+                        Apply
+                    </p>
+
                 </div>
 
-            </div>
+                <div class="success-line"></div>
 
-            <div class="panel notify-panel">
+                <div class="success-step">
 
-                <div class="panel-head">
-                    <h3>Recent Notifications</h3>
-                    <a href="student-notifications.html">View all</a>
+                    <span>
+                        3
+                    </span>
+
+                    <p>
+                        Prepare
+                    </p>
+
                 </div>
 
-                <div class="note">
-                    🏢
-                    <div>
-                        <b>TCS</b>
-                        <p>New job opening for Software Engineer</p>
-                    </div>
+                <div class="success-line"></div>
+
+                <div class="success-step">
+
+                    <span>
+                        4
+                    </span>
+
+                    <p>
+                        Interview
+                    </p>
+
                 </div>
 
-                <div class="note">
-                    📅
-                    <div>
-                        <b>Wipro Drive</b>
-                        <p>Registration closes tomorrow</p>
-                    </div>
-                </div>
+                <div class="success-line"></div>
 
-                <div class="note">
-                    🔔
-                    <div>
-                        <b>Aptitude Test</b>
-                        <p>Your test is scheduled soon</p>
-                    </div>
+                <div class="success-step trophy-step">
+
+                    <span>
+                        &#9733;
+                    </span>
+
+                    <p>
+                        Get Placed
+                    </p>
+
                 </div>
 
             </div>
@@ -261,17 +851,26 @@ if (!studentId) {
 
 async function initializeStudentDashboard() {
     try {
-        const responses = await Promise.all([
-            fetch("/api/students/" + studentId),
-            fetch("/api/students/" + studentId + "/eligible-companies"),
-            fetch("/api/drives"),
-            fetch("/api/companies")
-        ]);
+       const responses = await Promise.all([
+    fetch("/api/students/" + studentId),
+    fetch("/api/students/" + studentId + "/eligible-companies"),
+    fetch("/api/drives"),
+    fetch("/api/companies"),
+    fetch("/api/applications/student/" + studentId),
+    fetch("/api/interview-requests/student/" + studentId),
+    fetch("/api/applications/student/" + studentId + "/scheduled-tests"),
+    fetch("/api/student-notifications/" + studentId)
+]);
+
 
         const studentResponse = responses[0];
         const eligibleCompanyResponse = responses[1];
         const drivesResponse = responses[2];
         const companiesResponse = responses[3];
+        const applicationsResponse = responses[4];
+        const interviewsResponse = responses[5];
+        const scheduledTestsResponse = responses[6];
+        const notificationsResponse = responses[7];
 
         if (!studentResponse.ok) {
             throw new Error("Student profile load failed");
@@ -292,7 +891,183 @@ async function initializeStudentDashboard() {
         if (companiesResponse.ok) {
             allCompanies = await companiesResponse.json();
         }
+        if (applicationsResponse.ok) {
+    const applications = await applicationsResponse.json();
 
+    document.getElementById("applicationCount").innerText =
+        applications.length;
+
+    document.getElementById("applicationStatText").innerText =
+        applications.length === 1
+            ? "1 application submitted"
+            : applications.length + " applications submitted";           
+}
+if (interviewsResponse.ok) {
+    const interviews = await interviewsResponse.json();
+
+    const scheduledInterviews = interviews.filter(interview => {
+        return String(interview.interviewStatus || "")
+            .trim()
+            .toUpperCase() === "SCHEDULED";
+    });
+
+    document.getElementById("interviewCount").innerText =
+        scheduledInterviews.length;
+
+    document.getElementById("interviewStatText").innerText =
+        scheduledInterviews.length === 0
+            ? "No upcoming interview"
+            : scheduledInterviews.length === 1
+                ? "1 interview scheduled"
+                : scheduledInterviews.length + " interviews scheduled";
+}
+if (scheduledTestsResponse.ok) {
+    const scheduledTests = await scheduledTestsResponse.json();
+
+    document.getElementById("aptitudeStatusCount").innerText =
+        scheduledTests.length;
+
+    document.getElementById("aptitudeStatText").innerText =
+        scheduledTests.length === 0
+            ? "No aptitude test scheduled"
+            : scheduledTests.length === 1
+                ? "1 aptitude test scheduled"
+                : scheduledTests.length + " aptitude tests scheduled";
+}
+if (notificationsResponse.ok) {
+    const notifications = await notificationsResponse.json();
+
+    const unreadNotifications = notifications.filter(notification => {
+        return notification.read !== true;
+    });
+
+    const unreadCount = unreadNotifications.length;
+
+    document.getElementById("topNotificationBadge").innerText =
+        unreadCount;
+
+    document.getElementById("quickNotificationBadge").innerText =
+        unreadCount;
+
+    document.getElementById("dashboardNotificationText").innerText =
+        unreadCount === 0
+            ? "No new notifications"
+            : unreadCount === 1
+                ? "1 unread notification"
+                : unreadCount + " unread notifications";
+
+    document.getElementById("topNotificationBadge").style.display =
+        unreadCount > 0 ? "grid" : "none";
+
+    document.getElementById("quickNotificationBadge").style.display =
+        unreadCount > 0 ? "grid" : "none";
+        const notificationList =
+    document.getElementById("premiumNotificationList");
+
+const popupNotificationList =
+    document.getElementById("dashboardNotificationList");
+
+const latestNotifications = notifications.slice(0, 4);
+
+if (latestNotifications.length === 0) {
+
+    notificationList.innerHTML = `
+        <div class="premium-notification-empty">
+            <p>No notifications available.</p>
+        </div>
+    `;
+
+    popupNotificationList.innerHTML = `
+        <p class="notification-loading">
+            No notifications available.
+        </p>
+    `;
+
+} else {
+
+    notificationList.innerHTML =
+        latestNotifications.map(notification => {
+
+            const createdDate =
+                notification.createdAt
+                    ? new Date(notification.createdAt)
+                    : null;
+
+            const dateText =
+                createdDate && !isNaN(createdDate)
+                    ? createdDate.toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short"
+                    })
+                    : "";
+
+            return `
+                <div class="premium-notification-item">
+
+                    <div class="premium-notification-icon">
+                        ${notification.icon || "•"}
+                    </div>
+
+                    <div class="premium-notification-content">
+
+                        <strong>
+                            ${escapeHtml(
+                                notification.title || "Notification"
+                            )}
+                        </strong>
+
+                        <p>
+                            ${escapeHtml(
+                                notification.message || ""
+                            )}
+                        </p>
+
+                    </div>
+
+                    <div class="premium-notification-meta">
+
+                        <span>
+                            ${dateText}
+                        </span>
+
+                        ${
+                            notification.read === true
+                                ? ""
+                                : '<i class="unread-dot"></i>'
+                        }
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+    popupNotificationList.innerHTML =
+        latestNotifications.map(notification => {
+
+            return `
+                <a
+                    href="student-notifications.html"
+                    class="popup-notification-item"
+                >
+                    <strong>
+                        ${escapeHtml(
+                            notification.title || "Notification"
+                        )}
+                    </strong>
+
+                    <span>
+                        ${escapeHtml(
+                            notification.message || ""
+                        )}
+                    </span>
+                </a>
+            `;
+
+        }).join("");
+}
+}
         updateStudentProfile();
         await loadEligibleUpcomingDrives();
 
@@ -336,6 +1111,56 @@ function updateStudentProfile() {
 
     document.getElementById("topPhoto").src = photoUrl;
     document.getElementById("profilePhoto").src = photoUrl;
+    const profileFields = [
+    loggedInStudent.name,
+    loggedInStudent.email,
+    loggedInStudent.mobile,
+    loggedInStudent.rollNumber,
+    loggedInStudent.branch,
+    loggedInStudent.year,
+    loggedInStudent.cgpa,
+    loggedInStudent.skills,
+    loggedInStudent.address,
+    loggedInStudent.linkedin,
+    loggedInStudent.github,
+    loggedInStudent.resumeFileName,
+    loggedInStudent.photoFileName
+];
+
+const completedFields = profileFields.filter(value => {
+    return value !== null &&
+        value !== undefined &&
+        String(value).trim() !== "";
+}).length;
+
+const profilePercentage = Math.round(
+    (completedFields / profileFields.length) * 100
+);
+
+document.getElementById("dashboardProfilePercent").innerText =
+    profilePercentage + "%";
+
+document.getElementById("dashboardProfileProgressBar").style.width =
+    profilePercentage + "%";
+    const hasResume =
+    loggedInStudent.resumeFileName !== null &&
+    loggedInStudent.resumeFileName !== undefined &&
+    String(loggedInStudent.resumeFileName).trim() !== "";
+
+document.getElementById("resumeDashboardTitle").innerText =
+    hasResume
+        ? "Resume Ready"
+        : "Resume Not Uploaded";
+
+document.getElementById("resumeDashboardSubtitle").innerText =
+    hasResume
+        ? "Your latest resume is available and ready to view."
+        : "Upload your resume to complete your placement profile.";
+
+document.getElementById("dashboardResumeText").innerText =
+    hasResume
+        ? "View your uploaded resume"
+        : "Upload your resume";
 }
 
 /* ================= LIVE UPCOMING DRIVES ================= */
@@ -658,6 +1483,32 @@ function toggleStudentNotifications() {
         box.style.display === "block"
             ? "none"
             : "block";
+}
+function openStudentResume(event) {
+    if (event) {
+        event.preventDefault();
+    }
+
+    if (!loggedInStudent) {
+        alert("Student profile abhi load nahi hua.");
+        return;
+    }
+
+    const hasResume =
+        loggedInStudent.resumeFileName !== null &&
+        loggedInStudent.resumeFileName !== undefined &&
+        String(loggedInStudent.resumeFileName).trim() !== "";
+
+    if (!hasResume) {
+        alert("Resume upload nahi hai. Pehle resume upload karo.");
+        window.location.href = "student-settings.html";
+        return;
+    }
+
+    window.open(
+        "/api/students/" + studentId + "/resume",
+        "_blank"
+    );
 }
 
 function logout() {

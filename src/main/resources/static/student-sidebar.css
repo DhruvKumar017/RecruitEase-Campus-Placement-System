@@ -1,186 +1,687 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 
+:root{
+    --student-sidebar-width:265px;
+
+    --student-bg:#020617;
+    --student-sidebar:#061326;
+    --student-sidebar-2:#081a31;
+
+    --student-card:#0b1730;
+    --student-border:rgba(79,142,255,.18);
+
+    --student-text:#f8fbff;
+    --student-muted:#8da4c6;
+
+    --student-blue:#3b82f6;
+    --student-cyan:#22d3ee;
+    --student-purple:#7c3aed;
+    --student-green:#22c55e;
+    --student-red:#ef4444;
+}
+
 .student-unified-sidebar{
-    width:265px;
+    width:var(--student-sidebar-width);
+    min-width:var(--student-sidebar-width);
+    max-width:var(--student-sidebar-width);
+
     min-height:100vh;
+
     position:fixed;
     top:0;
     bottom:0;
     left:0;
-    z-index:50;
+
+    z-index:100;
 
     display:flex;
     flex-direction:column;
+
+    padding:18px 15px;
+
     overflow-y:auto;
+    overflow-x:hidden;
 
-    padding:22px 17px;
-
-    background:linear-gradient(180deg,#06182f,#04101f);
-    border-right:1px solid rgba(47,128,255,.20);
     font-family:"Poppins",sans-serif;
+
+    background:
+        radial-gradient(
+            circle at 30% 0%,
+            rgba(59,130,246,.16),
+            transparent 30%
+        ),
+        linear-gradient(
+            180deg,
+            #07172c 0%,
+            #041020 45%,
+            #020a16 100%
+        );
+
+    border-right:1px solid
+        rgba(72,126,255,.20);
+
+    box-shadow:
+        14px 0 45px rgba(0,0,0,.22);
 }
+
+/* ================= BRAND ================= */
 
 .student-unified-brand{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:11px;
 
-    padding:0 8px 20px;
-    border-bottom:1px solid rgba(255,255,255,.09);
+    padding:5px 8px 16px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.07);
 }
 
 .student-unified-brand-icon{
-    font-size:28px;
+    width:38px;
+    height:38px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:12px;
+
+    color:#ffffff;
+    font-size:17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--student-cyan),
+            var(--student-blue),
+            var(--student-purple)
+        );
+
+    box-shadow:
+        0 0 24px rgba(59,130,246,.35);
 }
 
 .student-unified-brand h2{
     margin:0;
+
     color:#ffffff;
-    font-size:25px;
+
+    font-size:22px;
+    line-height:1;
     font-weight:800;
+
+    letter-spacing:-.7px;
 }
 
 .student-unified-brand h2 span{
-    color:#2f80ff;
+    color:#56a4ff;
 }
 
 .student-unified-brand p{
-    margin:2px 0 0;
-    color:#bfd0e8;
-    font-size:11px;
+    margin:5px 0 0;
+
+    color:#8ca4c5;
+
+    font-size:9.5px;
+    font-weight:500;
 }
 
-.student-unified-user{
-    display:flex;
-    align-items:center;
-    gap:11px;
+/* ================= USER CARD ================= */
 
-    margin:20px 4px;
+.student-unified-user{
+    position:relative;
+
+    margin:16px 2px 10px;
+    padding:13px;
+
+    display:grid;
+
+    grid-template-columns:
+        48px 1fr;
+
+    gap:10px;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(27,57,104,.72),
+            rgba(10,27,53,.88)
+        );
+
+    border:
+        1px solid rgba(70,129,255,.22);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.04);
+}
+
+.student-unified-user::before{
+    content:"";
+
+    position:absolute;
+
+    inset:-1px;
+
+    border-radius:17px;
+
+    pointer-events:none;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34,211,238,.20),
+            transparent 35%,
+            rgba(124,58,237,.18)
+        );
+
+    mask:
+        linear-gradient(#fff 0 0)
+        content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
+
+    padding:1px;
 }
 
 .student-unified-user img{
-    width:55px;
-    height:55px;
+    width:48px;
+    height:48px;
+
     object-fit:cover;
 
-    border:2px solid #2f80ff;
     border-radius:50%;
-    background:#19365d;
+
+    border:2px solid #4da3ff;
+
+    box-shadow:
+        0 0 18px rgba(59,130,246,.35);
+
+    background:#142b4f;
+}
+
+.student-sidebar-user-details{
+    min-width:0;
 }
 
 .student-unified-user b{
     display:block;
+
+    max-width:135px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
     color:#ffffff;
-    font-size:13px;
+
+    font-size:12.5px;
+    font-weight:700;
 }
 
 .student-unified-user p{
-    margin:4px 0 0;
-    color:#9fb0c7;
-    font-size:11px;
+    margin:2px 0 4px;
+
+    color:#93a9c6;
+
+    font-size:9.5px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
-.student-unified-title{
-    margin:12px 8px 8px;
-    color:#8398b5;
-    font-size:10px;
+.placement-ready-badge{
+    display:inline-flex;
+    align-items:center;
+
+    gap:5px;
+
+    padding:3px 7px;
+
+    border-radius:30px;
+
+    color:#86efac;
+
+    font-size:8.5px;
     font-weight:700;
-    letter-spacing:1px;
+
+    background:
+        rgba(34,197,94,.10);
+
+    border:
+        1px solid rgba(34,197,94,.22);
+}
+
+/* ================= PROFILE PROGRESS ================= */
+
+.student-profile-progress{
+    grid-column:1 / -1;
+
+    margin-top:4px;
+}
+
+.student-profile-progress-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:6px;
+
+    color:#92a8c5;
+
+    font-size:8.5px;
+}
+
+.student-profile-progress-head strong{
+    color:#d8eaff;
+    font-size:9px;
+}
+
+.student-profile-progress-track{
+    height:5px;
+
+    overflow:hidden;
+
+    border-radius:50px;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+.student-profile-progress-bar{
+    width:0%;
+    height:100%;
+
+    border-radius:50px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #22d3ee,
+            #3b82f6,
+            #8b5cf6
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(59,130,246,.55);
+
+    transition:
+        width .5s ease;
+}
+
+/* ================= SECTION TITLE ================= */
+
+.student-unified-title{
+    margin:
+        12px 9px
+        6px;
+
+    color:#607a9f;
+
+    font-size:8.5px;
+    font-weight:800;
+
+    letter-spacing:1.15px;
+}
+
+/* ================= MENU ================= */
+
+.student-unified-menu{
+    display:flex;
+    flex-direction:column;
 }
 
 .student-unified-sidebar a{
+    text-decoration:none;
+}
+
+.student-unified-menu-item{
+    position:relative;
+
     display:flex;
     align-items:center;
+
     gap:10px;
 
-    margin:3px 0;
-    padding:10px 13px;
+    min-height:38px;
+
+    margin:2px 0;
+    padding:8px 11px;
 
     border-radius:11px;
 
-    color:#d9e5f7;
-    text-decoration:none;
-    font-size:13px;
+    color:#b6c8df;
+
+    font-size:11.5px;
     font-weight:500;
-    transition:.2s;
+
+    transition:
+        background .20s ease,
+        color .20s ease,
+        transform .20s ease,
+        box-shadow .20s ease;
 }
 
-.student-unified-sidebar a:hover,
-.student-unified-sidebar a.active{
+.student-unified-menu-item:hover{
     color:#ffffff;
-    background:linear-gradient(135deg,#1e40af,#2563eb);
-    box-shadow:0 9px 20px rgba(37,99,235,.25);
+
+    transform:
+        translateX(2px);
+
+    background:
+        rgba(59,130,246,.09);
 }
+
+.student-unified-menu-item.active{
+    color:#ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(31,95,255,.96),
+            rgba(37,99,235,.82)
+        );
+
+    box-shadow:
+        0 8px 22px
+        rgba(37,99,235,.25),
+        inset 0 0 0
+        1px rgba(255,255,255,.06);
+}
+
+.student-unified-menu-item.active::before{
+    content:"";
+
+    position:absolute;
+
+    left:-6px;
+
+    width:3px;
+    height:21px;
+
+    border-radius:10px;
+
+    background:#48dfff;
+
+    box-shadow:
+        0 0 12px #48dfff;
+}
+
+.student-menu-icon{
+    width:24px;
+    height:24px;
+
+    flex:0 0 24px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:8px;
+
+    color:#8ab8ff;
+
+    font-size:12px;
+    font-weight:800;
+
+    background:
+        rgba(49,91,160,.18);
+
+    border:
+        1px solid rgba(75,132,235,.12);
+}
+
+.student-unified-menu-item.active
+.student-menu-icon{
+    color:#ffffff;
+
+    background:
+        rgba(255,255,255,.11);
+
+    border-color:
+        rgba(255,255,255,.10);
+}
+
+.student-menu-label{
+    flex:1;
+}
+
+/* ================= NOTIFICATION BADGE ================= */
+
+.student-sidebar-badge{
+    min-width:20px;
+    height:19px;
+
+    padding:0 6px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:20px;
+
+    color:#ffffff;
+
+    font-size:9px;
+    font-weight:800;
+}
+
+.notification-badge{
+    background:
+        linear-gradient(
+            135deg,
+            #ef4444,
+            #fb7185
+        );
+
+    box-shadow:
+        0 0 13px
+        rgba(239,68,68,.30);
+}
+
+/* ================= DIVIDER ================= */
+
+.student-sidebar-divider{
+    height:1px;
+
+    margin:9px 6px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(96,165,250,.18),
+            transparent
+        );
+}
+
+/* ================= FOOTER CARD ================= */
 
 .student-unified-help{
     margin-top:auto;
-    padding:15px;
 
-    border:1px solid rgba(47,128,255,.28);
+    display:grid;
+
+    grid-template-columns:
+        35px 1fr 24px;
+
+    align-items:center;
+
+    gap:9px;
+
+    padding:11px;
+
     border-radius:15px;
-    background:rgba(47,128,255,.08);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(20,58,112,.45),
+            rgba(25,18,73,.45)
+        );
+
+    border:
+        1px solid rgba(91,134,255,.20);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.04);
+}
+
+.student-help-logo{
+    width:35px;
+    height:35px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:11px;
+
+    color:#ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0ea5e9,
+            #6366f1,
+            #9333ea
+        );
+
+    box-shadow:
+        0 0 16px
+        rgba(99,102,241,.32);
 }
 
 .student-unified-help h4{
     margin:0;
+
     color:#ffffff;
-    font-size:14px;
+
+    font-size:10.5px;
 }
 
 .student-unified-help p{
-    margin:5px 0 0;
-    color:#b5c6dc;
-    font-size:11px;
-    line-height:1.55;
+    margin:3px 0 0;
+
+    color:#84b8ff;
+
+    font-size:9px;
 }
 
-/* Har student page ka main content same sidebar width ke hisaab se align hoga */
+.student-help-arrow{
+    width:22px;
+    height:22px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:50%;
+
+    color:#ffffff;
+
+    font-size:11px;
+
+    background:
+        rgba(72,118,255,.22);
+}
+
+/* ================= PAGE ALIGNMENT ================= */
 
 body .main,
 body .profile-main,
 body .student-settings-main{
-    margin-left:265px !important;
-    width:calc(100% - 265px) !important;
+    margin-left:
+        var(--student-sidebar-width)
+        !important;
+
+    width:
+        calc(
+            100% -
+            var(--student-sidebar-width)
+        )
+        !important;
 }
 
-/* Light mode support */
+/* ================= LIGHT MODE ================= */
 
-body.student-light-profile .student-unified-sidebar,
-body.student-light-theme .student-unified-sidebar,
-body.light .student-unified-sidebar{
-    background:linear-gradient(180deg,#e0efff,#c9deff);
-    border-right-color:#c7dbf5;
+body.student-light-profile
+.student-unified-sidebar,
+body.student-light-theme
+.student-unified-sidebar,
+body.light
+.student-unified-sidebar{
+    background:
+        linear-gradient(
+            180deg,
+            #e8f3ff,
+            #d8e8ff
+        );
+
+    border-right-color:#bfd5ef;
 }
 
-body.student-light-profile .student-unified-brand h2,
-body.student-light-theme .student-unified-brand h2,
-body.light .student-unified-brand h2,
-body.student-light-profile .student-unified-user b,
-body.student-light-theme .student-unified-user b,
-body.light .student-unified-user b{
+body.student-light-profile
+.student-unified-brand h2,
+body.student-light-theme
+.student-unified-brand h2,
+body.light
+.student-unified-brand h2,
+body.student-light-profile
+.student-unified-user b,
+body.student-light-theme
+.student-unified-user b,
+body.light
+.student-unified-user b{
     color:#10213b;
 }
 
-body.student-light-profile .student-unified-sidebar a,
-body.student-light-theme .student-unified-sidebar a,
-body.light .student-unified-sidebar a{
+body.student-light-profile
+.student-unified-menu-item,
+body.student-light-theme
+.student-unified-menu-item,
+body.light
+.student-unified-menu-item{
     color:#29435f;
 }
 
-body.student-light-profile .student-unified-sidebar a.active,
-body.student-light-profile .student-unified-sidebar a:hover,
-body.student-light-theme .student-unified-sidebar a.active,
-body.student-light-theme .student-unified-sidebar a:hover,
-body.light .student-unified-sidebar a.active,
-body.light .student-unified-sidebar a:hover{
-    color:#ffffff;
+/* ================= SCROLLBAR ================= */
+
+.student-unified-sidebar::-webkit-scrollbar{
+    width:5px;
 }
 
+.student-unified-sidebar::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+.student-unified-sidebar::-webkit-scrollbar-thumb{
+    background:
+        rgba(59,130,246,.35);
+
+    border-radius:30px;
+}
+
+/* ================= RESPONSIVE ================= */
+
 @media(max-width:900px){
+
     .student-unified-sidebar{
-        width:100%;
-        min-height:auto;
         position:relative;
+
+        width:100%;
+        min-width:100%;
+        max-width:100%;
+
+        min-height:auto;
+
+        border-right:none;
+
+        border-bottom:
+            1px solid rgba(47,128,255,.18);
     }
 
     body .main,
