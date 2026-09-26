@@ -16,6 +16,7 @@ public class EmailService {
     public void sendPasswordResetOtp(String email, String otp) {
 
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("recruitease.campus.system@gmail.com");
 
         message.setTo(email);
         message.setSubject("RecruitEase - Password Reset OTP");
