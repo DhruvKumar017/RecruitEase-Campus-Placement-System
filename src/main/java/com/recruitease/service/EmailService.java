@@ -29,6 +29,13 @@ public class EmailService {
                 "Regards,\nRecruitEase Placement Cell"
         );
 
-        mailSender.send(message);
+       try {
+    mailSender.send(message);
+} catch (Exception e) {
+    System.err.println("===== RECRUITEASE MAIL ERROR =====");
+    e.printStackTrace();
+    throw e;
+
     }
+}
 }
