@@ -156,16 +156,30 @@
                     >
 
                     <input
-                        type="date"
-                        id="driveDate"
-                        required
-                    >
+    type="date"
+    id="driveDate"
+    required
+>
 
-                    <input
-                        type="date"
-                        id="lastDate"
-                        required
-                    >
+<input
+    type="time"
+    id="driveStartTime"
+    title="Drive Start Time"
+    required
+>
+
+<input
+    type="time"
+    id="driveEndTime"
+    title="Drive End Time"
+    required
+>
+
+<input
+    type="date"
+    id="lastDate"
+    required
+>
 
                     <select id="mode" required>
                         <option value="">Select Mode</option>
@@ -639,7 +653,9 @@ document.getElementById("driveForm").addEventListener("submit", async function(e
         packageLpa: Number(document.getElementById("packageLpa").value),
         minCgpa: Number(document.getElementById("minCgpa").value),
         driveDate: document.getElementById("driveDate").value,
-        lastDate: document.getElementById("lastDate").value,
+driveStartTime: document.getElementById("driveStartTime").value,
+driveEndTime: document.getElementById("driveEndTime").value,
+lastDate: document.getElementById("lastDate").value,
         mode: document.getElementById("mode").value,
         location: document.getElementById("location").value.trim(),
         branch: document.getElementById("branch").value.trim(),
@@ -649,12 +665,15 @@ document.getElementById("driveForm").addEventListener("submit", async function(e
     };
 
     if (
-        drive.companyName === "" ||
-        drive.jobRole === "" ||
-        drive.driveDate === "" ||
-        drive.lastDate === "" ||
-        drive.status === ""
-    ) {
+    drive.companyName === "" ||
+    drive.jobRole === "" ||
+    drive.driveDate === "" ||
+    drive.driveStartTime === "" ||
+    drive.driveEndTime === "" ||
+    drive.lastDate === "" ||
+    drive.status === ""
+)
+    {
         alert("Please fill all required drive details.");
         return;
     }
@@ -709,7 +728,9 @@ function viewDrive(id) {
         "Package: " + formatPackage(drive.packageLpa) + "\n" +
         "Minimum CGPA: " + (drive.minCgpa ?? "-") + "\n" +
         "Drive Date: " + formatDate(drive.driveDate) + "\n" +
-        "Last Date: " + formatDate(drive.lastDate) + "\n" +
+"Start Time: " + (drive.driveStartTime || "-") + "\n" +
+"End Time: " + (drive.driveEndTime || "-") + "\n" +
+"Last Date: " + formatDate(drive.lastDate) + "\n" +
         "Mode: " + (drive.mode || "-") + "\n" +
         "Location: " + (drive.location || "-") + "\n" +
         "Branches: " + (drive.branch || "-") + "\n" +
@@ -749,6 +770,8 @@ function editDrive(id) {
     document.getElementById("packageLpa").value = drive.packageLpa ?? "";
     document.getElementById("minCgpa").value = drive.minCgpa ?? "";
     document.getElementById("driveDate").value = drive.driveDate || "";
+    document.getElementById("driveStartTime").value = drive.driveStartTime || "";
+    document.getElementById("driveEndTime").value = drive.driveEndTime || "";
     document.getElementById("lastDate").value = drive.lastDate || "";
     document.getElementById("mode").value = drive.mode || "";
     document.getElementById("location").value = drive.location || "";

@@ -16,8 +16,11 @@ public class PlacementDrive {
 
     private String companyName;
     private String jobRole;
+    
     private Double packageLpa;
     private String driveDate;
+    private String driveStartTime;
+    private String driveEndTime;
     private String lastDate;
     private String mode;
     private String location;
@@ -46,12 +49,20 @@ public class PlacementDrive {
     }
 
     public String getDriveDate() {
-        return driveDate;
-    }
+    return driveDate;
+}
 
-    public String getLastDate() {
-        return lastDate;
-    }
+public String getDriveStartTime() {
+    return driveStartTime;
+}
+
+public String getDriveEndTime() {
+    return driveEndTime;
+}
+
+public String getLastDate() {
+    return lastDate;
+}
 
     public String getMode() {
         return mode;
@@ -97,13 +108,22 @@ public class PlacementDrive {
         this.packageLpa = packageLpa;
     }
 
-    public void setDriveDate(String driveDate) {
-        this.driveDate = driveDate;
-    }
+   public void setDriveDate(String driveDate) {
+    this.driveDate = driveDate;
+}
 
-    public void setLastDate(String lastDate) {
-        this.lastDate = lastDate;
-    }
+public void setDriveStartTime(String driveStartTime) {
+    this.driveStartTime = driveStartTime;
+}
+
+public void setDriveEndTime(String driveEndTime) {
+    this.driveEndTime = driveEndTime;
+}
+
+public void setLastDate(String lastDate) {
+    this.lastDate = lastDate;
+}
+
 
     public void setMode(String mode) {
         this.mode = mode;

@@ -591,13 +591,19 @@ function renderDrives() {
             )}</small>
         `;
 
-        const dateText = `
-            ${escapeHtml(formatDate(drive.driveDate))}
-            <br>
-            <small>Last: ${escapeHtml(
-                formatDate(drive.lastDate)
-            )}</small>
-        `;
+       const dateText = `
+    ${escapeHtml(formatDate(drive.driveDate))}
+    <br>
+    <small>
+        Time: ${escapeHtml(drive.driveStartTime || "-")}
+        -
+        ${escapeHtml(drive.driveEndTime || "-")}
+    </small>
+    <br>
+    <small>
+        Last: ${escapeHtml(formatDate(drive.lastDate))}
+    </small>
+`;
 
         const reasonHtml = !drive.canApply && !drive.alreadyApplied
             ? `
