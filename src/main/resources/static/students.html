@@ -117,10 +117,13 @@
                     <b>Dashboard</b> &nbsp;›&nbsp; All Students
                 </p>
             </div>
+<button type="button" class="refresh-btn" onclick="refreshStudentsPage()">
+    ↻ Refresh
+</button>
 
-            <a class="add-btn" href="student-register.html">
-                ＋ Add New Student
-            </a>
+<a class="add-btn" href="student-register.html">
+    + Add New Student
+</a>
 
         </section>
 
@@ -161,17 +164,17 @@
         <!-- ================= STATS ================= -->
         <section class="stats">
 
-            <div class="stat">
-                <div class="icon blue">👥</div>
+          <div class="stat total-students-card" onclick="showAllStudents()">
+    <div class="icon blue">👥</div>
 
-                <div>
-                    <p>Total Students</p>
-                    <h2 id="totalStudents">0</h2>
-                    <small>Registered Students</small>
-                </div>
-            </div>
+    <div>
+        <p>Total Students</p>
+        <h2 id="totalStudents">0</h2>
+        <small>Registered Students</small>
+    </div>
+</div>
 
-            <div class="stat">
+            <div class="stat active-students-card" onclick="showActiveStudents()">
                 <div class="icon green">✅</div>
 
                 <div>
@@ -181,25 +184,29 @@
                 </div>
             </div>
 
-            <div class="stat">
-                <div class="icon purple">💼</div>
+            <div class="stat" onclick="showPlacedStudents()" style="cursor:pointer;">
+    <div class="icon purple">💼</div>
 
-                <div>
-                    <p>Placed Students</p>
-<h2 id="placedStudents">0</h2>
-<small>Live Placement Data</small>
-                </div>
-            </div>
+    <div>
+        <p>Placed Students</p>
+        <h2 id="placedStudents">0</h2>
+        <small>Live Placement Data</small>
+    </div>
+</div>
 
-            <div class="stat">
-                <div class="icon red">🚫</div>
+           <div class="stat blocked-students-card"
+     onclick="showBlockedStudents()"
+     style="cursor:pointer;">
 
-                <div>
-                    <p>Blocked Students</p>
-                    <h2 id="blockedStudents">0</h2>
-                    <small>Restricted Accounts</small>
-                </div>
-            </div>
+    <div class="icon red">🚫</div>
+
+    <div>
+        <p>Blocked Students</p>
+        <h2 id="blockedStudents">0</h2>
+        <small>Restricted Accounts</small>
+    </div>
+
+</div>
 
         </section>
 
@@ -271,6 +278,7 @@
 
 <script>
 let students = [];
+let placedStudentIds = new Set();
 
 function escapeHtml(value) {
     return String(value ?? "")
@@ -312,15 +320,15 @@ function loadPlacedStudents() {
         })
         .then(applications => {
 
-            const placedStudentIds = new Set(
+            placedStudentIds = new Set(
                 (applications || [])
                     .filter(app =>
                         String(app.status || "")
                             .trim()
                             .toLowerCase() === "placed"
                     )
-                    .map(app => app.studentId)
-                    .filter(id => id != null)
+                    .map(app => Number(app.studentId))
+                    .filter(id => id > 0)
             );
 
             document.getElementById("placedStudents").textContent =
@@ -328,6 +336,9 @@ function loadPlacedStudents() {
         })
         .catch(error => {
             console.error("Placed students load error:", error);
+
+            placedStudentIds = new Set();
+
             document.getElementById("placedStudents").textContent = "0";
         });
 }
@@ -359,7 +370,7 @@ function renderStudents() {
 
         const matchStatus =
             status === "" ||
-            (status === "active" && !student.blocked) ||
+            (status === "active" && !student.blocked && !student.deleted)||
             (status === "blocked" && student.blocked);
 
         return matchSearch && matchBranch && matchCgpa && matchStatus;
@@ -368,7 +379,9 @@ function renderStudents() {
     document.getElementById("totalStudents").innerText = students.length;
 
     document.getElementById("activeStudents").innerText =
-        students.filter(student => !student.blocked).length;
+    students.filter(student =>
+        !student.blocked && !student.deleted
+    ).length;
 
     document.getElementById("blockedStudents").innerText =
         students.filter(student => student.blocked).length;
@@ -621,6 +634,147 @@ studentThemeToggle.addEventListener("click", function() {
 loadSharedAdminProfile();
 loadStudents();
 loadPlacedStudents();
+function showAllStudents() {
+
+    // Filters reset
+    const searchInput = document.getElementById("searchInput");
+    const branchFilter = document.getElementById("branchFilter");
+    const cgpaFilter = document.getElementById("cgpaFilter");
+    const statusFilter = document.getElementById("statusFilter");
+
+    if (searchInput) searchInput.value = "";
+    if (branchFilter) branchFilter.value = "";
+    if (cgpaFilter) cgpaFilter.value = "";
+    if (statusFilter) statusFilter.value = "";
+
+    // Show all registered students
+    renderStudents();
+
+    // Scroll to Student List
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+function showActiveStudents() {
+
+    // Reset other filters
+    document.getElementById("searchInput").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+
+    // Active filter
+    document.getElementById("statusFilter").value = "active";
+
+    renderStudents();
+
+    // Scroll to Student List
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showBlockedStudents() {
+
+    // Reset other filters
+    document.getElementById("searchInput").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+
+    // Only blocked students
+    document.getElementById("statusFilter").value = "blocked";
+
+    // Render filtered students
+    renderStudents();
+
+    // Scroll to Student List
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showPlacedStudents() {
+
+    // Reset filters
+    document.getElementById("searchInput").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+    document.getElementById("statusFilter").value = "";
+
+    const placedStudentsOnly = students.filter(student =>
+        placedStudentIds.has(Number(student.id))
+    );
+
+    const table = document.getElementById("studentTable");
+
+    if (placedStudentsOnly.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    No placed students found.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("entryText").innerText =
+            "Showing 0 entries";
+    } else {
+
+        table.innerHTML = placedStudentsOnly.map(student => `
+            <tr>
+                <td>${student.id}</td>
+
+                <td>
+                    <div class="name-cell">
+                        <img
+                            class="avatar"
+                            src="/api/students/${student.id}/photo"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                            alt="Student"
+                        >
+                        <b>${escapeHtml(student.name || "-")}</b>
+                    </div>
+                </td>
+
+                <td>${escapeHtml(student.email || "-")}</td>
+                <td>${escapeHtml(student.rollNumber || "-")}</td>
+                <td>${escapeHtml(student.branch || "-")}</td>
+
+                <td>
+                    <span class="cgpa">
+                        ${escapeHtml(student.cgpa ?? "-")}
+                    </span>
+                </td>
+
+                <td>${escapeHtml(student.skills || "-")}</td>
+                <td>${escapeHtml(student.preferredCompany || "-")}</td>
+
+                <td>
+                    <span class="status active">
+                        Placed
+                    </span>
+                </td>
+
+                <td>-</td>
+            </tr>
+        `).join("");
+
+        document.getElementById("entryText").innerText =
+            `Showing 1 to ${placedStudentsOnly.length} of ${placedStudentsOnly.length} entries`;
+    }
+
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+</script>
+<script>
+function refreshStudentsPage() {
+    window.location.reload();
+}
 </script>
 
 </body>

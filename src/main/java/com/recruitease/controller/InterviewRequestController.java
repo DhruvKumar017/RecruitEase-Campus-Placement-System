@@ -1,5 +1,9 @@
 package com.recruitease.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -136,14 +140,15 @@ public class InterviewRequestController {
      * Admin sets interview date, time, mode and Google Meet/Classroom link.
      */
     @PutMapping("/api/interview-requests/{id}/schedule")
-    public ResponseEntity<?> scheduleInterview(
-            @PathVariable Long id,
-            @RequestParam String interviewDate,
-            @RequestParam String interviewTime,
-            @RequestParam(defaultValue = "Google Meet") String interviewMode,
-            @RequestParam(required = false) String interviewLink,
-            @RequestParam(required = false) String adminRemark
-    ) {
+public ResponseEntity<?> scheduleInterview(
+        @PathVariable Long id,
+        @RequestParam String interviewDate,
+        @RequestParam String interviewTime,
+        @RequestParam(defaultValue = "60") Integer interviewDuration,
+        @RequestParam(defaultValue = "Google Meet") String interviewMode,
+        @RequestParam(required = false) String interviewLink,
+        @RequestParam(required = false) String adminRemark
+) {
         if (interviewDate == null || interviewDate.isBlank() ||
                 interviewTime == null || interviewTime.isBlank()) {
 
@@ -161,6 +166,7 @@ public class InterviewRequestController {
 
         request.setInterviewDate(interviewDate);
         request.setInterviewTime(interviewTime);
+        request.setInterviewDuration(interviewDuration);
         request.setInterviewMode(interviewMode);
         request.setInterviewLink(interviewLink);
         request.setAdminRemark(adminRemark);
@@ -176,6 +182,79 @@ public class InterviewRequestController {
 
         return ResponseEntity.ok(savedRequest);
     }
+    /*
+ * Student can apply only while the interview is UPCOMING.
+ */
+@PutMapping("/api/interview-requests/{id}/student-apply")
+public ResponseEntity<?> studentApplyForInterview(
+        @PathVariable Long id
+) {
+
+    InterviewRequest request = interviewRequestRepository
+            .findById(id)
+            .orElse(null);
+
+    if (request == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    // Interview must first be scheduled by admin.
+    if (request.getInterviewDate() == null ||
+            request.getInterviewDate().isBlank() ||
+            request.getInterviewTime() == null ||
+            request.getInterviewTime().isBlank()) {
+
+        return ResponseEntity.badRequest()
+                .body("Interview has not been scheduled yet.");
+    }
+
+    // Prevent duplicate application.
+    if (request.getStudentAppliedAt() != null) {
+        return ResponseEntity.badRequest()
+                .body("You have already applied for this interview.");
+    }
+
+    try {
+
+        LocalDate interviewDate =
+                LocalDate.parse(request.getInterviewDate());
+
+        LocalTime interviewTime =
+                LocalTime.parse(request.getInterviewTime());
+
+        LocalDateTime interviewStart =
+                LocalDateTime.of(interviewDate, interviewTime);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // Student can apply only BEFORE interview starts.
+        if (!now.isBefore(interviewStart)) {
+            return ResponseEntity.badRequest()
+                    .body(
+                        "Interview has already started. " +
+                        "You can no longer apply."
+                    );
+        }
+
+request.setStudentAppliedAt(now);
+request.setInterviewAttempted(true);
+
+InterviewRequest savedRequest =
+        interviewRequestRepository.save(request);
+
+        updateApplicationStatus(
+                request.getApplicationId(),
+                "Interview Applied"
+        );
+
+        return ResponseEntity.ok(savedRequest);
+
+    } catch (DateTimeParseException exception) {
+
+        return ResponseEntity.badRequest()
+                .body("Invalid interview date or time.");
+    }
+}
 
     @PutMapping("/api/interview-requests/{id}/status/{status}")
     public ResponseEntity<?> updateInterviewStatus(
@@ -197,12 +276,12 @@ public class InterviewRequestController {
 
         String normalizedStatus = status.trim().toLowerCase();
 
-        if (normalizedStatus.equals("selected")) {
-            updateApplicationStatus(
-                    request.getApplicationId(),
-                    "Selected"
-            );
-        } else if (normalizedStatus.equals("rejected")) {
+if (normalizedStatus.equals("selected")) {
+    updateApplicationStatus(
+            request.getApplicationId(),
+            "Placed"
+    );
+} else if (normalizedStatus.equals("rejected")) {
             updateApplicationStatus(
                     request.getApplicationId(),
                     "Rejected"
@@ -229,9 +308,15 @@ public class InterviewRequestController {
                 .findById(applicationId)
                 .orElse(null);
 
-        if (application != null) {
-            application.setStatus(status);
-            applicationRepository.save(application);
+if (application != null) {
+
+    application.setStatus(status);
+
+    if ("Placed".equalsIgnoreCase(status)) {
+        application.setPlacedAt(LocalDateTime.now());
+    }
+
+    applicationRepository.save(application);
+}
         }
     }
-}

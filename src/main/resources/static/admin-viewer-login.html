@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewer Login - RecruitEase</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #080f21;
+            color: #f8fafc;
+        }
+
+        .viewer-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 16px;
+            background:
+                radial-gradient(circle at 10% 10%,
+                    rgba(37, 99, 235, .16), transparent 40%),
+                radial-gradient(circle at 90% 90%,
+                    rgba(99, 102, 241, .12), transparent 40%);
+        }
+
+        .viewer-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 38px;
+            background: #0d172b;
+            border: 1px solid #243b62;
+            border-radius: 22px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .3);
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand span {
+            color: #3b82f6;
+        }
+
+        .viewer-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 20px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #132c54;
+            border: 1px solid #28508a;
+            font-size: 34px;
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #a7b7d2;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 19px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 9px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #30486c;
+            border-radius: 11px;
+            background: #101d34;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #3b82f6;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            filter: brightness(1.12);
+        }
+
+        .login-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .notice {
+            margin-top: 23px;
+            padding: 14px;
+            background: rgba(59, 130, 246, .08);
+            border: 1px solid #24477a;
+            border-radius: 11px;
+            color: #a8c7fa;
+            font-size: 12px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 25px;
+            text-align: center;
+            color: #60a5fa;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .error-message {
+            display: none;
+            margin-bottom: 16px;
+            color: #fca5a5;
+            font-size: 13px;
+            text-align: center;
+        }
+        .otp-section {
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #30486c;
+    border-radius: 14px;
+    background: #101d34;
+}
+
+.otp-title {
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.otp-description {
+    color: #a7b7d2;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.otp-row {
+    display: flex;
+    gap: 10px;
+}
+
+.otp-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+.otp-row button {
+    padding: 0 15px;
+    border: 0;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.otp-row button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.otp-status {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+        @media (max-width: 500px) {
+            .viewer-card {
+                padding: 26px 20px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="viewer-page">
+
+    <div class="viewer-card">
+
+        <div class="brand">
+            🎓 Recruit<span>Ease</span>
+        </div>
+
+        <div class="viewer-icon">👁️</div>
+
+        <h1>Admin Viewer Login</h1>
+
+        <p class="subtitle">
+            Explore the Admin Portal with secure,
+            temporary read-only access.
+        </p>
+
+<p id="errorMessage" class="error-message"></p>
+
+<div class="otp-section">
+
+    <h2 class="otp-title">Email Verification</h2>
+
+    <p class="otp-description">
+        Verify your email to request one-time Viewer access.
+        Main Admin approval is required before credentials
+        can be generated.
+    </p>
+
+    <div class="input-group">
+        <label for="viewerEmail">Email Address</label>
+        <input
+            type="email"
+            id="viewerEmail"
+            placeholder="Enter your email address"
+            autocomplete="email"
+        >
+    </div>
+
+    <button
+        type="button"
+        class="login-btn"
+        id="sendViewerOtpBtn"
+    >
+        Send OTP
+    </button>
+
+    <div
+        id="viewerOtpArea"
+        style="display: none; margin-top: 18px;"
+    >
+        <div class="input-group">
+            <label for="viewerOtp">6-Digit OTP</label>
+            <input
+                type="text"
+                id="viewerOtp"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                placeholder="Enter OTP"
+            >
+        </div>
+
+        <button
+            type="button"
+            class="login-btn"
+            id="verifyViewerOtpBtn"
+        >
+            Verify OTP
+        </button>
+    </div>
+
+    <p
+        id="viewerOtpStatus"
+        class="otp-status"
+        role="status"
+        aria-live="polite"
+    ></p>
+
+</div>
+
+<form id="viewerLoginForm" autocomplete="off">
+
+            <div class="input-group">
+                <label for="viewerId">Viewer ID</label>
+                <input
+                    type="text"
+                    id="viewerId"
+                    placeholder="Enter your one-time Viewer ID"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="viewerPassword">One-Time Password</label>
+                <input
+                    type="password"
+                    id="viewerPassword"
+                    placeholder="Enter your one-time password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-btn" id="viewerLoginBtn">
+                Access Viewer Portal →
+            </button>
+
+        </form>
+
+        <div class="notice">
+            🛡️ Read-Only Access
+            <p>
+                You can view authorized admin pages.
+                Adding, editing, deleting or changing
+                records is not permitted.
+            </p>
+        </div>
+
+        <a href="admin-login.html" class="back-link">
+            ← Back to Admin Login
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+    const viewerLoginForm =
+        document.getElementById("viewerLoginForm");
+
+    const viewerLoginBtn =
+        document.getElementById("viewerLoginBtn");
+
+    const errorMessage =
+        document.getElementById("errorMessage");
+        
+const viewerEmailInput = document.getElementById("viewerEmail");
+const sendViewerOtpBtn = document.getElementById("sendViewerOtpBtn");
+const verifyViewerOtpBtn = document.getElementById("verifyViewerOtpBtn");
+const viewerOtpArea = document.getElementById("viewerOtpArea");
+const viewerOtpStatus = document.getElementById("viewerOtpStatus");
+
+function showOtpStatus(message, success) {
+    viewerOtpStatus.textContent = message;
+    viewerOtpStatus.style.color =
+        success ? "#86efac" : "#fca5a5";
+}
+
+sendViewerOtpBtn.addEventListener("click", async function () {
+
+    const email = viewerEmailInput.value.trim();
+
+    if (!email || !viewerEmailInput.checkValidity()) {
+        showOtpStatus("Please enter a valid email.", false);
+        return;
+    }
+
+    sendViewerOtpBtn.disabled = true;
+    sendViewerOtpBtn.textContent = "Sending OTP...";
+
+    try {
+        const response = await fetch("/api/admin-viewer/otp/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to send OTP.");
+        }
+
+        viewerEmailInput.readOnly = true;
+        sendViewerOtpBtn.disabled = true;
+        viewerOtpArea.style.display = "block";
+
+        showOtpStatus("OTP sent successfully. Check your email.", true);
+
+    } catch (error) {
+        showOtpStatus(error.message, false);
+        sendViewerOtpBtn.disabled = false;
+    } finally {
+        sendViewerOtpBtn.textContent = "Send OTP";
+    }
+});
+
+verifyViewerOtpBtn.addEventListener("click", async function () {
+
+    const email = viewerEmailInput.value.trim();
+    const otp = document.getElementById("viewerOtp").value.trim();
+
+    if (!/^\d{6}$/.test(otp)) {
+        showOtpStatus("Please enter a valid 6-digit OTP.", false);
+        return;
+    }
+
+    verifyViewerOtpBtn.disabled = true;
+    verifyViewerOtpBtn.textContent = "Verifying...";
+
+    try {
+        const response = await fetch("/api/admin-viewer/otp/verify", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, otp })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "OTP verification failed.");
+        }
+
+if (!result.viewerId || !result.password) {
+    throw new Error("Temporary credentials were not received.");
+}
+
+document.getElementById("viewerId").value = result.viewerId;
+document.getElementById("viewerPassword").value = result.password;
+
+document.getElementById("viewerOtp").value = "";
+viewerOtpArea.style.display = "none";
+
+showOtpStatus(
+    "Email verified! Your temporary Viewer ID and password " +
+    "have been filled below. Login within 10 minutes. " +
+    "These credentials can be used only once.",
+    true
+);
+
+document.getElementById("viewerId").focus();
+
+    } catch (error) {
+        showOtpStatus(error.message, false);
+    } finally {
+        verifyViewerOtpBtn.disabled = false;
+        verifyViewerOtpBtn.textContent = "Verify OTP";
+    }
+});
+
+
+viewerLoginForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const viewerId = document.getElementById("viewerId").value.trim();
+    const password = document.getElementById("viewerPassword").value;
+
+    errorMessage.style.display = "none";
+    errorMessage.textContent = "";
+
+    if (!viewerId || !password) {
+        errorMessage.textContent = "Please enter Viewer ID and Password.";
+        errorMessage.style.display = "block";
+        return;
+    }
+
+    viewerLoginBtn.disabled = true;
+    viewerLoginBtn.textContent = "Verifying credentials...";
+
+    try {
+        const response = await fetch("/api/admin-viewer/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                viewerId: viewerId,
+                password: password
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                result.message || "Invalid Viewer ID or Password."
+            );
+        }
+
+if (!result.token || result.role !== "DEMO_VIEWER") {
+    throw new Error("Invalid Demo Viewer login response.");
+}
+        // Keep viewer authentication separate from admin authentication.
+sessionStorage.setItem("demoViewerToken", result.token);
+sessionStorage.setItem("demoViewerId", result.viewerId);
+sessionStorage.setItem("demoViewerRole", "DEMO_VIEWER");
+
+        document.getElementById("viewerPassword").value = "";
+
+// Redirect after successful Demo Viewer login.
+window.location.replace("demo-viewer-dashboard.html");
+
+    } catch (error) {
+        errorMessage.style.color = "#fca5a5";
+        errorMessage.textContent =
+            error.message || "Viewer login failed.";
+        errorMessage.style.display = "block";
+
+    } finally {
+        viewerLoginBtn.disabled = false;
+        viewerLoginBtn.textContent = "Access Viewer Portal →";
+    }
+});
+
+</script>
+
+</body>
+</html>

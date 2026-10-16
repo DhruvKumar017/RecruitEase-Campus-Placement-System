@@ -4,6 +4,461 @@
 <meta charset="UTF-8">
 <title>Notifications | RecruitEase</title>
 <link rel="stylesheet" href="student-portal.css">
+<style>
+/* =========================================================
+   RECRUITEASE - PREMIUM NOTIFICATION PAGE
+   ========================================================= */
+
+.notification-page {
+    padding-bottom: 40px;
+}
+
+/* ---------- HERO ---------- */
+
+.notification-hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 125px;
+    margin-bottom: 18px;
+    padding: 24px 28px;
+    border: 1px solid #173b68;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 90% 20%, rgba(0, 153, 255, .20), transparent 28%),
+        linear-gradient(135deg, #071a33, #082346);
+}
+
+.notification-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.notification-hero-icon {
+    width: 74px;
+    height: 74px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    background: linear-gradient(135deg, #00b8ff, #1768ff);
+    box-shadow: 0 12px 30px rgba(0, 119, 255, .30);
+}
+
+.notification-hero h1 {
+    margin: 0 0 7px;
+    font-size: 31px;
+}
+
+.notification-hero p {
+    margin: 0;
+    color: #a8bad5;
+    font-size: 14px;
+}
+
+/* ---------- CATEGORY CARDS ---------- */
+
+.notification-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.notification-summary-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 125px;
+    padding: 22px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid #174474;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: .25s ease;
+}
+
+.notification-summary-card:hover {
+    transform: translateY(-4px);
+}
+
+.notification-summary-card.recent {
+    background: linear-gradient(135deg, #062a59, #08204a);
+}
+
+.notification-summary-card.aptitude {
+    background: linear-gradient(135deg, #25104d, #37106c);
+    border-color: #5723a4;
+}
+
+.notification-summary-card.interview {
+    background: linear-gradient(135deg, #063c3a, #064c40);
+    border-color: #08745d;
+}
+
+.summary-icon {
+    flex: 0 0 62px;
+    width: 62px;
+    height: 62px;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 29px;
+}
+
+.recent .summary-icon {
+    background: linear-gradient(135deg, #00aaff, #176aff);
+}
+
+.aptitude .summary-icon {
+    background: linear-gradient(135deg, #8b2cff, #bd20ff);
+}
+
+.interview .summary-icon {
+    background: linear-gradient(135deg, #00bf91, #00dd8b);
+}
+
+.summary-content label {
+    display: block;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.summary-content p {
+    margin: 4px 0;
+    color: white;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.summary-content small {
+    color: #9fb5d2;
+}
+
+.summary-arrow {
+    margin-left: auto;
+    width: 43px;
+    height: 43px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.notification-summary-card.active {
+    box-shadow: 0 0 0 2px #1d7cff inset,
+                0 8px 30px rgba(0, 118, 255, .18);
+}
+
+/* ---------- FILTER BAR ---------- */
+
+.notification-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 10px;
+    border-radius: 17px;
+    border: 1px solid #16375f;
+    background: #07182e;
+}
+
+.notification-tabs {
+    display: flex;
+    gap: 9px;
+}
+
+.notification-tab {
+    border: 1px solid #27517e;
+    background: #081a33;
+    color: #d7e5fa;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.notification-tab:hover,
+.notification-tab.active {
+    background: linear-gradient(135deg, #1269ff, #1758e7);
+    border-color: #2684ff;
+    color: white;
+}
+
+.notification-search {
+    margin-left: auto;
+    flex: 1;
+    max-width: 500px;
+}
+
+.notification-search input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 17px;
+    border: 1px solid #1a416d;
+    border-radius: 12px;
+    outline: none;
+    color: #fff;
+    background: #081a33;
+}
+
+.notification-search input:focus {
+    border-color: #1788ff;
+}
+
+.mark-all-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 19px;
+    background: #1769ff;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+/* ---------- LIST PANEL ---------- */
+
+.notification-list-panel {
+    border: 1px solid #16375f;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #07182e;
+}
+
+.notification-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 20px;
+    border-bottom: 1px solid #16375f;
+}
+
+.notification-list-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.notification-list-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #8fa8c8;
+}
+
+/* ---------- INDIVIDUAL NOTIFICATION ---------- */
+
+.notification-item {
+    display: grid;
+    grid-template-columns: 54px 120px 1fr auto auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #13345b;
+    transition: .2s;
+}
+
+.notification-item:hover {
+    background: #0a213f;
+}
+
+.notification-item:last-child {
+    border-bottom: 0;
+}
+
+.notification-item.unread {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 120, 255, .10),
+        transparent
+    );
+}
+
+.notification-item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    background: #116dff;
+}
+
+.notification-item[data-type="APTITUDE"] .notification-item-icon {
+    background: linear-gradient(135deg, #7d22ff, #bc20ff);
+}
+
+.notification-item[data-type="INTERVIEW"] .notification-item-icon {
+    background: linear-gradient(135deg, #00a77c, #00d89c);
+}
+
+.notification-type {
+    display: inline-block;
+    text-align: center;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    background: #0751a8;
+    color: #d7ecff;
+}
+
+.notification-type.aptitude {
+    background: #6820c7;
+}
+
+.notification-type.interview {
+    background: #08775e;
+}
+
+.notification-message h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: white;
+}
+
+.notification-message p {
+    margin: 0;
+    color: #a8bad5;
+    font-size: 13px;
+}
+
+.notification-time {
+    white-space: nowrap;
+    color: #91a9c8;
+    font-size: 12px;
+}
+
+.notification-state {
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.notification-state.unread-state {
+    color: #ff5571;
+}
+
+.notification-state.read-state {
+    color: #20d99a;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 7px;
+}
+
+.notification-action-btn {
+    border: 1px solid #176fc4;
+    background: #0a3260;
+    color: #5fc1ff;
+    border-radius: 9px;
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
+.notification-delete {
+    border-color: #713048;
+    color: #ff7188;
+    background: #351629;
+}
+
+/* ---------- EMPTY ---------- */
+
+.notification-empty {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.notification-empty h3 {
+    margin-bottom: 8px;
+}
+
+.notification-empty p {
+    color: #8da5c4;
+}
+
+/* ---------- LIGHT MODE ---------- */
+
+body.light-mode .notification-hero,
+body.light-mode .notification-list-panel,
+body.light-mode .notification-toolbar {
+    background: #ffffff;
+    color: #17233b;
+}
+
+body.light-mode .notification-hero p,
+body.light-mode .notification-list-header p,
+body.light-mode .notification-message p {
+    color: #65758c;
+}
+
+body.light-mode .notification-message h3 {
+    color: #17233b;
+}
+
+body.light-mode .notification-summary-card.recent {
+    background: linear-gradient(135deg, #eaf5ff, #d9ebff);
+}
+
+body.light-mode .notification-summary-card.aptitude {
+    background: linear-gradient(135deg, #f5edff, #e9dcff);
+}
+
+body.light-mode .notification-summary-card.interview {
+    background: linear-gradient(135deg, #e4fff7, #d7f8ef);
+}
+
+body.light-mode .summary-content label,
+body.light-mode .summary-content p {
+    color: #17233b;
+}
+
+body.light-mode .notification-item {
+    background: #fff;
+}
+
+body.light-mode .notification-item:hover {
+    background: #f3f8ff;
+}
+
+body.light-mode .notification-search input,
+body.light-mode .notification-tab {
+    background: #f6f9fd;
+    color: #17233b;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1100px) {
+    .notification-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .notification-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .notification-item {
+        grid-template-columns: 50px 100px 1fr;
+    }
+
+    .notification-time,
+    .notification-state,
+    .notification-actions {
+        grid-column: 3;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -19,8 +474,7 @@
     <a href="student-applications.html">📄 Applications</a>
     <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
     <a href="student-interviews.html">🎤 Interviews</a>
-    <a href="student-resume.html">📑 Resume Builder</a>
-    <a href="student-placement-drives.html">💼 Placement Drive</a>
+<a href="student-placement-drives.html">💼 Placement Drive</a>
     <a class="active" href="student-notifications.html">🔔 Notifications</a>
     <a href="student-settings.html">⚙ Settings</a>
     <a href="student-login.html" onclick="logout()">↪ Logout</a>
@@ -32,13 +486,72 @@
 </aside>
 
 <main class="main">
+    <style>
+/* Notifications top header alignment */
+.notification-page ~ .topbar {
+    width: 100%;
+}
+
+main.main > header.topbar {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    width: 100%;
+    min-height: 72px;
+    margin-bottom: 20px;
+}
+
+main.main > header.topbar .top-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 16px;
+    margin-left: auto !important;
+}
+
+main.main > header.topbar #themeToggleBtn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #07182e;
+    border: 1px solid #173b68;
+    cursor: pointer;
+    font-size: 23px;
+}
+
+main.main > header.topbar .user-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 16px;
+    border: 1px solid #173b68;
+    border-radius: 20px;
+    background: #07182e;
+}
+
+main.main > header.topbar .user-box img {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+</style>
 
 <header class="topbar">
-    <input type="text" id="search" placeholder="Search notifications..." onkeyup="renderNotifications()">
 
     <div class="top-actions">
-        <button>🌙</button>
-        <div class="bell">🔔<span id="notifyCount">5</span></div>
+       <button
+    id="themeToggleBtn"
+    type="button"
+    onclick="toggleNotificationTheme()"
+    title="Change theme"
+>
+    🌙
+</button>
+        <div class="bell">🔔<span id="notifyCount">0</span></div>
 
         <div class="user-box">
             <img id="topPhoto">
@@ -50,27 +563,198 @@
     </div>
 </header>
 
-<section class="details-card">
-    <h2>Notifications</h2>
+<div class="notification-page">
 
-    <div class="info-grid">
-        <div><label>Total</label><p id="totalNotify">0</p></div>
-        <div><label>Unread</label><p id="unreadNotify">0</p></div>
-        <div><label>Placement</label><p>3</p></div>
-        <div><label>System</label><p>2</p></div>
-    </div>
-</section>
+    <section class="notification-hero">
+        <div class="notification-hero-left">
 
-<section class="details-card" style="margin-top:24px;">
-    <h2>Recent Updates</h2>
-    <div id="notificationList" class="application-list"></div>
-</section>
+            <div class="notification-hero-icon">
+                🔔
+            </div>
+
+            <div>
+                <h1>Notifications</h1>
+                <p>
+                    Stay updated with your placement activities,
+                    tests, interviews and other important updates.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <section class="notification-summary-grid">
+
+        <div class="notification-summary-card recent active"
+             id="recentCard"
+             onclick="selectNotificationCategory('RECENT')">
+
+            <div class="summary-icon">📋</div>
+
+            <div class="summary-content">
+                <label>Recent Notifications</label>
+                <p id="recentNotifyCount">0</p>
+                <small>Other placement & account updates</small>
+            </div>
+
+            <div class="summary-arrow">›</div>
+        </div>
+
+
+        <div class="notification-summary-card aptitude"
+             id="aptitudeCard"
+             onclick="selectNotificationCategory('APTITUDE')">
+
+            <div class="summary-icon">📊</div>
+
+            <div class="summary-content">
+                <label>Aptitude Tests</label>
+                <p id="aptitudeNotifyCount">0</p>
+                <small>Test schedules, results and updates</small>
+            </div>
+
+            <div class="summary-arrow">›</div>
+        </div>
+
+
+        <div class="notification-summary-card interview"
+             id="interviewCard"
+             onclick="selectNotificationCategory('INTERVIEW')">
+
+            <div class="summary-icon">📅</div>
+
+            <div class="summary-content">
+                <label>Interviews</label>
+                <p id="interviewNotifyCount">0</p>
+                <small>Interview requests, schedules and results</small>
+            </div>
+
+            <div class="summary-arrow">›</div>
+        </div>
+
+    </section>
+
+
+    <section class="notification-toolbar">
+
+        <div class="notification-tabs">
+
+           <button class="notification-tab"
+        onclick="selectNotificationCategory('ALL')">
+    All
+</button>
+
+            <button class="notification-tab active"
+                   onclick="selectNotificationCategory('RECENT')">
+                Recent
+            </button>
+
+            <button class="notification-tab"
+                    onclick="selectNotificationCategory('APTITUDE')">
+                Aptitude Tests
+            </button>
+
+           <button class="notification-tab"
+        onclick="selectNotificationCategory('INTERVIEW')">
+    Interviews
+</button>
+
+        </div>
+
+        <div class="notification-search">
+            <input
+                type="text"
+                id="search"
+                placeholder="🔍  Search notifications..."
+                onkeyup="renderNotifications()">
+        </div>
+
+        <button class="mark-all-btn"
+                onclick="markAllRead()">
+            ✓ Mark All as Read
+        </button>
+
+    </section>
+
+
+    <section class="notification-list-panel">
+
+        <div class="notification-list-header">
+
+            <div>
+                <h2 id="notificationSectionTitle">
+                    Recent Notifications
+                </h2>
+
+                <p>
+                    Showing latest updates from your placement activities
+                </p>
+            </div>
+
+        </div>
+
+        <div id="notificationList"></div>
+
+    </section>
+
+</div>
 
 </main>
 </div>
 
 <script>
 const studentId = localStorage.getItem("studentId");
+
+const NOTIFICATION_THEME_KEY = "studentNotificationTheme";
+
+function initializeNotificationTheme() {
+
+    const savedTheme =
+        localStorage.getItem(NOTIFICATION_THEME_KEY) || "dark";
+
+    applyNotificationTheme(savedTheme);
+}
+
+function toggleNotificationTheme() {
+
+    const isLight =
+        document.body.classList.contains("light-mode");
+
+    const newTheme = isLight ? "dark" : "light";
+
+    localStorage.setItem(
+        NOTIFICATION_THEME_KEY,
+        newTheme
+    );
+
+    applyNotificationTheme(newTheme);
+}
+
+function applyNotificationTheme(theme) {
+
+    const button =
+        document.getElementById("themeToggleBtn");
+
+    if (theme === "light") {
+
+        document.body.classList.add("light-mode");
+
+        if (button) {
+            button.innerText = "☀️";
+            button.title = "Switch to dark mode";
+        }
+
+    } else {
+
+        document.body.classList.remove("light-mode");
+
+        if (button) {
+            button.innerText = "🌙";
+            button.title = "Switch to light mode";
+        }
+    }
+}
 
 if (!studentId) {
     window.location.href = "student-login.html";
@@ -79,116 +763,322 @@ if (!studentId) {
 function logout() {
     localStorage.removeItem("studentId");
 }
-
 let notifications = [];
+let selectedNotificationCategory = "RECENT";
 
 async function loadNotifications() {
 
     try {
 
-        const response = await fetch("/api/student-notifications/student/" + studentId);
+        const response = await fetch(
+            "/api/student-notifications/student/" + studentId
+        );
 
-        notifications = await response.json();
+        if (!response.ok) {
+            throw new Error(
+                "Notification API failed: " + response.status
+            );
+        }
+
+        const data = await response.json();
+
+        notifications = Array.isArray(data)
+            ? data
+            : [];
 
         renderNotifications();
 
-    } catch (e) {
+    } catch (error) {
 
-        console.log(e);
+        console.error(
+            "Notification load error:",
+            error
+        );
 
+        notifications = [];
+
+        renderNotifications();
     }
-
 }
 
 function renderNotifications() {
 
-    const search = document.getElementById("search").value.toLowerCase();
+    const search =
+        document.getElementById("search").value
+            .toLowerCase()
+            .trim();
 
-    const list = document.getElementById("notificationList");
+    const list =
+        document.getElementById("notificationList");
 
-    const filtered = notifications.filter(n =>
+    // -------------------------
+    // CATEGORY COUNTS
+    // -------------------------
 
-        (n.title || "").toLowerCase().includes(search) ||
-        (n.message || "").toLowerCase().includes(search) ||
-        (n.type || "").toLowerCase().includes(search)
+    const recentNotifications = notifications.filter(n => {
+        const type = String(n.type || "").toUpperCase();
+
+        return type !== "APTITUDE" &&
+               type !== "INTERVIEW";
+    });
+
+    const aptitudeNotifications = notifications.filter(n =>
+        String(n.type || "").toUpperCase() === "APTITUDE"
+    );
+
+    const interviewNotifications = notifications.filter(n =>
+        String(n.type || "").toUpperCase() === "INTERVIEW"
+    );
+
+    document.getElementById("recentNotifyCount").innerText =
+        recentNotifications.length;
+
+    document.getElementById("aptitudeNotifyCount").innerText =
+        aptitudeNotifications.length;
+
+    document.getElementById("interviewNotifyCount").innerText =
+        interviewNotifications.length;
+
+    // Bell = total unread notifications
+    const unreadCount = notifications.filter(n =>
+        !n.readStatus
+    ).length;
+
+    document.getElementById("notifyCount").innerText =
+        unreadCount;
+
+    // -------------------------
+    // SELECT CATEGORY
+    // -------------------------
+
+    let categoryNotifications = [];
+
+ if (selectedNotificationCategory === "ALL") {
+
+    categoryNotifications = notifications;
+
+} else if (selectedNotificationCategory === "APTITUDE") {
+
+    categoryNotifications = aptitudeNotifications;
+
+} else if (selectedNotificationCategory === "INTERVIEW") {
+
+    categoryNotifications = interviewNotifications;
+
+} else {
+
+    categoryNotifications = recentNotifications;
+}
+
+    // -------------------------
+    // SEARCH
+    // -------------------------
+
+    const filtered = categoryNotifications.filter(n =>
+
+        String(n.title || "")
+            .toLowerCase()
+            .includes(search) ||
+
+        String(n.message || "")
+            .toLowerCase()
+            .includes(search) ||
+
+        String(n.type || "")
+            .toLowerCase()
+            .includes(search)
 
     );
 
-    document.getElementById("totalNotify").innerText = filtered.length;
-
-    document.getElementById("unreadNotify").innerText =
-        filtered.filter(n => !n.readStatus).length;
-
     list.innerHTML = "";
 
-    if(filtered.length==0){
+    if (filtered.length === 0) {
 
-        list.innerHTML="<h3>No Notifications Found</h3>";
+        list.innerHTML = `
+            <div class="notification-empty">
+                <h3>No Notifications Found</h3>
+                <p>No notifications are available in this category.</p>
+            </div>
+        `;
 
         return;
     }
 
-    filtered.forEach(n=>{
+filtered.forEach(n => {
 
-        list.innerHTML+=`
+    const type = String(n.type || "RECENT").toUpperCase();
 
-        <div class="application-card">
+    let typeClass = "";
+    let typeText = "RECENT";
 
-            <div>
+    if (type === "APTITUDE") {
+        typeClass = "aptitude";
+        typeText = "APTITUDE TEST";
+    } 
+    else if (type === "INTERVIEW") {
+        typeClass = "interview";
+        typeText = "INTERVIEW";
+    }
 
-                <h3>${getIcon(n.type)} ${n.title}</h3>
+    list.innerHTML += `
 
-                <p>${n.message}</p>
+        <div class="notification-item ${n.readStatus ? "" : "unread"}"
+             data-type="${escapeHtml(type)}">
 
-                <small>${formatDate(n.createdAt)}</small>
-
+            <div class="notification-item-icon">
+                ${getIcon(type)}
             </div>
 
             <div>
-
-                <span class="status ${n.readStatus ? "success":"pending"}">
-
-                    ${n.readStatus ? "Read":"Unread"}
-
+                <span class="notification-type ${typeClass}">
+                    ${typeText}
                 </span>
+            </div>
+
+            <div class="notification-message">
+
+                <h3>
+                    ${escapeHtml(n.title || "Notification")}
+                </h3>
+
+                <p>
+                    ${escapeHtml(n.message || "")}
+                </p>
+
+            </div>
+
+            <div class="notification-time">
+                🕒 ${formatDate(n.createdAt)}
+            </div>
+
+            <div class="notification-state
+                ${n.readStatus ? "read-state" : "unread-state"}">
+
+                ● ${n.readStatus ? "Read" : "Unread"}
+
+            </div>
+
+            <div class="notification-actions">
 
                 ${
                     !n.readStatus
                     ?
-                    `<button onclick="markRead(${n.id})">
-                        Mark Read
+                    `<button
+                        class="notification-action-btn"
+                        onclick="markRead(${n.id})">
+                        ✓ Mark Read
                     </button>`
                     :
                     ""
                 }
 
-                <button onclick="deleteNotification(${n.id})">
-                    Delete
+                <button
+                    class="notification-action-btn notification-delete"
+                    onclick="deleteNotification(${n.id})">
+                    🗑
                 </button>
 
             </div>
 
         </div>
-
-        `;
-
-    });
+    `;
+});
 
 }
+function selectNotificationCategory(category) {
 
-function getIcon(type){
+    selectedNotificationCategory = category;
 
-    if(type==="PLACEMENT") return "🏢";
+    // Remove active from all top cards
+    document
+        .querySelectorAll(".notification-summary-card")
+        .forEach(card => card.classList.remove("active"));
 
-    if(type==="INTERVIEW") return "🎤";
+    // Remove active from all bottom tabs
+    document
+        .querySelectorAll(".notification-tab")
+        .forEach(tab => tab.classList.remove("active"));
 
-    if(type==="APTITUDE") return "🧠";
+    const title =
+        document.getElementById("notificationSectionTitle");
 
-    if(type==="APPLICATION") return "📄";
+    const tabs =
+        document.querySelectorAll(".notification-tab");
+
+    if (category === "ALL") {
+
+        title.innerText = "All Notifications";
+
+        if (tabs[0]) {
+            tabs[0].classList.add("active");
+        }
+
+    } else if (category === "RECENT") {
+
+        document
+            .getElementById("recentCard")
+            .classList.add("active");
+
+        title.innerText = "Recent Notifications";
+
+        if (tabs[1]) {
+            tabs[1].classList.add("active");
+        }
+
+    } else if (category === "APTITUDE") {
+
+        document
+            .getElementById("aptitudeCard")
+            .classList.add("active");
+
+        title.innerText = "Aptitude Test Notifications";
+
+        if (tabs[2]) {
+            tabs[2].classList.add("active");
+        }
+
+    } else if (category === "INTERVIEW") {
+
+        document
+            .getElementById("interviewCard")
+            .classList.add("active");
+
+        title.innerText = "Interview Notifications";
+
+        if (tabs[3]) {
+            tabs[3].classList.add("active");
+        }
+    }
+
+    renderNotifications();
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+function getIcon(type) {
+
+    const notificationType =
+        String(type || "").toUpperCase();
+
+    if (notificationType === "INTERVIEW") return "🎤";
+    if (notificationType === "APTITUDE") return "🧠";
+    if (notificationType === "PLACEMENT") return "🏢";
+    if (notificationType === "APPLICATION") return "📄";
+    if (notificationType === "DRIVE") return "💼";
+    if (notificationType === "RESULT") return "📊";
+    if (notificationType === "ACCOUNT") return "👤";
+    if (notificationType === "COMPANY") return "🏢";
+    if (notificationType === "SYSTEM") return "⚙️";
 
     return "🔔";
-
 }
+
 
 function formatDate(date){
 
@@ -208,6 +1098,29 @@ async function markRead(id){
 
     loadNotifications();
 
+}
+async function markAllRead() {
+
+    try {
+
+        const response = await fetch(
+            "/api/student-notifications/student/" + studentId + "/read-all",
+            {
+                method: "PUT"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to mark notifications as read.");
+        }
+
+        await loadNotifications();
+
+    } catch (error) {
+
+        console.error("Mark all read error:", error);
+        alert("Unable to mark all notifications as read.");
+    }
 }
 
 async function deleteNotification(id){
@@ -239,12 +1152,15 @@ fetch("/api/students/"+studentId)
 
 });
 
+initializeNotificationTheme();
+
 loadNotifications();
 
-setInterval(loadNotifications,5000);
+setInterval(loadNotifications, 5000);
 
 </script>
 
 <script src="student-sidebar.js"></script>
 </body>
 </html>
+

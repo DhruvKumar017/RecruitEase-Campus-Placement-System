@@ -10,6 +10,7 @@ import com.recruitease.entity.Application;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
     List<Application> findByStudentId(Long studentId);
+    List<Application> findByTestId(Long testId);
 
     /* Existing company-wise application check */
     Optional<Application> findByStudentIdAndCompanyId(

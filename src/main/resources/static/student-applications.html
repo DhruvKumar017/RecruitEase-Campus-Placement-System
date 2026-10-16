@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -86,110 +86,91 @@
 
         <!-- ================= STATS ================= -->
 
-        <section class="applications-stats">
+<section class="applications-stats">
+        <!-- Upcoming Drives -->
+   <article class="applications-stat-card"
+         onclick="filterApplicationCard('upcoming')"
+         style="cursor:pointer;">
+        <div class="applications-stat-icon stat-blue">📅</div>
+        <div>
+            <h2 id="upcomingDriveCount">0</h2>
+            <p>Upcoming Drives</p>
+            <small>Scheduled placement drives</small>
+        </div>
+    </article>
 
-            <article class="applications-stat-card">
-                <div class="applications-stat-icon stat-blue">📄</div>
+<article class="applications-stat-card"
+         onclick="filterApplicationCard('live')"
+         style="cursor:pointer;">
+        <div class="applications-stat-icon stat-green">●</div>
+        <div>
+            <h2 id="liveDriveCount">0</h2>
+            <p>Live Drives</p>
+            <small>Currently running</small>
+        </div>
+    </article>
 
-                <div>
-                    <h2 id="totalApps">0</h2>
-                    <p>Total Applications</p>
-                    <small>All time applied</small>
-                </div>
-            </article>
+<article class="applications-stat-card"
+         onclick="filterApplicationCard('completed')"
+         style="cursor:pointer;">
 
-            <article class="applications-stat-card">
-                <div class="applications-stat-icon stat-green">✓</div>
+        <div class="applications-stat-icon stat-yellow">✓</div>
+        <div>
+            <h2 id="completedDriveCount">0</h2>
+            <p>Completed Drives</p>
+            <small>Finished placement drives</small>
+        </div>
+    </article>
 
-                <div>
-                    <h2 id="shortlistedApps">0</h2>
-                    <p>Shortlisted</p>
-                    <small>You are shortlisted</small>
-                </div>
-            </article>
+    <!-- Aptitude Tests -->
+    <article class="applications-stat-card"
+             onclick="window.location.href='student-aptitude-tests.html'"
+             style="cursor:pointer;">
+        <div class="applications-stat-icon stat-purple">A</div>
+        <div>
+            <h2 id="aptitudeTestCount">0</h2>
+            <p>Aptitude Tests</p>
+            <small>Scheduled company tests</small>
+        </div>
+    </article>
 
-            <article class="applications-stat-card">
-                <div class="applications-stat-icon stat-yellow">◷</div>
+    <!-- Interviews -->
+    <article class="applications-stat-card"
+             onclick="window.location.href='student-interviews.html'"
+             style="cursor:pointer;">
+        <div class="applications-stat-icon stat-red">I</div>
+        <div>
+            <h2 id="interviewApps">0</h2>
+            <p>Interviews</p>
+            <small>Interview activity</small>
+        </div>
+    </article>
 
-                <div>
-                    <h2 id="reviewApps">0</h2>
-                    <p>Under Review</p>
-                    <small>Application under review</small>
-                </div>
-            </article>
-
-            <article class="applications-stat-card">
-                <div class="applications-stat-icon stat-purple">♧</div>
-
-                <div>
-                    <h2 id="interviewApps">0</h2>
-                    <p>Interview Scheduled</p>
-                    <small>Upcoming interview</small>
-                </div>
-            </article>
-
-            <article class="applications-stat-card">
-                <div class="applications-stat-icon stat-red">✕</div>
-
-                <div>
-                    <h2 id="notSelectedApps">0</h2>
-                    <p>Not Selected</p>
-                    <small>Keep trying</small>
-                </div>
-            </article>
-
-        </section>
+</section>
 
         <!-- ================= FILTERS ================= -->
 
-        <section class="applications-filter-card">
 
-            <div class="applications-filter-search">
-                <span>⌕</span>
-
-                <input
-                    id="applicationSearch"
-                    type="text"
-                    placeholder="Search by company, role or drive..."
-                    onkeyup="renderApplications()"
-                >
-            </div>
-
-            <select id="statusFilter" onchange="renderApplications()">
-                <option value="">All Status</option>
-                <option value="applied">Applied</option>
-                <option value="shortlisted">Shortlisted</option>
-                <option value="test scheduled">Test Scheduled</option>
-                <option value="interview requested">Interview Requested</option>
-                <option value="interview">Interview Scheduled</option>
-                <option value="selected">Selected</option>
-                <option value="placed">Placed</option>
-                <option value="rejected">Not Selected</option>
-            </select>
-
-            <select id="typeFilter" onchange="renderApplications()">
-                <option value="">All Type</option>
-                <option value="drive">Drive</option>
-                <option value="company">Company Application</option>
-            </select>
-
-            <button
-                class="applications-reset-btn"
-                type="button"
-                onclick="resetFilters()"
-            >
-                ↻ Reset Filters
-            </button>
-
-        </section>
 
         <!-- ================= APPLICATION TABLE ================= -->
 
         <section class="applications-table-card">
 
-            <div class="applications-table-title">
-                <h2>☷ Applications List</h2>
-            </div>
+<div class="applications-table-title"
+     style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+
+    <h2>☷ Applications List</h2>
+
+    <button
+        id="refreshApplicationsBtn"
+        class="applications-reset-btn"
+        type="button"
+        onclick="refreshCurrentApplicationList()"
+    >
+        ↻ Refresh
+    </button>
+
+</div>
 
             <div class="applications-table-wrapper">
 
@@ -270,6 +251,10 @@ let applications = [];
 let drives = [];
 let driveMap = {};
 let interviewEligibilityMap = {};
+let interviewRequests = [];
+let interviewRequestMap = {};
+
+let selectedApplicationCard = "";
 
 if (!studentId) {
     window.location.href = "student-login.html";
@@ -282,14 +267,16 @@ if (!studentId) {
 async function initializeApplications() {
     try {
         const responses = await Promise.all([
-            fetch("/api/students/" + studentId),
-            fetch("/api/applications/student/" + studentId),
-            fetch("/api/drives")
-        ]);
+    fetch("/api/students/" + studentId),
+    fetch("/api/applications/student/" + studentId),
+    fetch("/api/drives"),
+    fetch("/api/interview-requests/student/" + studentId)
+]);
 
         const studentResponse = responses[0];
         const applicationsResponse = responses[1];
         const drivesResponse = responses[2];
+        const interviewResponse = responses[3];
 
         if (!studentResponse.ok) {
             throw new Error("Student profile not found.");
@@ -326,6 +313,19 @@ async function initializeApplications() {
                 driveMap[drive.id] = drive;
             });
         }
+        if (interviewResponse.ok) {
+
+    interviewRequests = await interviewResponse.json();
+
+    interviewRequestMap = {};
+
+    interviewRequests.forEach(request => {
+        if (request.applicationId != null) {
+            interviewRequestMap[request.applicationId] = request;
+        }
+
+    });
+}
 
         applications.sort((a, b) =>
             Number(b.id) - Number(a.id)
@@ -421,57 +421,303 @@ function getInterviewEligibility(appId) {
 /* ================= STATS ================= */
 
 function updateStats() {
-    const total = applications.length;
 
-    const shortlisted = applications.filter(app =>
-        normalizeStatus(app.status) === "shortlisted"
+    const upcomingDrives = drives.filter(drive =>
+        normalizeStatus(drive.status) === "upcoming"
     ).length;
 
-    const review = applications.filter(app =>
-        [
-            "applied",
-            "test scheduled",
-            "under review"
-        ].includes(normalizeStatus(app.status))
+    const liveDrives = drives.filter(drive => {
+        const status = normalizeStatus(drive.status);
+
+        return (
+            status === "ongoing" ||
+            status === "live" ||
+            status === "active"
+        );
+    }).length;
+
+    const completedDrives = drives.filter(drive =>
+        normalizeStatus(drive.status) === "completed"
     ).length;
 
-    const interviews = applications.filter(app =>
-        [
-            "interview",
-            "interview requested",
-            "interview scheduled"
-        ].includes(normalizeStatus(app.status))
+    const aptitudeTests = applications.filter(app =>
+        app.testId != null
     ).length;
 
-    const notSelected = applications.filter(app =>
-        [
-            "rejected",
-            "not selected"
-        ].includes(normalizeStatus(app.status))
-    ).length;
+    const interviews = interviewRequests.filter(request => {
+        const status = normalizeStatus(request.interviewStatus);
 
-    document.getElementById("totalApps").innerText = total;
-    document.getElementById("shortlistedApps").innerText = shortlisted;
-    document.getElementById("reviewApps").innerText = review;
-    document.getElementById("interviewApps").innerText = interviews;
-    document.getElementById("notSelectedApps").innerText =
-        notSelected;
+        return (
+            status === "pending" ||
+            status === "scheduled" ||
+            status === "completed" ||
+            status === "selected" ||
+            status === "placed"
+        );
+    }).length;
+
+
+    const upcomingElement =
+        document.getElementById("upcomingDriveCount");
+
+    const liveElement =
+        document.getElementById("liveDriveCount");
+
+    const completedElement =
+        document.getElementById("completedDriveCount");
+
+    const aptitudeElement =
+        document.getElementById("aptitudeTestCount");
+
+    const interviewElement =
+        document.getElementById("interviewCount");
+
+
+    if (upcomingElement) {
+        upcomingElement.innerText = upcomingDrives;
+    }
+
+    if (liveElement) {
+        liveElement.innerText = liveDrives;
+    }
+
+    if (completedElement) {
+        completedElement.innerText = completedDrives;
+    }
+
+    if (aptitudeElement) {
+        aptitudeElement.innerText = aptitudeTests;
+    }
+
+    if (interviewElement) {
+        interviewElement.innerText = interviews;
+    }
+}
+/* ================= TABLE RENDER ================= */
+function renderCompletedDrives() {
+
+    const tableBody =
+        document.getElementById("applicationTableBody");
+
+    const completedDrives = drives.filter(drive =>
+        normalizeStatus(drive.status) === "completed"
+    );
+
+    if (completedDrives.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="applications-loading">
+                    No completed drives found.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("applicationsEntryText").innerText =
+            "Showing 0 completed drives";
+
+        return;
+    }
+
+    tableBody.innerHTML = completedDrives.map((drive, index) => `
+        <tr>
+            <td>${index + 1}</td>
+
+            <td>
+                <div class="application-company-cell">
+                    <div class="application-company-logo">
+                        ${escapeHtml(companyInitials(drive.companyName))}
+                    </div>
+
+                    <div>
+                        <b>${escapeHtml(drive.companyName || "Company")}</b>
+                        <p>${escapeHtml(drive.jobRole || "Placement Drive")}</p>
+                    </div>
+                </div>
+            </td>
+
+            <td>
+                ${escapeHtml(drive.jobRole || "Not available")}
+            </td>
+
+            <td>
+                <span class="application-type-badge drive-type">
+                    Drive
+                </span>
+            </td>
+
+            <td>-</td>
+
+            <td>
+                ${escapeHtml(formatDate(drive.driveDate))}
+            </td>
+
+            <td>
+                ${getStatusHtml("Completed")}
+            </td>
+
+            <td>
+                -
+            </td>
+        </tr>
+    `).join("");
+
+    document.getElementById("applicationsEntryText").innerText =
+        `Showing ${completedDrives.length} completed drives`;
+}
+function filterApplicationCard(type) {
+    selectedApplicationCard = type;
+
+    if (
+        type === "upcoming" ||
+        type === "live" ||
+        type === "completed"
+    ) {
+        renderDriveApplications(type);
+    } else {
+        renderApplications();
+    }
+
+    document.querySelector(".applications-table-card")
+        ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
+function renderDriveApplications(type) {
+
+    const tableBody =
+        document.getElementById("applicationTableBody");
+
+    let filteredDrives = drives.filter(drive => {
+
+        const status = normalizeStatus(drive.status);
+
+        if (type === "upcoming") {
+            return status === "upcoming";
+        }
+
+        if (type === "live") {
+            return (
+                status === "live" ||
+                status === "ongoing" ||
+                status === "active"
+            );
+        }
+
+        if (type === "completed") {
+            return status === "completed";
+        }
+
+        return false;
+    });
+
+    if (filteredDrives.length === 0) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="applications-loading">
+                    No ${escapeHtml(type)} drives found.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("applicationsEntryText").innerText =
+            `Showing 0 ${type} drives`;
+
+        return;
+    }
+
+    tableBody.innerHTML = filteredDrives.map((drive, index) => {
+
+        const application = applications.find(app =>
+            Number(app.driveId) === Number(drive.id)
+        );
+
+        const applicationStatus = application
+            ? (application.status || "Applied")
+            : "Not Applied";
+
+        return `
+            <tr>
+
+                <td>${index + 1}</td>
+
+                <td>
+                    <strong>
+                        ${escapeHtml(drive.companyName || "Company")}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        drive.role ||
+                        drive.jobRole ||
+                        drive.position ||
+                        "-"
+                    )}
+                </td>
+
+                <td>Drive</td>
+
+                <td>
+                    ${
+                        application?.createdAt
+                            ? formatDateTime(application.createdAt)
+                            : "-"
+                    }
+                </td>
+
+                <td>
+                    ${drive.driveDate
+                        ? formatDate(drive.driveDate)
+                        : "-"
+                    }
+                </td>
+
+                <td>
+                    ${
+                        application
+                            ? getStatusHtml(applicationStatus)
+                            : `<span class="status-pending">Not Applied</span>`
+                    }
+                </td>
+
+<td>
+    ${
+        application
+            ? `<span>Applied</span>`
+            : (
+                type === "upcoming" || type === "live"
+                    ? `
+                        <button
+                            type="button"
+                            class="application-view-btn"
+                            onclick="applyToDrive(${drive.id})"
+                        >
+                            Apply Now
+                        </button>
+                    `
+                    : `<span>Not Applied</span>`
+            )
+    }
+</td>
+
+            </tr>
+        `;
+    }).join("");
+
+    document.getElementById("applicationsEntryText").innerText =
+        `Showing ${filteredDrives.length} ${type} drive(s)`;
 }
 
-/* ================= TABLE RENDER ================= */
-
 function renderApplications() {
+
     const search = normalize(
-        document.getElementById("applicationSearch").value
+        document.getElementById("topSearch")?.value || ""
     );
 
-    const statusFilter = normalize(
-        document.getElementById("statusFilter").value
-    );
-
-    const typeFilter = normalize(
-        document.getElementById("typeFilter").value
-    );
+    const statusFilter = "";
+    const typeFilter = "";
 
     const filteredApplications = applications.filter(app => {
         const company = normalize(app.companyName);
@@ -507,15 +753,43 @@ function renderApplications() {
                 )
             );
 
-        const matchesType =
-            !typeFilter ||
-            appType === typeFilter;
+       const matchesType =
+    !typeFilter ||
+    appType === typeFilter;
 
-        return (
-            matchesSearch &&
-            matchesStatus &&
-            matchesType
+let matchesCard = true;
+
+if (selectedApplicationCard === "upcoming") {
+    const drive = driveMap[app.driveId];
+
+    matchesCard =
+        !!drive &&
+        normalizeStatus(drive.status) === "upcoming";
+}
+if (selectedApplicationCard === "live") {
+    const drive = driveMap[app.driveId];
+
+    matchesCard =
+        !!drive &&
+        (
+            normalizeStatus(drive.status) === "active" ||
+            normalizeStatus(drive.status) === "live"
         );
+}
+if (selectedApplicationCard === "completed") {
+    const drive = driveMap[app.driveId];
+
+    matchesCard =
+        !!drive &&
+        normalizeStatus(drive.status) === "completed";
+}
+
+return (
+    matchesSearch &&
+    matchesStatus &&
+    matchesType &&
+    matchesCard
+);
     });
 
     const tableBody =
@@ -681,7 +955,7 @@ function viewApplication(applicationId) {
     const content =
         document.getElementById("applicationModalContent");
 
-    const testHtml = getTestDetailsHtml(eligibility);
+    const testHtml = getTestDetailsHtml(app, eligibility);
     const interviewHtml =
         getInterviewDetailsHtml(app, eligibility);
 
@@ -765,66 +1039,229 @@ function viewApplication(applicationId) {
     modal.style.display = "grid";
 }
 
-function getTestDetailsHtml(eligibility) {
+function getTestDetailsHtml(app, eligibility) {
+
+    // Test scheduled but student has not completed it yet
     if (!eligibility.testTaken) {
+
+        if (app.testId != null) {
+
+            return `
+                <div class="test-result-box">
+
+                    <p>
+                        <b>Status:</b>
+                        <span class="application-status status-review">
+                            Scheduled
+                        </span>
+                    </p>
+
+                    <p>
+                        <b>Company:</b>
+                        ${escapeHtml(app.companyName || "Not available")}
+                    </p>
+
+                    <p>
+                        <b>Test Date:</b>
+                        ${escapeHtml(
+                            app.testDate
+                                ? formatDate(app.testDate)
+                                : "Not available"
+                        )}
+                    </p>
+
+                    <p>
+                        <b>Start Time:</b>
+                        ${escapeHtml(
+                            formatTime(app.testStartTime)
+                        )}
+                    </p>
+
+                    <p>
+                        <b>End Time:</b>
+                        ${escapeHtml(
+                            formatTime(app.testEndTime)
+                        )}
+                    </p>
+
+                    <p>
+                        <b>Permission:</b>
+                        ${escapeHtml(
+                            app.testPermission || "Pending"
+                        )}
+                    </p>
+
+                </div>
+            `;
+        }
+
         return `
             <p class="modal-empty-text">
-                Aptitude test is not completed yet.
+                No aptitude test has been scheduled for this company yet.
             </p>
         `;
     }
 
+
+    // Test completed
     const percentage =
         Number(eligibility.percentage || 0).toFixed(2);
 
     return `
         <div class="test-result-box">
-            <p><b>Marks:</b> ${eligibility.obtainedMarks ?? 0} / ${eligibility.totalMarks ?? 0}</p>
-            <p><b>Percentage:</b> ${percentage}%</p>
-            <p><b>Company Cutoff:</b> ${Number(
-                eligibility.companyCutoff || 0
-            ).toFixed(2)}%</p>
+
+            <p>
+                <b>Company:</b>
+                ${escapeHtml(app.companyName || "Not available")}
+            </p>
+
+            <p>
+                <b>Status:</b>
+                Test Completed
+            </p>
+
+            <p>
+                <b>Marks:</b>
+                ${eligibility.obtainedMarks ?? 0}
+                /
+                ${eligibility.totalMarks ?? 0}
+            </p>
+
+            <p>
+                <b>Percentage:</b>
+                ${percentage}%
+            </p>
+
+            <p>
+                <b>Company Cutoff:</b>
+                ${Number(
+                    eligibility.companyCutoff || 0
+                ).toFixed(2)}%
+            </p>
 
             <p>
                 <b>Result:</b>
                 ${
                     eligibility.qualified
-                        ? " Qualified ✅"
-                        : " Not Qualified ❌"
+                        ? "Qualified ✅"
+                        : "Not Qualified ❌"
                 }
             </p>
+
         </div>
     `;
 }
 
 function getInterviewDetailsHtml(app, eligibility) {
+
+    const interview = interviewRequestMap[app.id];
+
+    // Interview has been scheduled by admin
+    if (
+        interview &&
+        normalize(interview.interviewStatus) === "scheduled"
+    ) {
+        return `
+            <div class="test-result-box">
+
+                <p>
+                    <b>Company:</b>
+                    ${escapeHtml(
+                        interview.companyName ||
+                        app.companyName ||
+                        "Not available"
+                    )}
+                </p>
+
+                <p>
+                    <b>Status:</b>
+                    Interview Scheduled
+                </p>
+
+                <p>
+                    <b>Date:</b>
+                    ${escapeHtml(
+                        interview.interviewDate
+                            ? formatDate(interview.interviewDate)
+                            : "Not available"
+                    )}
+                </p>
+
+                <p>
+                    <b>Time:</b>
+                    ${escapeHtml(
+                        formatTime(interview.interviewTime)
+                    )}
+                </p>
+
+                <p>
+                    <b>Mode:</b>
+                    ${escapeHtml(
+                        interview.interviewMode ||
+                        "Not available"
+                    )}
+                </p>
+
+                <p>
+                    <b>Admin Remark:</b>
+                    ${escapeHtml(
+                        interview.adminRemark ||
+                        "No remark"
+                    )}
+                </p>
+
+                ${
+                    interview.interviewLink
+                        ? `
+                            <p>
+                                <a
+                                    href="${escapeHtml(interview.interviewLink)}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="application-interview-btn"
+                                >
+                                    Join Interview
+                                </a>
+                            </p>
+                        `
+                        : ""
+                }
+
+            </div>
+        `;
+    }
+
+    // Aptitude test not completed
     if (!eligibility.testTaken) {
         return `
             <p class="modal-empty-text">
-                Complete aptitude test first to apply for interview.
+                Complete aptitude test first to become eligible for interview.
             </p>
         `;
     }
 
+    // Aptitude test failed
     if (!eligibility.qualified) {
         return `
             <p class="modal-empty-text error-text">
-                Aptitude cutoff clear nahi hua.
+                Aptitude cutoff was not cleared.
             </p>
         `;
     }
 
-    if (eligibility.interviewRequested) {
+    // Interview request already sent, waiting for admin
+    if (eligibility.interviewRequested || interview) {
         return `
             <p class="modal-success-text">
-                Interview request admin ko bhej di gayi hai ✅
+                Interview request submitted. Waiting for admin to schedule the interview.
             </p>
         `;
     }
 
+    // Qualified student can request interview
     return `
         <p class="modal-empty-text">
-            You are eligible to apply for an interview.
+            You qualified the aptitude test and are eligible for interview.
         </p>
 
         <button
@@ -887,22 +1324,132 @@ async function requestInterview(applicationId) {
     }
 }
 
+/* ================= DRIVE APPLICATION ================= */
+
+async function applyToDrive(driveId) {
+
+    const drive = drives.find(item =>
+        Number(item.id) === Number(driveId)
+    );
+
+    if (!drive) {
+        alert("Drive details not found.");
+        return;
+    }
+
+    const confirmed = confirm(
+        "Apply for " +
+        (drive.companyName || "this company") +
+        " placement drive?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "/api/applications/apply-drive/" +
+            studentId +
+            "/" +
+            driveId,
+            {
+                method: "POST"
+            }
+        );
+
+        const responseText = await response.text();
+
+        if (!response.ok) {
+            throw new Error(
+                responseText ||
+                "Unable to apply for this placement drive."
+            );
+        }
+
+        alert("Application submitted successfully.");
+
+        await initializeApplications();
+
+        if (selectedApplicationCard === "upcoming") {
+            renderDriveApplications("upcoming");
+
+        } else if (selectedApplicationCard === "live") {
+            renderDriveApplications("live");
+        }
+
+    } catch (error) {
+
+        console.error("Drive application error:", error);
+
+        alert(
+            error.message ||
+            "Unable to apply for this placement drive."
+        );
+    }
+}
+
+/* ================= REFRESH CURRENT LIST ================= */
+
+let isRefreshingApplications = false;
+
+async function refreshCurrentApplicationList() {
+
+    if (isRefreshingApplications) return;
+
+    const refreshBtn = document.getElementById("refreshApplicationsBtn");
+    const currentCard = selectedApplicationCard;
+
+    isRefreshingApplications = true;
+
+    if (refreshBtn) {
+        refreshBtn.disabled = true;
+        refreshBtn.innerText = "↻ Refreshing...";
+    }
+
+    try {
+        await initializeApplications();
+
+        selectedApplicationCard = currentCard;
+
+        if (
+            currentCard === "upcoming" ||
+            currentCard === "live" ||
+            currentCard === "completed"
+        ) {
+            renderDriveApplications(currentCard);
+        } else {
+            renderApplications();
+        }
+
+    } catch (error) {
+        console.error("Refresh failed:", error);
+        alert("Applications refresh nahi ho payi.");
+
+    } finally {
+        isRefreshingApplications = false;
+
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.innerText = "↻ Refresh";
+        }
+    }
+}
+
 /* ================= FILTERS ================= */
 
 function applyTopSearch() {
-    document.getElementById("applicationSearch").value =
-        document.getElementById("topSearch").value;
 
-    renderApplications();
-}
-
-function resetFilters() {
-    document.getElementById("applicationSearch").value = "";
-    document.getElementById("topSearch").value = "";
-    document.getElementById("statusFilter").value = "";
-    document.getElementById("typeFilter").value = "";
-
-    renderApplications();
+    if (
+        selectedApplicationCard === "upcoming" ||
+        selectedApplicationCard === "live" ||
+        selectedApplicationCard === "completed"
+    ) {
+        renderDriveApplications(selectedApplicationCard);
+    } else {
+        renderApplications();
+    }
 }
 
 /* ================= THEME ================= */
@@ -997,6 +1544,29 @@ function formatDateTime(dateTimeValue) {
 
     } catch (error) {
         return dateTimeValue;
+    }
+}
+function formatTime(timeValue) {
+
+    if (!timeValue) {
+        return "Not available";
+    }
+
+    try {
+        const parts = timeValue.split(":");
+
+        let hour = Number(parts[0]);
+        const minute = parts[1] || "00";
+
+        const period = hour >= 12 ? "PM" : "AM";
+
+        hour = hour % 12;
+        hour = hour || 12;
+
+        return `${hour}:${minute} ${period}`;
+
+    } catch (error) {
+        return timeValue;
     }
 }
 

@@ -295,6 +295,598 @@
             width:100%;
         }
     }
+    /* =========================================================
+   NEW MY APTITUDE TESTS PAGE DESIGN
+   ========================================================= */
+
+/* ---------- PAGE HEADER ---------- */
+
+.aptitude-page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0 22px;
+}
+
+.aptitude-title-icon {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: linear-gradient(135deg, #7c3aed, #a000ff);
+
+    color: white;
+    font-size: 29px;
+
+    box-shadow: 0 8px 25px rgba(124, 58, 237, .30);
+}
+
+.aptitude-page-header h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.aptitude-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin-top: 8px;
+
+    font-size: 14px;
+}
+
+.aptitude-breadcrumb a {
+    color: #2f80ff;
+    text-decoration: none;
+}
+
+.aptitude-breadcrumb span {
+    color: #607693;
+}
+
+.aptitude-breadcrumb b {
+    color: #c5d2e5;
+}
+
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.aptitude-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+
+    margin-bottom: 22px;
+}
+
+.aptitude-stat-card {
+    min-height: 118px;
+
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 20px;
+
+    border-radius: 16px;
+
+    background: #08182c;
+
+    border: 1px solid rgba(47, 128, 255, .25);
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.aptitude-stat-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(47, 128, 255, .65);
+
+    background: #0a1d36;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+}
+
+.aptitude-stat-icon {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.aptitude-blue {
+    background: linear-gradient(135deg, #2563eb, #087cff);
+}
+
+.aptitude-green {
+    background: linear-gradient(135deg, #059669, #18c88c);
+}
+
+.aptitude-yellow {
+    background: linear-gradient(135deg, #d78300, #f0a000);
+}
+
+.aptitude-purple {
+    background: linear-gradient(135deg, #6d28d9, #9333ea);
+}
+
+.aptitude-stat-card h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.aptitude-stat-card p {
+    margin: 2px 0 0;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.aptitude-stat-card small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #91a8c6;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FILTER BAR
+   ========================================================= */
+
+.aptitude-filter-card {
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, 2fr)
+        minmax(170px, .8fr)
+        minmax(190px, .9fr)
+        auto;
+
+    gap: 14px;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    padding: 16px;
+
+    border-radius: 16px;
+
+    background: #08182c;
+
+    border: 1px solid rgba(47, 128, 255, .25);
+}
+
+.aptitude-filter-search {
+    position: relative;
+}
+
+.aptitude-filter-search span {
+    position: absolute;
+
+    left: 16px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #8aa4c5;
+
+    font-size: 18px;
+
+    pointer-events: none;
+}
+
+.aptitude-filter-search input,
+.aptitude-filter-card select {
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    border-radius: 11px;
+
+    border: 1px solid rgba(47, 128, 255, .28);
+
+    outline: none;
+
+    background: #07152a;
+
+    color: #ffffff;
+
+    font-size: 13px;
+}
+
+.aptitude-filter-search input {
+    padding: 0 16px 0 46px;
+}
+
+.aptitude-filter-card select {
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.aptitude-filter-search input::placeholder {
+    color: #758aa6;
+}
+
+.aptitude-filter-search input:focus,
+.aptitude-filter-card select:focus {
+    border-color: #2f80ff;
+
+    box-shadow: 0 0 0 2px rgba(47, 128, 255, .08);
+}
+
+.aptitude-reset-btn {
+    height: 48px;
+
+    padding: 0 18px;
+
+    border-radius: 11px;
+
+    border: 1px solid #2381e8;
+
+    background: transparent;
+
+    color: #4da3ff;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition: .2s ease;
+}
+
+.aptitude-reset-btn:hover {
+    background: rgba(47, 128, 255, .12);
+}
+
+
+/* =========================================================
+   APTITUDE TEST TABLE
+   ========================================================= */
+
+.aptitude-table-card {
+    overflow: hidden;
+
+    border-radius: 17px;
+
+    background: #08182c;
+
+    border: 1px solid rgba(47, 128, 255, .25);
+}
+
+.aptitude-table-title {
+    padding: 17px 20px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.aptitude-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.aptitude-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    color: #dce8f8;
+
+    font-size: 13px;
+}
+
+.aptitude-table thead {
+    background: #0b1d38;
+}
+
+.aptitude-table th {
+    padding: 15px 17px;
+
+    text-align: left;
+
+    color: #bdd3ee;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.aptitude-table td {
+    padding: 13px 17px;
+
+    border-top: 1px solid rgba(255, 255, 255, .06);
+
+    vertical-align: middle;
+}
+
+.aptitude-table tbody tr {
+    transition: background .2s ease;
+}
+
+.aptitude-table tbody tr:hover {
+    background: rgba(47, 128, 255, .05);
+}
+
+
+/* ---------- COMPANY CELL ---------- */
+
+.aptitude-company-cell {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.aptitude-company-logo {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    color: #2563eb;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    border: 1px solid #dbeafe;
+}
+
+.aptitude-company-cell b {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.aptitude-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 11px;
+
+    border-radius: 18px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.status-upcoming {
+    color: #69aaff;
+    background: rgba(37, 99, 235, .25);
+}
+
+.status-live {
+    color: #73f0bd;
+    background: rgba(5, 150, 105, .27);
+}
+
+.status-completed {
+    color: #ffc34e;
+    background: rgba(217, 119, 6, .25);
+}
+
+.status-qualified {
+    color: #d6a5ff;
+    background: rgba(126, 34, 206, .28);
+}
+
+.status-expired {
+    color: #cbd5e1;
+    background: rgba(71, 85, 105, .45);
+}
+
+
+/* =========================================================
+   TABLE BUTTONS
+   ========================================================= */
+
+.aptitude-action-btn {
+    min-width: 112px;
+    height: 38px;
+
+    padding: 0 15px;
+
+    border-radius: 9px;
+
+    border: 1px solid #2381e8;
+
+    background: transparent;
+
+    color: #4da3ff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+.aptitude-action-btn:hover {
+    background: rgba(47, 128, 255, .12);
+}
+
+.aptitude-start-btn {
+    border: none;
+
+    color: #ffffff;
+
+    background: linear-gradient(135deg, #2563eb, #087cff);
+
+    box-shadow: 0 5px 14px rgba(37, 99, 235, .25);
+}
+
+.aptitude-start-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, #0670e8);
+}
+
+
+/* =========================================================
+   TABLE FOOTER
+   ========================================================= */
+
+.aptitude-table-footer {
+    min-height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 0 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, .07);
+}
+
+.aptitude-table-footer p {
+    color: #a9bbd3;
+    font-size: 12px;
+}
+
+.aptitude-pagination {
+    display: flex;
+    gap: 7px;
+}
+
+.aptitude-pagination button {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 8px;
+
+    border: 1px solid rgba(47, 128, 255, .25);
+
+    background: #07152a;
+
+    color: #bcd1eb;
+
+    cursor: pointer;
+}
+
+.aptitude-pagination .active-page {
+    border-color: #2563eb;
+
+    background: #2563eb;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   ACTIVE CARD
+   ========================================================= */
+
+.aptitude-stat-card.active-test-card {
+    border-color: #2f80ff;
+
+    background: #0b213e;
+
+    box-shadow:
+        0 0 0 1px rgba(47, 128, 255, .15),
+        0 10px 28px rgba(0, 0, 0, .18);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .aptitude-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .aptitude-filter-card {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 750px) {
+
+    .aptitude-page-header h1 {
+        font-size: 26px;
+    }
+
+    .aptitude-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .aptitude-filter-card {
+        grid-template-columns: 1fr;
+    }
+
+    .aptitude-table-footer {
+        padding: 15px;
+
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
 </style>
 </head>
 
@@ -312,8 +904,7 @@
         <a href="student-applications.html">📄 Applications</a>
         <a class="active" href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
         <a href="student-interviews.html">🎤 Interviews</a>
-        <a href="student-resume.html">📑 Resume Builder</a>
-        <a href="student-placement-drives.html">💼 Placement Drive</a>
+<a href="student-placement-drives.html">💼 Placement Drive</a>
         <a href="student-notifications.html">🔔 Notifications</a>
         <a href="student-settings.html">⚙ Settings</a>
         <a href="student-login.html" onclick="logout()">↪ Logout</a>
@@ -324,12 +915,12 @@
 
         <header class="topbar">
 
-            <input
-                id="testSearch"
-                type="text"
-                placeholder="Search scheduled tests..."
-                onkeyup="renderScheduledTests()"
-            >
+<input
+    id="topTestSearch"
+    type="text"
+    placeholder="Search tests, companies or topics..."
+    onkeyup="syncTopTestSearch()"
+>
 
             <div class="top-actions">
 
@@ -352,45 +943,210 @@
 
         </header>
 
-        <section class="details-card">
+<!-- ================= PAGE HEADER ================= -->
 
-            <h2>My Aptitude Tests</h2>
+<section class="aptitude-page-header">
 
-            <div class="info-grid">
+    <div class="aptitude-title-icon">
+        ▣
+    </div>
 
-                <div>
-                    <label>Scheduled Tests</label>
-                    <p id="scheduledCount">0</p>
-                </div>
+    <div>
+        <h1>My Aptitude Tests</h1>
 
-                <div>
-                    <label>Completed Tests</label>
-                    <p id="completedCount">0</p>
-                </div>
+        <div class="aptitude-breadcrumb">
+            <a href="student-dashboard.html">Dashboard</a>
+            <span>›</span>
+            <b>My Aptitude Tests</b>
+        </div>
+    </div>
 
-                <div>
-                    <label>Qualified</label>
-                    <p id="qualifiedCount">0</p>
-                </div>
+</section>
 
-                <div>
-                    <label>Pending Tests</label>
-                    <p id="pendingCount">0</p>
-                </div>
 
-            </div>
+<!-- ================= TEST STATS ================= -->
 
-        </section>
+<section class="aptitude-stats">
 
-        <section class="details-card" style="margin-top:24px;">
+    <!-- Upcoming Tests -->
+    <article
+        class="aptitude-stat-card"
+        onclick="filterTestCard('upcoming')"
+    >
+        <div class="aptitude-stat-icon aptitude-blue">
+            📅
+        </div>
 
-            <h2>Scheduled Tests</h2>
+        <div>
+            <h2 id="upcomingCount">0</h2>
+            <p>Upcoming Tests</p>
+            <small>Scheduled aptitude tests</small>
+        </div>
+    </article>
 
-            <div id="scheduledTestList">
-                <p class="empty-test-message">Loading scheduled tests...</p>
-            </div>
 
-        </section>
+    <!-- Live Tests -->
+    <article
+        class="aptitude-stat-card"
+        onclick="filterTestCard('live')"
+    >
+        <div class="aptitude-stat-icon aptitude-green">
+            ▶
+        </div>
+
+        <div>
+            <h2 id="liveCount">0</h2>
+            <p>Live Tests</p>
+            <small>Currently running tests</small>
+        </div>
+    </article>
+
+
+    <!-- Completed Tests -->
+    <article
+        class="aptitude-stat-card"
+        onclick="filterTestCard('completed')"
+    >
+        <div class="aptitude-stat-icon aptitude-yellow">
+            ✓
+        </div>
+
+        <div>
+            <h2 id="completedCount">0</h2>
+            <p>Completed Tests</p>
+            <small>Finished aptitude tests</small>
+        </div>
+    </article>
+
+
+    <!-- Qualified Tests -->
+    <article
+        class="aptitude-stat-card"
+        onclick="filterTestCard('qualified')"
+    >
+        <div class="aptitude-stat-icon aptitude-purple">
+            🏆
+        </div>
+
+        <div>
+            <h2 id="qualifiedCount">0</h2>
+            <p>Qualified Tests</p>
+            <small>Tests you have cleared</small>
+        </div>
+    </article>
+
+</section>
+<!-- ================= APTITUDE FILTERS ================= -->
+
+<section class="aptitude-filter-card">
+
+    <div class="aptitude-filter-search">
+        <span>⌕</span>
+
+        <input
+            id="testSearch"
+            type="text"
+            placeholder="Search by company or test name..."
+            onkeyup="renderScheduledTests()"
+        >
+    </div>
+
+    <select
+        id="testStatusFilter"
+        onchange="renderScheduledTests()"
+    >
+        <option value="">All Status</option>
+        <option value="upcoming">Upcoming</option>
+        <option value="live">Live</option>
+        <option value="completed">Completed</option>
+        <option value="qualified">Qualified</option>
+    </select>
+
+    <select
+        id="testCompanyFilter"
+        onchange="renderScheduledTests()"
+    >
+        <option value="">All Companies</option>
+    </select>
+
+    <button
+        class="aptitude-reset-btn"
+        type="button"
+        onclick="resetTestFilters()"
+    >
+        ↻ Reset Filters
+    </button>
+
+</section>
+
+
+<!-- ================= APTITUDE TESTS LIST ================= -->
+
+<section class="aptitude-table-card">
+
+    <div class="aptitude-table-title">
+        ▣ Aptitude Tests List
+    </div>
+
+    <div class="aptitude-table-wrapper">
+
+        <table class="aptitude-table">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company</th>
+                    <th>Test Name</th>
+                    <th>Test Date</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="aptitudeTestTableBody">
+
+                <tr>
+                    <td colspan="7" style="text-align:center;">
+                        Loading aptitude tests...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="aptitude-table-footer">
+
+        <p id="aptitudeEntryText">
+            Showing 0 tests
+        </p>
+
+        <div class="aptitude-pagination">
+
+            <button type="button" disabled>
+                ‹
+            </button>
+
+            <button
+                class="active-page"
+                type="button"
+            >
+                1
+            </button>
+
+            <button type="button" disabled>
+                ›
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
 
         <section class="test-window" id="testWindow">
 
@@ -468,6 +1224,7 @@ const studentId = localStorage.getItem("studentId");
 let scheduledApplications = [];
 let resultMap = {};
 let testMap = {};
+let selectedTestCard = "";
 
 let activeApplication = null;
 let activeQuestions = [];
@@ -533,21 +1290,33 @@ async function initializeStudentTests() {
             });
         }
 
-        scheduledApplications.sort((a, b) =>
-            Number(b.id) - Number(a.id)
-        );
+scheduledApplications.sort((a, b) =>
+    Number(b.id) - Number(a.id)
+);
 
-        updateTestStats();
-        renderScheduledTests();
+updateTestStats();
+renderScheduledTests();
 
-    } catch (error) {
+} catch (error) {
         console.error("Student tests load error:", error);
+        document.getElementById("aptitudeTestTableBody").innerHTML =
+    `<tr><td colspan="7" style="color:red;text-align:center;padding:25px;">
+    ${error.name}: ${error.message}
+    </td></tr>`;
+        alert("Actual Error: " + error.message);
 
-        document.getElementById("scheduledTestList").innerHTML = `
-            <p class="empty-test-message">
-                Scheduled tests load nahi ho rahe. Backend check karo.
-            </p>
-        `;
+        const tableBody = document.getElementById("aptitudeTestTableBody");
+
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7"
+                        style="text-align:center; padding:35px; color:#ff9aaa;">
+                        Scheduled tests load nahi ho rahe. Backend check karo.
+                    </td>
+                </tr>
+            `;
+        }
     }
 }
 
@@ -646,151 +1415,657 @@ function getTestButtonMarkup(app, result) {
 /* ================= STATS ================= */
 
 function updateTestStats() {
-    const completed = scheduledApplications.filter(app =>
-        Boolean(resultMap[app.id])
-    ).length;
 
-    const qualified = scheduledApplications.filter(app => {
+    let upcoming = 0;
+    let live = 0;
+    let completed = 0;
+    let qualified = 0;
+
+    scheduledApplications.forEach(app => {
+
         const result = resultMap[app.id];
 
-        return result &&
-            String(result.status || "").toLowerCase() === "qualified";
-    }).length;
+        /* ================= RESULT EXISTS ================= */
 
-    document.getElementById("scheduledCount").innerText =
-        scheduledApplications.length;
+        if (result) {
 
-    document.getElementById("completedCount").innerText =
-        completed;
+            const resultStatus = String(result.status || "")
+                .trim()
+                .toLowerCase();
 
-    document.getElementById("qualifiedCount").innerText =
-        qualified;
+completed++;
 
-    document.getElementById("pendingCount").innerText =
-        scheduledApplications.length - completed;
+if (resultStatus === "qualified") {
+    qualified++;
 }
 
-/* ================= RENDER TEST LIST ================= */
+return;
+        }
 
-function renderScheduledTests() {
-    const search = document.getElementById("testSearch").value
-        .toLowerCase()
-        .trim();
+        /* ================= NO RESULT ================= */
 
-    const filteredTests = scheduledApplications.filter(app => {
-        const test = testMap[app.testId] || {};
+        const windowStatus = getTestWindowStatus(app);
 
-        const testName = String(test.testName || "").toLowerCase();
-        const companyName = String(app.companyName || "").toLowerCase();
-        const role = String(app.role || "").toLowerCase();
-        const testId = String(app.testId || "").toLowerCase();
+        if (windowStatus.canStart) {
+            live++;
+            return;
+        }
 
-        return (
-            testName.includes(search) ||
-            companyName.includes(search) ||
-            role.includes(search) ||
-            testId.includes(search)
-        );
+        const message = String(windowStatus.message || "")
+            .trim()
+            .toLowerCase();
+
+if (
+    message.includes("expired") ||
+    message.includes("ended")
+) {
+    completed++;
+} else {
+    upcoming++;
+}
     });
 
-    const container = document.getElementById("scheduledTestList");
+    /* ================= UPDATE CARDS ================= */
 
-    if (filteredTests.length === 0) {
-        container.innerHTML = `
-            <p class="empty-test-message">
-                No scheduled tests found.
-            </p>
-        `;
+    const upcomingElement =
+        document.getElementById("upcomingCount");
+
+    const liveElement =
+        document.getElementById("liveCount");
+
+    const completedElement =
+        document.getElementById("completedCount");
+
+    const qualifiedElement =
+        document.getElementById("qualifiedCount");
+
+    if (upcomingElement) {
+        upcomingElement.innerText = upcoming;
+    }
+
+    if (liveElement) {
+        liveElement.innerText = live;
+    }
+
+    if (completedElement) {
+        completedElement.innerText = completed;
+    }
+
+    if (qualifiedElement) {
+        qualifiedElement.innerText = qualified;
+    }
+}
+/* ================= RENDER TEST LIST ================= */
+function resetTestFilters() {
+
+    selectedTestCard = "";
+
+    const searchInput = document.getElementById("testSearch");
+    const topSearchInput = document.getElementById("topTestSearch");
+    const statusFilter = document.getElementById("testStatusFilter");
+    const companyFilter = document.getElementById("testCompanyFilter");
+
+    if (searchInput) {
+        searchInput.value = "";
+    }
+
+    if (topSearchInput) {
+        topSearchInput.value = "";
+    }
+
+    if (statusFilter) {
+        statusFilter.value = "";
+    }
+
+    if (companyFilter) {
+        companyFilter.value = "";
+    }
+
+    document.querySelectorAll(".aptitude-stat-card")
+        .forEach(card => {
+            card.classList.remove("active-test-card");
+        });
+
+    renderScheduledTests();
+}
+
+
+function syncTopTestSearch() {
+
+    const topSearchInput =
+        document.getElementById("topTestSearch");
+
+    const searchInput =
+        document.getElementById("testSearch");
+
+    if (!topSearchInput || !searchInput) {
         return;
     }
 
-    container.innerHTML = filteredTests.map(app => {
+    searchInput.value = topSearchInput.value;
+
+    renderScheduledTests();
+}
+
+
+function filterTestCard(type) {
+
+    selectedTestCard = type;
+
+    const searchInput = document.getElementById("testSearch");
+    const statusFilter = document.getElementById("testStatusFilter");
+    const companyFilter = document.getElementById("testCompanyFilter");
+
+    if (searchInput) {
+        searchInput.value = "";
+    }
+
+    if (statusFilter) {
+        statusFilter.value = "";
+    }
+
+    if (companyFilter) {
+        companyFilter.value = "";
+    }
+
+    document.querySelectorAll(".aptitude-stat-card")
+        .forEach(card => {
+            card.classList.remove("active-test-card");
+        });
+
+    const cardMap = {
+        upcoming: 0,
+        live: 1,
+        completed: 2,
+        qualified: 3
+    };
+
+    const cards = document.querySelectorAll(".aptitude-stat-card");
+
+    if (
+        cardMap[type] !== undefined &&
+        cards[cardMap[type]]
+    ) {
+        cards[cardMap[type]].classList.add("active-test-card");
+    }
+
+    renderScheduledTests();
+
+    document.querySelector(".aptitude-table-card")
+        ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
+
+function renderScheduledTests() {
+
+    const searchElement =
+        document.getElementById("testSearch");
+
+    const statusElement =
+        document.getElementById("testStatusFilter");
+
+    const companyElement =
+        document.getElementById("testCompanyFilter");
+
+    const search = String(
+        searchElement?.value || ""
+    ).toLowerCase().trim();
+
+    const statusFilter = String(
+        statusElement?.value || ""
+    ).toLowerCase().trim();
+
+    const companyFilter = String(
+        companyElement?.value || ""
+    ).toLowerCase().trim();
+
+
+    /* ================= COMPANY FILTER ================= */
+
+    if (companyElement) {
+
+        const currentCompanyValue = companyElement.value;
+
+        const companies = [
+            ...new Set(
+                scheduledApplications
+                    .map(app => app.companyName)
+                    .filter(Boolean)
+            )
+        ].sort();
+
+        companyElement.innerHTML =
+            `<option value="">All Companies</option>` +
+            companies.map(company => `
+                <option value="${escapeHtml(
+                    String(company).toLowerCase()
+                )}">
+                    ${escapeHtml(company)}
+                </option>
+            `).join("");
+
+        companyElement.value = currentCompanyValue;
+    }
+
+
+    /* ================= FILTER TESTS ================= */
+
+    const filteredTests = scheduledApplications.filter(app => {
+
         const test = testMap[app.testId] || {};
         const result = resultMap[app.id];
 
         const testName =
-            test.testName || `Test ID ${app.testId}`;
+            String(test.testName || `Test ID ${app.testId}`)
+                .toLowerCase();
 
-        const duration =
-            test.duration
-                ? `${test.duration} min`
-                : "Duration not set";
+        const companyName =
+            String(app.companyName || "")
+                .toLowerCase();
 
-        const resultTag = getResultTag(result);
+        const role =
+            String(app.role || "")
+                .toLowerCase();
 
-        return `
-            <div class="test-card">
+        const testId =
+            String(app.testId || "")
+                .toLowerCase();
 
-                <div>
-                    <h3>${escapeHtml(testName)}</h3>
 
-                    <p>
-                        ${escapeHtml(app.companyName || "Company")}
-                        • ${escapeHtml(app.role || "Role")}
-                    </p>
+        /* ---------- SEARCH ---------- */
 
-                    <div class="test-meta">
+        const matchesSearch =
+            !search ||
+            testName.includes(search) ||
+            companyName.includes(search) ||
+            role.includes(search) ||
+            testId.includes(search);
 
-                        <span class="test-tag">
-                            Assigned Test ID: ${app.testId}
-                        </span>
 
-                        <span class="test-tag">
-                            Application ID: ${app.id}
-                        </span>
+        /* ---------- STATUS ---------- */
 
-                        <span class="test-tag">
-                            📅 ${formatDate(app.testDate)}
-                        </span>
+        let testStatus = "upcoming";
 
-                        <span class="test-tag">
-                            ⏰ ${formatTime(app.testStartTime)}
-                            - ${formatTime(app.testEndTime)}
-                        </span>
+if (result) {
 
-                        <span class="test-tag">
-                            ⌛ ${duration}
-                        </span>
+    const resultStatus =
+        String(result.status || "")
+            .trim()
+            .toLowerCase();
 
-                        ${resultTag}
+    testStatus = resultStatus === "qualified"
+        ? "qualified"
+        : "completed";
 
-                    </div>
-                </div>
+} else {
 
-                ${getTestButtonMarkup(app, result)}
+            const windowStatus =
+                getTestWindowStatus(app);
 
-            </div>
+            if (windowStatus.canStart) {
+                testStatus = "live";
+            } else {
+
+                const message =
+                    String(windowStatus.message || "")
+                        .toLowerCase();
+
+                if (
+                    message.includes("expired") ||
+                    message.includes("ended")
+                ) {
+                    testStatus = "completed";
+                } else {
+                    testStatus = "upcoming";
+                }
+            }
+        }
+
+
+        /* ---------- CARD FILTER ---------- */
+
+        const matchesCard =
+            !selectedTestCard ||
+            testStatus === selectedTestCard;
+
+
+        /* ---------- STATUS DROPDOWN ---------- */
+
+        const matchesStatus =
+            !statusFilter ||
+            testStatus === statusFilter;
+
+
+        /* ---------- COMPANY ---------- */
+
+        const matchesCompany =
+            !companyFilter ||
+            companyName === companyFilter;
+
+
+        return (
+            matchesSearch &&
+            matchesCard &&
+            matchesStatus &&
+            matchesCompany
+        );
+    });
+
+
+    /* ================= TABLE ================= */
+
+    const tableBody =
+        document.getElementById("aptitudeTestTableBody");
+
+    const entryText =
+        document.getElementById("aptitudeEntryText");
+
+    if (!tableBody) {
+        return;
+    }
+
+
+    /* ================= EMPTY ================= */
+
+    if (filteredTests.length === 0) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    style="
+                        text-align:center;
+                        padding:35px;
+                        color:#91a8c6;
+                    "
+                >
+                    No aptitude tests found.
+                </td>
+            </tr>
         `;
-    }).join("");
+
+        if (entryText) {
+            entryText.innerText = "Showing 0 tests";
+        }
+
+        return;
+    }
+
+
+    /* ================= TABLE ROWS ================= */
+
+    tableBody.innerHTML = filteredTests.map(
+        (app, index) => {
+
+            const test =
+                testMap[app.testId] || {};
+
+            const result =
+                resultMap[app.id];
+
+            const testName =
+                test.testName ||
+                `Test ID ${app.testId}`;
+
+            const companyName =
+                app.companyName ||
+                "Company";
+
+            const duration =
+                test.duration
+                    ? `${test.duration} min`
+                    : "Not Set";
+
+
+            /* ---------- STATUS ---------- */
+
+            let status = "upcoming";
+            let statusText = "Upcoming";
+            let statusIcon = "📅";
+            let statusClass = "status-upcoming";
+
+
+            if (result) {
+
+                const resultStatus =
+                    String(result.status || "")
+                        .trim()
+                        .toLowerCase();
+
+                if (resultStatus === "qualified") {
+
+                    status = "qualified";
+                    statusText = "Qualified";
+                    statusIcon = "🏆";
+                    statusClass = "status-qualified";
+
+                } else {
+    status = "completed";
+    statusText = "Completed";
+    statusIcon = "✓";
+    statusClass = "status-completed";
+
 }
 
-function getResultTag(result) {
-    if (!result) {
-        return `
-            <span class="test-tag warning">
-                📝 Not Attempted
-            </span>
-        `;
+            } else {
+
+                const windowStatus =
+                    getTestWindowStatus(app);
+
+                if (windowStatus.canStart) {
+
+                    status = "live";
+                    statusText = "Live";
+                    statusIcon = "▶";
+                    statusClass = "status-live";
+
+                } else {
+
+                    const message =
+                        String(windowStatus.message || "")
+                            .toLowerCase();
+
+                    if (
+                        message.includes("expired") ||
+                        message.includes("ended")
+                    ) {
+
+status = "completed";
+statusText = "Not Attempted";
+statusIcon = "⌛";
+statusClass = "status-completed";
+
+                    } else {
+
+                        status = "upcoming";
+                        statusText = "Upcoming";
+                        statusIcon = "📅";
+                        statusClass = "status-upcoming";
+                    }
+                }
+            }
+
+
+            /* ---------- ACTION BUTTON ---------- */
+
+            let actionButton = "";
+
+            if (status === "live") {
+
+                actionButton = `
+                    <button
+                        class="aptitude-action-btn aptitude-start-btn"
+                        type="button"
+                        onclick="startTest(${app.id})"
+                    >
+                        Start Test
+                    </button>
+                `;
+
+} else if (
+    (status === "completed" || status === "qualified") &&
+    result
+) {
+
+                actionButton = `
+                    <button
+                        class="aptitude-action-btn"
+                        type="button"
+                        onclick="viewTestResult(${app.id})"
+                    >
+                        View Result
+                    </button>
+                `;
+
+            } else {
+
+                actionButton = `
+                    <button
+                        class="aptitude-action-btn"
+                        type="button"
+                        onclick="viewTestDetails(${app.id})"
+                    >
+                        View Details
+                    </button>
+                `;
+            }
+
+
+            /* ---------- COMPANY INITIAL ---------- */
+
+            const companyInitial =
+                String(companyName)
+                    .trim()
+                    .charAt(0)
+                    .toUpperCase() || "C";
+
+
+            return `
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <div class="aptitude-company-cell">
+
+                            <div class="aptitude-company-logo">
+                                ${escapeHtml(companyInitial)}
+                            </div>
+
+                            <b>
+                                ${escapeHtml(companyName)}
+                            </b>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(testName)}
+                    </td>
+
+                    <td>
+                        📅 ${formatDate(app.testDate)}
+                    </td>
+
+                    <td>
+                        ⌛ ${escapeHtml(duration)}
+                    </td>
+
+                    <td>
+                        <span class="aptitude-status ${statusClass}">
+                            ${statusIcon}
+                            ${statusText}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${actionButton}
+                    </td>
+
+                </tr>
+            `;
+        }
+    ).join("");
+
+
+    /* ================= FOOTER ================= */
+
+    if (entryText) {
+
+        entryText.innerText =
+            `Showing ${filteredTests.length} of ${scheduledApplications.length} tests`;
     }
-
-    const percentage = Number(result.percentage || 0).toFixed(2);
-
-    if (String(result.status || "").toLowerCase() === "qualified") {
-        return `
-            <span class="test-tag success">
-                ✅ Qualified ${percentage}%
-            </span>
-        `;
-    }
-
-    return `
-        <span class="test-tag failed">
-            ❌ Not Qualified ${percentage}%
-        </span>
-    `;
 }
 
 /* ================= START TEST ================= */
+function viewTestDetails(applicationId) {
+
+    const app = scheduledApplications.find(item =>
+        Number(item.id) === Number(applicationId)
+    );
+
+    if (!app) {
+        alert("Test details not found.");
+        return;
+    }
+
+    const test = testMap[app.testId] || {};
+    const windowStatus = getTestWindowStatus(app);
+
+    const testName =
+        test.testName || `Test ID ${app.testId}`;
+
+    const duration =
+        test.duration
+            ? `${test.duration} min`
+            : "Not set";
+
+    alert(
+        `Test Details\n\n` +
+        `Company: ${app.companyName || "Company"}\n` +
+        `Role: ${app.role || "Role"}\n` +
+        `Test: ${testName}\n` +
+        `Date: ${formatDate(app.testDate)}\n` +
+        `Time: ${formatTime(app.testStartTime)} - ${formatTime(app.testEndTime)}\n` +
+        `Duration: ${duration}\n` +
+        `Status: ${windowStatus.message || "Scheduled"}`
+    );
+}
+
+
+function viewTestResult(applicationId) {
+
+    const app = scheduledApplications.find(item =>
+        Number(item.id) === Number(applicationId)
+    );
+
+    if (!app) {
+        alert("Test application not found.");
+        return;
+    }
+
+    const result = resultMap[app.id];
+
+    if (!result) {
+        alert("Test result is not available yet.");
+        return;
+    }
+
+    const percentage =
+        Number(result.percentage || 0).toFixed(2);
+
+    alert(
+        `Test Result\n\n` +
+        `Company: ${app.companyName || "Company"}\n` +
+        `Marks: ${result.obtainedMarks || 0} / ${result.totalMarks || 0}\n` +
+        `Percentage: ${percentage}%\n` +
+        `Result: ${result.status || "Completed"}`
+    );
+}
 
 async function startTest(applicationId) {
     const application = scheduledApplications.find(app =>

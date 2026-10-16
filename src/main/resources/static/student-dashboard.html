@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -118,7 +118,7 @@
                 <div class="premium-hero-copy">
 
                     <span class="hero-small-label">
-                        GOOD EVENING
+                        Welcome Back!
                     </span>
 
                     <h1>
@@ -349,7 +349,7 @@
                         </span>
 
                         <a
-                            href="student-placement-drives.html"
+                            href="student-upcoming-drives.html"
                             class="premium-view-link"
                         >
                             View All Drives
@@ -835,6 +835,40 @@
 
 const studentId = localStorage.getItem("studentId");
 
+// Attach Student JWT to same-origin API requests
+const originalStudentFetch = window.fetch.bind(window);
+
+window.fetch = function(input, init = {}) {
+
+    const url = new URL(
+        input instanceof Request ? input.url : input,
+        window.location.origin
+    );
+
+    if (
+        url.origin !== window.location.origin ||
+        !url.pathname.startsWith("/api/")
+    ) {
+        return originalStudentFetch(input, init);
+    }
+
+    const token = sessionStorage.getItem("studentToken");
+
+    const headers = new Headers(
+        init.headers ||
+        (input instanceof Request ? input.headers : undefined)
+    );
+
+    if (token) {
+        headers.set("Authorization", "Bearer " + token);
+    }
+
+    return originalStudentFetch(input, {
+        ...init,
+        headers: headers
+    });
+};
+
 let loggedInStudent = null;
 let allDrives = [];
 let allCompanies = [];
@@ -859,7 +893,7 @@ async function initializeStudentDashboard() {
     fetch("/api/applications/student/" + studentId),
     fetch("/api/interview-requests/student/" + studentId),
     fetch("/api/applications/student/" + studentId + "/scheduled-tests"),
-    fetch("/api/student-notifications/" + studentId)
+    fetch("/api/student-notifications/student/" + studentId)
 ]);
 
 
@@ -1178,12 +1212,10 @@ async function loadEligibleUpcomingDrives() {
         });
 
     await Promise.all(
-        eligibleUpcomingDrives.map(async drive => {
-            if (drive.companyId) {
-                drive.applied = await isCompanyAlreadyApplied(drive.companyId);
-            }
-        })
-    );
+    eligibleUpcomingDrives.map(async drive => {
+        drive.applied = await isDriveAlreadyApplied(drive.id);
+    })
+);
 
     document.getElementById("upcomingDriveCount").innerText =
         eligibleUpcomingDrives.length;
@@ -1295,25 +1327,29 @@ function findCompanyIdByName(companyName) {
     return company ? company.id : null;
 }
 
-async function isCompanyAlreadyApplied(companyId) {
+async function isDriveAlreadyApplied(driveId) {
     try {
         const response = await fetch(
-            "/api/applications/student/" +
-            studentId +
-            "/company/" +
-            companyId
+            "/api/applications/student/" + studentId
         );
 
         if (!response.ok) {
             return false;
         }
 
-        return await response.json();
+        const studentApplications = await response.json();
+
+        return studentApplications.some(app =>
+            Number(app.driveId) === Number(driveId)
+        );
 
     } catch (error) {
+        console.error("Drive application check failed:", error);
         return false;
     }
 }
+
+/* ================= SEARCH + RENDER ================= */
 
 /* ================= SEARCH + RENDER ================= */
 
@@ -1419,26 +1455,33 @@ async function applyDashboardDrive(driveId) {
 
     try {
         const response = await fetch(
-            "/api/applications/apply/" + studentId + "/" + drive.companyId,
-            {
-                method: "POST"
-            }
-        );
+    "/api/applications/apply-drive/" + studentId + "/" + drive.id,
+    {
+        method: "POST"
+    }
+);
 
-        if (!response.ok) {
-            throw new Error("Application failed");
-        }
+       const responseText = await response.text();
 
-        drive.applied = true;
+console.log("Apply Drive HTTP Status:", response.status);
+console.log("Apply Drive Response:", responseText);
 
-        alert("✅ Application submitted successfully.");
+if (!response.ok) {
+    throw new Error(
+        responseText || "Application failed"
+    );
+}
 
-        filterUpcomingDrives();
+drive.applied = true;
+
+alert("Application submitted successfully.");
+
+filterUpcomingDrives();
 
     } catch (error) {
-        console.error("Apply error:", error);
-        alert("Unable to apply. Please try again.");
-    }
+    console.error("Apply error:", error);
+    alert("Apply failed: " + error.message);
+}
 }
 
 /* ================= DATE + HELPERS ================= */
@@ -1513,6 +1556,8 @@ function openStudentResume(event) {
 
 function logout() {
     localStorage.removeItem("studentId");
+    sessionStorage.removeItem("studentToken");
+    window.location.href = "student-login.html";
 }
 
 </script>

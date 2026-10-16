@@ -2,9 +2,6 @@ package com.recruitease.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +21,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.recruitease.dto.StudentEligibilityDTO;
 import com.recruitease.entity.Company;
 import com.recruitease.entity.Student;
+import com.recruitease.entity.StudentDeletionHistory;
 import com.recruitease.entity.StudentLogin;
 import com.recruitease.repository.CompanyRepository;
+import com.recruitease.repository.StudentDeletionHistoryRepository;
 import com.recruitease.repository.StudentLoginRepository;
 import com.recruitease.repository.StudentRepository;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 
 @RestController
 @RequestMapping("/api/students")
@@ -44,16 +43,37 @@ public class StudentController {
     private final StudentRepository studentRepository;
     private final CompanyRepository companyRepository;
     private final StudentLoginRepository studentLoginRepository;
+    private final StudentDeletionHistoryRepository studentDeletionHistoryRepository;
 
-    public StudentController(
-            StudentRepository studentRepository,
-            CompanyRepository companyRepository,
-            StudentLoginRepository studentLoginRepository
-    ) {
-        this.studentRepository = studentRepository;
-        this.companyRepository = companyRepository;
-        this.studentLoginRepository = studentLoginRepository;
+   public StudentController(
+        StudentRepository studentRepository,
+        CompanyRepository companyRepository,
+        StudentLoginRepository studentLoginRepository,
+        StudentDeletionHistoryRepository studentDeletionHistoryRepository
+) {
+    this.studentRepository = studentRepository;
+    this.companyRepository = companyRepository;
+    this.studentLoginRepository = studentLoginRepository;
+    this.studentDeletionHistoryRepository = studentDeletionHistoryRepository;
+}
+private void saveDeletionHistory(Student student, String action) {
+
+    if (student == null) {
+        return;
     }
+
+    StudentDeletionHistory history = new StudentDeletionHistory();
+
+    history.setStudentId(student.getId());
+    history.setName(student.getName());
+    history.setEmail(student.getEmail());
+    history.setRollNumber(student.getRollNumber());
+    history.setBranch(student.getBranch());
+    history.setCgpa(student.getCgpa());
+    history.setAction(action);
+
+    studentDeletionHistoryRepository.save(history);
+}
 
     /* ================= REGISTER STUDENT ================= */
 
@@ -262,10 +282,13 @@ public class StudentController {
         if (student == null) {
             return null;
         }
+student.setDeleted(true);
 
-        student.setDeleted(true);
+Student savedStudent = studentRepository.save(student);
 
-        return studentRepository.save(student);
+saveDeletionHistory(savedStudent, "DELETED");
+
+return savedStudent;
     }
 
     /* ================= RESTORE STUDENT ================= */
@@ -279,17 +302,50 @@ public class StudentController {
             return null;
         }
 
-        student.setDeleted(false);
+       student.setDeleted(false);
 
-        return studentRepository.save(student);
+Student savedStudent = studentRepository.save(student);
+
+saveDeletionHistory(savedStudent, "RESTORED");
+
+return savedStudent;
     }
 
     /* ================= PERMANENT DELETE ================= */
 
-    @DeleteMapping("/{id}/permanent")
-    public void permanentDelete(@PathVariable Long id) {
-        studentRepository.deleteById(id);
+ @DeleteMapping("/{id}/permanent")
+public void permanentDelete(@PathVariable Long id) {
+
+    Student student = studentRepository.findById(id).orElse(null);
+
+    if (student == null) {
+        return;
     }
+
+    saveDeletionHistory(student, "PERMANENTLY_DELETED");
+
+    studentRepository.deleteById(id);
+    
+}
+/* ================= DELETION HISTORY ================= */
+
+@GetMapping("/history/deleted")
+public List<StudentDeletionHistory> getDeletedHistory() {
+    return studentDeletionHistoryRepository
+            .findByActionOrderByActionAtDesc("DELETED");
+}
+
+@GetMapping("/history/restored")
+public List<StudentDeletionHistory> getRestoredHistory() {
+    return studentDeletionHistoryRepository
+            .findByActionOrderByActionAtDesc("RESTORED");
+}
+
+@GetMapping("/history/permanently-deleted")
+public List<StudentDeletionHistory> getPermanentlyDeletedHistory() {
+    return studentDeletionHistoryRepository
+            .findByActionOrderByActionAtDesc("PERMANENTLY_DELETED");
+}
 
     /* ================= UPDATE STUDENT ================= */
 

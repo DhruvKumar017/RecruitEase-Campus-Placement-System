@@ -282,31 +282,84 @@
                 flex-direction:column;
             }
         }
+        /* Admin Dashboard View card */
+#viewerHistoryCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+#viewerHistoryCard p {
+    font-size: 14px;
+    flex: 1;
+}
+
+#viewerHistoryCard h2 {
+    font-size: 30px;
+    margin: 0;
+    color: #ffffff;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-right: 50px;
+}
+
+#viewerHistoryCard::after {
+    content: "❯";
+    width: 40px;
+    height: 40px;
+    border: 1px solid #1475d5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 20px;
+    flex-shrink: 0;
+}
     </style>
+    <link rel="stylesheet" href="admin-dashboard.css">
 </head>
 
 <body>
 
 <div class="layout">
 
-    <aside class="sidebar">
-        <div class="brand">🎓 Recruit<span>Ease</span></div>
+<aside class="sidebar">
 
-        <a href="admin-dashboard.html">▦ Dashboard</a>
-        <a href="students.html">👥 All Students</a>
-        <a href="companies.html">🏢 Companies</a>
-        <a href="placement-drives.html">📅 Placement Drives</a>
-        <a href="applications-admin.html">📄 Applications</a>
-        <a href="admin-interviews.html">🎤 Interviews</a>
-        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <div class="brand">
+        <div class="brand-icon">🎓</div>
 
-        <a class="active" href="admin-requests.html">
-            🛡️ Admin Requests
-        </a>
+        <div>
+            <h2>Recruit<span>Ease</span></h2>
+            <p>Campus Placement System</p>
+        </div>
+    </div>
 
-        <a href="help.html">❓ Help Center</a>
-        <a href="index.html">↪ Logout</a>
-    </aside>
+    <a href="admin-dashboard.html">▦ Dashboard</a>
+
+    <p class="menu-title">STUDENTS</p>
+    <a href="students.html">👥 All Students</a>
+    <a href="deleted-students.html">🗑️ Deleted Students</a>
+
+    <p class="menu-title">COMPANIES</p>
+    <a href="companies.html">🏢 All Companies</a>
+    <a href="placement-drives.html">🗓️ Placement Drives</a>
+
+    <p class="menu-title">PLACEMENTS</p>
+    <a href="applications-admin.html">📄 Applications</a>
+    <a href="eligibility.html">🏆 Eligibility</a>
+    <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="admin-interviews.html">🎤 Interviews</a>
+    <a href="placed-students.html">✅ Placed Students</a>
+    <a href="reports.html">📊 Reports & Analytics</a>
+    <a class="active" href="requests-issues.html">🛟 Requests & Issues</a>
+
+    <p class="menu-title">SYSTEM</p>
+    <a href="settings.html">⚙️ Settings</a>
+    <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+
+</aside>
 
     <main class="main">
 
@@ -322,52 +375,109 @@
         </div>
 
         <section class="stats">
-            <div class="stat-card pending">
-                <p>Pending Requests</p>
-                <h2 id="pendingCount">0</h2>
-            </div>
+<div class="stat-card pending"
+     onclick="filterAdminRequests('pending')"
+     role="button"
+     tabindex="0"
+     onkeydown="if(event.key==='Enter') filterAdminRequests('pending')"
+     style="cursor:pointer;">
 
-            <div class="stat-card approved">
-                <p>Approved Requests</p>
-                <h2 id="approvedCount">0</h2>
-            </div>
+    <p>Pending Requests</p>
+    <h2 id="pendingCount">0</h2>
 
-            <div class="stat-card rejected">
-                <p>Rejected Requests</p>
-                <h2 id="rejectedCount">0</h2>
-            </div>
+</div>
+
+<div class="stat-card approved"
+     onclick="filterAdminRequests('approved')"
+     role="button"
+     tabindex="0"
+     onkeydown="if(event.key==='Enter') filterAdminRequests('approved')"
+     style="cursor:pointer;">
+
+    <p>Approved Requests</p>
+    <h2 id="approvedCount">0</h2>
+
+</div>
+<div class="stat-card rejected"
+     id="viewerHistoryCard"
+     onclick="toggleViewerHistory()"
+     role="button"
+     tabindex="0"
+     onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();toggleViewerHistory();}"
+     aria-controls="viewerHistorySection"
+     aria-expanded="false"
+     style="cursor:pointer;">
+
+    <p>Admin Dashboard View</p>
+
+</div>
         </section>
 
-        <section class="table-card">
+<!-- Demo Viewer History -->
+<section id="viewerHistorySection"
+         class="table-card"
+         hidden
+         style="margin-bottom:24px;">
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Applicant</th>
-                        <th>Email / Phone</th>
-                        <th>Department</th>
-                        <th>Requested Username</th>
-                        <th>Reason</th>
-                        <th>Requested At</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+    <div style="padding:22px;">
+        <h2>👁️ Admin Dashboard Viewer History</h2>
 
-                <tbody id="requestTableBody">
-                    <tr>
-                        <td colspan="9" class="empty-row">
-                            Loading admin requests...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <p style="color:#aebbd1; margin-top:8px;">
+            Demo Viewer access records
+        </p>
+    </div>
 
-        </section>
+    <table>
+        <thead>
+            <tr>
+                <th>Email ID</th>
+                <th>Viewer ID</th>
+                <th>Password</th>
+                <th>Date & Time</th>
+            </tr>
+        </thead>
 
-    </main>
+        <tbody id="viewerHistoryBody">
+            <tr>
+                <td colspan="4" class="empty-row">
+                    History database connection pending.
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
+</section>
+
+<!-- Admin Access Requests Table -->
+<section class="table-card" id="adminRequestsSection" hidden>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Applicant</th>
+                <th>Email / Phone</th>
+                <th>Department</th>
+                <th>Requested Username</th>
+                <th>Reason</th>
+                <th>Requested At</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="requestTableBody">
+            <tr>
+                <td colspan="9" class="empty-row">
+                    Loading admin requests...
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</section>
+
+</main>
 </div>
 
 <script>
@@ -396,17 +506,17 @@
             updateStats();
             renderRequests();
 
-        } catch (error) {
-            console.error(error);
+} catch (error) {
 
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="9" class="empty-row">
-                        ❌ Requests load nahi hui. Backend check karo.
-                    </td>
-                </tr>
-            `;
-        }
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="empty-row">
+                ❌ Viewer History Error:
+                ${escapeHtml(error.message)}
+            </td>
+        </tr>
+    `;
+}
     }
 
     function updateStats() {
@@ -424,7 +534,6 @@
 
         document.getElementById("pendingCount").innerText = pending;
         document.getElementById("approvedCount").innerText = approved;
-        document.getElementById("rejectedCount").innerText = rejected;
     }
 
     function renderRequests() {
@@ -441,9 +550,14 @@
             return;
         }
 
-        const sortedRequests = [...allAdminRequests].sort((a, b) => {
-            return Number(b.id) - Number(a.id);
-        });
+const filteredRequests = allAdminRequests.filter(request =>
+    activeRequestFilter === "all" ||
+    String(request.status || "").toLowerCase() === activeRequestFilter
+);
+
+const sortedRequests = [...filteredRequests].sort((a, b) => {
+    return Number(b.id) - Number(a.id);
+});
 
         tableBody.innerHTML = sortedRequests.map(request => {
             const status = String(request.status || "Pending");
@@ -577,7 +691,135 @@
             .replaceAll('"', "&quot;")
             .replaceAll("'", "&#039;");
     }
+async function toggleViewerHistory() {
 
+    const viewerSection =
+        document.getElementById("viewerHistorySection");
+
+    const requestsSection =
+        document.getElementById("adminRequestsSection");
+
+    const viewerCard =
+        document.getElementById("viewerHistoryCard");
+
+    if (!viewerSection || !requestsSection || !viewerCard) {
+        return;
+    }
+
+    // Hide Pending and Approved requests table
+    requestsSection.hidden = true;
+
+    // Show only Viewer History
+    viewerSection.hidden = false;
+
+    viewerCard.setAttribute("aria-expanded", "true");
+
+    // Load latest Viewer History from database
+    await loadViewerHistory();
+}
+
+async function loadViewerHistory() {
+
+    const tableBody = document.getElementById("viewerHistoryBody");
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="empty-row">
+                Loading viewer history...
+            </td>
+        </tr>
+    `;
+
+    try {
+
+        // Use the authenticated Admin JWT.
+        const token =
+            sessionStorage.getItem("adminToken") ||
+            localStorage.getItem("adminToken");
+
+        if (!token) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty-row">
+                        Admin authentication required.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        const response = await fetch("/api/admin-viewer/history", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                "Viewer history request failed: " + response.status
+            );
+        }
+
+        const history = await response.json();
+
+        if (!Array.isArray(history) || history.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty-row">
+                        No successful viewer logins found.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tableBody.innerHTML = history.map(viewer => `
+            <tr>
+                <td>${escapeHtml(viewer.email || "-")}</td>
+                <td>${escapeHtml(viewer.viewerId || "-")}</td>
+                <td>••••••••</td>
+                <td>${escapeHtml(formatDate(viewer.loginAt))}</td>
+            </tr>
+        `).join("");
+
+} catch (error) {
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="empty-row">
+                ❌ Viewer History API Error:
+                ${escapeHtml(error.message)}
+            </td>
+        </tr>
+    `;
+}
+}
+let activeRequestFilter = "all";
+
+function filterAdminRequests(status) {
+
+    const requestsSection =
+        document.getElementById("adminRequestsSection");
+
+    const viewerSection =
+        document.getElementById("viewerHistorySection");
+
+    const viewerCard =
+        document.getElementById("viewerHistoryCard");
+
+    // Show only the selected request list
+    activeRequestFilter = status;
+
+    // Hide Viewer History
+    viewerSection.hidden = true;
+    viewerCard.setAttribute("aria-expanded", "false");
+
+    // Show Admin Requests table
+    requestsSection.hidden = false;
+
+    renderRequests();
+}
     loadAdminRequests();
 </script>
 

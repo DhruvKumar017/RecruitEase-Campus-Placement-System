@@ -16,15 +16,17 @@ body{
 body{
     background:#050816;
     color:#fff;
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y:auto;
 }
 
 .login-page{
     width:100%;
-    height:100vh;
+    min-height:100vh;
+    height:auto;
     display:grid;
     grid-template-columns:48% 52%;
-    overflow:hidden;
+    overflow:visible;
 }
 
 /* ================= LEFT PANEL ================= */
@@ -595,4 +597,51 @@ button[type="submit"]:hover{
     .login-card:hover{
         transform:none;
     }
+}
+
+/* Admin Viewer Access */
+
+.viewer-access-section {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.viewer-access-label {
+    color: #aebbd3;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.viewer-access-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 15px 18px;
+    border: 1px solid #3b82f6;
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.08);
+    color: #60a5fa;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s ease;
+    box-sizing: border-box;
+}
+
+.viewer-access-btn:hover {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: #60a5fa;
+    transform: translateY(-2px);
+}
+
+.viewer-access-btn span:last-child {
+    margin-left: auto;
+}
+
+.viewer-access-note {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 10px;
 }

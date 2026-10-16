@@ -17,137 +17,199 @@
 
     <aside class="sidebar">
 
-        <div class="brand">
-            <div class="brand-icon">🎓</div>
+    <div class="brand">
+        <div class="brand-icon">🎓</div>
 
-            <div>
-                <h2>Recruit<span>Ease</span></h2>
-                <p>Campus Placement System</p>
-            </div>
+        <div>
+            <h2>Recruit<span>Ease</span></h2>
+            <p>Campus Placement System</p>
         </div>
+    </div>
 
-        <a class="active" href="admin-dashboard.html">▦ Dashboard</a>
+    <a class="active" href="admin-dashboard.html">▦ Dashboard</a>
 
-        <p class="menu-title">STUDENTS</p>
-        <a href="students.html">👥 All Students</a>
-        <a href="deleted-students.html">🗑️ Deleted Students</a>
+    <p class="menu-title">STUDENTS</p>
+    <a href="students.html">👥 All Students</a>
+    <a href="deleted-students.html">🗑️ Deleted Students</a>
 
-        <p class="menu-title">COMPANIES</p>
-        <a href="companies.html">🏢 All Companies</a>
-        <a href="placement-drives.html">📅 Placement Drives</a>
+    <p class="menu-title">COMPANIES</p>
+    <a href="companies.html">🏢 All Companies</a>
+    <a href="placement-drives.html">🗓️ Placement Drives</a>
 
-        <p class="menu-title">PLACEMENTS</p>
-        <a href="applications-admin.html">📄 Applications</a>
-        <a href="eligibility.html">🏆 Eligibility</a>
-        <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
-        <a href="admin-interviews.html">🎤 Interviews</a>
-        <a href="placed-students.html">✅ Placed Students</a>
-        <a href="reports.html">📊 Reports & Analytics</a>
-        <a href="requests-issues.html">🛟 Requests & Issues</a>
+    <p class="menu-title">PLACEMENTS</p>
+    <a href="applications-admin.html">📄 Applications</a>
+    <a href="eligibility.html">🏆 Eligibility</a>
+    <a href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
+    <a href="admin-interviews.html">🎤 Interviews</a>
+    <a href="placed-students.html">✅ Placed Students</a>
+    <a href="reports.html">📊 Reports & Analytics</a>
+    <a href="requests-issues.html">🛟 Requests & Issues</a>
 
-        <p class="menu-title">SYSTEM</p>
-        <a href="settings.html">⚙️ Settings</a>
-        <a href="index.html" onclick="adminLogout()">↪ Logout</a>
+    <p class="menu-title">SYSTEM</p>
+    <a href="settings.html" id="adminSettingsLink">
+    ⚙️ Settings
+</a>
+    <a href="index.html" onclick="adminLogout()">↪ Logout</a>
 
-    </aside>
+</aside>
 
     <main class="main-content">
+        <!-- ================= TOP NAVBAR ================= -->
 
-        <div class="topbar">
+<header class="target-topbar">
 
-            <div>
-                <h1>Welcome back, Admin 👋</h1>
-                <p>Here's what's happening with your placement portal today.</p>
-            </div>
+    <div class="target-search">
+        <span class="search-icon">⌕</span>
 
-            <div class="top-actions">
+        <input
+            type="text"
+            id="dashboardSearch"
+            placeholder="Search students, companies, drives..."
+            onkeyup="dashboardSearch()"
+        >
+    </div>
 
-                <input
-                    type="text"
-                    id="dashboardSearch"
-                    placeholder="Search students, companies..."
-                    onkeyup="dashboardSearch()"
-                >
 
-                <div class="notification-box">
+    <div class="target-top-actions">
 
-                    <button
-                        class="bell"
-                        id="notificationBell"
-                        type="button"
-                        onclick="toggleNotifications()"
-                        aria-label="Open notifications"
-                    >
-                        🔔
-                        <span id="notificationCount">0</span>
-                    </button>
+        <div class="notification-box">
 
-                    <div
-                        class="notification-dropdown"
-                        id="notificationDropdown"
-                    >
-                        <div class="notification-header">
-                            <h4>Live Notifications</h4>
+            <button
+                class="target-circle-btn"
+                id="notificationBell"
+                type="button"
+                onclick="toggleNotifications()"
+                aria-label="Open notifications"
+            >
+                🔔
+                <span id="notificationCount">0</span>
+            </button>
 
-                            <div class="notification-header-actions">
-                                <button
-                                    type="button"
-                                    onclick="refreshNotifications()"
-                                >
-                                    ↻ Refresh
-                                </button>
 
-                                <button
-                                    type="button"
-                                    onclick="markAllNotificationsRead()"
-                                >
-                                    ✓ Mark All Read
-                                </button>
-                            </div>
-                        </div>
+            <div
+                class="notification-dropdown"
+                id="notificationDropdown"
+            >
 
-                        <div
-                            class="notification-list"
-                            id="notificationList"
+                <div class="notification-header">
+
+                    <h4>Live Notifications</h4>
+
+                    <div class="notification-header-actions">
+
+                        <button
+                            type="button"
+                            onclick="refreshNotifications()"
                         >
-                            <div class="notification-loading">
-                                Loading notifications...
-                            </div>
-                        </div>
+                            ↻ Refresh
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="markAllNotificationsRead()"
+                        >
+                            ✓ Mark All Read
+                        </button>
+
                     </div>
 
                 </div>
 
-                <button id="themeToggle" class="theme-btn" type="button">
-                    🌙
-                </button>
 
-                <div class="admin-profile">
-                    <label for="profileUpload">
-                        <img
-                            id="adminPhoto"
-                            src="https://i.pravatar.cc/80?img=12"
-                            alt="Admin"
-                        >
-                    </label>
-
-                    <input
-                        type="file"
-                        id="profileUpload"
-                        accept="image/*"
-                        hidden
-                    >
-
-                    <div><b>Admin</b></div>
-                    <span>⌄</span>
+                <div
+                    class="notification-list"
+                    id="notificationList"
+                >
+                    <div class="notification-loading">
+                        Loading notifications...
+                    </div>
                 </div>
 
             </div>
 
         </div>
 
-        <div class="date-pill" id="liveClock">Loading time...</div>
 
+        <button
+            id="themeToggle"
+            class="target-circle-btn"
+            type="button"
+        >
+            ☾
+        </button>
+
+
+        <div class="target-admin-profile">
+
+            <label for="profileUpload">
+
+                <img
+                    id="adminPhoto"
+                    src="https://i.pravatar.cc/80?img=12"
+                    alt="Admin"
+                >
+
+            </label>
+
+            <input
+                type="file"
+                id="profileUpload"
+                accept="image/*"
+                hidden
+            >
+
+
+            <div class="target-admin-info">
+
+                <strong id="adminDisplayName">Admin</strong>
+
+                <span>
+                    Placement Cell
+                </span>
+
+            </div>
+
+
+            <span class="profile-arrow">
+                ⌄
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =============== WELCOME BANNER =============== -->
+
+<section class="dashboard-hero">
+
+    <div class="hero-welcome">
+        <h1>
+            Welcome Back, <span id="welcomeAdminName">Admin</span> 👋
+        </h1>
+
+        <p>
+            Manage students, companies, drives and placement activities efficiently.
+        </p>
+    </div>
+
+    <div class="hero-clock">
+
+        <div class="hero-clock-row">
+            <span class="hero-clock-icon">▣</span>
+            <span id="heroDate">Loading date...</span>
+        </div>
+
+        <div class="hero-clock-row">
+            <span class="hero-clock-icon">◷</span>
+            <span id="heroTime">Loading time...</span>
+        </div>
+
+    </div>
+
+</section>
         <section class="stats-grid">
 
             <div class="stat-card">
@@ -180,59 +242,136 @@
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon orange">👤</div>
+           <div class="stat-card">
+    <div class="stat-icon orange">👤</div>
 
-                <div>
-                    <p>Placed Students</p>
-                    <h2 id="placedStudentCount">0</h2>
-                    <span>↗ Live data</span>
-                </div>
-            </div>
+    <div>
+        <p>Total Applications</p>
+        <h2 id="applicationCount">0</h2>
+        <span>↗ Live data</span>
+    </div>
+</div>
 
         </section>
 
         <section class="middle-grid">
 
-            <div class="panel big-panel">
+           <div class="panel big-panel recent-applications-panel">
 
-                <div class="panel-head">
-                    <h3>Placement Overview</h3>
-                    <button type="button">Live Data</button>
-                </div>
+    <div class="panel-head">
+        <h3>Recent Applications</h3>
 
-                <div class="legend">
-                    <span><b class="dot blue-dot"></b>Applications</span>
-                    <span><b class="dot green-dot"></b>Tests Scheduled</span>
-                    <span><b class="dot purple-dot"></b>Placed</span>
-                </div>
+        <button
+            type="button"
+            onclick="window.location.href='applications-admin.html'"
+        >
+            View All →
+        </button>
+    </div>
 
-                <div class="line-chart">
-                    <canvas id="placementChart"></canvas>
-                </div>
+    <div class="dashboard-table-wrapper">
 
-            </div>
+       <table class="dashboard-table recent-applications-table">
 
-            <div class="panel">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
 
-                <div class="panel-head">
-                    <h3>Top Recruiting Companies</h3>
+            <tbody id="recentApplicationsList">
 
-                    <button
-                        type="button"
-                        onclick="window.location.href='companies.html'"
-                    >
-                        View All
-                    </button>
-                </div>
+                <tr>
+                    <td colspan="5" class="dashboard-loading">
+                        Loading recent applications...
+                    </td>
+                </tr>
 
-                <div class="company-list" id="companyList">
-                    <p style="padding:20px;color:#9fb0c7;">
-                        Loading company data...
-                    </p>
-                </div>
+            </tbody>
 
-            </div>
+        </table>
+
+    </div>
+
+</div>
+<!-- ================= UPCOMING PLACEMENT DRIVES ================= -->
+
+<div class="panel upcoming-drives-panel">
+
+    <div class="panel-head">
+        <h3>Upcoming Placement Drives</h3>
+
+        <button
+            type="button"
+            onclick="window.location.href='placement-drives.html'"
+        >
+            View All →
+        </button>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+
+        <table class="dashboard-table drives-table">
+
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Date</th>
+                    <th>Eligible</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="upcomingDrivesList">
+
+                <tr>
+                    <td colspan="4" class="dashboard-loading">
+                        Loading upcoming drives...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ================= RECENT ACTIVITIES ================= -->
+
+<div class="panel recent-activities-panel">
+
+    <div class="panel-head">
+
+        <h3>Recent Activities</h3>
+
+        <button
+            type="button"
+            onclick="window.location.href='admin-notifications.html'"
+        >
+            View All →
+        </button>
+
+    </div>
+
+    <div
+        class="recent-activities-list"
+        id="recentActivitiesList"
+    >
+        <div class="dashboard-loading">
+            Loading recent activities...
+        </div>
+    </div>
+
+</div>
+
+           
 
         </section>
 
@@ -246,15 +385,34 @@
 
 const adminUsername = localStorage.getItem("adminUsername");
 const adminRole = localStorage.getItem("adminRole");
+// Demo Viewer UI restrictions
+const isDemoViewer = adminRole === "DEMO_VIEWER";
+
+if (isDemoViewer) {
+    const settingsLink =
+        document.getElementById("adminSettingsLink");
+
+    if (settingsLink) {
+        settingsLink.style.display = "none";
+    }
+}
 
 if (!adminUsername || !adminRole) {
     alert("Please login as an approved admin first.");
     window.location.href = "admin-login.html";
 }
+const adminDisplayName = document.getElementById("adminDisplayName");
+const welcomeAdminName = document.getElementById("welcomeAdminName");
+
+if (adminDisplayName) {
+    adminDisplayName.innerText = adminUsername;
+}
+
+if (welcomeAdminName) {
+    welcomeAdminName.innerText = adminUsername;
+}
 
 /* ================= DASHBOARD VARIABLES ================= */
-
-let placementChart = null;
 
 let dashboardStudents = [];
 let dashboardCompanies = [];
@@ -275,9 +433,28 @@ function adminLogout() {
 
 /* ================= COMMON API HELPER ================= */
 
+
 async function getJson(url, fallbackValue = []) {
+
     try {
-        const response = await fetch(url);
+
+        const token = localStorage.getItem("adminToken");
+
+        if (!token) {
+            throw new Error("Admin authentication token missing.");
+        }
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            throw new Error("Unauthorized API access: " + url);
+        }
 
         if (!response.ok) {
             throw new Error("Unable to load " + url);
@@ -286,10 +463,13 @@ async function getJson(url, fallbackValue = []) {
         return await response.json();
 
     } catch (error) {
-        console.error(error);
+
+        console.error("Dashboard API error:", error);
+
         return fallbackValue;
     }
 }
+
 
 /* ================= LOAD DASHBOARD DATA ================= */
 
@@ -315,29 +495,406 @@ async function loadDashboardData() {
     document.getElementById("driveCount").innerText =
         dashboardDrives.length;
 
-    document.getElementById("placedStudentCount").innerText =
-        getPlacedStudentCount();
+    document.getElementById("applicationCount").innerText =
+    dashboardApplications.length;
 
-    const companyRows = buildCompanyRows();
+renderRecentApplications();
+renderUpcomingDrives();
+}
+/* ================= UPCOMING PLACEMENT DRIVES ================= */
 
-    renderPlacementChart(companyRows);
-    renderTopCompanies(companyRows);
+function renderUpcomingDrives() {
+
+    const container = document.getElementById("upcomingDrivesList");
+
+    if (!container) {
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingDrives = dashboardDrives
+        .filter(function(drive) {
+
+            if (!drive || !drive.driveDate) {
+                return false;
+            }
+
+            const driveDate = new Date(drive.driveDate + "T00:00:00");
+
+            const status = String(drive.status || "")
+                .trim()
+                .toLowerCase();
+
+            return (
+                driveDate >= today ||
+                status === "ongoing" ||
+                status === "upcoming"
+            );
+        })
+        .sort(function(a, b) {
+
+            return new Date(a.driveDate) -
+                   new Date(b.driveDate);
+        })
+        .slice(0, 5);
+
+
+    if (upcomingDrives.length === 0) {
+
+        container.innerHTML = `
+            <tr>
+                <td colspan="4" class="dashboard-loading">
+                    No upcoming placement drives.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML = upcomingDrives
+        .map(function(drive) {
+
+            const companyName =
+                drive.companyName || "Company";
+
+            const driveDate =
+                formatDashboardDriveDate(drive.driveDate);
+
+            const eligible =
+                getEligibleStudentCount(drive);
+
+            const status =
+                drive.status || "Upcoming";
+
+            return `
+                <tr>
+
+                    <td>
+                        <div class="drive-company-cell">
+
+                            <div class="drive-company-logo">
+                                ${escapeHtml(
+                                    getCompanyInitials(companyName)
+                                )}
+                            </div>
+
+                            <span>
+                                ${escapeHtml(companyName)}
+                            </span>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(driveDate)}
+                    </td>
+
+                    <td>
+                        ${eligible}
+                    </td>
+
+                    <td>
+                        <span class="drive-status ${getDriveStatusClass(status)}">
+                            ${escapeHtml(status)}
+                        </span>
+                    </td>
+
+                </tr>
+            `;
+
+        })
+        .join("");
 }
 
-/* ================= PLACED STUDENT COUNT ================= */
 
-function getPlacedStudentCount() {
-    const placedStudentIds = new Set();
+/* ================= ELIGIBLE STUDENTS ================= */
 
-    dashboardApplications.forEach(function(application) {
-        const status = normalizeStatus(application.status);
+function getEligibleStudentCount(drive) {
 
-        if (status === "placed" && application.studentId) {
-            placedStudentIds.add(application.studentId);
+    return dashboardStudents.filter(function(student) {
+
+        if (!student || student.deleted === true || student.blocked === true) {
+            return false;
         }
+
+        const studentCgpa =
+            Number(student.cgpa || 0);
+
+        const requiredCgpa =
+            Number(drive.minCgpa || 0);
+
+        if (studentCgpa < requiredCgpa) {
+            return false;
+        }
+
+        const requiredBranch =
+            String(drive.branch || "")
+                .trim()
+                .toLowerCase();
+
+        const studentBranch =
+            String(student.branch || "")
+                .trim()
+                .toLowerCase();
+
+        if (
+            requiredBranch &&
+            requiredBranch !== "all" &&
+            requiredBranch !== studentBranch
+        ) {
+            return false;
+        }
+
+        return true;
+    }).length;
+}
+
+
+/* ================= DRIVE DATE ================= */
+
+function formatDashboardDriveDate(dateValue) {
+
+    if (!dateValue) {
+        return "—";
+    }
+
+    const date =
+        new Date(dateValue + "T00:00:00");
+
+    if (isNaN(date.getTime())) {
+        return "—";
+    }
+
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+
+/* ================= COMPANY INITIALS ================= */
+
+function getCompanyInitials(companyName) {
+
+    const words =
+        String(companyName || "")
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+    if (words.length === 0) {
+        return "CO";
+    }
+
+    if (words.length === 1) {
+        return words[0]
+            .substring(0, 3)
+            .toUpperCase();
+    }
+
+    return words
+        .slice(0, 2)
+        .map(function(word) {
+            return word.charAt(0);
+        })
+        .join("")
+        .toUpperCase();
+}
+
+
+/* ================= DRIVE STATUS CLASS ================= */
+
+function getDriveStatusClass(status) {
+
+    const value =
+        String(status || "")
+            .trim()
+            .toLowerCase();
+
+    if (value === "ongoing") {
+        return "ongoing";
+    }
+
+    if (value === "completed") {
+        return "completed";
+    }
+
+    return "upcoming";
+}
+/* ================= RECENT APPLICATIONS ================= */
+function renderRecentApplications() {
+
+    const container = document.getElementById("recentApplicationsList");
+
+    if (!container) {
+        return;
+    }
+
+    const validApplications = dashboardApplications
+        .filter(function(application) {
+
+            if (!application) {
+                return false;
+            }
+
+            const studentId = Number(application.studentId);
+            const companyName =
+                String(application.companyName || "").trim();
+
+            const role =
+                String(application.role || "").trim();
+
+            const roleIsNumeric =
+                role !== "" && /^\d+$/.test(role);
+
+            return (
+                studentId > 0 &&
+                companyName !== "" &&
+                companyName.toLowerCase() !== "unknown" &&
+                !roleIsNumeric
+            );
+        })
+        .sort(function(a, b) {
+            return Number(b.id || 0) - Number(a.id || 0);
+        })
+        .slice(0, 5);
+
+    if (validApplications.length === 0) {
+
+        container.innerHTML = `
+            <tr>
+                <td colspan="5" class="dashboard-loading">
+                    No recent applications available.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = validApplications
+        .map(function(application) {
+
+            const studentName =
+                application.studentName &&
+                application.studentName !== "Unknown Student"
+                    ? application.studentName
+                    : getStudentName(application.studentId);
+
+            const companyName =
+                application.companyName || "—";
+
+            const role =
+                application.role || "—";
+
+            const status =
+                normalizeApplicationStatus(application.status);
+
+            const date =
+                getApplicationDate(application);
+
+            return `
+                <tr>
+                    <td>${escapeHtml(studentName)}</td>
+
+                    <td>${escapeHtml(companyName)}</td>
+
+                    <td>${escapeHtml(role)}</td>
+
+                    <td>${escapeHtml(date)}</td>
+
+                    <td>
+                        <span class="application-status ${getApplicationStatusClass(status)}">
+                            ${escapeHtml(status)}
+                        </span>
+                    </td>
+                </tr>
+            `;
+        })
+        .join("");
+}
+
+function getStudentName(studentId) {
+
+    const student = dashboardStudents.find(function(item) {
+        return Number(item.id) === Number(studentId);
     });
 
-    return placedStudentIds.size;
+    if (!student) {
+        return "Student";
+    }
+
+    return student.name ||
+           student.fullName ||
+           student.studentName ||
+           "Student";
+}
+
+
+function normalizeApplicationStatus(status) {
+
+    const value = String(status || "").trim();
+
+    if (!value) {
+        return "Applied";
+    }
+
+    // Corrupted old records may contain dates in status
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return "Applied";
+    }
+
+    return value;
+}
+
+
+function getApplicationStatusClass(status) {
+
+    const value = String(status || "").toLowerCase();
+
+    if (value.includes("reject")) {
+        return "status-rejected";
+    }
+
+    if (value.includes("placed") ||
+        value.includes("selected")) {
+        return "status-placed";
+    }
+
+    if (value.includes("test")) {
+        return "status-test";
+    }
+
+    if (value.includes("interview")) {
+        return "status-interview";
+    }
+
+    return "status-applied";
+}
+function getApplicationDate(application) {
+
+    const dateValue =
+        application.appliedAt ||
+        application.applicationDate ||
+        application.createdAt ||
+        application.appliedDate;
+
+    if (!dateValue) {
+        return "—";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date.getTime())) {
+        return "—";
+    }
+
+    return date.toLocaleDateString("en-IN");
 }
 
 /* ================= COMPANY LIVE DATA ================= */
@@ -388,104 +945,6 @@ function buildCompanyRows() {
         .sort(function(first, second) {
             return second.applications - first.applications;
         });
-}
-
-/* ================= CHART ================= */
-
-function renderPlacementChart(companyRows) {
-    let chartRows = companyRows
-        .filter(function(row) {
-            return row.applications > 0;
-        })
-        .slice(0, 5);
-
-    if (chartRows.length === 0) {
-        chartRows = [
-            {
-                companyName: "No Live Data",
-                applications: 0,
-                scheduledTests: 0,
-                placed: 0
-            }
-        ];
-    }
-
-    const labels = chartRows.map(function(row) {
-        return shortenCompanyName(row.companyName);
-    });
-
-    const applicationData = chartRows.map(function(row) {
-        return row.applications;
-    });
-
-    const scheduledData = chartRows.map(function(row) {
-        return row.scheduledTests;
-    });
-
-    const placedData = chartRows.map(function(row) {
-        return row.placed;
-    });
-
-    const chartElement = document.getElementById("placementChart");
-
-    if (placementChart) {
-        placementChart.destroy();
-    }
-
-    placementChart = new Chart(chartElement, {
-        type: "line",
-
-        data: {
-            labels: labels,
-
-            datasets: [
-                {
-                    label: "Applications",
-                    data: applicationData,
-                    borderColor: "#2563eb",
-                    backgroundColor: "rgba(37,99,235,.12)",
-                    tension: 0.4,
-                    fill: true
-                },
-                {
-                    label: "Tests Scheduled",
-                    data: scheduledData,
-                    borderColor: "#22c55e",
-                    backgroundColor: "rgba(34,197,94,.10)",
-                    tension: 0.4,
-                    fill: true
-                },
-                {
-                    label: "Placed",
-                    data: placedData,
-                    borderColor: "#8b5cf6",
-                    backgroundColor: "rgba(139,92,246,.10)",
-                    tension: 0.4,
-                    fill: true
-                }
-            ]
-        },
-
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0
-                    }
-                }
-            }
-        }
-    });
 }
 
 /* ================= TOP COMPANIES ================= */
@@ -559,18 +1018,27 @@ async function loadNotifications() {
     `;
 
     try {
-        const response = await fetch(
-            "/api/admin-notifications?adminUsername=" +
-            encodeURIComponent(adminUsername)
-        );
+const response = await fetch(
+    "/api/admin-notifications?adminUsername=" +
+    encodeURIComponent(adminUsername),
+    {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " +
+                localStorage.getItem("adminToken"),
+            "Accept": "application/json"
+        }
+    }
+);
 
         if (!response.ok) {
             throw new Error("Notification API failed");
         }
 
-        dashboardNotifications = await response.json();
+       dashboardNotifications = await response.json();
 
-        renderNotifications();
+renderNotifications();
+renderRecentActivities();
 
     } catch (error) {
         console.error(error);
@@ -583,6 +1051,114 @@ async function loadNotifications() {
 
         updateNotificationBadge(0);
     }
+}
+/* ================= RECENT ACTIVITIES ================= */
+
+function renderRecentActivities() {
+
+    const container = document.getElementById("recentActivitiesList");
+
+    if (!container) {
+        return;
+    }
+
+    if (!Array.isArray(dashboardNotifications) ||
+        dashboardNotifications.length === 0) {
+
+        container.innerHTML = `
+            <div class="dashboard-loading">
+                No recent activities available.
+            </div>
+        `;
+
+        return;
+    }
+
+    const recentActivities = dashboardNotifications
+        .slice(0, 5);
+
+    container.innerHTML = recentActivities
+        .map(function(notification, index) {
+
+            const title =
+                notification.title ||
+                notification.message ||
+                "New activity";
+
+            const message =
+                notification.message || "";
+
+            const time =
+                notification.timeAgo ||
+                formatActivityTime(notification.createdAt);
+
+            const icon =
+                notification.icon || "🔔";
+
+            return `
+                <div class="recent-activity-item">
+
+                    <div class="activity-marker activity-marker-${(index % 5) + 1}">
+                        ${escapeHtml(icon)}
+                    </div>
+
+                    <div class="activity-content">
+
+                        <div class="activity-text">
+
+                            <p>
+                                ${escapeHtml(title)}
+                            </p>
+
+                            ${
+                                message && message !== title
+                                ? `<small>${escapeHtml(message)}</small>`
+                                : ""
+                            }
+
+                        </div>
+
+                        <span class="activity-time">
+                            ${escapeHtml(time)}
+                        </span>
+
+                    </div>
+
+                </div>
+            `;
+        })
+        .join("");
+}
+
+
+function formatActivityTime(createdAt) {
+
+    if (!createdAt) {
+        return "";
+    }
+
+    const date = new Date(createdAt);
+
+    if (isNaN(date.getTime())) {
+        return String(createdAt);
+    }
+
+    const diff =
+        Math.floor((Date.now() - date.getTime()) / 1000);
+
+    if (diff < 60) {
+        return "Just now";
+    }
+
+    if (diff < 3600) {
+        return Math.floor(diff / 60) + " min ago";
+    }
+
+    if (diff < 86400) {
+        return Math.floor(diff / 3600) + " hours ago";
+    }
+
+    return Math.floor(diff / 86400) + " days ago";
 }
 
 function renderNotifications() {
@@ -671,9 +1247,14 @@ async function markNotificationRead(notificationKey) {
             "/api/admin-notifications/mark-read?" +
             "adminUsername=" + encodeURIComponent(adminUsername) +
             "&notificationKey=" + encodeURIComponent(notificationKey),
-            {
-                method: "POST"
-            }
+  {
+    method: "POST",
+    headers: {
+        "Authorization": "Bearer " +
+            localStorage.getItem("adminToken"),
+        "Accept": "application/json"
+    }
+}
         );
 
         if (!response.ok) {
@@ -693,9 +1274,14 @@ async function markAllNotificationsRead() {
         const response = await fetch(
             "/api/admin-notifications/mark-all-read?" +
             "adminUsername=" + encodeURIComponent(adminUsername),
-            {
-                method: "POST"
-            }
+{
+    method: "POST",
+    headers: {
+        "Authorization": "Bearer " +
+            localStorage.getItem("adminToken"),
+        "Accept": "application/json"
+    }
+}
         );
 
         if (!response.ok) {
@@ -786,11 +1372,38 @@ document.addEventListener("click", function(event) {
 function updateClock() {
     const now = new Date();
 
-    document.getElementById("liveClock").innerText =
-        "📅 " +
-        now.toLocaleDateString("en-IN") +
-        "  ⏰ " +
-        now.toLocaleTimeString("en-IN");
+    // Old clock - agar page me available hai
+    const liveClock = document.getElementById("liveClock");
+
+    if (liveClock) {
+        liveClock.innerText =
+            "📅 " +
+            now.toLocaleDateString("en-IN") +
+            " ⏰ " +
+            now.toLocaleTimeString("en-IN");
+    }
+
+    // New welcome banner date
+    const heroDate = document.getElementById("heroDate");
+
+    if (heroDate) {
+        heroDate.innerText = now.toLocaleDateString("en-GB", {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+        });
+    }
+
+    // New welcome banner time
+    const heroTime = document.getElementById("heroTime");
+    if (heroTime) {
+        heroTime.innerText = now.toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        });
+    }
 }
 
 updateClock();

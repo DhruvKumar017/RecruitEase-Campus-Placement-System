@@ -1982,3 +1982,160 @@ body.light .premium-panel h3{
             #6547d4
         );
 }
+/* ===== SIMPLE ADMIN-STYLE STUDENT DASHBOARD ===== */
+
+/* Main background */
+body {
+    background: #030814;
+}
+
+.main.premium-dashboard {
+    padding: 24px 28px;
+    background: #030814;
+}
+
+/* Simple welcome banner */
+.premium-hero {
+    min-height: 190px;
+    border-radius: 18px;
+    background: linear-gradient(120deg, #06182f, #102d58);
+    border: 1px solid #1e3a5f;
+    box-shadow: none;
+}
+
+.premium-hero::after,
+.premium-hero-overlay {
+    display: none;
+}
+
+.premium-hero-content {
+    padding: 20px 28px 28px;
+}
+
+.premium-hero-copy h1 {
+    font-size: 30px;
+}
+
+.hero-message,
+.hero-quote {
+    display: none;
+}
+
+/* Clean statistic cards */
+.premium-stats-grid {
+    gap: 18px;
+    margin: 20px 0;
+}
+
+.premium-stat-card {
+    min-height: 130px;
+    padding: 22px;
+    border-radius: 18px;
+    background: #081528 !important;
+    border: 1px solid rgba(47, 128, 255, .18);
+    box-shadow: none;
+}
+
+.premium-stat-card::before {
+    display: none;
+}
+
+.premium-stat-icon {
+    border-radius: 15px;
+    background: #173f92;
+}
+
+.premium-stat-content h2 {
+    font-size: 32px;
+}
+
+.premium-stat-title {
+    font-size: 13px;
+}
+
+/* Simple dashboard panels */
+.premium-panel {
+    background: #081528;
+    border: 1px solid rgba(47, 128, 255, .16);
+    border-radius: 18px;
+    box-shadow: none;
+}
+
+.premium-panel-head h2 {
+    font-size: 19px;
+}
+
+.premium-panel-head p {
+    font-size: 12px;
+}
+
+/* Clean layout */
+.premium-dashboard-grid {
+    gap: 18px;
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 1fr);
+}
+
+.premium-right-column {
+    gap: 18px;
+}
+
+.dashboard-bottom-grid {
+    gap: 18px;
+}
+
+/* Simple action buttons */
+.premium-view-link,
+.premium-profile-button {
+    border-radius: 10px;
+    font-size: 12px;
+    box-shadow: none;
+}
+
+/* Preserve existing sidebar dimensions and behavior */
+/* ===== COMPACT UPCOMING DRIVES PANEL ===== */
+
+.premium-drives-panel {
+    min-height: 0 !important;
+    height: auto !important;
+    align-self: start;
+}
+
+.premium-drive-list {
+    min-height: 100px !important;
+    height: auto !important;
+    padding-bottom: 14px;
+}
+
+.premium-dashboard-grid {
+    align-items: start;
+}
+/* ===== SIMPLE CAREER ACCESS CARDS ===== */
+
+.premium-access-grid .premium-access-card {
+    background: #0d1d35 !important;
+    border: 1px solid #203a5c !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+    transition: 0.2s ease;
+}
+
+.premium-access-grid .premium-access-card:hover {
+    background: #142b4b !important;
+    border-color: #3b82f6 !important;
+    transform: translateY(-2px);
+}
+
+.premium-access-grid .access-icon {
+    background: #193d79 !important;
+    border: 1px solid #315b9c !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+}
+
+.premium-access-grid .premium-access-card strong {
+    color: #ffffff !important;
+}
+
+.premium-access-grid .premium-access-card span {
+    color: #a9bdd9;
+}

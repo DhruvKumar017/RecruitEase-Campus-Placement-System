@@ -1,4 +1,5 @@
 package com.recruitease.dto;
+import java.time.LocalDateTime;
 
 public class ApplicationAdminDTO {
 
@@ -26,6 +27,7 @@ public class ApplicationAdminDTO {
 
     private boolean interviewRequested;
     private String interviewStatus;
+    private LocalDateTime createdAt;
 
     public ApplicationAdminDTO() {
     }
@@ -189,4 +191,11 @@ public class ApplicationAdminDTO {
     public void setInterviewStatus(String interviewStatus) {
         this.interviewStatus = interviewStatus;
     }
+    public LocalDateTime getCreatedAt() {
+    return createdAt;
+}
+
+public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+}
 }

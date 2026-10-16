@@ -98,6 +98,9 @@
                     <b>Dashboard</b> &nbsp;›&nbsp; Placed Students
                 </p>
             </div>
+            <button type="button" class="refresh-btn" onclick="refreshPlacedStudentsPage()">
+    ↻ Refresh
+</button>
 
             <button class="export-btn" type="button" onclick="exportPlacedStudents()">
                 ⬇ Export Report
@@ -118,15 +121,6 @@
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon purple-icon">💼</div>
-
-                <div>
-                    <p>This Year</p>
-                    <h3 id="placedThisYear">0</h3>
-                    <small>Placed Students</small>
-                </div>
-            </div>
 
             <div class="stat-card">
                 <div class="stat-icon blue-icon">🏢</div>
@@ -138,25 +132,7 @@
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon orange-icon">₹</div>
 
-                <div>
-                    <p>Highest Package</p>
-                    <h3 id="highestPackage">--</h3>
-                    <small>Max Offered</small>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon teal-icon">📈</div>
-
-                <div>
-                    <p>Average Package</p>
-                    <h3 id="averagePackage">--</h3>
-                    <small>Overall Average</small>
-                </div>
-            </div>
 
         </section>
 
@@ -192,17 +168,6 @@
                         <select id="batchFilter" onchange="filterPlacedStudents()">
                             <option value="">All Batches</option>
                         </select>
-
-                    </div>
-
-                    <div class="date-filter-row">
-
-                        <input type="date" id="fromDate" onchange="filterPlacedStudents()">
-                        <input type="date" id="toDate" onchange="filterPlacedStudents()">
-
-                        <button class="clear-filter-btn" type="button" onclick="clearFilters()">
-                            ↻ Clear Filters
-                        </button>
 
                     </div>
 
@@ -246,57 +211,7 @@
             </div>
 
             <!-- ================= RIGHT SIDE CARDS ================= -->
-            <aside class="right-column">
 
-                <section class="side-card">
-
-                    <h3>Placement Overview</h3>
-
-                    <div class="overview-ring"></div>
-
-                    <div id="branchOverview"></div>
-
-                </section>
-
-                <section class="side-card">
-
-                    <h3>Top Recruiting Companies</h3>
-
-                    <div id="topCompanies"></div>
-
-                    <button class="view-all-btn" type="button" onclick="window.location.href='companies.html'">
-                        View All Companies
-                    </button>
-
-                </section>
-
-                <section class="side-card">
-
-                    <h3>Placement Insights</h3>
-
-                    <div class="insight-row">
-                        <span>📋 Total Offers</span>
-                        <b id="insightTotalOffers">0</b>
-                    </div>
-
-                    <div class="insight-row">
-                        <span>✅ Offers Accepted</span>
-                        <b id="insightAccepted">0</b>
-                    </div>
-
-                    <div class="insight-row">
-                        <span>💰 Packages Recorded</span>
-                        <b id="insightPackages">0</b>
-                    </div>
-
-                    <div class="insight-row">
-                        <span>🎓 Placement Branches</span>
-                        <b id="insightBranches">0</b>
-                    </div>
-
-                </section>
-
-            </aside>
 
         </section>
 
@@ -319,7 +234,8 @@ async function loadPlacedStudents() {
 
         placedStudents = await Promise.all(
             placedApplications.map(async app => {
-                let student = null;
+    let student = null;
+    let drive = null;
 
                 try {
                     const studentResponse = await fetch("/api/students/" + app.studentId);
@@ -330,7 +246,17 @@ async function loadPlacedStudents() {
                 } catch (error) {
                     console.log("Student profile not found for ID:", app.studentId);
                 }
+                if (app.driveId) {
+    try {
+        const driveResponse = await fetch("/api/drives/" + app.driveId);
 
+        if (driveResponse.ok) {
+            drive = await driveResponse.json();
+        }
+    } catch (error) {
+        console.log("Placement drive not found for ID:", app.driveId);
+    }
+}
                 return {
                     applicationId: app.id,
                     studentId: app.studentId,
@@ -341,19 +267,16 @@ async function loadPlacedStudents() {
                     batch: student?.batch || "Not Set",
                     companyName: app.companyName || "Company Not Set",
                     role: app.role || "Role Not Set",
-                    packageLpa: getPackageValue(app),
+                    packageLpa: drive?.packageLpa || getPackageValue(app),
                     placedOn: getPlacedDate(app),
                     offerStatus: app.offerStatus || "Accepted"
                 };
             })
         );
 
-        populateFilters();
-        updatePlacedStats();
-        renderBranchOverview();
-        renderTopCompanies();
-        renderPlacementInsights();
-        renderPlacedStudents(placedStudents);
+populateFilters();
+updatePlacedStats();
+renderPlacedStudents(placedStudents);
 
     } catch (error) {
         console.error("Placed students error:", error);
@@ -382,7 +305,11 @@ function getPackageValue(app) {
 }
 
 function getPlacedDate(app) {
-    return app.placedOn || app.placementDate || app.updatedAt || "";
+    return app.placedAt ||
+           app.placedOn ||
+           app.placementDate ||
+           app.updatedAt ||
+           "";
 }
 
 function renderPlacedStudents(data) {
@@ -478,9 +405,6 @@ function filterPlacedStudents() {
     const branch = document.getElementById("branchFilter").value;
     const batch = document.getElementById("batchFilter").value;
 
-    const fromDate = document.getElementById("fromDate").value;
-    const toDate = document.getElementById("toDate").value;
-
     const filteredStudents = placedStudents.filter(student => {
         const matchesSearch =
             student.studentName.toLowerCase().includes(searchValue) ||
@@ -500,25 +424,13 @@ function filterPlacedStudents() {
         const matchesBatch =
             batch === "" || student.batch === batch;
 
-        const placementDate = normalizeDate(student.placedOn);
-
-        const matchesFromDate =
-            fromDate === "" ||
-            (placementDate !== "" && placementDate >= fromDate);
-
-        const matchesToDate =
-            toDate === "" ||
-            (placementDate !== "" && placementDate <= toDate);
-
-        return (
-            matchesSearch &&
-            matchesCompany &&
-            matchesRole &&
-            matchesBranch &&
-            matchesBatch &&
-            matchesFromDate &&
-            matchesToDate
-        );
+return (
+    matchesSearch &&
+    matchesCompany &&
+    matchesRole &&
+    matchesBranch &&
+    matchesBatch
+);
     });
 
     renderPlacedStudents(filteredStudents);
@@ -550,132 +462,15 @@ function populateSelect(selectId, values) {
 }
 
 function updatePlacedStats() {
-    const packages = placedStudents
-        .map(student => student.packageLpa)
-        .filter(packageValue => packageValue > 0);
-
     const uniqueCompanies = new Set(
         placedStudents.map(student => student.companyName)
     ).size;
 
-    const currentYear = new Date().getFullYear();
-
-    const currentYearPlaced = placedStudents.filter(student => {
-        const date = new Date(student.placedOn);
-        return !isNaN(date) && date.getFullYear() === currentYear;
-    }).length;
-
-    const highestPackage =
-        packages.length > 0 ? Math.max(...packages) : 0;
-
-    const averagePackage =
-        packages.length > 0
-            ? packages.reduce((sum, value) => sum + value, 0) / packages.length
-            : 0;
-
     document.getElementById("totalPlaced").innerText = placedStudents.length;
-    document.getElementById("placedThisYear").innerText = currentYearPlaced;
     document.getElementById("totalCompanies").innerText = uniqueCompanies;
-
-    document.getElementById("highestPackage").innerText =
-        highestPackage > 0 ? highestPackage.toFixed(2) + " LPA" : "--";
-
-    document.getElementById("averagePackage").innerText =
-        averagePackage > 0 ? averagePackage.toFixed(2) + " LPA" : "--";
 }
 
-function renderBranchOverview() {
-    const branchCount = {};
 
-    placedStudents.forEach(student => {
-        const branch = student.branch || "Others";
-        branchCount[branch] = (branchCount[branch] || 0) + 1;
-    });
-
-    const total = placedStudents.length || 1;
-
-    const dotClasses = [
-        "dot-cse",
-        "dot-it",
-        "dot-ece",
-        "dot-me",
-        "dot-other"
-    ];
-
-    const branchRows = Object.entries(branchCount)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5)
-        .map(([branch, count], index) => `
-            <div class="overview-row">
-                <span>
-                    <i class="legend-dot ${dotClasses[index] || "dot-other"}"></i>
-                    ${escapeHtml(branch)}
-                </span>
-
-                <b>${Math.round((count / total) * 100)}%</b>
-            </div>
-        `)
-        .join("");
-
-    document.getElementById("branchOverview").innerHTML =
-        branchRows || `
-            <div class="overview-row">
-                <span>No branch data</span>
-                <b>0%</b>
-            </div>
-        `;
-}
-
-function renderTopCompanies() {
-    const companyCount = {};
-
-    placedStudents.forEach(student => {
-        companyCount[student.companyName] =
-            (companyCount[student.companyName] || 0) + 1;
-    });
-
-    const companyRows = Object.entries(companyCount)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5)
-        .map(([company, count], index) => `
-            <div class="company-rank">
-                <span class="rank-number">${index + 1}</span>
-
-                <span class="rank-logo">
-                    ${escapeHtml(company.substring(0, 3).toUpperCase())}
-                </span>
-
-                <span class="rank-company">${escapeHtml(company)}</span>
-
-                <span>${count} Students</span>
-            </div>
-        `)
-        .join("");
-
-    document.getElementById("topCompanies").innerHTML =
-        companyRows || `
-            <div class="company-rank">
-                <span>No company data available.</span>
-            </div>
-        `;
-}
-
-function renderPlacementInsights() {
-    const packageRecorded = placedStudents.filter(
-        student => student.packageLpa > 0
-    ).length;
-
-    const totalBranches = new Set(
-        placedStudents
-            .map(student => student.branch)
-            .filter(branch => branch && branch !== "Not Set")
-    ).size;
-
-    document.getElementById("insightTotalOffers").innerText = placedStudents.length;
-    document.getElementById("insightAccepted").innerText = placedStudents.length;
-    document.getElementById("insightPackages").innerText = packageRecorded;
-    document.getElementById("insightBranches").innerText = totalBranches;
-}
 
 function viewPlacement(applicationId) {
     const student = placedStudents.find(
@@ -705,9 +500,6 @@ function clearFilters() {
     document.getElementById("roleFilter").value = "";
     document.getElementById("branchFilter").value = "";
     document.getElementById("batchFilter").value = "";
-    document.getElementById("fromDate").value = "";
-    document.getElementById("toDate").value = "";
-
     renderPlacedStudents(placedStudents);
 }
 
@@ -790,10 +582,11 @@ document.getElementById("themeToggle").addEventListener("click", function() {
 
     button.innerText = button.innerText === "🌙" ? "☀️" : "🌙";
 });
+function refreshPlacedStudentsPage() {
+    window.location.reload();
+}
 
 loadPlacedStudents();
-
-</script>
 
 </script>
 

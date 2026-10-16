@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -149,13 +149,14 @@
                 <option value="applied">Applied Only</option>
             </select>
 
-            <select id="statusFilter" onchange="renderDrives()">
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="upcoming">Upcoming</option>
-                <option value="applied">Applied</option>
-                <option value="not-eligible">Not Eligible</option>
-            </select>
+<select id="statusFilter" onchange="renderDrives()">
+    <option value="">All Status</option>
+    <option value="active">Active</option>
+    <option value="upcoming">Upcoming</option>
+    <option value="completed">Completed</option>
+    <option value="applied">Applied</option>
+    <option value="not-eligible">Not Eligible</option>
+</select>
 
             <button class="filter-button" type="button" onclick="renderDrives()">
                 ⚱ Filter
@@ -270,13 +271,15 @@ function normalize(value) {
 }
 
 function isActiveDrive(drive) {
-    const status = normalize(drive.status);
-
-    return status === "active" || status === "open";
+    return normalize(drive.status) === "active";
 }
 
 function isUpcomingDrive(drive) {
-    return !isActiveDrive(drive) && !drive.alreadyApplied;
+    return normalize(drive.status) === "upcoming";
+}
+
+function isCompletedDrive(drive) {
+    return normalize(drive.status) === "completed";
 }
 
 function formatDate(dateValue) {
@@ -476,10 +479,13 @@ function getFilteredDrives() {
         if (status === "active") {
             matchesStatus = isActiveDrive(drive);
 
-        } else if (status === "upcoming") {
-            matchesStatus = isUpcomingDrive(drive);
+} else if (status === "upcoming") {
+    matchesStatus = isUpcomingDrive(drive);
 
-        } else if (status === "applied") {
+} else if (status === "completed") {
+    matchesStatus = isCompletedDrive(drive);
+
+} else if (status === "applied") {
             matchesStatus = drive.alreadyApplied;
 
         } else if (status === "not-eligible") {
@@ -496,6 +502,11 @@ function getFilteredDrives() {
 }
 
 function getStatusHtml(drive) {
+
+    if (isCompletedDrive(drive)) {
+        return `<span class="drive-status completed-status">Completed</span>`;
+    }
+
     if (drive.alreadyApplied) {
         return `<span class="drive-status applied-status">Applied</span>`;
     }
@@ -504,23 +515,40 @@ function getStatusHtml(drive) {
         return `<span class="drive-status active-status">Active</span>`;
     }
 
-    return `<span class="drive-status upcoming-status">Upcoming</span>`;
+    if (isUpcomingDrive(drive)) {
+        return `<span class="drive-status upcoming-status">Upcoming</span>`;
+    }
+
+    return `<span class="drive-status">Unknown</span>`;
 }
 
 function getActionHtml(drive) {
     const id = Number(drive.driveId);
+    // Completed drive par koi application/notification action nahi
+if (isCompletedDrive(drive)) {
+    return `
+        <button
+            class="drive-action disabled-action"
+            type="button"
+            disabled
+        >
+            Completed
+        </button>
+    `;
+}
 
-    if (drive.alreadyApplied) {
-        return `
-            <button
-                class="drive-action applied-action"
-                type="button"
-                disabled
-            >
-                ✓ Applied
-            </button>
-        `;
-    }
+// Upcoming drive - application abhi open nahi hai
+if (isUpcomingDrive(drive)) {
+    return `
+        <button
+            class="drive-action notify-action"
+            type="button"
+            onclick="notifyForDrive(${id})"
+        >
+            Notify Me
+        </button>
+    `;
+}
 
     if (drive.canApply) {
         return `

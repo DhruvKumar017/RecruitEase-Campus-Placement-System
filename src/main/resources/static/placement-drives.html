@@ -103,6 +103,9 @@
                     <b>Dashboard</b> &nbsp;›&nbsp; Placement Drives
                 </p>
             </div>
+            <button type="button" class="refresh-btn" onclick="refreshPlacementDrivesPage()">
+    ↻ Refresh
+</button>
 
             <button class="add-drive-btn" type="button" onclick="toggleDriveForm()">
                 ＋ Schedule New Drive
@@ -216,12 +219,6 @@
                         required
                     >
 
-                    <select id="driveStatus" required>
-                        <option value="">Select Status</option>
-                        <option value="Upcoming">Upcoming</option>
-                        <option value="Active">Active</option>
-                        <option value="Completed">Completed</option>
-                    </select>
 
                     <button class="save-drive-btn" id="saveDriveButton" type="submit">
                         Save Drive
@@ -245,36 +242,47 @@
                     <small>Live Database Data</small>
                 </div>
             </div>
+           <div class="stat-card"
+     id="activeDrivesCard"
+     onclick="showActiveDrives()"
+     style="cursor: pointer;">
 
-            <div class="stat-card">
-                <div class="stat-icon green-icon">🚀</div>
+    <div class="stat-icon green-icon">🚀</div>
 
-                <div>
-                    <p>Active Drives</p>
-                    <h3 id="activeDrives">0</h3>
-                    <small>Currently Running</small>
-                </div>
-            </div>
+    <div>
+        <p>Active Drives</p>
+        <h3 id="activeDrives">0</h3>
+        <small>Currently Running</small>
+    </div>
+</div>
 
-            <div class="stat-card">
-                <div class="stat-icon orange-icon">⏳</div>
+<div class="stat-card"
+     id="upcomingDrivesCard"
+     onclick="showUpcomingDrives()"
+     style="cursor: pointer;">
 
-                <div>
-                    <p>Upcoming Drives</p>
-                    <h3 id="upcomingDrives">0</h3>
-                    <small>Scheduled Drives</small>
-                </div>
-            </div>
+    <div class="stat-icon orange-icon">⏳</div>
 
-            <div class="stat-card">
-                <div class="stat-icon purple-icon">✅</div>
+    <div>
+        <p>Upcoming Drives</p>
+        <h3 id="upcomingDrives">0</h3>
+        <small>Scheduled Drives</small>
+    </div>
+</div>
 
-                <div>
-                    <p>Completed Drives</p>
-                    <h3 id="completedDrives">0</h3>
-                    <small>Finished Drives</small>
-                </div>
-            </div>
+            <div class="stat-card"
+     id="completedDrivesCard"
+     onclick="showCompletedDrives()"
+     style="cursor: pointer;">
+
+    <div class="stat-icon purple-icon">✅</div>
+
+    <div>
+        <p>Completed Drives</p>
+        <h3 id="completedDrives">0</h3>
+        <small>Finished Drives</small>
+    </div>
+</div>
 
         </section>
 
@@ -420,7 +428,11 @@ async function loadDrives() {
         });
 
         updateDriveStats();
-        filterDrives();
+
+// Page open hote hi sirf Active Drives show hongi
+document.getElementById("statusFilter").value = "Active";
+
+filterDrives();
 
     } catch (error) {
         console.error("Drive load error:", error);
@@ -580,6 +592,61 @@ function clearFilters() {
     filterDrives();
 }
 
+function showActiveDrives() {
+
+    // Search reset
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+
+    // Only Active status
+    document.getElementById("statusFilter").value = "Active";
+
+    // Existing filter function use karo
+    filterDrives();
+
+    // Table tak automatically scroll
+    document.querySelector(".drives-table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showUpcomingDrives() {
+
+    // Search reset
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+
+    // Only Upcoming
+    document.getElementById("statusFilter").value = "Upcoming";
+
+    filterDrives();
+
+    // Table tak scroll
+    document.querySelector(".drives-table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showCompletedDrives() {
+
+    // Search reset
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+
+    // Only Completed
+    document.getElementById("statusFilter").value = "Completed";
+
+    filterDrives();
+
+    // Table tak scroll
+    document.querySelector(".drives-table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
 /* ================= STATS ================= */
 
 function updateDriveStats() {
@@ -660,8 +727,7 @@ lastDate: document.getElementById("lastDate").value,
         location: document.getElementById("location").value.trim(),
         branch: document.getElementById("branch").value.trim(),
         skills: document.getElementById("skills").value.trim(),
-        vacancy: Number(document.getElementById("vacancy").value),
-        status: document.getElementById("driveStatus").value
+        vacancy: Number(document.getElementById("vacancy").value)
     };
 
     if (
@@ -670,10 +736,9 @@ lastDate: document.getElementById("lastDate").value,
     drive.driveDate === "" ||
     drive.driveStartTime === "" ||
     drive.driveEndTime === "" ||
-    drive.lastDate === "" ||
-    drive.status === ""
+    drive.lastDate === ""
 )
-    {
+ {
         alert("Please fill all required drive details.");
         return;
     }
@@ -778,7 +843,7 @@ function editDrive(id) {
     document.getElementById("branch").value = drive.branch || "";
     document.getElementById("skills").value = drive.skills || "";
     document.getElementById("vacancy").value = drive.vacancy ?? "";
-    document.getElementById("driveStatus").value = drive.status || "";
+    
 
     document.getElementById("driveFormTitle").innerText =
         "Edit Placement Drive";
@@ -890,6 +955,10 @@ loadDrives();
 
 <script src="admin-profile.js"></script>
 <script src="admin-toolbar.js"></script>
-
+<script>
+function refreshPlacementDrivesPage() {
+    window.location.reload();
+}
+</script>
 </body>
 </html>

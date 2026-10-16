@@ -1,5 +1,8 @@
 package com.recruitease.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -35,9 +38,16 @@ public class PlacementDriveController {
     }
 
     @GetMapping
-    public List<PlacementDrive> getAllDrives() {
-        return placementDriveRepository.findAll();
+public List<PlacementDrive> getAllDrives() {
+
+    List<PlacementDrive> drives = placementDriveRepository.findAll();
+
+    for (PlacementDrive drive : drives) {
+        updateDriveStatus(drive);
     }
+
+    return placementDriveRepository.saveAll(drives);
+}
 
     @GetMapping("/{id}")
     public PlacementDrive getDriveById(@PathVariable Long id) {
@@ -63,9 +73,12 @@ public class PlacementDriveController {
 
         drive.setCompanyName(company.getCompanyName());
 
-        return ResponseEntity.ok(
-                placementDriveRepository.save(drive)
-        );
+// Automatically calculate status using drive date + start/end time
+updateDriveStatus(drive);
+
+return ResponseEntity.ok(
+        placementDriveRepository.save(drive)
+);
     }
 
     @PutMapping("/{id}")
@@ -100,6 +113,8 @@ public class PlacementDriveController {
         drive.setJobRole(updatedDrive.getJobRole());
         drive.setPackageLpa(updatedDrive.getPackageLpa());
         drive.setDriveDate(updatedDrive.getDriveDate());
+        drive.setDriveStartTime(updatedDrive.getDriveStartTime());
+        drive.setDriveEndTime(updatedDrive.getDriveEndTime());
         drive.setLastDate(updatedDrive.getLastDate());
         drive.setMode(updatedDrive.getMode());
         drive.setLocation(updatedDrive.getLocation());
@@ -107,7 +122,7 @@ public class PlacementDriveController {
         drive.setMinCgpa(updatedDrive.getMinCgpa());
         drive.setSkills(updatedDrive.getSkills());
         drive.setVacancy(updatedDrive.getVacancy());
-        drive.setStatus(updatedDrive.getStatus());
+        updateDriveStatus(drive);
 
         return ResponseEntity.ok(
                 placementDriveRepository.save(drive)
@@ -125,4 +140,42 @@ public class PlacementDriveController {
 
         return ResponseEntity.ok("Placement drive deleted successfully.");
     }
+private void updateDriveStatus(PlacementDrive drive) {
+
+    try {
+        if (drive.getDriveDate() == null ||
+            drive.getDriveStartTime() == null ||
+            drive.getLastDate() == null) {
+            return;
+        }
+
+        LocalDate driveDate = LocalDate.parse(drive.getDriveDate());
+        LocalTime startTime = LocalTime.parse(drive.getDriveStartTime());
+        LocalDate lastDate = LocalDate.parse(drive.getLastDate());
+
+        LocalDateTime startDateTime =
+                LocalDateTime.of(driveDate, startTime);
+
+        LocalDateTime lastDateTime =
+                LocalDateTime.of(lastDate, LocalTime.MAX);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(startDateTime)) {
+            drive.setStatus("Upcoming");
+
+        } else if (!now.isAfter(lastDateTime)) {
+            drive.setStatus("Active");
+
+        } else {
+            drive.setStatus("Completed");
+        }
+
+    } catch (Exception e) {
+        System.out.println(
+            "Unable to calculate drive status for drive ID: "
+            + drive.getId()
+        );
+    }
+}
 }

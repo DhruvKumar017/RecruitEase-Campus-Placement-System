@@ -7,4 +7,6 @@ import com.recruitease.entity.AptitudeTest;
 public interface AptitudeTestRepository
         extends JpaRepository<AptitudeTest, Long> {
 
+    java.util.List<AptitudeTest> findAllByOrderByTestNumberAsc();
+
 }

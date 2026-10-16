@@ -71,12 +71,22 @@
     }
 
     async function apiRequest(url, options = {}) {
-        const requestOptions = {
-            ...options,
-            headers: {
-                ...(options.headers || {})
-            }
-        };
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+    throw new Error(
+        "Admin session expired. Please login again."
+    );
+}
+
+const requestOptions = {
+    ...options,
+    headers: {
+        ...(options.headers || {}),
+        "Authorization": "Bearer " + token,
+        "Accept": "application/json"
+    }
+};
 
         if (options.body) {
             requestOptions.headers["Content-Type"] = "application/json";
@@ -1149,6 +1159,18 @@
                 tab.style.display = "none";
             }
         });
+        // Hide Main Admin-only quick actions from Normal Admin
+document.querySelectorAll(".quick-action")
+    .forEach(function (element) {
+        const text = element.textContent.trim().toLowerCase();
+
+        if (
+            text.includes("add new admin") ||
+            text.includes("manage roles")
+        ) {
+            element.style.display = "none";
+        }
+    });
 
         const generalInputs = [
             "instituteName",

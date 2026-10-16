@@ -46,15 +46,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authorizationHeader.substring(7).trim();
 
         try {
-            if (jwtService.isTokenValid(token) &&
-                    SecurityContextHolder.getContext()
-                            .getAuthentication() == null) {
+if (!jwtService.isTokenValid(token)) {
+    SecurityContextHolder.clearContext();
+
+    response.sendError(
+            HttpServletResponse.SC_UNAUTHORIZED,
+            "Invalid or expired authentication token."
+    );
+    return;
+}
+
+if (SecurityContextHolder.getContext()
+        .getAuthentication() == null) {
 
                 String username =
                         jwtService.extractUsername(token);
 
                 String role =
                         jwtService.extractRole(token);
+                        // Demo Viewer must never access real application APIs.
+if ("DEMO_VIEWER".equals(role)) {
+
+    String path = request.getServletPath();
+
+boolean allowedDemoApi =
+        "GET".equals(request.getMethod())
+        && path.equals("/api/demo-viewer/dashboard");
+
+    if (!allowedDemoApi) {
+
+        SecurityContextHolder.clearContext();
+
+        response.sendError(
+                HttpServletResponse.SC_FORBIDDEN,
+                "Demo Viewer cannot access this API."
+        );
+        return;
+    }
+}
 
                 if (username != null &&
                         !username.isBlank() &&
@@ -84,10 +113,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             }
 
-        } catch (Exception error) {
-            SecurityContextHolder.clearContext();
-        }
+} catch (Exception error) {
+    SecurityContextHolder.clearContext();
 
-        filterChain.doFilter(request, response);
+    response.sendError(
+            HttpServletResponse.SC_UNAUTHORIZED,
+            "Invalid or expired authentication token."
+    );
+    return;
+}
+
+filterChain.doFilter(request, response);
     }
 }

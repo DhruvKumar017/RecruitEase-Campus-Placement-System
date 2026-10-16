@@ -35,10 +35,32 @@ public class AptitudeTestController {
 
     /* ================= GET ALL TESTS ================= */
 
-    @GetMapping("/api/aptitude-tests")
-    public List<AptitudeTest> getAllTests() {
-        return aptitudeTestRepository.findAll();
+@GetMapping("/api/aptitude-tests")
+public List<AptitudeTest> getAllTests() {
+
+    List<AptitudeTest> tests = aptitudeTestRepository.findAll();
+
+    tests.sort((a, b) -> Long.compare(a.getId(), b.getId()));
+
+    boolean changed = false;
+
+    for (int i = 0; i < tests.size(); i++) {
+        int correctTestNumber = i + 1;
+
+        if (tests.get(i).getTestNumber() == null ||
+                !tests.get(i).getTestNumber().equals(correctTestNumber)) {
+
+            tests.get(i).setTestNumber(correctTestNumber);
+            changed = true;
+        }
     }
+
+    if (changed) {
+        aptitudeTestRepository.saveAll(tests);
+    }
+
+    return tests;
+}
 
     /* ================= CREATE TEST ================= */
 
@@ -74,6 +96,12 @@ public class AptitudeTestController {
         if (test.getScore() == null) {
             test.setScore(0);
         }
+        List<AptitudeTest> existingTests =
+        aptitudeTestRepository.findAllByOrderByTestNumberAsc();
+
+int nextTestNumber = existingTests.size() + 1;
+
+test.setTestNumber(nextTestNumber);
 
         AptitudeTest savedTest = aptitudeTestRepository.save(test);
 
@@ -93,19 +121,18 @@ public class AptitudeTestController {
             return ResponseEntity.notFound().build();
         }
 
-        boolean testIsScheduledForStudent = applicationRepository
-                .findAll()
-                .stream()
-                .anyMatch(application ->
-                        application.getTestId() != null &&
-                        application.getTestId().equals(testId)
-                );
+var scheduledApplications = applicationRepository.findByTestId(testId);
+scheduledApplications.forEach(application -> {
+    application.setTestId(null);
+    application.setTestDate(null);
+    application.setTestStartTime(null);
+    application.setTestEndTime(null);
+    application.setTestPermission(null);
+});
 
-        if (testIsScheduledForStudent) {
-            return ResponseEntity.badRequest().body(
-                    "This test is already scheduled for a student, so it cannot be deleted."
-            );
-        }
+if (!scheduledApplications.isEmpty()) {
+    applicationRepository.saveAll(scheduledApplications);
+}
 
         List<TestQuestion> questions =
                 testQuestionRepository.findByTestId(testId);
@@ -114,10 +141,23 @@ public class AptitudeTestController {
             testQuestionRepository.deleteAll(questions);
         }
 
-        aptitudeTestRepository.deleteById(testId);
+aptitudeTestRepository.deleteById(testId);
 
-        return ResponseEntity.ok(
-                "Test and its questions deleted successfully."
-        );
+List<AptitudeTest> remainingTests =
+        aptitudeTestRepository.findAll();
+
+remainingTests.sort((a, b) ->
+        Long.compare(a.getId(), b.getId())
+);
+
+for (int i = 0; i < remainingTests.size(); i++) {
+    remainingTests.get(i).setTestNumber(i + 1);
+}
+
+aptitudeTestRepository.saveAll(remainingTests);
+
+return ResponseEntity.ok(
+        "Test and its questions deleted successfully."
+);
     }
 }

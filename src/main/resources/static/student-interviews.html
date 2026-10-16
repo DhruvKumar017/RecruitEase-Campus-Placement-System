@@ -79,6 +79,699 @@
             width:100%;
         }
     }
+    .status-live{
+    color:#ffb84d !important;
+    background:rgba(255,184,77,.16) !important;
+    border:1px solid rgba(255,184,77,.35) !important;
+    animation:livePulse 1.5s infinite;
+}
+
+@keyframes livePulse{
+    0%,100%{
+        box-shadow:0 0 0 rgba(255,184,77,0);
+    }
+
+    50%{
+        box-shadow:0 0 14px rgba(255,184,77,.28);
+    }
+}
+/* ================================
+   INTERVIEW SUMMARY DESIGN
+================================ */
+
+.interview-summary-section {
+    margin-top: 24px;
+}
+
+.interview-page-heading {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.interview-heading-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.28);
+}
+
+.interview-page-heading h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.interview-page-heading p {
+    margin: 5px 0 0;
+    color: #8fa6c7;
+    font-size: 14px;
+}
+
+/* Main grid */
+
+.interview-summary-grid {
+    display: grid;
+    grid-template-columns: 1.9fr 1fr 1fr;
+    gap: 16px;
+}
+
+.summary-card {
+    border: 1px solid #173b67;
+    border-radius: 18px;
+    padding: 20px;
+    min-height: 190px;
+    box-sizing: border-box;
+}
+
+/* Total Interview Card */
+
+.total-interviews-card {
+    background:
+        radial-gradient(circle at top left,
+            rgba(37, 99, 235, 0.20),
+            transparent 45%),
+        #071a31;
+    border-color: #1462b8;
+}
+
+.summary-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.summary-card-header h3,
+.result-card-content h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.summary-card-header p,
+.result-card-content > p {
+    margin: 5px 0 0;
+    color: #91a8c7;
+    font-size: 13px;
+}
+
+.summary-card-header > strong {
+    margin-left: auto;
+    color: #ffffff;
+    font-size: 42px;
+    line-height: 1;
+}
+
+.summary-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 24px;
+}
+
+.total-icon {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+/* Upcoming / Live / Finished */
+
+.interview-status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 20px;
+    border: 1px solid #174a80;
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.mini-status-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    min-height: 84px;
+    background: rgba(8, 29, 55, 0.75);
+}
+
+.mini-status-card + .mini-status-card {
+    border-left: 1px solid #174a80;
+}
+
+.mini-status-card h4 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.mini-status-card strong {
+    display: block;
+    color: #ffffff;
+    font-size: 24px;
+    margin-top: 3px;
+}
+
+.mini-status-card p {
+    margin: 2px 0 0;
+    color: #8299b8;
+    font-size: 11px;
+}
+
+.mini-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 800;
+}
+
+.upcoming-icon {
+    background: #2563eb;
+    color: white;
+}
+
+.live-icon {
+    background: #059669;
+    color: white;
+}
+
+.finished-icon {
+    background: #2563eb;
+    color: white;
+}
+
+/* Placed Card */
+
+.placed-card {
+    display: flex;
+    gap: 16px;
+    background:
+        radial-gradient(circle at top left,
+            rgba(16, 185, 129, 0.25),
+            transparent 60%),
+        #07302f;
+    border-color: #0d7668;
+}
+
+.placed-icon {
+    background: rgba(16, 185, 129, 0.22);
+}
+
+.result-card-content {
+    flex: 1;
+}
+
+.result-number {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.result-number strong {
+    color: #ffffff;
+    font-size: 34px;
+}
+
+.result-number span {
+    color: #a6b7ca;
+    font-size: 12px;
+}
+
+.result-message {
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.placed-message {
+    color: #4ade80;
+    background: rgba(16, 185, 129, 0.16);
+}
+
+/* Failed Card */
+
+.failed-card {
+    display: flex;
+    gap: 16px;
+    background:
+        radial-gradient(circle at top left,
+            rgba(239, 68, 68, 0.20),
+            transparent 60%),
+        #28152b;
+    border-color: #8b3346;
+}
+
+.failed-icon {
+    background: rgba(239, 68, 68, 0.25);
+    color: #ffffff;
+}
+
+.failed-message {
+    color: #fb7185;
+    background: rgba(239, 68, 68, 0.14);
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+    .interview-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .total-interviews-card {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 700px) {
+    .interview-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .total-interviews-card {
+        grid-column: auto;
+    }
+
+    .interview-status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mini-status-card + .mini-status-card {
+        border-left: none;
+        border-top: 1px solid #174a80;
+    }
+}
+
+/* ========================================
+   INTERVIEW PAGE - NEW SUMMARY CARDS
+   Only affects the Interviews page
+======================================== */
+
+.interview-new-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.interview-new-card {
+    position: relative;
+    min-height: 190px;
+    padding: 24px;
+    border-radius: 18px;
+    border: 1px solid rgba(47, 128, 255, 0.18);
+    background: #081528;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.interview-new-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.22);
+}
+
+.interview-new-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    border-radius: 13px;
+    font-size: 23px;
+}
+
+.interview-new-card p {
+    margin: 0 0 8px;
+    color: #dce7f8;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.interview-new-card h2 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.interview-new-card span {
+    color: #93a8c4;
+    font-size: 12px;
+}
+
+/* Total Interviews - Blue */
+.interview-new-card.total {
+    background: linear-gradient(145deg, #102b55, #081528);
+    border-color: rgba(59, 130, 246, 0.45);
+}
+
+.interview-new-card.total .interview-new-icon {
+    background: rgba(59, 130, 246, 0.22);
+    color: #60a5fa;
+}
+
+/* Selected - Green */
+.interview-new-card.selected {
+    background: linear-gradient(145deg, #103c35, #081528);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.interview-new-card.selected .interview-new-icon {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+}
+
+/* Not Selected - Red */
+.interview-new-card.not-selected {
+    background: linear-gradient(145deg, #421e31, #081528);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.interview-new-card.not-selected .interview-new-icon {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fb7185;
+}
+
+/* Completed - Gold */
+.interview-new-card.completed {
+    background: linear-gradient(145deg, #423316, #081528);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.interview-new-card.completed .interview-new-icon {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+
+/* Light Mode - Interview Cards Only */
+body.light .interview-new-card {
+    background: #ffffff;
+    border-color: #dbe4f0;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+}
+
+body.light .interview-new-card p,
+body.light .interview-new-card h2 {
+    color: #0f172a;
+}
+
+body.light .interview-new-card span {
+    color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 1250px) {
+    .interview-new-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .interview-new-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .interview-new-card {
+        min-height: 165px;
+    }
+}
+
+/* ========================================
+   STUDENT INTERVIEWS - PROFESSIONAL TABLE
+   Scoped to Interviews page only
+======================================== */
+
+.interview-table-section {
+    margin-top: 26px;
+    padding: 26px;
+    background: #081528;
+    border: 1px solid rgba(47, 128, 255, 0.18);
+    border-radius: 20px;
+}
+
+.interview-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.interview-table-header h2 {
+    color: #fff;
+    font-size: 21px;
+    font-weight: 700;
+    margin: 0 0 6px;
+}
+
+.interview-table-header p {
+    color: #91a8c7;
+    font-size: 13px;
+    margin: 0;
+}
+
+.interview-refresh-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    border: none;
+    border-radius: 11px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.interview-refresh-btn:hover {
+    background: #1d4ed8;
+}
+
+.interview-refresh-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Search and Status Filter */
+
+.interview-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.interview-filter-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    max-width: 440px;
+    padding: 0 16px;
+    height: 46px;
+    background: #0b1d38;
+    border: 1px solid #1b3d67;
+    border-radius: 11px;
+    color: #9fb0c7;
+}
+
+.interview-filter-search span {
+    font-size: 24px;
+}
+
+.interview-filter-search input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 13px;
+}
+
+.interview-filter-search input::placeholder {
+    color: #8299b8;
+}
+
+.interview-status-filter {
+    min-width: 170px;
+    height: 46px;
+    padding: 0 14px;
+    background: #0b1d38;
+    border: 1px solid #1b3d67;
+    border-radius: 11px;
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Table */
+
+.interview-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.interview-data-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.interview-data-table thead {
+    background: #102746;
+}
+
+.interview-data-table th {
+    padding: 17px 15px;
+    color: #a9c4e7;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.interview-data-table th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.interview-data-table th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.interview-data-table td {
+    padding: 18px 15px;
+    color: #dce7f8;
+    font-size: 13px;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(47, 128, 255, 0.12);
+}
+
+.interview-data-table tbody tr:hover {
+    background: rgba(47, 128, 255, 0.06);
+}
+
+.interview-data-table .interview-empty {
+    text-align: center;
+    padding: 36px 15px;
+    color: #91a8c7;
+}
+
+.interview-data-table .interview-status {
+    display: inline-block;
+    min-width: 105px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.interview-data-table .interview-action-btn {
+    min-width: 95px;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.interview-company-name {
+    color: #fff;
+    font-weight: 700;
+}
+
+.interview-role-name {
+    color: #9fb0c7;
+}
+
+.interview-mode-label {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(47, 128, 255, 0.12);
+    color: #93c5fd;
+}
+
+/* Light mode - Table Only */
+
+body.light .interview-table-section {
+    background: #fff;
+    border-color: #dbeafe;
+}
+
+body.light .interview-table-header h2,
+body.light .interview-company-name {
+    color: #0f172a;
+}
+
+body.light .interview-filter-search,
+body.light .interview-status-filter {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+body.light .interview-filter-search input {
+    color: #0f172a;
+}
+
+body.light .interview-data-table thead {
+    background: #eff6ff;
+}
+
+body.light .interview-data-table th {
+    color: #475569;
+}
+
+body.light .interview-data-table td {
+    color: #334155;
+    border-color: #e2e8f0;
+}
+
+body.light .interview-data-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* Responsive */
+
+@media (max-width: 750px) {
+    .interview-table-section {
+        padding: 16px;
+    }
+
+    .interview-table-header,
+    .interview-filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .interview-filter-search {
+        max-width: 100%;
+    }
+
+    .interview-status-filter,
+    .interview-refresh-btn {
+        width: 100%;
+    }
+}
+
 </style>
 </head>
 
@@ -96,7 +789,6 @@
         <a href="student-applications.html">📄 Applications</a>
         <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
         <a class="active" href="student-interviews.html">🎤 Interviews</a>
-        <a href="student-resume.html">📑 Resume Builder</a>
         <a href="student-placement-drives.html">💼 Placement Drive</a>
         <a href="student-notifications.html">🔔 Notifications</a>
         <a href="student-settings.html">⚙ Settings</a>
@@ -141,45 +833,135 @@
 
         </header>
 
-        <section class="details-card">
 
-            <h2>Interview Schedule</h2>
+<section class="interview-summary-section">
 
-            <div class="info-grid">
+    <div class="interview-page-heading">
+        <div class="interview-heading-icon">🎤</div>
+        <div>
+            <h1>My Interviews</h1>
+            <p>Track your interview schedule and results</p>
+        </div>
+    </div>
 
-                <div>
-                    <label>Total Interviews</label>
-                    <p id="totalInterviewCount">0</p>
-                </div>
+    <div class="interview-new-stats">
 
-                <div>
-                    <label>Upcoming</label>
-                    <p id="upcomingInterviewCount">0</p>
-                </div>
+        <div class="interview-new-card total">
+            <div class="interview-new-icon">📅</div>
+            <p>Total Interviews</p>
+            <h2 id="totalInterviewCount">0</h2>
+            <span>All interview records</span>
+        </div>
 
-                <div>
-                    <label>Pending</label>
-                    <p id="pendingInterviewCount">0</p>
-                </div>
+        <div class="interview-new-card selected">
+            <div class="interview-new-icon">🏆</div>
+            <p>Selected</p>
+            <h2 id="placedInterviewCount">0</h2>
+            <span>Successfully selected</span>
+        </div>
 
-                <div>
-                    <label>Placed</label>
-                    <p id="placedInterviewCount">0</p>
-                </div>
+        <div class="interview-new-card not-selected">
+            <div class="interview-new-icon">✕</div>
+            <p>Not Selected</p>
+            <h2 id="failedInterviewCount">0</h2>
+            <span>Not cleared</span>
+        </div>
 
-            </div>
+        <div class="interview-new-card completed">
+            <div class="interview-new-icon">✓</div>
+            <p>Completed</p>
+            <h2 id="finishedInterviewCount">0</h2>
+            <span>Interview process finished</span>
+        </div>
 
-        </section>
+    </div>
 
-        <section class="details-card" style="margin-top:24px;">
+    <!-- Existing JavaScript references these IDs -->
+    <span id="upcomingInterviewCount" hidden>0</span>
+    <span id="liveInterviewCount" hidden>0</span>
 
-            <h2>My Interview Requests & Schedule</h2>
+</section>
 
-            <div class="application-list" id="interviewList">
-                <p class="interview-empty">Loading interviews...</p>
-            </div>
 
-        </section>
+
+<!-- INTERVIEW REQUESTS & SCHEDULE TABLE -->
+<section class="interview-table-section">
+
+    <div class="interview-table-header">
+        <div>
+            <h2>Interview Requests & Schedule</h2>
+            <p>View your interviews, schedules and results</p>
+        </div>
+
+        <button
+            type="button"
+            class="interview-refresh-btn"
+            id="refreshInterviewBtn"
+            onclick="refreshInterviews()"
+        >
+            ↻ Refresh
+        </button>
+    </div>
+
+    <div class="interview-filter-bar">
+
+        <div class="interview-filter-search">
+            <span>⌕</span>
+            <input
+                type="text"
+                id="interviewTableSearch"
+                placeholder="Search by company, role or status..."
+                oninput="renderInterviews()"
+            >
+        </div>
+
+        <select
+            id="interviewStatusFilter"
+            class="interview-status-filter"
+            onchange="renderInterviews()"
+        >
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="live">Live</option>
+            <option value="completed">Completed</option>
+            <option value="selected">Selected</option>
+            <option value="rejected">Not Selected</option>
+        </select>
+
+    </div>
+
+    <div class="interview-table-scroll">
+
+        <table class="interview-data-table">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Interview Date</th>
+                    <th>Interview Time</th>
+                    <th>Mode</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="interviewList">
+                <tr>
+                    <td colspan="8" class="interview-empty">
+                        Loading interviews...
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
 
     </main>
 
@@ -239,8 +1021,20 @@ async function initializeInterviewPage() {
             getInterviewSortTime(first) - getInterviewSortTime(second)
         );
 
-        updateInterviewStats();
-        renderInterviews();
+      updateInterviewStats();
+renderInterviews();
+
+
+/* Automatically refresh interview data every 30 seconds */
+
+if (!window.interviewRefreshTimer) {
+    window.interviewRefreshTimer = setInterval(() => {
+        if (!document.hidden) {
+            refreshInterviews(true);
+        }
+    }, 30000);
+}
+
 
     } catch (error) {
         console.error(error);
@@ -253,12 +1047,84 @@ async function initializeInterviewPage() {
     }
 }
 
+async function refreshInterviews(silent = false) {
+
+    const refreshBtn = document.getElementById("refreshInterviewBtn");
+
+    if (refreshBtn?.disabled) return;
+
+    try {
+
+        if (refreshBtn) {
+            refreshBtn.disabled = true;
+            refreshBtn.innerText = "↻ Refreshing...";
+        }
+
+        const responses = await Promise.all([
+            fetch("/api/interview-requests/student/" + studentId, {
+                cache: "no-store"
+            }),
+            fetch("/api/applications/student/" + studentId, {
+                cache: "no-store"
+            })
+        ]);
+
+        if (!responses[0].ok || !responses[1].ok) {
+            throw new Error("Unable to refresh interview data.");
+        }
+
+        const interviews = await responses[0].json();
+        const applications = await responses[1].json();
+
+        if (!Array.isArray(interviews) ||
+            !Array.isArray(applications)) {
+            throw new Error("Invalid interview data received.");
+        }
+
+        const updatedApplicationsMap = {};
+
+        applications.forEach(application => {
+            updatedApplicationsMap[application.id] = application;
+        });
+
+        interviews.sort((first, second) =>
+            getInterviewSortTime(first) - getInterviewSortTime(second)
+        );
+
+        studentInterviews = interviews;
+        studentApplicationsMap = updatedApplicationsMap;
+
+        updateInterviewStats();
+        renderInterviews();
+
+    } catch (error) {
+
+        console.error("Interview refresh failed:", error);
+
+        if (!silent) {
+    alert("Unable to refresh interviews. Please try again.");
+}
+
+    } finally {
+
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.innerText = "↻ Refresh";
+        }
+
+    }
+}
+
+
 function getEffectiveStatus(interview) {
+
     const application =
         studentApplicationsMap[interview.applicationId];
 
-    const applicationStatus = normalizeStatus(application?.status);
+    const applicationStatus =
+        normalizeStatus(application?.status);
 
+    // Final result has highest priority
     if (applicationStatus === "placed") {
         return "placed";
     }
@@ -271,89 +1137,222 @@ function getEffectiveStatus(interview) {
         return "rejected";
     }
 
-    return normalizeStatus(interview.interviewStatus);
+    const backendStatus =
+        normalizeStatus(interview.interviewStatus);
+
+    // Interview has not been scheduled yet
+    if (backendStatus === "pending") {
+        return "pending";
+    }
+
+    // Scheduled interview changes automatically by time
+    if (interview.interviewDate && interview.interviewTime) {
+        return getInterviewTimeStatus(interview);
+    }
+
+    return backendStatus;
 }
 
 function updateInterviewStats() {
-    const total = studentInterviews.length;
 
+const total = studentInterviews.filter(interview => {
+    const status = getEffectiveStatus(interview);
+
+    return status !== "pending";
+}).length;
     const upcoming = studentInterviews.filter(interview =>
-        isUpcomingInterview(interview)
+        getEffectiveStatus(interview) === "upcoming"
     ).length;
 
-    const pending = studentInterviews.filter(interview =>
-        getEffectiveStatus(interview) === "pending"
+    const live = studentInterviews.filter(interview =>
+        getEffectiveStatus(interview) === "live"
     ).length;
 
-    const placed = studentInterviews.filter(interview =>
-        getEffectiveStatus(interview) === "placed"
-    ).length;
+    const finished = studentInterviews.filter(interview => {
+        const status = getEffectiveStatus(interview);
+
+        return [
+            "finished",
+            "completed",
+            "placed",
+            "selected",
+            "failed",
+            "rejected"
+        ].includes(status);
+    }).length;
+
+    const placed = studentInterviews.filter(interview => {
+        const status = getEffectiveStatus(interview);
+
+        return status === "placed" || status === "selected";
+    }).length;
+
+    const failed = studentInterviews.filter(interview => {
+        const status = getEffectiveStatus(interview);
+
+        return status === "failed" || status === "rejected";
+    }).length;
 
     document.getElementById("totalInterviewCount").innerText = total;
     document.getElementById("upcomingInterviewCount").innerText = upcoming;
-    document.getElementById("pendingInterviewCount").innerText = pending;
+    document.getElementById("liveInterviewCount").innerText = live;
+    document.getElementById("finishedInterviewCount").innerText = finished;
     document.getElementById("placedInterviewCount").innerText = placed;
-    document.getElementById("notificationCount").innerText = pending;
+    document.getElementById("failedInterviewCount").innerText = failed;
+
+    const notificationCount =
+        document.getElementById("notificationCount");
+
+    if (notificationCount) {
+        notificationCount.innerText = upcoming;
+    }
 }
 
 function renderInterviews() {
-    const search = document.getElementById("interviewSearch").value
-        .toLowerCase()
-        .trim();
 
-    const filteredInterviews = studentInterviews.filter(interview => {
-        const companyName = String(interview.companyName || "")
-            .toLowerCase();
+    const topSearch = document.getElementById("interviewSearch")?.value || "";
+    const tableSearch = document.getElementById("interviewTableSearch")?.value || "";
 
-        const status = getEffectiveStatus(interview);
+    const search = (tableSearch || topSearch).toLowerCase().trim();
 
-        const interviewMode = String(interview.interviewMode || "")
-            .toLowerCase();
-
-        return (
-            companyName.includes(search) ||
-            status.includes(search) ||
-            interviewMode.includes(search)
-        );
-    });
+    const selectedStatus =
+        document.getElementById("interviewStatusFilter")?.value || "";
 
     const interviewList = document.getElementById("interviewList");
 
+    if (!interviewList) return;
+
+    const filteredInterviews = studentInterviews.filter(interview => {
+
+        const status = getEffectiveStatus(interview);
+
+        const application = studentApplicationsMap[interview.applicationId];
+
+        const companyName = String(interview.companyName || "");
+        const role = String(
+            interview.role ||
+            application?.role ||
+            ""
+        );
+
+        const mode = String(interview.interviewMode || "");
+
+        const searchableText = [
+            companyName,
+            role,
+            mode,
+            status,
+            getInterviewStatusText(status)
+        ].join(" ").toLowerCase();
+
+        const matchesSearch = searchableText.includes(search);
+
+        let matchesStatus = true;
+
+        if (selectedStatus === "completed") {
+            matchesStatus = [
+                "finished",
+                "completed"
+            ].includes(status);
+
+        } else if (selectedStatus === "selected") {
+            matchesStatus = [
+                "selected",
+                "placed"
+            ].includes(status);
+
+        } else if (selectedStatus === "rejected") {
+            matchesStatus = [
+                "rejected",
+                "failed"
+            ].includes(status);
+
+        } else if (selectedStatus) {
+            matchesStatus = status === selectedStatus;
+        }
+
+        return matchesSearch && matchesStatus;
+    });
+
     if (filteredInterviews.length === 0) {
+
         interviewList.innerHTML = `
-            <p class="interview-empty">
-                No interview request or scheduled interview found.
-            </p>
+            <tr>
+                <td colspan="8" class="interview-empty">
+                    No interviews found.
+                </td>
+            </tr>
         `;
+
         return;
     }
 
-    interviewList.innerHTML = filteredInterviews.map(interview => {
+    interviewList.innerHTML = filteredInterviews.map((interview, index) => {
+
         const status = getEffectiveStatus(interview);
 
+        const application = studentApplicationsMap[interview.applicationId];
+
+        const companyName = interview.companyName || "Company";
+
+        const role =
+            interview.role ||
+            application?.role ||
+            "Not specified";
+
+        const date = interview.interviewDate
+            ? formatDate(interview.interviewDate)
+            : "Not scheduled";
+
+        const time = interview.interviewTime
+            ? formatTime(interview.interviewTime)
+            : "-";
+
+        const mode = interview.interviewMode || "-";
+
         return `
-            <div class="application-card">
+            <tr>
 
-                <div>
-                    <h3>
-                        ${escapeHtml(interview.companyName || "Company")} Interview
-                    </h3>
+                <td>${index + 1}</td>
 
-                    <p>${escapeHtml(getScheduleText(interview, status))}</p>
+                <td>
+                    <span class="interview-company-name">
+                        ${escapeHtml(companyName)}
+                    </span>
+                </td>
 
-                    ${getInterviewRemarkMarkup(interview, status)}
-                </div>
+                <td>
+                    <span class="interview-role-name">
+                        ${escapeHtml(role)}
+                    </span>
+                </td>
 
-                <span class="interview-status ${getInterviewStatusClass(status)}">
-                    ${escapeHtml(getInterviewStatusText(status))}
-                </span>
+                <td>${escapeHtml(date)}</td>
 
-                ${getInterviewActionMarkup(interview, status)}
+                <td>${escapeHtml(time)}</td>
 
-            </div>
+                <td>
+                    <span class="interview-mode-label">
+                        ${escapeHtml(mode)}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="interview-status ${getInterviewStatusClass(status)}">
+                        ${escapeHtml(getInterviewStatusText(status))}
+                    </span>
+                </td>
+
+                <td>
+                    ${getInterviewActionMarkup(interview, status)}
+                </td>
+
+            </tr>
         `;
+
     }).join("");
 }
+
 
 function getScheduleText(interview, status) {
     if (status === "placed") {
@@ -404,21 +1403,106 @@ function getInterviewRemarkMarkup(interview, status) {
 }
 
 function getInterviewActionMarkup(interview, status) {
-    if (
-        status === "scheduled" &&
-        isValidHttpLink(interview.interviewLink)
-    ) {
+
+    // 1. Interview abhi schedule nahi hua
+    if (status === "pending") {
         return `
             <button
-                class="interview-action-btn"
+                class="interview-action-btn secondary"
                 type="button"
-                onclick="joinInterview(${interview.id})"
+                onclick="showInterviewDetails(${interview.id})"
             >
-                Join
+                Details
             </button>
         `;
     }
 
+    // 2. Interview UPCOMING hai
+    if (status === "upcoming") {
+
+        // Student already applied
+        if (interview.studentAppliedAt) {
+            return `
+                <button
+                    class="interview-action-btn applied-btn"
+                    type="button"
+                    disabled
+                >
+                    ✓ Applied
+                </button>
+            `;
+        }
+
+        // Student abhi tak apply nahi kiya
+        return `
+            <button
+                class="interview-action-btn apply-btn"
+                type="button"
+                onclick="applyForInterview(${interview.id}, this)"
+            >
+                Apply for Interview
+            </button>
+        `;
+    }
+
+    // 3. Interview LIVE ho gaya
+    if (status === "live") {
+
+        // Apply nahi kiya tha
+        if (!interview.studentAppliedAt) {
+            return `
+                <button
+                    class="interview-action-btn not-applied-btn"
+                    type="button"
+                    disabled
+                >
+                    Not Applied
+                </button>
+            `;
+        }
+
+        // Applied + online interview link available
+        if (isValidHttpLink(interview.interviewLink)) {
+            return `
+                <button
+                    class="interview-action-btn"
+                    type="button"
+                    onclick="joinInterview(${interview.id})"
+                >
+                    Join Interview
+                </button>
+            `;
+        }
+
+        // Applied but offline/no URL
+        return `
+            <button
+                class="interview-action-btn secondary"
+                type="button"
+                onclick="showInterviewDetails(${interview.id})"
+            >
+                Details
+            </button>
+        `;
+    }
+
+    // 4. Interview finished but student never applied
+    if (
+        status === "finished" &&
+        !interview.studentAppliedAt
+    ) {
+        return `
+            <button
+                class="interview-action-btn not-applied-btn"
+                type="button"
+                disabled
+            >
+                Not Applied
+            </button>
+        `;
+    }
+
+    // 5. Finished / Selected / Placed / Rejected
     return `
         <button
             class="interview-action-btn secondary"
@@ -429,8 +1513,63 @@ function getInterviewActionMarkup(interview, status) {
         </button>
     `;
 }
+async function applyForInterview(interviewId, button) {
+
+    if (!interviewId) {
+        alert("Interview request not found.");
+        return;
+    }
+
+    const originalText = button.innerText;
+
+    try {
+        button.disabled = true;
+        button.innerText = "Applying...";
+
+        const response = await fetch(
+            `/api/interview-requests/${interviewId}/student-apply`,
+            {
+                method: "PUT"
+            }
+        );
+
+        if (!response.ok) {
+            const message = await response.text();
+            throw new Error(message || "Unable to apply for interview.");
+        }
+
+        const updatedInterview = await response.json();
+
+        const index = studentInterviews.findIndex(
+            item => Number(item.id) === Number(interviewId)
+        );
+
+        if (index !== -1) {
+            studentInterviews[index] = updatedInterview;
+        }
+
+        updateInterviewStats();
+        renderInterviews();
+
+        alert("Interview applied successfully.");
+
+    } catch (error) {
+
+        console.error(error);
+
+        button.disabled = false;
+        button.innerText = originalText;
+
+        alert(error.message || "Unable to apply for interview.");
+    }
+}
 
 function getInterviewStatusClass(status) {
+
+    if (status === "upcoming") return "status-scheduled";
+    if (status === "live") return "status-live";
+    if (status === "finished") return "status-completed";
+
     if (status === "scheduled") return "status-scheduled";
     if (status === "completed") return "status-completed";
     if (status === "selected") return "status-selected";
@@ -441,11 +1580,16 @@ function getInterviewStatusClass(status) {
 }
 
 function getInterviewStatusText(status) {
+
+    if (status === "upcoming") return "Upcoming";
+    if (status === "live") return "Live";
+    if (status === "finished") return "Finished";
+
     if (status === "scheduled") return "Scheduled";
     if (status === "completed") return "Completed";
     if (status === "selected") return "Selected";
     if (status === "placed") return "Placed";
-    if (status === "rejected") return "Rejected";
+    if (status === "rejected") return "Failed";
 
     return "Request Pending";
 }
@@ -489,21 +1633,41 @@ function showInterviewDetails(interviewId) {
     );
 }
 
-function isUpcomingInterview(interview) {
-    if (getEffectiveStatus(interview) !== "scheduled") {
-        return false;
-    }
+function getInterviewTimeStatus(interview) {
 
     if (!interview.interviewDate || !interview.interviewTime) {
-        return false;
+        return "pending";
     }
 
-    const dateTime = new Date(
+    const startTime = new Date(
         `${interview.interviewDate}T${normalizeTime(interview.interviewTime)}`
     );
 
-    return !Number.isNaN(dateTime.getTime()) &&
-        dateTime >= new Date();
+    if (Number.isNaN(startTime.getTime())) {
+        return "pending";
+    }
+
+    const duration = Number(interview.interviewDuration) || 60;
+
+    const endTime = new Date(
+        startTime.getTime() + duration * 60 * 1000
+    );
+
+    const now = new Date();
+
+    if (now < startTime) {
+        return "upcoming";
+    }
+
+    if (now >= startTime && now < endTime) {
+        return "live";
+    }
+
+    return "finished";
+}
+
+function isUpcomingInterview(interview) {
+    return getInterviewTimeStatus(interview) === "upcoming";
 }
 
 function getInterviewSortTime(interview) {

@@ -168,21 +168,6 @@
 
 <div class="layout">
 
-    <aside class="sidebar">
-
-        <div class="logo">🎓 Recruit<span>Ease</span></div>
-
-        <a href="admin-dashboard.html">⌂ Dashboard</a>
-        <a href="students.html">👥 Students</a>
-        <a href="companies.html">🏢 Companies</a>
-        <a href="eligibility.html">🏆 Eligibility</a>
-        <a href="applications-admin.html">📄 Applications</a>
-        <a class="active" href="admin-aptitude-tests.html">🧠 Aptitude Tests</a>
-        <a href="placed-students.html">✅ Placed Students</a>
-        <a href="index.html">↪ Logout</a>
-
-    </aside>
-
     <main class="main">
 
         <div class="topbar">
@@ -433,10 +418,18 @@ async function initializePage() {
 
     const savedTestId = localStorage.getItem("selectedTestId");
 
-    if (savedTestId) {
-        document.getElementById("testIdInput").value = savedTestId;
+if (savedTestId) {
+    const savedTest = allTests.find(test =>
+        Number(test.id) === Number(savedTestId)
+    );
+
+    if (savedTest) {
+        document.getElementById("testIdInput").value =
+            savedTest.testNumber || savedTest.id;
+
         loadSelectedTest();
     }
+}
 }
 
 async function loadAvailableTests() {
@@ -475,18 +468,18 @@ function renderTestDropdowns() {
     allTests.forEach(test => {
         const testName = escapeHtml(test.testName || "Aptitude Test");
 
-        testSelect.innerHTML += `
-            <option value="${test.id}">
-                Test ID: ${test.id} - ${testName}
-            </option>
-        `;
+testSelect.innerHTML += `
+    <option value="${test.id}">
+        Test ID: ${test.testNumber || test.id} - ${testName}
+    </option>
+`;
 
         if (Number(test.id) !== Number(activeTestId)) {
-            sourceSelect.innerHTML += `
-                <option value="${test.id}">
-                    Test ID: ${test.id} - ${testName}
-                </option>
-            `;
+sourceSelect.innerHTML += `
+    <option value="${test.id}">
+        Test ID: ${test.testNumber || test.id} - ${testName}
+    </option>
+`;
         }
     });
 
@@ -503,7 +496,14 @@ function selectTestFromDropdown() {
     const selectedId = document.getElementById("testIdSelect").value;
 
     if (selectedId) {
-        document.getElementById("testIdInput").value = selectedId;
+        const selectedTest = allTests.find(test =>
+            Number(test.id) === Number(selectedId)
+        );
+
+        document.getElementById("testIdInput").value =
+            selectedTest
+                ? (selectedTest.testNumber || selectedTest.id)
+                : "";
     }
 }
 
@@ -515,33 +515,36 @@ async function loadSelectedTest() {
         return;
     }
 
-    const testId = Number(enteredId);
+const enteredDisplayTestId = Number(enteredId);
 
-    const selectedTest = allTests.find(test =>
-        Number(test.id) === testId
-    );
+const selectedTest = allTests.find(test =>
+    Number(test.testNumber || test.id) === enteredDisplayTestId
+);
 
-    if (!selectedTest) {
-        alert("Ye Test ID database me nahi mili.");
-        return;
-    }
+if (!selectedTest) {
+    alert("Ye Test ID database me nahi mili.");
+    return;
+}
 
-    activeTestId = testId;
+const testId = Number(selectedTest.id);
 
-    localStorage.setItem("selectedTestId", testId);
+activeTestId = testId;
 
-    document.getElementById("selectedTestIdText").innerText = testId;
+localStorage.setItem("selectedTestId", testId);
+
+const displayTestId = selectedTest.testNumber || selectedTest.id;
+
+document.getElementById("selectedTestIdText").innerText = displayTestId;
 
     document.getElementById("testStatusText").innerText =
         selectedTest.status || "Active";
 
     document.getElementById("testIdSelect").value = testId;
 
-    document.getElementById("selectedTestMessage").innerText =
-        `✅ Test ID ${testId} selected: ${
-            selectedTest.testName || "Aptitude Test"
-        }`;
-
+document.getElementById("selectedTestMessage").innerText =
+    `✅ Test ID ${displayTestId} selected: ${
+        selectedTest.testName || "Aptitude Test"
+    }`;
     document.getElementById("selectedTestMessage").style.display = "block";
 
     renderTestDropdowns();
@@ -588,7 +591,9 @@ async function loadQuestions() {
             table.innerHTML = `
                 <tr>
                     <td colspan="6">
-                        No questions added for Test ID ${activeTestId}.
+                        No questions added for Test ID ${
+    allTests.find(test => Number(test.id) === Number(activeTestId))?.testNumber || activeTestId
+}.
                     </td>
                 </tr>
             `;
@@ -706,7 +711,15 @@ async function saveQuestion() {
             throw new Error(await response.text());
         }
 
-        alert(`Question saved for Test ID ${activeTestId}.`);
+        const currentTest = allTests.find(test =>
+    Number(test.id) === Number(activeTestId)
+);
+
+const displayTestId = currentTest
+    ? (currentTest.testNumber || currentTest.id)
+    : activeTestId;
+
+alert(`Question saved for Test ID ${displayTestId}.`);
 
         clearForm();
         await loadQuestions();
@@ -735,13 +748,28 @@ async function copyQuestionsToCurrentTest() {
         alert("Source aur Target Test ID same nahi ho sakti.");
         return;
     }
+    const sourceTest = allTests.find(test =>
+    Number(test.id) === Number(sourceTestId)
+);
 
-    const confirmed = confirm(
-        `Copy all questions?\n\n` +
-        `Source Test ID: ${sourceTestId}\n` +
-        `Target Test ID: ${activeTestId}\n\n` +
-        `Original questions delete nahi honge.`
-    );
+const targetTest = allTests.find(test =>
+    Number(test.id) === Number(activeTestId)
+);
+
+const sourceDisplayId = sourceTest
+    ? (sourceTest.testNumber || sourceTest.id)
+    : sourceTestId;
+
+const targetDisplayId = targetTest
+    ? (targetTest.testNumber || targetTest.id)
+    : activeTestId;
+
+const confirmed = confirm(
+    `Copy all questions?\n\n` +
+    `Source Test ID: ${sourceDisplayId}\n` +
+    `Target Test ID: ${targetDisplayId}\n\n` +
+    `Original questions delete nahi honge.`
+);
 
     if (!confirmed) {
         return;

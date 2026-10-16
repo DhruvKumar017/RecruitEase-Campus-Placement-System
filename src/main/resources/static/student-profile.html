@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -57,15 +57,14 @@
         <a href="student-eligible-companies.html">🏢 Eligible Companies</a>
         <a href="student-placement-drives.html">💼 Placement Drives</a>
         <a href="student-applications.html">📄 My Applications</a>
-        <a href="student-aptitude-tests.html">🧠 Aptitude Tests</a>
-        <a href="student-interviews.html">🎤 Interviews</a>
-        <a href="student-resume.html">📑 Resume Builder</a>
+        <a href="student-aptitude-tests.html">✅ Aptitude Tests</a>
+        <a href="student-interviews.html">👥 Interviews</a>
         <a href="student-notifications.html">🔔 Notifications</a>
 
         <p class="menu-title">ACCOUNT</p>
 
         <a href="student-settings.html">⚙ Settings</a>
-        <a href="#" onclick="logout(); return false;">↪ Logout</a>
+        <a href="#" onclick="logout(); return false;">??? Logout</a>
 
     </aside>
 
@@ -130,227 +129,325 @@
                     type="button"
                     onclick="downloadProfilePdf()"
                 >
-                    ⬇ Download Profile PDF
+                    ?? Download Profile PDF
                 </button>
             </div>
 
         </section>
+        <!-- ================= PROFILE SUMMARY STATS ================= -->
 
-        <section class="profile-grid">
+<section class="profile-summary-stats">
 
-            <section class="card">
+    <article class="profile-summary-card">
+        <div class="profile-summary-icon summary-blue">
+            ✓
+        </div>
 
-                <div class="profile-hero">
+        <div>
+            <h2 id="profileCompletionCount">0%</h2>
+            <p>Profile Completion</p>
+            <small>Complete your placement profile</small>
+        </div>
+    </article>
 
-                    <img
-                        id="mainPhoto"
-                        class="profile-main-photo"
-                        alt="Student Photo"
+
+    <article class="profile-summary-card">
+        <div class="profile-summary-icon summary-purple">
+            🎓
+        </div>
+
+        <div>
+            <h2 id="profileYearCount">-</h2>
+            <p>Academic Year</p>
+            <small>Current academic year</small>
+        </div>
+    </article>
+
+
+    <article class="profile-summary-card">
+        <div class="profile-summary-icon summary-green">
+            ★
+        </div>
+
+        <div>
+            <h2 id="profileCgpaCount">0.0</h2>
+            <p>Current CGPA</p>
+            <small>Academic performance</small>
+        </div>
+    </article>
+
+
+    <article class="profile-summary-card">
+        <div class="profile-summary-icon summary-orange">
+            &lt;/&gt;
+        </div>
+
+        <div>
+            <h2 id="profileSkillsCount">0</h2>
+            <p>Skills Added</p>
+            <small>Technical & professional skills</small>
+        </div>
+    </article>
+
+</section>
+
+    <section class="profile-grid">
+
+    <!-- ================= LEFT COLUMN ================= -->
+    <div class="profile-left-column">
+
+        <!-- PROFILE DETAILS -->
+        <section class="card">
+
+            <div class="profile-hero">
+
+                <img
+                    id="mainPhoto"
+                    class="profile-main-photo"
+                    alt="Student Photo"
+                >
+
+                <div class="profile-hero-content">
+
+                    <h2>
+                        <span id="profileName">Student</span>
+                        <span class="student-status">Active</span>
+                    </h2>
+
+                    <p>🎓 <span>Branch:</span>
+                        <b id="profileBranch">Not added</b>
+                    </p>
+
+                    <p>🪪 <span>Roll No.:</span>
+                        <b id="profileRollNumber">Not added</b>
+                    </p>
+
+                    <p>📅 <span>Year:</span>
+                        <b id="profileYear">Not added</b>
+                    </p>
+
+                    <p>✉ <span>Email:</span>
+                        <b id="profileEmail">Not added</b>
+                    </p>
+
+                    <p>☎ <span>Mobile:</span>
+                        <b id="profileMobile">Not added</b>
+                    </p>
+
+                    <button
+                        id="changePhotoButton"
+                        class="secondary-btn change-photo-btn"
+                        type="button"
+                        onclick="goToSettings()"
                     >
-
-                    <div class="profile-hero-content">
-                        <h2>
-                            <span id="profileName">Student</span>
-                            <span class="student-status">Active</span>
-                        </h2>
-
-                        <p>🎓 <span>Branch:</span> <b id="profileBranch">Not added</b></p>
-                        <p>🪪 <span>Roll No.:</span> <b id="profileRollNumber">Not added</b></p>
-                        <p>📅 <span>Year:</span> <b id="profileYear">Not added</b></p>
-                        <p>✉ <span>Email:</span> <b id="profileEmail">Not added</b></p>
-                        <p>☎ <span>Mobile:</span> <b id="profileMobile">Not added</b></p>
-
-                        <button
-                            id="changePhotoButton"
-                            class="secondary-btn change-photo-btn"
-                            type="button"
-                            onclick="goToSettings()"
-                        >
-                            📸 Change Photo
-                        </button>
-                    </div>
+                        📷 Change Photo
+                    </button>
 
                 </div>
 
-            </section>
-
-            <section class="card">
-
-                <div class="card-heading">
-                    <div class="heading-icon">◔</div>
-
-                    <div>
-                        <h3>Profile Overview</h3>
-                        <p>Current academic and placement details.</p>
-                    </div>
-                </div>
-
-                <div class="overview-list">
-
-                    <div class="overview-row">
-                        <span>⭐ CGPA</span>
-                        <b id="overviewCgpa">Not added</b>
-                    </div>
-
-                    <div class="overview-row">
-                        <span>🏫 Branch</span>
-                        <b id="overviewBranch">Not added</b>
-                    </div>
-
-                    <div class="overview-row">
-                        <span>🪪 Roll Number</span>
-                        <b id="overviewRollNumber">Not added</b>
-                    </div>
-
-                    <div class="overview-row">
-                        <span>📅 Current Year</span>
-                        <b id="overviewYear">Not added</b>
-                    </div>
-
-                    <div class="overview-row">
-                        <span>🏢 Preferred Company</span>
-                        <b id="overviewCompany">Not added</b>
-                    </div>
-
-                    <div class="overview-row">
-    <span>📄 Resume</span>
-
-    <div>
-        <b id="overviewResume">Not uploaded</b>
-
-        <button
-            id="viewResumeButton"
-            type="button"
-            onclick="viewStudentResume()"
-            style="display:none; margin-left:10px;"
-        >
-            View Resume
-        </button>
-    </div>
-</div>
-
-                </div>
-
-            </section>
-
-            <section class="lower-grid">
-
-                <article class="card">
-
-                    <div class="card-heading">
-                        <div class="heading-icon">📚</div>
-
-                        <div>
-                            <h3>Academic Details</h3>
-                            <p>Data available in your profile.</p>
-                        </div>
-                    </div>
-
-                    <div class="info-list">
-
-                        <div class="info-row">
-                            <span>Current CGPA</span>
-                            <b id="academicCgpa">Not added</b>
-                        </div>
-
-                        <div class="info-row">
-                            <span>Branch</span>
-                            <b id="academicBranch">Not added</b>
-                        </div>
-
-                        <div class="info-row">
-                            <span>Year</span>
-                            <b id="academicYear">Not added</b>
-                        </div>
-
-                        <div class="info-row">
-                            <span>Skills Added</span>
-                            <b id="academicSkillCount">0</b>
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="card">
-
-                    <div class="card-heading">
-                        <div class="heading-icon">⌨</div>
-
-                        <div>
-                            <h3>Skills</h3>
-                            <p>Skills added by you in profile settings.</p>
-                        </div>
-                    </div>
-
-                    <div id="skillsWrap" class="skill-wrap">
-                        <div class="empty-note">No skills added yet.</div>
-                    </div>
-
-                </article>
-
-                <article class="card">
-
-                    <div class="card-heading">
-                        <div class="heading-icon">🔗</div>
-
-                        <div>
-                            <h3>Contact & Links</h3>
-                            <p>Your registered contact information.</p>
-                        </div>
-                    </div>
-
-                    <div class="contact-list">
-
-                        <div class="contact-row">
-                            <span>✉ Email</span>
-                            <b id="contactEmail">Not added</b>
-                        </div>
-
-                        <div class="contact-row">
-                            <span>☎ Mobile</span>
-                            <b id="contactMobile">Not added</b>
-                        </div>
-
-                        <div class="contact-row">
-                            <span>📍 Address</span>
-                            <b id="contactAddress">Not added</b>
-                        </div>
-
-                        <div class="contact-row">
-                            <span>in LinkedIn</span>
-                            <a id="contactLinkedin" href="#" target="_blank">Not added</a>
-                        </div>
-
-                        <div class="contact-row">
-                            <span>◉ GitHub</span>
-                            <a id="contactGithub" href="#" target="_blank">Not added</a>
-                        </div>
-
-                    </div>
-
-                </article>
-
-            </section>
-
-            <section class="card about-card">
-
-                <div class="card-heading">
-                    <div class="heading-icon">👤</div>
-
-                    <div>
-                        <h3>About Me</h3>
-                        <p>Generated from your current profile details.</p>
-                    </div>
-                </div>
-
-                <p id="aboutText" class="about-text">
-                    Profile information is loading...
-                </p>
-
-            </section>
+            </div>
 
         </section>
+
+
+        <!-- ACADEMIC DETAILS + SKILLS -->
+        <article class="card">
+
+            <div class="card-heading">
+                <div class="heading-icon">📚</div>
+
+                <div>
+                    <h3>Academic Details</h3>
+                    <p>Your academic and technical profile information.</p>
+                </div>
+            </div>
+
+            <div class="info-list">
+
+                <div class="info-row">
+                    <span>Current CGPA</span>
+                    <b id="academicCgpa">Not added</b>
+                </div>
+
+                <div class="info-row">
+                    <span>Branch</span>
+                    <b id="academicBranch">Not added</b>
+                </div>
+
+                <div class="info-row">
+                    <span>Year</span>
+                    <b id="academicYear">Not added</b>
+                </div>
+
+                <div class="info-row">
+                    <span>Skills Added</span>
+                    <b id="academicSkillCount">0</b>
+                </div>
+
+            </div>
+
+            <!-- TECHNICAL SKILLS INSIDE ACADEMIC CARD -->
+            <div class="academic-skills-section">
+
+                <div class="academic-skills-heading">
+                    <span>⌨</span>
+
+                    <div>
+                        <h4>Technical Skills</h4>
+                        <p>Skills added to your placement profile.</p>
+                    </div>
+                </div>
+
+                <div id="skillsWrap" class="skill-wrap">
+                    <div class="empty-note">
+                        No skills added yet.
+                    </div>
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- CONTACT & LINKS -->
+        <article class="card">
+
+            <div class="card-heading">
+                <div class="heading-icon">🔗</div>
+
+                <div>
+                    <h3>Contact & Links</h3>
+                    <p>Your registered contact information.</p>
+                </div>
+            </div>
+
+            <div class="contact-list">
+
+                <div class="contact-row">
+                    <span>✉ Email</span>
+                    <b id="contactEmail">Not added</b>
+                </div>
+
+                <div class="contact-row">
+                    <span>☎ Mobile</span>
+                    <b id="contactMobile">Not added</b>
+                </div>
+
+                <div class="contact-row">
+                    <span>📍 Address</span>
+                    <b id="contactAddress">Not added</b>
+                </div>
+
+                <div class="contact-row">
+                    <span>in LinkedIn</span>
+                    <a id="contactLinkedin" href="#" target="_blank">
+                        Not added
+                    </a>
+                </div>
+
+                <div class="contact-row">
+                    <span>?-? GitHub</span>
+                    <a id="contactGithub" href="#" target="_blank">
+                        Not added
+                    </a>
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <!-- ================= RIGHT COLUMN ================= -->
+    <div class="profile-right-column">
+
+        <!-- PROFILE OVERVIEW -->
+        <section class="card">
+
+            <div class="card-heading">
+                <div class="heading-icon">?-"</div>
+
+                <div>
+                    <h3>Profile Overview</h3>
+                    <p>Current academic and placement details.</p>
+                </div>
+            </div>
+
+            <div class="overview-list">
+
+                <div class="overview-row">
+                    <span>? CGPA</span>
+                    <b id="overviewCgpa">Not added</b>
+                </div>
+
+                <div class="overview-row">
+                    <span>🎓 Branch</span>
+                    <b id="overviewBranch">Not added</b>
+                </div>
+
+                <div class="overview-row">
+                    <span>🪪 Roll Number</span>
+                    <b id="overviewRollNumber">Not added</b>
+                </div>
+
+                <div class="overview-row">
+                    <span>📅 Current Year</span>
+                    <b id="overviewYear">Not added</b>
+                </div>
+
+                <div class="overview-row">
+                    <span>🏢 Preferred Company</span>
+                    <b id="overviewCompany">Not added</b>
+                </div>
+
+                <div class="overview-row">
+
+                    <span>📄 Resume</span>
+
+                    <div class="resume-overview">
+
+                        <b id="overviewResume">Not uploaded</b>
+
+                        <button
+                            id="viewResumeButton"
+                            type="button"
+                            onclick="viewStudentResume()"
+                            style="display:none;"
+                        >
+                            View Resume
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ================= ABOUT ME ================= -->
+    <section class="card about-card">
+
+        <div class="card-heading">
+            <div class="heading-icon">👤</div>
+
+            <div>
+                <h3>About Me</h3>
+                <p>Generated from your current profile details.</p>
+            </div>
+        </div>
+
+        <p id="aboutText" class="about-text">
+            Profile information is loading...
+        </p>
+
+    </section>
+
+</section>
 
     </main>
 
@@ -521,7 +618,7 @@ function applyAdminViewUi() {
     const editButton =
         document.getElementById("editProfileButton");
 
-    editButton.innerText = "← Back to All Students";
+    editButton.innerText = "??? Back to All Students";
 
     document.getElementById("changePhotoButton").style.display =
         "none";
@@ -547,8 +644,7 @@ async function loadProfile() {
         const studentInfo = [
             studentData.branch || "Student",
             studentData.year || ""
-        ].filter(Boolean).join(" · ");
-
+            ].filter(Boolean).join(" · ");
         setText("sidebarName", studentData.name, "Student");
         setText("sidebarInfo", studentInfo, "RecruitEase Student");
 
@@ -611,13 +707,74 @@ if (studentData.resumeFileName) {
         if (!github) {
             githubElement.removeAttribute("target");
         }
+renderSkills(studentData.skills);
 
-        renderSkills(studentData.skills);
+/* ================= PROFILE SUMMARY CARDS ================= */
 
-        document.getElementById("aboutText").innerText =
-            buildAboutText(studentData);
+// Academic Year
+setText(
+    "profileYearCount",
+    studentData.year,
+    "-"
+);
 
-        applyAdminViewUi();
+// Current CGPA
+setText(
+    "profileCgpaCount",
+    studentData.cgpa,
+    "0.0"
+);
+
+// Skills Count
+const skillsList = String(studentData.skills || "")
+    .split(",")
+    .map(skill => skill.trim())
+    .filter(Boolean);
+
+setText(
+    "profileSkillsCount",
+    skillsList.length,
+    "0"
+);
+
+// Profile Completion
+const profileFields = [
+    studentData.name,
+    studentData.email,
+    studentData.rollNumber,
+    studentData.branch,
+    studentData.cgpa,
+    studentData.skills,
+    studentData.preferredCompany,
+    studentData.mobile,
+    studentData.year,
+    studentData.address,
+    studentData.linkedin,
+    studentData.github,
+    studentData.resumeFileName,
+    studentData.photoFileName
+];
+
+const completedFields = profileFields.filter(value =>
+    value !== null &&
+    value !== undefined &&
+    String(value).trim() !== ""
+).length;
+
+const profileCompletion = Math.round(
+    (completedFields / profileFields.length) * 100
+);
+
+setText(
+    "profileCompletionCount",
+    profileCompletion + "%",
+    "0%"
+);
+
+document.getElementById("aboutText").innerText =
+    buildAboutText(studentData);
+
+applyAdminViewUi();
 
     } catch (error) {
         console.error(error);
@@ -648,7 +805,7 @@ function toggleTheme() {
     localStorage.setItem(profileThemeKey, theme);
 
     document.getElementById("themeButton").innerText =
-        isLight ? "☀️" : "🌙";
+    isLight ? "☀️" : "🌙";
 }
 
 function loadTheme() {

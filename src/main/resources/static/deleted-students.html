@@ -103,6 +103,9 @@
                     <b>Dashboard</b> &nbsp;›&nbsp; Deleted Students
                 </p>
             </div>
+            <button type="button" class="refresh-btn" onclick="refreshDeletedStudentsPage()">
+    ↻ Refresh
+</button>
 
             <button
                 class="report-btn"
@@ -114,49 +117,53 @@
 
         </section>
 
-        <section class="stats-grid">
+<section class="stats-grid">
 
-            <div class="stat-card">
-                <div class="stat-icon purple-icon">👥</div>
+    <!-- DELETED STUDENTS -->
+    <div class="stat-card active-history-card"
+         id="deletedCard"
+         onclick="showHistory('deleted')">
 
-                <div>
-                    <p>Total Deleted</p>
-                    <h3 id="totalDeleted">0</h3>
-                    <small>Live Database Data</small>
-                </div>
-            </div>
+        <div class="stat-icon red-icon">🗑️</div>
 
-            <div class="stat-card">
-                <div class="stat-icon red-icon">📅</div>
+        <div>
+            <p>Deleted Students</p>
+            <h3 id="totalDeleted">0</h3>
+            <small>Currently Deleted</small>
+        </div>
+    </div>
 
-                <div>
-                    <p>Deleted This Month</p>
-                    <h3 id="deletedThisMonth">0</h3>
-                    <small>Date-tracked Records</small>
-                </div>
-            </div>
 
-            <div class="stat-card">
-                <div class="stat-icon orange-icon">👤</div>
+    <!-- RESTORED STUDENTS -->
+    <div class="stat-card"
+         id="restoredCard"
+         onclick="showHistory('restored')">
 
-                <div>
-                    <p>Can Be Restored</p>
-                    <h3 id="canRestore">0</h3>
-                    <small>Available Accounts</small>
-                </div>
-            </div>
+        <div class="stat-icon green-icon">♻️</div>
 
-            <div class="stat-card">
-                <div class="stat-icon green-icon">📊</div>
+        <div>
+            <p>Restored Students</p>
+            <h3 id="totalRestored">0</h3>
+            <small>Restored Accounts</small>
+        </div>
+    </div>
 
-                <div>
-                    <p>Average CGPA</p>
-                    <h3 id="averageCgpa">0.00</h3>
-                    <small>Deleted Students</small>
-                </div>
-            </div>
 
-        </section>
+    <!-- PERMANENTLY DELETED -->
+    <div class="stat-card"
+         id="permanentCard"
+         onclick="showHistory('permanent')">
+
+        <div class="stat-icon purple-icon">❌</div>
+
+        <div>
+            <p>Permanently Deleted</p>
+            <h3 id="totalPermanentDeleted">0</h3>
+            <small>Removed From Database</small>
+        </div>
+    </div>
+
+</section>
 
         <section class="table-panel">
 
@@ -255,6 +262,35 @@
 
     let deletedStudents = [];
     let filteredDeletedStudents = [];
+
+    let restoredStudents = [];
+let permanentlyDeletedStudents = [];
+let currentHistoryType = "deleted";
+
+async function loadHistoryCounts() {
+    try {
+        const [restoredResponse, permanentResponse] = await Promise.all([
+            fetch("/api/students/history/restored"),
+            fetch("/api/students/history/permanently-deleted")
+        ]);
+
+        if (!restoredResponse.ok || !permanentResponse.ok) {
+            throw new Error("History load failed");
+        }
+
+        restoredStudents = await restoredResponse.json();
+        permanentlyDeletedStudents = await permanentResponse.json();
+
+        document.getElementById("totalRestored").innerText =
+            restoredStudents.length;
+
+        document.getElementById("totalPermanentDeleted").innerText =
+            permanentlyDeletedStudents.length;
+
+    } catch (error) {
+        console.error("History count error:", error);
+    }
+}
 
     async function loadDeletedStudents() {
         const body = document.getElementById("deletedStudentsBody");
@@ -469,50 +505,178 @@
         }).join("");
     }
 
-    function updateStats() {
-        const total = deletedStudents.length;
+    async function showHistory(type) {
 
-        const currentMonth = new Date().getMonth();
-        const currentYear = new Date().getFullYear();
+    currentHistoryType = type;
 
-        const deletedThisMonth = deletedStudents.filter(function (student) {
-            const dateValue =
-                student.deletedAt ||
-                student.deletedOn ||
-                student.updatedAt;
+    // Active card highlight
+    document.getElementById("deletedCard").classList.remove("active-history-card");
+    document.getElementById("restoredCard").classList.remove("active-history-card");
+    document.getElementById("permanentCard").classList.remove("active-history-card");
 
-            if (!dateValue) {
-                return false;
-            }
+    const body = document.getElementById("deletedStudentsBody");
+    const countText = document.getElementById("tableCountText");
 
-            const deletedDate = new Date(dateValue);
+    // ================= DELETED =================
+    if (type === "deleted") {
 
-            return (
-                !isNaN(deletedDate) &&
-                deletedDate.getMonth() === currentMonth &&
-                deletedDate.getFullYear() === currentYear
-            );
-        }).length;
+        document.getElementById("deletedCard")
+            .classList.add("active-history-card");
 
-        const cgpaValues = deletedStudents
-            .map(function (student) {
-                return Number(student.cgpa);
-            })
-            .filter(function (value) {
-                return !isNaN(value) && value > 0;
-            });
+        await loadDeletedStudents();
 
-        const averageCgpa = cgpaValues.length > 0
-            ? cgpaValues.reduce(function (sum, value) {
-                return sum + value;
-            }, 0) / cgpaValues.length
-            : 0;
+        document.querySelector(".table-panel").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
 
-        document.getElementById("totalDeleted").innerText = total;
-        document.getElementById("deletedThisMonth").innerText = deletedThisMonth;
-        document.getElementById("canRestore").innerText = total;
-        document.getElementById("averageCgpa").innerText = averageCgpa.toFixed(2);
+        return;
     }
+
+    // ================= RESTORED =================
+    if (type === "restored") {
+
+        document.getElementById("restoredCard")
+            .classList.add("active-history-card");
+
+        const response = await fetch("/api/students/history/restored");
+
+        if (!response.ok) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="10" class="empty-row">
+                        Restored students load nahi ho rahe.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        restoredStudents = await response.json();
+
+        countText.innerText =
+            `Showing ${restoredStudents.length} restored entries`;
+
+        if (restoredStudents.length === 0) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="10" class="empty-row">
+                        No restored students found.
+                    </td>
+                </tr>
+            `;
+        } else {
+            renderHistoryStudents(restoredStudents, "restored");
+        }
+    }
+
+    // ================= PERMANENT =================
+    if (type === "permanent") {
+
+        document.getElementById("permanentCard")
+            .classList.add("active-history-card");
+
+        const response = await fetch(
+            "/api/students/history/permanently-deleted"
+        );
+
+        if (!response.ok) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="10" class="empty-row">
+                        Permanently deleted students load nahi ho rahe.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        permanentlyDeletedStudents = await response.json();
+
+        countText.innerText =
+            `Showing ${permanentlyDeletedStudents.length} permanently deleted entries`;
+
+        if (permanentlyDeletedStudents.length === 0) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="10" class="empty-row">
+                        No permanently deleted students found.
+                    </td>
+                </tr>
+            `;
+        } else {
+            renderHistoryStudents(
+                permanentlyDeletedStudents,
+                "permanent"
+            );
+        }
+    }
+
+    document.querySelector(".table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+function renderHistoryStudents(list, type) {
+
+    const body = document.getElementById("deletedStudentsBody");
+
+    body.innerHTML = list.map(function(student, index) {
+
+        const actionText =
+            type === "restored"
+                ? "Restored"
+                : "Permanently Deleted";
+
+        return `
+            <tr>
+
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="student-cell">
+
+                        <span class="student-avatar ${getAvatarClass(index)}">
+                            ${getInitials(student.name)}
+                        </span>
+
+                        <span class="student-name">
+                            ${escapeHtml(student.name || "Not Available")}
+                        </span>
+
+                    </div>
+                </td>
+
+                <td>${escapeHtml(student.rollNumber || "-")}</td>
+
+                <td>${escapeHtml(student.email || "-")}</td>
+
+                <td>${escapeHtml(student.branch || "Not Set")}</td>
+
+                <td>-</td>
+
+                <td>${student.cgpa ?? "-"}</td>
+
+                <td>${escapeHtml(student.actionAt || student.createdAt || "-")}</td>
+
+                <td>${actionText}</td>
+
+                <td>-</td>
+
+            </tr>
+        `;
+    }).join("");
+}
+
+function updateStats() {
+    const totalDeleted = document.getElementById("totalDeleted");
+
+    if (totalDeleted) {
+        totalDeleted.innerText = deletedStudents.length;
+    }
+}
 
     async function restoreStudent(studentId, studentName) {
         const confirmed = confirm(
@@ -707,9 +871,14 @@
     }
 
     loadDeletedStudents();
+    loadHistoryCounts();
 </script>
 
 <script src="admin-toolbar.js"></script>
-
+<script>
+function refreshDeletedStudentsPage() {
+    window.location.reload();
+}
+</script>
 </body>
 </html>

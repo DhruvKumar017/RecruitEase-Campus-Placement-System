@@ -3,6 +3,7 @@ package com.recruitease.controller;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Map;
+import com.recruitease.security.JwtService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,26 +30,54 @@ public class StudentLoginController {
     private final StudentRepository studentRepository;
     private final PasswordResetOtpRepository passwordResetOtpRepository;
     private final EmailService emailService;
+    private final JwtService jwtService;
 
     public StudentLoginController(
             StudentLoginRepository studentLoginRepository,
             StudentRepository studentRepository,
-            PasswordResetOtpRepository passwordResetOtpRepository,
-            EmailService emailService
+PasswordResetOtpRepository passwordResetOtpRepository,
+EmailService emailService,
+JwtService jwtService
     ) {
         this.studentLoginRepository = studentLoginRepository;
         this.studentRepository = studentRepository;
         this.passwordResetOtpRepository = passwordResetOtpRepository;
         this.emailService = emailService;
+this.jwtService = jwtService;
     }
 
-    @PostMapping("/login")
-    public StudentLogin login(@RequestBody StudentLogin loginRequest) {
-        return studentLoginRepository.findByUsernameAndPassword(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
-        );
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody StudentLogin loginRequest) {
+
+    StudentLogin studentLogin =
+            studentLoginRepository.findByUsernameAndPassword(
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword()
+            );
+
+    if (studentLogin == null) {
+        return ResponseEntity.status(401)
+                .body(Map.of("message", "Invalid username or password"));
     }
+
+    Student student = studentRepository
+            .findById(studentLogin.getStudentId())
+            .orElse(null);
+
+    if (student == null || student.isBlocked() || student.isDeleted()) {
+        return ResponseEntity.status(403)
+                .body(Map.of("message", "Student account is not active"));
+    }
+
+    String token = jwtService.generateStudentToken(student.getId());
+
+    return ResponseEntity.ok(Map.of(
+            "studentId", student.getId(),
+            "username", studentLogin.getUsername(),
+            "role", "STUDENT",
+            "token", token
+    ));
+}
 
     @PostMapping("/create")
     public StudentLogin createLogin(@RequestBody StudentLogin studentLogin) {

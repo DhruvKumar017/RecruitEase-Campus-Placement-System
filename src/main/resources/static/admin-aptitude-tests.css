@@ -347,7 +347,7 @@ body{
 
 .tests-content-grid{
     display:grid;
-    grid-template-columns:minmax(0,1fr) 285px;
+    grid-template-columns:minmax(0,1fr);
     gap:18px;
     align-items:start;
 }
@@ -356,9 +356,9 @@ body{
 
 .stats-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(4, minmax(0, 1fr));
     gap:16px;
-    margin-bottom:18px;
+    margin-bottom:24px;
 }
 
 .stat-card{
@@ -414,7 +414,7 @@ body{
 
 .filter-bar{
     display:grid;
-    grid-template-columns:1.5fr 1fr 1fr 1fr auto;
+    grid-template-columns:2fr 1fr 1fr auto;
     gap:12px;
     padding:18px;
     background:linear-gradient(90deg,#091a32,#0a1428);
@@ -881,4 +881,285 @@ body{
         width:100%;
     }
 }
+}
+/* Final Aptitude Test layout - hide old right side panels */
+.tests-right-column {
+    display: none !important;
+}
+/* Hide old separate scheduled student tests panel */
+.scheduled-student-panel {
+    display: none !important;
+}
+.create-test-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.create-test-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(59, 130, 246, 0.55);
+}
+
+.create-arrow {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.create-test-card:hover .create-arrow {
+    transform: translate(4px, -50%);
+}
+/* ===== Bottom Upcoming Test + Quick Actions ===== */
+
+.bottom-action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.bottom-info-card {
+    background: #071a33;
+    border: 1px solid rgba(74, 144, 255, 0.18);
+    border-radius: 18px;
+    padding: 22px;
+    min-height: 220px;
+}
+
+.bottom-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.bottom-card-head h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.bottom-card-head p {
+    margin: 5px 0 0;
+    color: #9db2cc;
+    font-size: 13px;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.bottom-info-card .quick-action {
+    width: 100%;
+    min-height: 58px;
+}
+
+@media (max-width: 900px) {
+    .bottom-action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* ===== Manage Questions Top Card ===== */
+
+.manage-question-card {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.manage-question-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(59, 130, 246, 0.55);
+}
+
+.manage-question-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.manage-question-icon {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59, 130, 246, 0.15);
+    font-size: 24px;
+}
+
+.manage-question-content h3 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.manage-question-content p {
+    margin: 0;
+    color: #9db2cc;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.manage-question-arrow {
+    margin-left: auto;
+    font-size: 24px;
+    color: #dbeafe;
+}
+/* ===== Upcoming Students Dropdown ===== */
+
+.upcoming-click-card {
+    cursor: pointer;
+}
+
+.upcoming-students-panel {
+    display: none;
+    grid-column: 1 / -1;
+    background: #071a33;
+    border: 1px solid rgba(74, 144, 255, 0.18);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.upcoming-students-panel.show {
+    display: block;
+}
+
+.upcoming-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.upcoming-list-header h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 17px;
+}
+
+.upcoming-list-header button {
+    border: none;
+    background: transparent;
+    color: #9db2cc;
+    font-size: 18px;
+    cursor: pointer;
+}
+/* ===== Upcoming Student Live List ===== */
+
+#upcomingStudentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upcoming-student-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 14px 16px;
+    background: rgba(8, 29, 56, 0.85);
+    border: 1px solid rgba(74, 144, 255, 0.14);
+    border-radius: 12px;
+}
+
+.upcoming-student-row b {
+    display: block;
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.upcoming-student-row span {
+    display: block;
+    color: #9db2cc;
+    font-size: 12px;
+}
+
+.upcoming-empty {
+    padding: 20px;
+    text-align: center;
+    color: #9db2cc;
+    background: rgba(8, 29, 56, 0.85);
+    border-radius: 12px;
+}
+
+@media (max-width: 850px) {
+    .upcoming-student-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+/* ===== Upcoming Test Card - Title Only ===== */
+
+.upcoming-click-card .bottom-card-head p,
+.upcoming-click-card .upcoming-test,
+.upcoming-click-card .side-link {
+    display: none !important;
+}
+
+.upcoming-click-card .bottom-card-head {
+    margin-bottom: 0;
+}
+
+.upcoming-click-card .bottom-card-head h3 {
+    margin: 0;
+}
+/* ===== Upcoming Test Card - Same Alignment As Other Cards ===== */
+
+.upcoming-click-card {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.upcoming-click-card .bottom-card-head {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.upcoming-click-card .bottom-card-head h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+/* ================= REFRESH BUTTON ================= */
+
+.refresh-btn{
+    padding:12px 18px;
+    border:1px solid #3b82f6;
+    border-radius:12px;
+
+    background:transparent;
+    color:#60a5fa;
+
+    font-size:14px;
+    font-weight:700;
+
+    cursor:pointer;
+    white-space:nowrap;
+    transition:.25s;
+}
+
+.refresh-btn:hover{
+    background:rgba(59,130,246,.12);
+    border-color:#60a5fa;
+    transform:translateY(-1px);
 }

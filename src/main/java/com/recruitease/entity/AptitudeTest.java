@@ -19,6 +19,7 @@ public class AptitudeTest {
     private Integer duration;
     private String status;
     private Integer score;
+    private Integer testNumber;
 
     // 👇 YAHAN ADD KARNA HAI
     private String scheduledDay;
@@ -32,6 +33,9 @@ public class AptitudeTest {
     public Integer getDuration() { return duration; }
     public String getStatus() { return status; }
     public Integer getScore() { return score; }
+    public Integer getTestNumber() {
+    return testNumber;
+}
 
     // 👇 GETTER YAHAN ADD KARO (score ke niche)
     public String getScheduledDay() {
@@ -45,6 +49,9 @@ public class AptitudeTest {
     public void setDuration(Integer duration) { this.duration = duration; }
     public void setStatus(String status) { this.status = status; }
     public void setScore(Integer score) { this.score = score; }
+    public void setTestNumber(Integer testNumber) {
+    this.testNumber = testNumber;
+}
 
     // 👇 SETTER SABSE LAST ME ADD KARO
     public void setScheduledDay(String scheduledDay) {

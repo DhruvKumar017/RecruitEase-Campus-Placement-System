@@ -23,6 +23,7 @@ import com.recruitease.entity.Application;
 import com.recruitease.entity.AptitudeTest;
 import com.recruitease.entity.Company;
 import com.recruitease.entity.InterviewRequest;
+import com.recruitease.entity.Notification;
 import com.recruitease.entity.PlacementDrive;
 import com.recruitease.entity.Student;
 import com.recruitease.entity.StudentTestResult;
@@ -30,6 +31,7 @@ import com.recruitease.repository.ApplicationRepository;
 import com.recruitease.repository.AptitudeTestRepository;
 import com.recruitease.repository.CompanyRepository;
 import com.recruitease.repository.InterviewRequestRepository;
+import com.recruitease.repository.NotificationRepository;
 import com.recruitease.repository.PlacementDriveRepository;
 import com.recruitease.repository.StudentRepository;
 import com.recruitease.repository.StudentTestResultRepository;
@@ -44,6 +46,7 @@ public class ApplicationController {
     private final StudentTestResultRepository resultRepository;
     private final InterviewRequestRepository interviewRequestRepository;
     private final AptitudeTestRepository aptitudeTestRepository;
+    private final NotificationRepository notificationRepository;
 
     public ApplicationController(
             ApplicationRepository applicationRepository,
@@ -52,8 +55,9 @@ public class ApplicationController {
             StudentRepository studentRepository,
             StudentTestResultRepository resultRepository,
             InterviewRequestRepository interviewRequestRepository,
-            AptitudeTestRepository aptitudeTestRepository
-    ) {
+AptitudeTestRepository aptitudeTestRepository,
+NotificationRepository notificationRepository    
+) {
         this.applicationRepository = applicationRepository;
         this.companyRepository = companyRepository;
         this.placementDriveRepository = placementDriveRepository;
@@ -61,6 +65,7 @@ public class ApplicationController {
         this.resultRepository = resultRepository;
         this.interviewRequestRepository = interviewRequestRepository;
         this.aptitudeTestRepository = aptitudeTestRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     @PostMapping("/api/applications/apply/{studentId}/{companyId}")
@@ -157,9 +162,79 @@ public class ApplicationController {
     }
 
     @GetMapping("/api/applications/student/{studentId}")
-    public List<Application> getStudentApplications(@PathVariable Long studentId) {
-        return applicationRepository.findByStudentId(studentId);
-    }
+public List<Map<String, Object>> getStudentApplications(
+        @PathVariable Long studentId
+) {
+
+    return applicationRepository.findByStudentId(studentId)
+            .stream()
+            .map(application -> {
+
+                Map<String, Object> data = new LinkedHashMap<>();
+
+                // Application details
+                data.put("id", application.getId());
+                data.put("studentId", application.getStudentId());
+                data.put("companyId", application.getCompanyId());
+                data.put("driveId", application.getDriveId());
+                data.put("companyName", application.getCompanyName());
+                data.put("role", application.getRole());
+                data.put("status", application.getStatus());
+                data.put("createdAt", application.getCreatedAt());
+
+                // Aptitude details
+                data.put("testId", application.getTestId());
+                data.put("testDate", application.getTestDate());
+                data.put("testStartTime", application.getTestStartTime());
+                data.put("testEndTime", application.getTestEndTime());
+                data.put("testPermission", application.getTestPermission());
+
+                // Placement drive details
+                PlacementDrive drive = null;
+
+                if (application.getDriveId() != null) {
+                    drive = placementDriveRepository
+                            .findById(application.getDriveId())
+                            .orElse(null);
+                }
+
+                if (drive != null) {
+
+                    data.put("driveDate", drive.getDriveDate());
+                    data.put("driveStartTime", drive.getDriveStartTime());
+                    data.put("driveEndTime", drive.getDriveEndTime());
+
+                    data.put("packageLpa", drive.getPackageLpa());
+                    data.put("mode", drive.getMode());
+                    data.put("location", drive.getLocation());
+
+                    data.put("branch", drive.getBranch());
+                    data.put("minCgpa", drive.getMinCgpa());
+                    data.put("skills", drive.getSkills());
+                    data.put("vacancy", drive.getVacancy());
+                    data.put("driveStatus", drive.getStatus());
+
+                } else {
+
+                    data.put("driveDate", null);
+                    data.put("driveStartTime", null);
+                    data.put("driveEndTime", null);
+
+                    data.put("packageLpa", null);
+                    data.put("mode", null);
+                    data.put("location", null);
+
+                    data.put("branch", null);
+                    data.put("minCgpa", null);
+                    data.put("skills", null);
+                    data.put("vacancy", null);
+                    data.put("driveStatus", null);
+                }
+
+                return data;
+            })
+            .toList();
+}
 
     @GetMapping("/api/applications/all")
     public List<ApplicationAdminDTO> getAllApplications() {
@@ -362,13 +437,14 @@ public ResponseEntity<?> updateApplicationStatus(
      * Reschedule:
      * Same Test ID stays, so existing questions remain connected.
      */
-    @PutMapping("/api/applications/{id}/schedule-test")
-    public ResponseEntity<?> scheduleTest(
-            @PathVariable Long id,
-            @RequestParam String testDate,
-            @RequestParam String testStartTime,
-            @RequestParam String testEndTime
-    ) {
+@PutMapping("/api/applications/{id}/schedule-test")
+public ResponseEntity<?> scheduleTest(
+        @PathVariable Long id,
+        @RequestParam(required = false) Long testId,
+        @RequestParam String testDate,
+        @RequestParam String testStartTime,
+        @RequestParam String testEndTime
+) {
         if (testDate == null || testDate.isBlank() ||
                 testStartTime == null || testStartTime.isBlank() ||
                 testEndTime == null || testEndTime.isBlank()) {
@@ -393,14 +469,27 @@ public ResponseEntity<?> updateApplicationStatus(
                     .body("Student has already completed this aptitude test.");
         }
 
-        AptitudeTest aptitudeTest = null;
-        boolean newTestGenerated = false;
+AptitudeTest aptitudeTest = null;
+boolean newTestGenerated = false;
 
-        if (application.getTestId() != null) {
-            aptitudeTest = aptitudeTestRepository
-                    .findById(application.getTestId())
-                    .orElse(null);
-        }
+// Create New Test page se already-created test aaya hai
+if (testId != null) {
+    aptitudeTest = aptitudeTestRepository
+            .findById(testId)
+            .orElse(null);
+
+    if (aptitudeTest == null) {
+        return ResponseEntity.badRequest()
+                .body("Selected aptitude test not found.");
+    }
+}
+
+// Existing application ko reschedule kiya ja raha hai
+if (aptitudeTest == null && application.getTestId() != null) {
+    aptitudeTest = aptitudeTestRepository
+            .findById(application.getTestId())
+            .orElse(null);
+}
 
         if (aptitudeTest == null) {
             aptitudeTest = createStudentSpecificTest(
@@ -422,25 +511,51 @@ public ResponseEntity<?> updateApplicationStatus(
             aptitudeTestRepository.save(aptitudeTest);
         }
 
-        application.setTestId(aptitudeTest.getId());
-        application.setTestDate(testDate);
-        application.setTestStartTime(testStartTime);
-        application.setTestEndTime(testEndTime);
-        application.setTestPermission("Allowed");
-        application.setStatus("Test Scheduled");
+  application.setTestId(aptitudeTest.getId());
+application.setTestDate(testDate);
+application.setTestStartTime(testStartTime);
+application.setTestEndTime(testEndTime);
+application.setTestPermission("Allowed");
+application.setStatus("Test Scheduled");
 
-        Application savedApplication =
-                applicationRepository.save(application);
+Application savedApplication =
+        applicationRepository.save(application);
 
-        Map<String, Object> response = new LinkedHashMap<>();
+Notification notification = new Notification();
 
-        response.put("message", "Student test scheduled successfully.");
-        response.put("generatedTestId", aptitudeTest.getId());
-        response.put("testName", aptitudeTest.getTestName());
-        response.put("generatedNewTest", newTestGenerated);
-        response.put("application", savedApplication);
+notification.setStudentId(application.getStudentId());
 
-        return ResponseEntity.ok(response);
+notification.setTitle(
+        newTestGenerated
+                ? "New Aptitude Test Scheduled"
+                : "Aptitude Test Rescheduled"
+);
+
+notification.setMessage(
+        aptitudeTest.getTestName()
+        + " is scheduled for "
+        + testDate
+        + " from "
+        + testStartTime
+        + " to "
+        + testEndTime
+        + "."
+);
+
+notification.setType("APTITUDE");
+notification.setReadStatus(false);
+
+notificationRepository.save(notification);
+
+Map<String, Object> response = new LinkedHashMap<>();
+
+response.put("message", "Student test scheduled successfully.");
+response.put("generatedTestId", aptitudeTest.getId());
+response.put("testName", aptitudeTest.getTestName());
+response.put("generatedNewTest", newTestGenerated);
+response.put("application", savedApplication);
+
+return ResponseEntity.ok(response);
     }
 
     @GetMapping("/api/applications/student/{studentId}/scheduled-tests")
@@ -520,6 +635,7 @@ public ResponseEntity<?> updateApplicationStatus(
         dto.setCompanyName(application.getCompanyName());
         dto.setRole(application.getRole());
         dto.setStatus(application.getStatus());
+        dto.setCreatedAt(application.getCreatedAt());
 
         dto.setTestId(application.getTestId());
         dto.setTestDate(application.getTestDate());

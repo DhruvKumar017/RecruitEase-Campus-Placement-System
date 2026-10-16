@@ -31,27 +31,37 @@ public class InterviewRequest {
 
     private String interviewStatus;
 
-    private String interviewDate;
-    private String interviewTime;
-    private String interviewMode;
-    private String interviewLink;
-    private String adminRemark;
+private String interviewDate;
+private String interviewTime;
+
+private Integer interviewDuration = 60;
+private LocalDateTime studentAppliedAt;
+
+private Boolean interviewAttempted = false;
+
+private String interviewMode;
+private String interviewLink;
+private String adminRemark;
 
     private LocalDateTime requestedAt;
 
     public InterviewRequest() {
     }
 
-    @PrePersist
-    public void setDefaultValues() {
-        if (requestedAt == null) {
-            requestedAt = LocalDateTime.now();
-        }
-
-        if (interviewStatus == null || interviewStatus.isBlank()) {
-            interviewStatus = "PENDING";
-        }
+@PrePersist
+public void setDefaultValues() {
+    if (requestedAt == null) {
+        requestedAt = LocalDateTime.now();
     }
+
+    if (interviewStatus == null || interviewStatus.isBlank()) {
+        interviewStatus = "PENDING";
+    }
+
+    if (interviewDuration == null || interviewDuration <= 0) {
+        interviewDuration = 60;
+    }
+}
 
     public Long getId() {
         return id;
@@ -100,6 +110,18 @@ public class InterviewRequest {
     public String getInterviewTime() {
         return interviewTime;
     }
+
+   public Integer getInterviewDuration() {
+    return interviewDuration;
+}
+
+public LocalDateTime getStudentAppliedAt() {
+    return studentAppliedAt;
+}
+
+public Boolean getInterviewAttempted() {
+    return interviewAttempted;
+}
 
     public String getInterviewMode() {
         return interviewMode;
@@ -160,6 +182,17 @@ public class InterviewRequest {
     public void setInterviewTime(String interviewTime) {
         this.interviewTime = interviewTime;
     }
+   public void setInterviewDuration(Integer interviewDuration) {
+    this.interviewDuration = interviewDuration;
+}
+
+public void setStudentAppliedAt(LocalDateTime studentAppliedAt) {
+    this.studentAppliedAt = studentAppliedAt;
+}
+
+public void setInterviewAttempted(Boolean interviewAttempted) {
+    this.interviewAttempted = interviewAttempted;
+}
 
     public void setInterviewMode(String interviewMode) {
         this.interviewMode = interviewMode;

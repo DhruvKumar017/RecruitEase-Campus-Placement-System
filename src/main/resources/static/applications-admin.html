@@ -91,6 +91,9 @@
                     <b>Dashboard</b> &nbsp;›&nbsp; Applications
                 </p>
             </div>
+            <button type="button" class="refresh-btn" onclick="refreshApplicationsPage()">
+    ↻ Refresh
+</button>
 
             <button
                 class="report-btn"
@@ -102,96 +105,76 @@
 
         </section>
 
-        <section class="stats-grid">
+<section class="stats-grid">
 
-            <div class="stat-card">
-                <div class="stat-icon blue-icon">📋</div>
-                <div>
-                    <p>Total Applications</p>
-                    <h3 id="totalApplications">0</h3>
-                    <small>All Time</small>
-                </div>
-            </div>
+    <!-- Total Applications -->
+    <div class="stat-card total-applications-card"
+     onclick="showAllApplications()"
+     style="cursor:pointer;"
+     title="Show all applications">
+        <div class="stat-icon blue-icon">📄</div>
+        <div>
+            <p>Total Applications</p>
+            <h3 id="totalApplications">0</h3>
+            <small>All Applications</small>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-icon green-icon">✅</div>
-                <div>
-                    <p>Shortlisted</p>
-                    <h3 id="shortlistedCount">0</h3>
-                    <small>Ready for Next Stage</small>
-                </div>
-            </div>
+    <!-- Drive Applied -->
+    <div class="stat-card drive-applied-card"
+     onclick="showDriveApplications()"
+     style="cursor:pointer;"
+     title="Show applications submitted through placement drives">
+        <div class="stat-icon orange-icon">⏳</div>
+        <div>
+            <p>Drive Applied</p>
+            <h3 id="driveAppliedCount">0</h3>
+            <small>Applied to Drives</small>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-icon orange-icon">⏳</div>
-                <div>
-                    <p>Under Review</p>
-                    <h3 id="reviewCount">0</h3>
-                    <small>Applied / Pending</small>
-                </div>
-            </div>
+    <!-- Aptitude Request -->
+    <div class="stat-card aptitude-request-card"
+     onclick="showAptitudeRequests()"
+     style="cursor:pointer;"
+     title="Show applications sent for aptitude test">
+        <div class="stat-icon blue-icon">➤</div>
+        <div>
+            <p>Aptitude Request</p>
+            <h3 id="aptitudeRequestCount">0</h3>
+            <small>Aptitude Test Pending</small>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-icon purple-icon">❌</div>
-                <div>
-                    <p>Rejected</p>
-                    <h3 id="rejectedCount">0</h3>
-                    <small>Not Selected</small>
-                </div>
-            </div>
+    <!-- Aptitude Result -->
+    <div class="stat-card aptitude-result-card"
+     onclick="showAptitudeResults()"
+     style="cursor:pointer;"
+     title="Show aptitude test results">
+        <div class="stat-icon purple-icon">🧠</div>
+        <div>
+            <p>Aptitude Result</p>
+            <h3 id="aptitudeResultCount">0</h3>
+            <small>Test Completed</small>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-icon teal-icon">💼</div>
-                <div>
-                    <p>Placed</p>
-                    <h3 id="placedCount">0</h3>
-                    <small>Final Placement</small>
-                </div>
-            </div>
+    <!-- Interview Request -->
+    <div class="stat-card interview-request-card"
+     onclick="showInterviewRequests()"
+     style="cursor:pointer;"
+     title="Show applications sent for interview">
+        <div class="stat-icon teal-icon">💼</div>
+        <div>
+            <p>Interview Request</p>
+            <h3 id="interviewRequestCount">0</h3>
+            <small>Interview Pending</small>
+        </div>
+    </div>
 
-        </section>
+</section>
 
         <section class="application-panel">
-
-            <div class="filter-bar">
-
-                <input
-                    type="text"
-                    id="tableSearch"
-                    placeholder="Search applications..."
-                    onkeyup="filterApplications()"
-                >
-
-                <select id="companyFilter" onchange="filterApplications()">
-                    <option value="">All Companies</option>
-                </select>
-
-                <select id="statusFilter" onchange="filterApplications()">
-                    <option value="">All Status</option>
-                    <option value="Applied">Applied</option>
-                    <option value="Test Scheduled">Test Scheduled</option>
-                    <option value="Interview Requested">Interview Requested</option>
-                    <option value="Interview Scheduled">Interview Scheduled</option>
-                    <option value="Selected">Selected</option>
-                    <option value="Rejected">Rejected</option>
-                    <option value="Placed">Placed</option>
-                </select>
-
-                <select id="testFilter" onchange="filterApplications()">
-                    <option value="">All Test Status</option>
-                    <option value="Allowed">Test Allowed</option>
-                    <option value="Not Allowed">Test Not Scheduled</option>
-                </select>
-
-                <button
-                    class="clear-filter-btn"
-                    type="button"
-                    onclick="clearFilters()"
-                >
-                    ↻ Clear Filters
-                </button>
-
-            </div>
 
             <div class="table-wrapper">
 
@@ -208,6 +191,7 @@
                             <th>Test / Stage</th>
                             <th>Update Status</th>
                             <th>Actions</th>
+                            <th>View</th>
                         </tr>
                     </thead>
 
@@ -265,73 +249,55 @@
 <script>
 
 let applications = [];
+let drives = [];
+let driveMap = {};
+let currentApplicationView = "all";
 
-function loadApplications() {
-    fetch("/api/applications/all")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Applications load failed");
-            }
+async function loadApplications() {
+    try {
+        const responses = await Promise.all([
+            fetch("/api/applications/all"),
+            fetch("/api/drives")
+        ]);
 
-            return response.json();
-        })
-        .then(data => {
-            applications = data;
+        const applicationsResponse = responses[0];
+        const drivesResponse = responses[1];
 
-            populateCompanyFilter();
-            updateApplicationStats();
-            filterApplications();
-        })
-        .catch(error => {
-            console.error(error);
+        if (!applicationsResponse.ok) {
+            throw new Error("Applications load failed");
+        }
 
-            document.getElementById("applicationTable").innerHTML = `
-                <tr>
-                    <td colspan="9" style="text-align:center;padding:30px;">
-                        Applications load nahi ho rahi hain. Backend check karo.
-                    </td>
-                </tr>
-            `;
-        });
-}
+        applications = await applicationsResponse.json();
 
-function populateCompanyFilter() {
-    const companyFilter = document.getElementById("companyFilter");
-    const currentValue = companyFilter.value;
+        if (drivesResponse.ok) {
+            drives = await drivesResponse.json();
 
-    const companies = [...new Set(
-        applications
-            .map(app => app.companyName)
-            .filter(Boolean)
-    )];
+            driveMap = {};
 
-    companyFilter.innerHTML = `<option value="">All Companies</option>`;
+            drives.forEach(drive => {
+                driveMap[Number(drive.id)] = drive;
+            });
+        }
+        updateApplicationStats();
+        filterApplications();
 
-    companies.forEach(company => {
-        companyFilter.innerHTML += `
-            <option value="${escapeHtml(company)}">
-                ${escapeHtml(company)}
-            </option>
+    } catch (error) {
+        console.error("Application load error:", error);
+
+        document.getElementById("applicationTable").innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center;padding:30px;">
+                    Applications load nahi ho rahi hain. Backend check karo.
+                </td>
+            </tr>
         `;
-    });
-
-    companyFilter.value = currentValue;
+    }
 }
 
 function filterApplications() {
-    const topSearch = document.getElementById("topSearch").value
+    const searchValue = document.getElementById("topSearch").value
         .toLowerCase()
         .trim();
-
-    const tableSearch = document.getElementById("tableSearch").value
-        .toLowerCase()
-        .trim();
-
-    const searchValue = tableSearch || topSearch;
-
-    const selectedCompany = document.getElementById("companyFilter").value;
-    const selectedStatus = document.getElementById("statusFilter").value;
-    const selectedTest = document.getElementById("testFilter").value;
 
     const filteredApplications = applications.filter(app => {
         const companyName = String(app.companyName || "").toLowerCase();
@@ -339,45 +305,788 @@ function filterApplications() {
         const studentName = String(app.studentName || "").toLowerCase();
         const studentId = String(app.studentId || "").toLowerCase();
 
-        const matchesSearch =
+        return (
             companyName.includes(searchValue) ||
             role.includes(searchValue) ||
             studentName.includes(searchValue) ||
-            studentId.includes(searchValue);
-
-        const matchesCompany =
-            selectedCompany === "" ||
-            app.companyName === selectedCompany;
-
-        const matchesStatus =
-            selectedStatus === "" ||
-            app.status === selectedStatus;
-
-        const matchesTest =
-            selectedTest === "" ||
-            (selectedTest === "Allowed" && app.testPermission === "Allowed") ||
-            (selectedTest === "Not Allowed" && app.testPermission !== "Allowed");
-
-        return matchesSearch &&
-            matchesCompany &&
-            matchesStatus &&
-            matchesTest;
+            studentId.includes(searchValue)
+        );
     });
 
     renderApplications(filteredApplications);
 }
 
-function clearFilters() {
-    document.getElementById("topSearch").value = "";
-    document.getElementById("tableSearch").value = "";
-    document.getElementById("companyFilter").value = "";
-    document.getElementById("statusFilter").value = "";
-    document.getElementById("testFilter").value = "";
+function renderInterviewRequests(data) {
 
-    filterApplications();
+    const tableHead = document.querySelector("thead");
+    const tableBody = document.querySelector("tbody");
+
+    // Interview Request specific columns
+    tableHead.innerHTML = `
+        <tr>
+            <th>No.</th>
+            <th>Student Name</th>
+            <th>Company Name</th>
+            <th>Role</th>
+            <th>Applied Details</th>
+            <th>Aptitude Test Score</th>
+            <th>Interview Schedule</th>
+        </tr>
+    `;
+
+    tableBody.innerHTML = "";
+
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center; padding:30px;">
+                    No interview requests found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    data.forEach((app, index) => {
+
+        const studentName =
+            app.studentName || "Unknown Student";
+
+        const companyName =
+            app.companyName || "Unknown Company";
+
+        const role =
+            app.role || "-";
+
+          let appliedDetails = "Date not available";
+
+if (app.createdAt) {
+    const appliedDate = new Date(app.createdAt);
+
+    const dateText = appliedDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+
+    const timeText = appliedDate.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    appliedDetails = `
+        <strong>Applied: ${dateText}</strong>
+        <br>
+        <span class="secondary-text">${timeText}</span>
+    `;
+}
+
+            const obtainedMarks = Number(app.obtainedMarks ?? 0);
+const totalMarks = Number(app.totalMarks ?? 0);
+
+const percentage =
+    totalMarks > 0
+        ? ((obtainedMarks / totalMarks) * 100).toFixed(2)
+        : "0.00";
+
+const score = hasTestResult(app)
+    ? `${obtainedMarks} / ${totalMarks} (${percentage}%)`
+    : "-";
+
+        tableBody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <strong>${studentName}</strong>
+                </td>
+
+                <td>
+                    <strong>${companyName}</strong>
+                </td>
+
+                <td>${role}</td>
+
+                <td>${appliedDetails}</td>
+
+                <td>
+                    <strong>${score}</strong>
+                </td>
+
+                <td>
+                    <button
+                        class="action-btn"
+                        onclick="window.location.href='admin-interviews.html'">
+                        Schedule Interview
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+async function showInterviewRequests() {
+    currentApplicationView = "interview-request";
+
+    // Clear existing filters/search
+    document.getElementById("topSearch").value = "";
+
+    // Show ONLY applications sent/requested for interview
+try {
+    const response = await fetch("/api/interview-requests");
+
+    if (!response.ok) {
+        throw new Error("Interview requests load failed");
+    }
+
+    const requests = await response.json();
+
+const studentSentRequests = requests.filter(request =>
+    request.studentAppliedAt != null
+);
+
+const interviewApplications = studentSentRequests
+    .map(request => {
+        const application = applications.find(app =>
+            Number(app.id) === Number(request.applicationId)
+        );
+
+        if (!application) {
+            return null;
+        }
+
+        return {
+            ...application,
+            interviewRequestId: request.id,
+            aptitudePercentage: request.aptitudePercentage,
+            interviewDate: request.interviewDate,
+            interviewTime: request.interviewTime,
+            interviewMode: request.interviewMode,
+            interviewStatus: request.interviewStatus,
+            studentAppliedAt: request.studentAppliedAt
+        };
+    })
+    .filter(app => app !== null);
+
+renderInterviewRequests(interviewApplications);
+
+} catch (error) {
+    console.error("Interview request load error:", error);
+    renderInterviewRequests([]);
+}
+}
+
+function showAptitudeResults() {
+    currentApplicationView = "aptitude-result";
+
+    // Clear existing filters/search
+    document.getElementById("topSearch").value = "";
+
+    // Show ONLY applications whose aptitude result is available
+    const aptitudeResults = applications.filter(app =>
+        hasTestResult(app)
+    );
+
+    renderAptitudeResults(aptitudeResults);
+}
+
+function getAptitudeResultStageMarkup(app) {
+
+    const percentage = Number(app.percentage || 0);
+    const cutoff = Number(app.companyCutoff || 0);
+
+    const qualified = percentage >= cutoff;
+
+    return `
+        <div class="stage">
+            <span class="stage-dot ${qualified ? "" : "red"}"></span>
+            <div>
+                <b>${qualified ? "Qualified" : "Not Qualified"}</b>
+                <br>
+                <small>
+                    ${percentage.toFixed(2)}% / Cutoff ${cutoff.toFixed(2)}%
+                </small>
+            </div>
+        </div>
+    `;
+}
+
+function renderAptitudeResults(data) {
+
+    const tableHead = document.querySelector("thead");
+    const table = document.getElementById("applicationTable");
+
+    tableHead.innerHTML = `
+        <tr>
+            <th>#</th>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Applied Details</th>
+            <th>Status</th>
+            <th>Test / Stage</th>
+            <th>Marks</th>
+        </tr>
+    `;
+
+    document.getElementById("applicationCountText").innerText =
+        `Showing ${data.length} aptitude results`;
+
+    if (data.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center;padding:30px;">
+                    No aptitude results found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    table.innerHTML = data.map((app, index) => {
+
+        const companyName = app.companyName || "Company";
+        const companyLogo =
+            companyName.substring(0, 3).toUpperCase();
+
+        const studentName =
+            app.studentName || `Student ID: ${app.studentId}`;
+
+        const obtainedMarks =
+            app.obtainedMarks ?? 0;
+
+        const totalMarks =
+            app.totalMarks ?? 0;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="student-cell">
+                        <span class="student-avatar ${getAvatarClass(index)}">
+                            ${getInitials(studentName)}
+                        </span>
+
+                        <div>
+                            <span class="primary-text">
+                                ${escapeHtml(studentName)}
+                            </span>
+                            <span class="secondary-text">
+                                Student ID: ${app.studentId || "-"}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="company-cell">
+                        <span class="company-logo">
+                            ${escapeHtml(companyLogo)}
+                        </span>
+
+                        <div>
+                            <span class="primary-text">
+                                ${escapeHtml(companyName)}
+                            </span>
+                            <span class="secondary-text">
+                                ${app.driveId
+                                    ? `Drive ID: ${app.driveId}`
+                                    : "Company Application"}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <span class="primary-text">
+                        ${escapeHtml(app.role || "Role Not Set")}
+                    </span>
+                </td>
+
+                <td>
+                    ${getApplicationDetailsMarkup(app)}
+                </td>
+
+                <td>
+                    <span class="status status-review">
+                        ${escapeHtml(app.status || "Applied")}
+                    </span>
+                </td>
+
+               <td>
+    ${getAptitudeResultStageMarkup(app)}
+</td>
+
+                <td>
+                    <span class="primary-text">
+                        ${obtainedMarks} / ${totalMarks}
+                    </span>
+                    <span class="secondary-text">
+                        ${Number(app.percentage || 0).toFixed(2)}%
+                    </span>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function renderAptitudeRequests(data) {
+
+    const tableHead = document.querySelector("thead");
+    const table = document.getElementById("applicationTable");
+
+    tableHead.innerHTML = `
+        <tr>
+            <th>#</th>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Applied Details</th>
+            <th>Status</th>
+            <th>Test / Stage</th>
+            <th>Actions</th>
+        </tr>
+    `;
+
+    document.getElementById("applicationCountText").innerText =
+        `Showing ${data.length} aptitude requests`;
+
+    if (data.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align:center;padding:30px;">
+                    No aptitude requests found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    table.innerHTML = data.map((app, index) => {
+
+        const companyName = app.companyName || "Company";
+        const companyLogo =
+            companyName.substring(0, 3).toUpperCase();
+
+        const studentName =
+            app.studentName || `Student ID: ${app.studentId}`;
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="student-cell">
+                        <span class="student-avatar ${getAvatarClass(index)}">
+                            ${getInitials(studentName)}
+                        </span>
+
+                        <div>
+                            <span class="primary-text">
+                                ${escapeHtml(studentName)}
+                            </span>
+                            <span class="secondary-text">
+                                Student ID: ${app.studentId || "-"}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="company-cell">
+                        <span class="company-logo">
+                            ${escapeHtml(companyLogo)}
+                        </span>
+
+                        <div>
+                            <span class="primary-text">
+                                ${escapeHtml(companyName)}
+                            </span>
+                            <span class="secondary-text">
+                                ${app.driveId
+                                    ? `Drive ID: ${app.driveId}`
+                                    : "Company Application"}
+                            </span>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <span class="primary-text">
+                        ${escapeHtml(app.role || "Role Not Set")}
+                    </span>
+                </td>
+
+                <td>
+                    ${getApplicationDetailsMarkup(app)}
+                </td>
+
+                <td>
+                    <span class="status status-review">
+                        Applied
+                    </span>
+                </td>
+
+                <td>
+                    ${getTestStageMarkup(app)}
+                </td>
+
+                <td>
+                    <div class="action-buttons">
+                        ${getActionButtonsMarkup(app)}
+                    </div>
+                </td>
+
+                <td>
+    <button
+        class="interview"
+        type="button"
+        onclick="viewTestId(${app.testId})"
+        ${!app.testId ? "disabled" : ""}
+    >
+        View
+    </button>
+</td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function showAptitudeRequests() {
+    currentApplicationView = "aptitude-request";
+
+    // Clear existing filters/search
+    document.getElementById("topSearch").value = "";
+
+    const aptitudeRequests = applications.filter(app => {
+
+        const currentStatus = normalizeStatus(app.status);
+
+        // Request send ho chuki hai
+        const requestSent =
+            currentStatus === "aptitude request";
+
+        // Ya test schedule ho chuka hai
+        const testScheduled =
+            app.testPermission === "Allowed" &&
+            app.testId &&
+            app.testDate;
+
+        // Result aane tak Aptitude Request me show hoga
+ return (
+    (requestSent || testScheduled) &&
+    !hasTestResult(app)
+);
+    });
+
+    renderAptitudeRequests(aptitudeRequests);
+}
+
+function isDriveCompleted(app) {
+
+    if (!app.driveId) {
+        return false;
+    }
+
+    const drive = driveMap[Number(app.driveId)];
+
+    if (!drive) {
+        return false;
+    }
+
+    // Backend se calculated status ko final source maanenge
+    return String(drive.status || "")
+        .trim()
+        .toLowerCase() === "completed";
+}
+
+
+function getDriveApplicationActionMarkup(app) {
+
+    // 1. Drive complete
+    if (isDriveCompleted(app)) {
+        return `
+            <span class="secondary-text"
+                  style="color:#ff8798;font-weight:700;">
+                Drive Complete
+            </span>
+        `;
+    }
+
+    // 2. Aptitude request already sent
+    if (
+        String(app.status || "")
+            .trim()
+            .toLowerCase() === "aptitude request"
+    ) {
+        return `
+            <span class="secondary-text"
+                  style="color:#67e8f9;font-weight:700;">
+                Request Already Sent
+            </span>
+        `;
+    }
+
+    // 3. Test already scheduled
+    if (
+        app.testPermission === "Allowed" &&
+        app.testId &&
+        app.testDate
+    ) {
+        return `
+            <span class="secondary-text"
+                  style="color:#67e8f9;font-weight:700;">
+                Request Already Sent
+            </span>
+        `;
+    }
+
+    // 4. Drive active + request can be sent
+    return `
+        <button
+            type="button"
+            onclick="sendAptitudeRequest(${app.id})"
+            style="
+                background:transparent;
+                border:none;
+                padding:0;
+                color:#86efac;
+                font-weight:700;
+                cursor:pointer;
+                font-family:inherit;
+            "
+        >
+            Request Sent
+        </button>
+    `;
+}
+
+
+function renderDriveApplications(data) {
+
+    const tableHead = document.querySelector("thead");
+    const table = document.getElementById("applicationTable");
+
+    tableHead.innerHTML = `
+        <tr>
+            <th>#</th>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Applied Details</th>
+            <th>Status</th>
+            <th>Test / Stage</th>
+            <th>Action</th>
+        </tr>
+    `;
+
+    document.getElementById("applicationCountText").innerText =
+        `Showing ${data.length} drive applications`;
+
+    if (data.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center;padding:30px;">
+                    No drive applications found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    table.innerHTML = data.map((app, index) => {
+
+        const companyName = app.companyName || "Company";
+
+        const companyLogo =
+            companyName.substring(0, 3).toUpperCase();
+
+        const studentName =
+            app.studentName || `Student ID: ${app.studentId}`;
+
+        return `
+            <tr>
+
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="student-cell">
+
+                        <span class="student-avatar ${getAvatarClass(index)}">
+                            ${getInitials(studentName)}
+                        </span>
+
+                        <div>
+                            <span class="primary-text">
+                                ${escapeHtml(studentName)}
+                            </span>
+
+                            <span class="secondary-text">
+                                Student ID: ${app.studentId || "-"}
+                            </span>
+                        </div>
+
+                    </div>
+                </td>
+
+                <td>
+                    <div class="company-cell">
+
+                        <span class="company-logo">
+                            ${escapeHtml(companyLogo)}
+                        </span>
+
+                        <div>
+                            <span class="primary-text">
+                                ${escapeHtml(companyName)}
+                            </span>
+
+                            <span class="secondary-text">
+                                Drive ID: ${app.driveId || "-"}
+                            </span>
+                        </div>
+
+                    </div>
+                </td>
+
+                <td>
+                    <span class="primary-text">
+                        ${escapeHtml(app.role || "Role Not Set")}
+                    </span>
+                </td>
+
+                <td>
+                    ${getApplicationDetailsMarkup(app)}
+                </td>
+
+                <td>
+                    <span class="status status-review">
+                        Applied
+                    </span>
+                </td>
+
+                <td>
+                    ${getTestStageMarkup(app)}
+                </td>
+
+                <td>
+                    ${getDriveApplicationActionMarkup(app)}
+                </td>
+
+            </tr>
+        `;
+    }).join("");
+}
+
+async function showDriveApplications() {
+    currentApplicationView = "drive";
+
+    // Clear existing filters/search
+    document.getElementById("topSearch").value = "";
+
+    try {
+
+        // Get current students
+        const response = await fetch("/api/students");
+
+        if (!response.ok) {
+            throw new Error("Students load failed");
+        }
+
+        const students = await response.json();
+
+        // IDs of students who are currently active
+        const activeStudentIds = new Set(
+            students
+                .filter(student =>
+                    student.blocked !== true &&
+                    student.deleted !== true
+                )
+                .map(student => Number(student.id))
+        );
+
+        // Drive applications of ACTIVE students only
+        const driveApplications = applications.filter(app => {
+
+            const hasDrive =
+                app.driveId !== null &&
+                app.driveId !== undefined &&
+                String(app.driveId).trim() !== "";
+
+            const isActiveStudent =
+                activeStudentIds.has(Number(app.studentId));
+
+            return hasDrive && isActiveStudent;
+        });
+
+        renderDriveApplications(driveApplications);
+
+    } catch (error) {
+
+        console.error("Unable to load active drive applications:", error);
+
+        alert("Unable to load active student drive applications.");
+    }
+}
+
+async function showAllApplications() {
+    currentApplicationView = "all";
+
+    // Clear existing filters/search
+    document.getElementById("topSearch").value = "";
+
+    try {
+        const response = await fetch("/api/students");
+
+        if (!response.ok) {
+            throw new Error("Students load failed");
+        }
+
+        const students = await response.json();
+
+        // Current ACTIVE students only
+        const activeStudentIds = new Set(
+            students
+                .filter(student =>
+                    student.blocked !== true &&
+                    student.deleted !== true
+                )
+                .map(student => Number(student.id))
+        );
+
+        // Applications belonging to active students only
+        const activeApplications = applications.filter(app =>
+            activeStudentIds.has(Number(app.studentId))
+        );
+
+        renderApplications(activeApplications);
+
+    } catch (error) {
+        console.error("Unable to load active applications:", error);
+        alert("Unable to load active student applications.");
+    }
 }
 
 function renderApplications(data) {
+
+    // Restore normal Applications table header
+    const tableHead = document.querySelector("thead");
+
+    tableHead.innerHTML = `
+        <tr>
+            <th>#</th>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Applied Details</th>
+            <th>Status</th>
+            <th>Test / Stage</th>
+            <th>Update Status</th>
+            <th>Actions</th>
+        </tr>
+    `;
+
     const table = document.getElementById("applicationTable");
 
     document.getElementById("applicationCountText").innerText =
@@ -452,9 +1161,9 @@ function renderApplications(data) {
                 <td>${getApplicationDetailsMarkup(app)}</td>
 
                 <td>
-                    <span class="status ${getStatusClass(app.status)}">
-                        ${escapeHtml(app.status || "Applied")}
-                    </span>
+                    <span class="status status-review">
+    Applied
+</span>
                 </td>
 
                 <td>${getTestStageMarkup(app)}</td>
@@ -472,75 +1181,151 @@ function renderApplications(data) {
 }
 
 function getApplicationDetailsMarkup(app) {
-    if (hasTestResult(app)) {
-        return `
-            <span class="primary-text">
-                Marks: ${app.obtainedMarks ?? 0} / ${app.totalMarks ?? 0}
-            </span>
 
-            <span class="secondary-text">
-                ${Number(app.percentage || 0).toFixed(2)}%
-                • Cutoff: ${Number(app.companyCutoff || 0).toFixed(2)}%
-            </span>
+    if (!app.createdAt) {
+        return `
+            <span class="primary-text">Applied Date Not Available</span>
+            <span class="secondary-text">-</span>
         `;
     }
 
-    if (app.testPermission === "Allowed") {
-        return `
-            <span class="primary-text">
-                ${escapeHtml(app.testDate || "Test Scheduled")}
-            </span>
+    const appliedDate = new Date(app.createdAt);
 
-            <span class="secondary-text">
-                Test ID: ${app.testId || "-"}
-                • ${escapeHtml(app.testStartTime || "Time Not Set")}
-            </span>
-        `;
-    }
+    const dateText = appliedDate.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+
+    const timeText = appliedDate.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    });
 
     return `
-        <span class="primary-text">Test Not Scheduled</span>
-        <span class="secondary-text">Schedule aptitude test first</span>
+        <span class="primary-text">
+            Applied: ${dateText}
+        </span>
+
+        <span class="secondary-text">
+            ${timeText}
+        </span>
     `;
 }
 
 function getTestStageMarkup(app) {
-    if (hasTestResult(app)) {
-        const qualified = isTestQualified(app);
 
-        return `
-            <div class="stage">
-                <span class="stage-dot ${qualified ? "" : "red"}"></span>
+    const interviewStatus =
+        String(app.interviewStatus || "").trim().toLowerCase();
 
-                <div>
-                    <b>${qualified ? "Qualified" : "Not Qualified"}</b>
-                    <br>
-                    <small>
-                        ${Number(app.percentage || 0).toFixed(2)}%
-                        / Cutoff ${Number(app.companyCutoff || 0).toFixed(2)}%
-                    </small>
-                </div>
-            </div>
-        `;
-    }
-
-    if (app.testPermission === "Allowed") {
+    // 1. Interview clear / student selected -> Placed
+    if (
+        interviewStatus === "selected" ||
+        interviewStatus === "placed" ||
+        normalizeStatus(app.status) === "placed"
+    ) {
         return `
             <div class="stage">
                 <span class="stage-dot"></span>
                 <div>
-                    <b>Aptitude Test Scheduled</b>
+                    <b>Placed</b>
                     <br>
-                    <small>Test ID: ${app.testId || "-"}</small>
+                    <small>Interview Cleared</small>
                 </div>
             </div>
         `;
     }
 
+    // 2. Interview rejected
+    if (interviewStatus === "rejected") {
+        return `
+            <div class="stage">
+                <span class="stage-dot red"></span>
+                <div>
+                    <b>Rejected</b>
+                    <br>
+                    <small>Interview Not Cleared</small>
+                </div>
+            </div>
+        `;
+    }
+
+    // 3. Aptitude result available
+    if (hasTestResult(app)) {
+
+        // Aptitude not qualified
+        if (!isTestQualified(app)) {
+            return `
+                <div class="stage">
+                    <span class="stage-dot red"></span>
+                    <div>
+                        <b>Not Qualified</b>
+                        <br>
+                        <small>
+                            ${Number(app.percentage || 0).toFixed(2)}%
+                            / Cutoff ${Number(app.companyCutoff || 0).toFixed(2)}%
+                        </small>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Aptitude qualified + interview already scheduled
+        if (
+            interviewStatus === "scheduled" ||
+            interviewStatus === "pending"
+        ) {
+            return `
+                <div class="stage">
+                    <span class="stage-dot"></span>
+                    <div>
+                        <b>Interview Scheduled</b>
+                        <br>
+                        <small>Aptitude Qualified</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Aptitude qualified -> next step interview
+        return `
+            <div class="stage">
+                <span class="stage-dot"></span>
+                <div>
+                    <b>Interview Schedule</b>
+                    <br>
+                    <small>Aptitude Qualified</small>
+                </div>
+            </div>
+        `;
+    }
+
+    // 4. Aptitude test scheduled but result not available
+    if (
+        app.testPermission === "Allowed" &&
+        app.testId !== null &&
+        app.testId !== undefined
+    ) {
+        return `
+            <div class="stage">
+                <span class="stage-dot"></span>
+                <div>
+                    <b>Test Scheduled</b>
+                    <br>
+                    <small>Test ID: ${app.testId}</small>
+                </div>
+            </div>
+        `;
+    }
+
+    // 5. Nothing scheduled yet
     return `
         <div class="stage">
             <span class="stage-dot orange"></span>
-            Test Not Scheduled
+            <div>
+                <b>Test Not Scheduled</b>
+            </div>
         </div>
     `;
 }
@@ -575,6 +1360,36 @@ function getStatusControlMarkup(app) {
     `;
 }
 
+function getAptitudeActionState(app) {
+
+    // Test schedule hi nahi hua
+    if (
+        app.testPermission !== "Allowed" ||
+        !app.testId ||
+        !app.testDate ||
+        !app.testEndTime
+    ) {
+        return "NOT_SCHEDULED";
+    }
+
+    const testEndDateTime = new Date(
+        `${app.testDate}T${app.testEndTime}`
+    );
+
+    // Invalid date/time safety
+    if (isNaN(testEndDateTime.getTime())) {
+        return "SCHEDULED";
+    }
+
+    // Test ka end time nikal gaya
+    if (new Date() > testEndDateTime) {
+        return "COMPLETED";
+    }
+
+    // Test scheduled hai aur end time abhi nahi nikla
+    return "SCHEDULED";
+}
+
 function getActionButtonsMarkup(app) {
     const currentStatus = normalizeStatus(app.status);
 
@@ -594,34 +1409,43 @@ function getActionButtonsMarkup(app) {
         `;
     }
 
-    if (!hasTestResult(app)) {
-        const scheduleButton = `
+ if (!hasTestResult(app)) {
+
+    const aptitudeState = getAptitudeActionState(app);
+
+    // Test abhi schedule nahi hua
+    if (aptitudeState === "NOT_SCHEDULED") {
+        return `
             <button
                 class="schedule"
                 type="button"
-                onclick="openScheduleBox(${app.id})"
+                onclick="window.location.href='admin-aptitude-tests.html'"
             >
-                ${app.testPermission === "Allowed"
-                    ? "Reschedule Test"
-                    : "Schedule Test"}
+                Schedule Test
             </button>
         `;
-
-        const viewTestButton =
-            app.testPermission === "Allowed" && app.testId
-                ? `
-                    <button
-                        class="interview"
-                        type="button"
-                        onclick="viewTestId(${app.testId})"
-                    >
-                        View Test ID: ${app.testId}
-                    </button>
-                `
-                : "";
-
-        return scheduleButton + viewTestButton;
     }
+
+    // Test scheduled hai aur end time abhi nahi nikla
+    if (aptitudeState === "SCHEDULED") {
+        return `
+            <span class="secondary-text"
+                  style="color:#79edb4;font-weight:700;">
+                Scheduled
+            </span>
+        `;
+    }
+
+    // Test ka end time nikal chuka hai
+    if (aptitudeState === "COMPLETED") {
+        return `
+            <span class="secondary-text"
+                  style="color:#79edb4;font-weight:700;">
+                Test Completed
+            </span>
+        `;
+    }
+}
 
     if (!isTestQualified(app)) {
         return `
@@ -706,6 +1530,38 @@ function directPlace(applicationId) {
     }
 
     updateStatus(applicationId, "Placed");
+}
+
+async function sendAptitudeRequest(applicationId) {
+
+    if (!confirm("Send aptitude test request for this student?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/applications/${applicationId}/status/${encodeURIComponent("Aptitude Request")}`,
+            {
+                method: "PUT"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        alert("Aptitude request sent successfully.");
+
+        await loadApplications();
+
+    } catch (error) {
+        console.error("Aptitude request error:", error);
+
+        alert(
+            error.message ||
+            "Aptitude request send nahi hui."
+        );
+    }
 }
 
 function updateStatus(id, status) {
@@ -794,35 +1650,101 @@ function viewTestId(testId) {
     window.location.href = "admin-test-questions.html";
 }
 
-function updateApplicationStats() {
+async function updateApplicationStats() {
+
+    // 1. Total Applications
     document.getElementById("totalApplications").innerText =
         applications.length;
 
-    document.getElementById("shortlistedCount").innerText =
+   // 2. Drive Applied - actual drive applications of active students
+try {
+    const response = await fetch("/api/students");
+
+    if (!response.ok) {
+        throw new Error("Students load failed");
+    }
+
+    const students = await response.json();
+
+    const activeStudentIds = new Set(
+        students
+            .filter(student =>
+                student.blocked !== true &&
+                student.deleted !== true
+            )
+            .map(student => Number(student.id))
+    );
+
+    const driveAppliedCount = applications.filter(app => {
+
+        const hasDrive =
+            app.driveId !== null &&
+            app.driveId !== undefined &&
+            String(app.driveId).trim() !== "";
+
+        const isActiveStudent =
+            activeStudentIds.has(Number(app.studentId));
+
+        return hasDrive && isActiveStudent;
+    }).length;
+
+    document.getElementById("driveAppliedCount").innerText =
+        driveAppliedCount;
+
+} catch (error) {
+    console.error("Unable to calculate drive applications:", error);
+    document.getElementById("driveAppliedCount").innerText = "0";
+}
+
+ // 3. Aptitude Request
+
+// 3. Aptitude Request
+
+document.getElementById("aptitudeRequestCount").innerText =
+    applications.filter(app => {
+
+        const currentStatus = normalizeStatus(app.status);
+
+        const requestSent =
+            currentStatus === "aptitude request";
+
+        const testScheduled =
+            app.testPermission === "Allowed" &&
+            app.testId &&
+            app.testDate;
+
+return (
+    (requestSent || testScheduled) &&
+    !hasTestResult(app)
+);
+
+    }).length;
+
+    // 4. Aptitude Result
+    document.getElementById("aptitudeResultCount").innerText =
         applications.filter(app =>
-            normalizeStatus(app.status) === "shortlisted"
+            hasTestResult(app)
         ).length;
 
-    document.getElementById("reviewCount").innerText =
-        applications.filter(app =>
-            [
-                "applied",
-                "test scheduled",
-                "aptitude completed",
-                "interview requested",
-                "interview scheduled"
-            ].includes(normalizeStatus(app.status))
-        ).length;
+    // 5. Interview Request
+// 5. Interview Request
+try {
+    const interviewResponse = await fetch("/api/interview-requests");
 
-    document.getElementById("rejectedCount").innerText =
-        applications.filter(app =>
-            normalizeStatus(app.status) === "rejected"
-        ).length;
+    if (interviewResponse.ok) {
+        const interviewRequests = await interviewResponse.json();
 
-    document.getElementById("placedCount").innerText =
-        applications.filter(app =>
-            ["placed", "selected"].includes(normalizeStatus(app.status))
-        ).length;
+        document.getElementById("interviewRequestCount").innerText =
+            interviewRequests.filter(request =>
+                request.studentAppliedAt != null
+            ).length;
+    } else {
+        document.getElementById("interviewRequestCount").innerText = "0";
+    }
+} catch (error) {
+    console.error("Interview request count load error:", error);
+    document.getElementById("interviewRequestCount").innerText = "0";
+}
 }
 
 function downloadApplicationsReport() {
@@ -923,6 +1845,29 @@ loadApplications();
 
 <script src="admin-profile.js"></script>
 <script src="admin-toolbar.js"></script>
+<script>
+async function refreshApplicationsPage() {
 
+    const activeView = currentApplicationView;
+
+    await loadApplications();
+
+    if (activeView === "drive") {
+        await showDriveApplications();
+    }
+    else if (activeView === "aptitude-request") {
+        showAptitudeRequests();
+    }
+    else if (activeView === "aptitude-result") {
+        showAptitudeResults();
+    }
+    else if (activeView === "interview-request") {
+        showInterviewRequests();
+    }
+    else {
+        await showAllApplications();
+    }
+}
+</script>
 </body>
 </html>

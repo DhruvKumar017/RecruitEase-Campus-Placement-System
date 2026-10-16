@@ -36,14 +36,105 @@ public class JwtService {
                 .signWith(getSigningKey())
                 .compact();
     }
+    
+    // Generate a short-lived token for read-only viewers.
+    public String generateViewerToken(String viewerId) {
 
+        Date now = new Date();
+
+        Date expiryDate = new Date(
+                now.getTime() + (30 * 60 * 1000L)
+        );
+
+        return Jwts.builder()
+                .subject(viewerId)
+                .claim("role", "DEMO_VIEWER")
+.claim("accessType", "DEMO_ONLY")
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(getSigningKey())
+                .compact();
+    }
+    // Generate a 30-minute token for demo-only access.
+public String generateDemoViewerToken(String verifiedEmail) {
+
+    if (verifiedEmail == null || verifiedEmail.isBlank()) {
+        throw new IllegalArgumentException(
+                "Verified email is required."
+        );
+    }
+
+    Date now = new Date();
+
+    Date expiryDate = new Date(
+            now.getTime() + (30 * 60 * 1000L)
+    );
+
+    return Jwts.builder()
+            .subject(verifiedEmail.trim().toLowerCase(
+                    java.util.Locale.ROOT
+            ))
+            .claim("role", "DEMO_VIEWER")
+            .claim("accessType", "DEMO_ONLY")
+            .issuedAt(now)
+            .expiration(expiryDate)
+            .signWith(getSigningKey())
+            .compact();
+}
+
+    // Generate JWT for authenticated students
+public String generateStudentToken(Long studentId) {
+
+    if (studentId == null) {
+        throw new IllegalArgumentException("Student ID is required");
+    }
+
+    Date now = new Date();
+
+    Date expiryDate = new Date(
+            now.getTime() + jwtExpirationMs
+    );
+
+    return Jwts.builder()
+            .subject(studentId.toString())
+            .claim("role", "STUDENT")
+            .claim("studentId", studentId)
+            .issuedAt(now)
+            .expiration(expiryDate)
+            .signWith(getSigningKey())
+            .compact();
+}
     public String extractUsername(String token) {
         return getClaims(token).getSubject();
     }
 
-    public String extractRole(String token) {
-        return getClaims(token).get("role", String.class);
+public String extractRole(String token) {
+    return getClaims(token).get("role", String.class);
+}
+
+// Extract student ID only from STUDENT tokens
+public Long extractStudentId(String token) {
+
+    Claims claims = getClaims(token);
+
+    String role = claims.get("role", String.class);
+
+    if (!"STUDENT".equals(role)) {
+        throw new IllegalArgumentException(
+                "This token does not belong to a student."
+        );
     }
+
+    Number studentId = claims.get("studentId", Number.class);
+
+    if (studentId == null) {
+        throw new IllegalArgumentException(
+                "Student ID not found in token."
+        );
+    }
+
+    return studentId.longValue();
+}
 
     public boolean isTokenValid(String token) {
         try {

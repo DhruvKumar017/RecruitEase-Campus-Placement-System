@@ -28,11 +28,6 @@
             icon: "●●",
             label: "Interviews"
         },
-        {
-            file: "student-resume.html",
-            icon: "▧",
-            label: "Resume"
-        }
     ];
 
     function getCurrentFileName() {
@@ -491,12 +486,10 @@
                 event.preventDefault();
             }
 
-            localStorage.removeItem(
-                "studentId"
-            );
+localStorage.removeItem("studentId");
+sessionStorage.removeItem("studentToken");
 
-            window.location.href =
-                "student-login.html";
+window.location.href = "student-login.html";
         };
 
     document.addEventListener(

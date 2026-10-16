@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Viewer Dashboard | RecruitEase</title>
+
+<link rel="stylesheet" href="admin-dashboard.css">
+
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: #f1f5f9;
+    color: #0f172a;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+.main-content > header {
+    background: #ffffff;
+    color: #0f172a;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+.brand { font-size: 23px; font-weight: 800; }
+.brand span { color: #60a5fa; }
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 17px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.logout { background: #ef4444; color: white; }
+main { max-width: 1150px; margin: auto; padding: 30px 20px; }
+h1 { margin-bottom: 6px; }
+.subtitle { color: #64748b; }
+.notice {
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+    padding: 16px;
+    border-radius: 12px;
+    margin: 25px 0;
+}
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+.card, .panel {
+    background: white;
+    border-radius: 14px;
+    padding: 23px;
+    box-shadow: 0 4px 15px #0000000a;
+}
+.card p { color: #64748b; margin: 0 0 12px; }
+.card strong { font-size: 32px; }
+.panel { margin-top: 25px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+th { background: #f8fafc; }
+#status { color: #64748b; }
+@media(max-width: 800px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 480px) {
+    .stats { grid-template-columns: 1fr; }
+    header { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a class="active" href="demo-viewer-dashboard.html">
+            ▦ Dashboard
+        </a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="demo-viewer-dashboard.html">👥 All Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="demo-viewer-dashboard.html">🏢 All Companies</a>
+        <a href="demo-viewer-dashboard.html">🗓️ Placement Drives</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="demo-viewer-dashboard.html">📄 Applications</a>
+        <a href="demo-viewer-dashboard.html">📊 Reports & Analytics</a>
+
+        <p class="menu-title">SYSTEM</p>
+
+        <!-- Settings intentionally unavailable to Demo Viewer -->
+
+        <a href="#" id="viewerSidebarLogout">↪ Logout</a>
+
+    </aside>
+
+    <div class="main-content">
+
+<header>
+    <div class="brand">Recruit<span>Ease</span> | Demo Viewer</div>
+    <button class="logout" id="logoutBtn">Logout</button>
+</header>
+
+<main class="viewer-dashboard-content">
+
+    <!-- Welcome Banner -->
+    <section class="dashboard-hero">
+
+        <div class="hero-welcome">
+            <h1>
+                Welcome Back,
+                <span>Demo Viewer</span> 👋
+            </h1>
+
+            <p>
+                Explore RecruitEase Campus Placement
+                Management System in read-only mode.
+            </p>
+        </div>
+
+        <div class="hero-clock">
+
+            <div class="hero-clock-row">
+                <span class="hero-clock-icon">▣</span>
+                <span id="heroDate">Loading date...</span>
+            </div>
+
+            <div class="hero-clock-row">
+                <span class="hero-clock-icon">◷</span>
+                <span id="heroTime">Loading time...</span>
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="notice">
+        🔒 Demo Mode — Read-only access. All information displayed here
+        is sample data. Adding, editing and deleting records is disabled.
+    </div>
+
+    <p id="status" role="status">Loading demo dashboard...</p>
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon blue">🎓</div>
+        <div>
+            <p>Total Students</p>
+            <h2 id="totalStudents">0</h2>
+            <span>Demo data</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon green">🏢</div>
+        <div>
+            <p>Total Companies</p>
+            <h2 id="totalCompanies">0</h2>
+            <span>Demo data</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon purple">📅</div>
+        <div>
+            <p>Total Drives</p>
+            <h2 id="totalDrives">0</h2>
+            <span>Demo data</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon orange">👤</div>
+        <div>
+            <p>Placed Students</p>
+            <h2 id="placedStudents">0</h2>
+            <span>Demo data</span>
+        </div>
+    </div>
+
+</section>
+
+<section class="panel big-panel">
+
+    <div class="panel-head">
+        <h3>Sample Company Drives</h3>
+
+        <span style="
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 600;
+        ">
+            👁 View Only
+        </span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+
+        <table class="dashboard-table">
+
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="companyTable">
+                <tr>
+                    <td colspan="3" class="dashboard-loading">
+                        Loading demo company drives...
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+</main>
+
+<script>
+const token = sessionStorage.getItem("demoViewerToken");
+const role = sessionStorage.getItem("demoViewerRole");
+
+function logout() {
+    sessionStorage.removeItem("demoViewerToken");
+    sessionStorage.removeItem("demoViewerRole");
+    sessionStorage.removeItem("demoViewerId");
+    window.location.replace("admin-viewer-login.html");
+}
+
+document.getElementById("logoutBtn").addEventListener("click", logout);
+document.getElementById("viewerSidebarLogout")
+    .addEventListener("click", function(event) {
+        event.preventDefault();
+        logout();
+    });
+
+function setText(id, value) {
+    document.getElementById(id).textContent = value;
+}
+
+async function loadDashboard() {
+    if (!token || role !== "DEMO_VIEWER") {
+        logout();
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/demo-viewer/dashboard", {
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
+            cache: "no-store"
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            logout();
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error("Unable to load dashboard.");
+        }
+
+        const data = await response.json();
+
+        if (data.demoMode !== true) {
+            throw new Error("Invalid demo dashboard response.");
+        }
+
+        setText("totalStudents", data.totalStudents);
+        setText("totalCompanies", data.totalCompanies);
+        setText("totalDrives", data.totalDrives);
+        setText("placedStudents", data.placedStudents);
+
+        const tbody = document.getElementById("companyTable");
+        tbody.replaceChildren();
+
+        (data.companies || []).forEach(company => {
+            const row = document.createElement("tr");
+
+            [company.name, company.role, company.status].forEach(value => {
+                const cell = document.createElement("td");
+                cell.textContent = value ?? "";
+                row.appendChild(cell);
+            });
+
+            tbody.appendChild(row);
+        });
+
+        setText("status", "Demo data loaded successfully.");
+
+    } catch (error) {
+        setText("status", error.message || "Dashboard loading failed.");
+    }
+}
+
+loadDashboard();
+</script>
+    </div>
+
+</div>
+
+</body>
+</html>

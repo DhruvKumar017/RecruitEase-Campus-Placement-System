@@ -111,4 +111,81 @@ public class EmailService {
             );
         }
     }
+    
+public void sendViewerVerificationOtp(
+        String email,
+        String otp
+) {
+
+    try {
+
+        Map<String, Object> payload = Map.of(
+                "sender", Map.of(
+                        "name", "RecruitEase",
+                        "email", SENDER_EMAIL
+                ),
+                "to", List.of(
+                        Map.of("email", email)
+                ),
+                "subject",
+                "RecruitEase - Viewer Email Verification",
+                "textContent",
+                        "Hello,\n\n" +
+                        "Your RecruitEase Viewer verification OTP is: "
+                        + otp +
+                        "\n\nThis OTP is valid for 5 minutes." +
+                        "\n\nIf you did not request Viewer access, " +
+                        "you can ignore this email." +
+                        "\n\nDo not share this OTP with anyone." +
+                        "\n\nRegards,\nRecruitEase Placement Cell"
+        );
+
+        String requestBody =
+                objectMapper.writeValueAsString(payload);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BREVO_URL))
+                .header("accept", "application/json")
+                .header("content-type", "application/json")
+                .header("api-key", brevoApiKey)
+                .POST(
+                        HttpRequest.BodyPublishers.ofString(
+                                requestBody
+                        )
+                )
+                .build();
+
+        HttpResponse<String> response =
+                httpClient.send(
+                        request,
+                        HttpResponse.BodyHandlers.ofString()
+                );
+
+        if (response.statusCode() < 200 ||
+                response.statusCode() >= 300) {
+
+            throw new RuntimeException(
+                    "Viewer OTP email failed. HTTP "
+                    + response.statusCode()
+            );
+        }
+
+    } catch (InterruptedException exception) {
+
+        Thread.currentThread().interrupt();
+
+        throw new RuntimeException(
+                "Viewer OTP email request interrupted.",
+                exception
+        );
+
+    } catch (Exception exception) {
+
+        throw new RuntimeException(
+                "Unable to send Viewer verification OTP.",
+                exception
+        );
+    }
+}
+
 }

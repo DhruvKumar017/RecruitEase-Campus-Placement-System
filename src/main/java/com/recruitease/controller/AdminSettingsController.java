@@ -205,7 +205,7 @@ public class AdminSettingsController {
     public ResponseEntity<?> getAdminProfile(
             @RequestParam String adminUsername
     ) {
-        String username = normalizeUsername(adminUsername);
+        String username = authenticatedAdminUsername(adminUsername);
 
         if (username.isEmpty()) {
             return ResponseEntity.badRequest()
@@ -222,7 +222,7 @@ public class AdminSettingsController {
             @RequestParam String adminUsername,
             @RequestBody AdminProfile input
     ) {
-        String username = normalizeUsername(adminUsername);
+        String username = authenticatedAdminUsername(adminUsername);
 
         if (username.isEmpty()) {
             return ResponseEntity.badRequest()
@@ -260,7 +260,7 @@ public class AdminSettingsController {
             @RequestParam String adminUsername,
             @RequestBody AdminProfile input
     ) {
-        String username = normalizeUsername(adminUsername);
+        String username = authenticatedAdminUsername(adminUsername);
 
         if (username.isEmpty()) {
             return ResponseEntity.badRequest()
@@ -307,7 +307,7 @@ public class AdminSettingsController {
             @RequestParam String adminUsername,
             @RequestBody Map<String, String> passwordData
     ) {
-        String username = normalizeUsername(adminUsername);
+        String username = authenticatedAdminUsername(adminUsername);
 
         String currentPassword =
                 clean(passwordData.get("currentPassword"));
@@ -765,11 +765,25 @@ public class AdminSettingsController {
                         );
     }
 
-    private boolean isMainAdmin(String adminRole) {
-        return "MAIN_ADMIN".equalsIgnoreCase(
-                clean(adminRole)
-        );
+private boolean isMainAdmin(String adminRole) {
+
+    org.springframework.security.core.Authentication auth =
+        org.springframework.security.core.context
+            .SecurityContextHolder
+            .getContext()
+            .getAuthentication();
+
+    if (auth == null || !auth.isAuthenticated()) {
+        return false;
     }
+
+    return auth.getAuthorities().stream()
+        .anyMatch(authority ->
+            "ROLE_MAIN_ADMIN".equals(
+                authority.getAuthority()
+            )
+        );
+}
 
     private ResponseEntity<?> forbiddenMainAdminOnly() {
         return ResponseEntity.status(403).body(
@@ -777,9 +791,41 @@ public class AdminSettingsController {
         );
     }
 
-    private String normalizeUsername(String username) {
-        return clean(username).toLowerCase();
+private String authenticatedAdminUsername(String requestedUsername) {
+
+    org.springframework.security.core.Authentication auth =
+        org.springframework.security.core.context
+            .SecurityContextHolder
+            .getContext()
+            .getAuthentication();
+
+    if (auth == null || !auth.isAuthenticated()) {
+        throw new org.springframework.security.access.AccessDeniedException(
+            "Admin authentication required."
+        );
     }
+
+    boolean isAdmin = auth.getAuthorities().stream()
+        .anyMatch(authority ->
+            "ROLE_MAIN_ADMIN".equals(authority.getAuthority()) ||
+            "ROLE_ADMIN".equals(authority.getAuthority())
+        );
+
+    String loggedInUsername = clean(auth.getName()).toLowerCase();
+
+    if (!isAdmin ||
+            !loggedInUsername.equalsIgnoreCase(clean(requestedUsername))) {
+        throw new org.springframework.security.access.AccessDeniedException(
+            "You cannot access another admin's profile."
+        );
+    }
+
+    return loggedInUsername;
+}
+
+private String normalizeUsername(String username) {
+    return clean(username).toLowerCase();
+}
 
     private String clean(String value) {
         return value == null ? "" : value.trim();

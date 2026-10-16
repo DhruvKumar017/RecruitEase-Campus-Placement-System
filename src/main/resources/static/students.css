@@ -796,3 +796,124 @@ body.student-dark .cancel{
         flex-direction:column;
     }
 }
+/* ================= CLICKABLE TOTAL STUDENTS CARD ================= */
+
+.total-students-card{
+    cursor:pointer;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.total-students-card:hover{
+    transform:translateY(-4px);
+    border-color:#3b82f6;
+    box-shadow:0 12px 30px rgba(37,99,235,.22);
+}
+
+.total-students-card:active{
+    transform:translateY(-1px) scale(.99);
+}
+.active-students-card{
+    cursor:pointer;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.active-students-card:hover{
+    transform:translateY(-4px);
+    border-color:#10b981;
+    box-shadow:0 12px 30px rgba(16,185,129,.18);
+}
+
+.active-students-card:active{
+    transform:translateY(-1px) scale(.99);
+}
+/* ================= LIGHT MODE SIDEBAR ================= */
+
+body.dark-mode .sidebar{
+    background:#eaf3ff !important;
+    border-right:1px solid #bfd6f5 !important;
+}
+
+body.dark-mode .brand{
+    border-bottom-color:#bfd6f5 !important;
+}
+
+body.dark-mode .brand h2{
+    color:#0f172a !important;
+}
+
+body.dark-mode .brand h2 span{
+    color:#2f80ff !important;
+}
+
+body.dark-mode .brand p{
+    color:#64748b !important;
+}
+
+body.dark-mode .menu-title{
+    color:#64748b !important;
+}
+
+body.dark-mode .sidebar a{
+    color:#1e293b !important;
+}
+
+body.dark-mode .sidebar a:hover,
+body.dark-mode .sidebar a.active{
+    color:#ffffff !important;
+    background:linear-gradient(135deg,#1e40af,#3b82f6) !important;
+}
+
+body.dark-mode .help-card{
+    background:#ffffff !important;
+    border-color:#bfd6f5 !important;
+}
+
+body.dark-mode .help-card h4{
+    color:#0f172a !important;
+}
+
+body.dark-mode .help-card p{
+    color:#64748b !important;
+}
+/* ================= REFRESH BUTTON ================= */
+
+.refresh-btn{
+    padding:13px 22px;
+    margin-left:auto;
+    margin-right:10px;
+
+    border:1px solid #93c5fd;
+    border-radius:12px;
+
+    background:#ffffff;
+    color:#2563eb;
+
+    font-size:14px;
+    font-weight:700;
+
+    cursor:pointer;
+    transition:.25s;
+}
+
+.refresh-btn:hover{
+    background:#eff6ff;
+    border-color:#2563eb;
+    transform:translateY(-1px);
+}
+
+/* Dark Mode */
+body.student-dark .refresh-btn{
+    background:#0b1b31;
+    color:#60a5fa;
+    border-color:#1e4d7b;
+}
+
+body.student-dark .refresh-btn:hover{
+    background:#102744;
+}

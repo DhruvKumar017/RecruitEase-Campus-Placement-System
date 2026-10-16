@@ -693,3 +693,879 @@ body.student-light-profile .skill-chip{
         height:130px;
     }
 }
+/* =========================================================
+   NEW MY PROFILE DESIGN - RECRUITEASE
+   Applications Style
+   ========================================================= */
+
+/* ---------- MAIN CONTENT ---------- */
+
+.profile-main{
+    width:calc(100% - 265px);
+    margin-left:265px;
+    padding:22px 28px 40px;
+    background:
+        radial-gradient(circle at 70% 0%,
+        rgba(47,128,255,.08),
+        transparent 32%),
+        #030814;
+}
+
+
+/* ---------- TOPBAR ---------- */
+
+.profile-topbar{
+    min-height:68px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+
+    padding:0 18px;
+
+    background:#071426;
+    border:1px solid rgba(47,128,255,.16);
+    border-radius:14px;
+}
+
+.profile-search{
+    width:min(520px,50%);
+    height:43px;
+
+    padding:0 16px;
+
+    border:1px solid rgba(47,128,255,.20);
+    border-radius:10px;
+    outline:none;
+
+    background:#08182d;
+    color:#ffffff;
+
+    font-size:13px;
+}
+
+.profile-search::placeholder{
+    color:#7188a8;
+}
+
+.profile-search:focus{
+    border-color:#2f80ff;
+    box-shadow:0 0 0 3px rgba(47,128,255,.08);
+}
+
+
+/* ---------- PAGE HEADING ---------- */
+
+.page-heading{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+
+    margin:27px 0 22px;
+}
+
+.page-heading h1{
+    margin:0;
+    color:#ffffff;
+    font-size:30px;
+    font-weight:800;
+}
+
+.page-heading p{
+    margin-top:7px;
+    color:#8fa6c5;
+    font-size:13px;
+}
+
+.page-buttons{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.primary-btn,
+.secondary-btn{
+    min-height:42px;
+    padding:0 17px;
+
+    border-radius:9px;
+    cursor:pointer;
+
+    font-size:12px;
+    font-weight:700;
+
+    transition:.2s ease;
+}
+
+.primary-btn{
+    border:1px solid #2f80ff;
+    background:#2f80ff;
+    color:#ffffff;
+}
+
+.primary-btn:hover{
+    background:#1f6ee5;
+}
+
+.secondary-btn{
+    border:1px solid rgba(47,128,255,.32);
+    background:#091a31;
+    color:#c5d9f4;
+}
+
+.secondary-btn:hover{
+    border-color:#2f80ff;
+    color:#ffffff;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+   ========================================================= */
+
+.profile-summary-stats{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:16px;
+    margin-bottom:20px;
+}
+
+.profile-summary-card{
+    min-height:112px;
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding:18px;
+
+    background:#071629;
+
+    border:1px solid rgba(47,128,255,.16);
+    border-radius:13px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
+}
+
+.profile-summary-card:hover{
+    transform:translateY(-2px);
+    border-color:rgba(47,128,255,.45);
+    background:#091b32;
+}
+
+.profile-summary-icon{
+    width:48px;
+    height:48px;
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    font-size:19px;
+    font-weight:800;
+}
+
+.summary-blue{
+    color:#63a4ff;
+    background:rgba(47,128,255,.14);
+}
+
+.summary-purple{
+    color:#b48cff;
+    background:rgba(124,58,237,.16);
+}
+
+.summary-green{
+    color:#5be0a0;
+    background:rgba(22,199,132,.14);
+}
+
+.summary-orange{
+    color:#ffb45d;
+    background:rgba(255,138,0,.14);
+}
+
+.profile-summary-card h2{
+    margin:0;
+
+    color:#ffffff;
+    font-size:25px;
+    font-weight:800;
+}
+
+.profile-summary-card p{
+    margin-top:3px;
+
+    color:#e3ecf8;
+    font-size:12px;
+    font-weight:700;
+}
+
+.profile-summary-card small{
+    display:block;
+    margin-top:3px;
+
+    color:#7289a8;
+    font-size:10px;
+}
+
+
+/* =========================================================
+   PROFILE GRID
+   ========================================================= */
+
+.profile-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+    gap:18px;
+    align-items:start;
+}
+
+
+/* ---------- COMMON CARDS ---------- */
+
+.card{
+    padding:21px;
+
+    background:#071629;
+
+    border:1px solid rgba(47,128,255,.15);
+    border-radius:13px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.10);
+}
+
+.card:hover{
+    border-color:rgba(47,128,255,.26);
+}
+
+
+/* =========================================================
+   MAIN PROFILE HERO
+   ========================================================= */
+
+.profile-hero{
+    min-height:245px;
+
+    display:flex;
+    align-items:center;
+    gap:25px;
+
+    padding:8px;
+}
+
+.profile-main-photo{
+    width:150px;
+    height:150px;
+    flex-shrink:0;
+
+    object-fit:cover;
+
+    border:4px solid #2f80ff;
+    border-radius:50%;
+
+    background:#102747;
+
+    box-shadow:
+        0 0 0 6px rgba(47,128,255,.08),
+        0 12px 30px rgba(0,0,0,.25);
+}
+
+.profile-hero-content{
+    flex:1;
+}
+
+.profile-hero-content h2{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+
+    margin-bottom:14px;
+
+    color:#ffffff;
+    font-size:23px;
+}
+
+.student-status{
+    display:inline-flex;
+    align-items:center;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    background:rgba(22,199,132,.12);
+    border:1px solid rgba(22,199,132,.25);
+
+    color:#58d99b;
+
+    font-size:10px;
+    font-weight:700;
+}
+
+.profile-hero-content p{
+    margin:8px 0;
+
+    color:#8ea5c3;
+    font-size:12px;
+}
+
+.profile-hero-content p span{
+    color:#8399b7;
+}
+
+.profile-hero-content p b{
+    color:#dbe7f6;
+    font-weight:600;
+}
+
+.change-photo-btn{
+    margin-top:12px;
+}
+
+
+/* =========================================================
+   PROFILE OVERVIEW
+   ========================================================= */
+
+.card-heading{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    margin-bottom:18px;
+    padding-bottom:15px;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.heading-icon{
+    width:38px;
+    height:38px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:9px;
+
+    background:rgba(47,128,255,.12);
+    color:#6ca8ff;
+
+    font-size:16px;
+}
+
+.card-heading h3{
+    color:#ffffff;
+    font-size:15px;
+    font-weight:700;
+}
+
+.card-heading p{
+    margin-top:3px;
+
+    color:#7188a8;
+    font-size:10px;
+}
+
+
+/* ---------- INFO ROWS ---------- */
+
+.overview-list,
+.info-list,
+.contact-list{
+    display:flex;
+    flex-direction:column;
+}
+
+.overview-row,
+.info-row,
+.contact-row{
+    min-height:47px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:10px 3px;
+
+    border-bottom:1px solid rgba(255,255,255,.055);
+}
+
+.overview-row:last-child,
+.info-row:last-child,
+.contact-row:last-child{
+    border-bottom:none;
+}
+
+.overview-row span,
+.info-row span,
+.contact-row span{
+    color:#8299b8;
+    font-size:11px;
+}
+
+.overview-row b,
+.info-row b,
+.contact-row b{
+    color:#e2ebf7;
+
+    font-size:11px;
+    font-weight:600;
+
+    text-align:right;
+}
+
+.contact-row a{
+    color:#62a5ff;
+
+    font-size:11px;
+    font-weight:600;
+
+    text-decoration:none;
+}
+
+.contact-row a:hover{
+    text-decoration:underline;
+}
+
+
+/* =========================================================
+   LOWER DETAILS
+   ========================================================= */
+
+.lower-grid{
+    grid-column:1 / -1;
+
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+}
+
+
+/* ---------- SKILLS ---------- */
+
+.skill-wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.skill-chip{
+    display:inline-flex;
+    align-items:center;
+
+    min-height:31px;
+    padding:0 11px;
+
+    border:1px solid rgba(47,128,255,.24);
+    border-radius:7px;
+
+    background:rgba(47,128,255,.08);
+
+    color:#7db3ff;
+
+    font-size:10px;
+    font-weight:700;
+}
+
+.empty-note{
+    color:#7188a8;
+    font-size:11px;
+}
+
+
+/* ---------- RESUME BUTTON ---------- */
+
+#viewResumeButton{
+    min-height:31px;
+    padding:0 11px !important;
+
+    border:1px solid rgba(47,128,255,.30) !important;
+    border-radius:7px !important;
+
+    background:rgba(47,128,255,.10) !important;
+
+    color:#73adff !important;
+
+    cursor:pointer;
+
+    font-size:10px;
+    font-weight:700;
+}
+
+#viewResumeButton:hover{
+    background:#2f80ff !important;
+    color:#ffffff !important;
+}
+
+
+/* =========================================================
+   ABOUT
+   ========================================================= */
+
+.about-card{
+    grid-column:1 / -1;
+}
+
+.about-text{
+    color:#9eb1ca;
+    font-size:12px;
+    line-height:1.8;
+}
+
+
+/* =========================================================
+   TOP PROFILE
+   ========================================================= */
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.icon-button{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid rgba(47,128,255,.20);
+    border-radius:9px;
+
+    background:#08182d;
+    color:#ffffff;
+
+    cursor:pointer;
+}
+
+.top-profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding-left:13px;
+
+    border-left:1px solid rgba(255,255,255,.08);
+}
+
+.top-profile img{
+    width:39px;
+    height:39px;
+
+    object-fit:cover;
+
+    border:2px solid #2f80ff;
+    border-radius:50%;
+}
+
+.top-profile b{
+    color:#ffffff;
+    font-size:11px;
+}
+
+.top-profile p{
+    margin-top:2px;
+
+    color:#7188a8;
+    font-size:9px;
+}
+
+
+/* =========================================================
+   RESPONSIVE OVERRIDES
+   ========================================================= */
+
+@media(max-width:1200px){
+
+    .profile-summary-stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
+
+    .lower-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:900px){
+
+    .profile-main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .profile-summary-stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:650px){
+
+    .profile-summary-stats{
+        grid-template-columns:1fr;
+    }
+
+    .lower-grid{
+        grid-template-columns:1fr;
+    }
+
+    .profile-hero{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .profile-main-photo{
+        width:125px;
+        height:125px;
+    }
+}
+/* ===== PROFILE WIDTH FIX ===== */
+
+.profile-main{
+    width:auto !important;
+    min-width:0;
+    margin-left:265px;
+    overflow-x:hidden;
+}
+
+.profile-summary-stats{
+    width:100%;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+}
+
+.profile-summary-card{
+    min-width:0;
+}
+
+.profile-summary-card > div:last-child{
+    min-width:0;
+}
+
+.profile-summary-card p,
+.profile-summary-card small{
+    white-space:normal;
+}
+
+@media(max-width:1300px){
+    .profile-summary-stats{
+        grid-template-columns:repeat(2, minmax(0,1fr));
+    }
+}
+
+@media(max-width:900px){
+    .profile-main{
+        margin-left:0;
+    }
+}
+
+/* =========================================
+   ACADEMIC DETAILS + SKILLS
+   ========================================= */
+
+.academic-skills-section{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid rgba(47,128,255,.15);
+}
+
+.academic-skills-heading{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    margin-bottom:14px;
+}
+
+.academic-skills-heading > span{
+    width:36px;
+    height:36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:9px;
+
+    background:rgba(47,128,255,.12);
+    color:#4d9aff;
+
+    font-size:17px;
+}
+
+.academic-skills-heading h4{
+    margin:0;
+    color:#ffffff;
+    font-size:14px;
+    font-weight:700;
+}
+
+.academic-skills-heading p{
+    margin-top:3px;
+    color:#7189a8;
+    font-size:11px;
+}
+
+.academic-skills-section .skill-wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+/* =====================================================
+   FINAL PROFILE LAYOUT FIX
+   ===================================================== */
+
+.profile-grid{
+    display:grid !important;
+    grid-template-columns:minmax(0,1.35fr) minmax(360px,.85fr) !important;
+    gap:18px !important;
+    align-items:start !important;
+}
+
+.profile-left-column,
+.profile-right-column{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    min-width:0;
+}
+
+/* Cards should size according to their own content */
+.profile-left-column > .card,
+.profile-right-column > .card{
+    width:100%;
+    height:auto;
+}
+
+/* Technical Skills inside Academic Details */
+.academic-skills-section{
+    margin-top:18px;
+    padding-top:18px;
+    border-top:1px solid rgba(47,128,255,.15);
+}
+
+.academic-skills-heading{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.academic-skills-heading > span{
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    border-radius:9px;
+    background:rgba(47,128,255,.12);
+    color:#5fa2ff;
+}
+
+.academic-skills-heading h4{
+    margin:0;
+    color:var(--text);
+    font-size:15px;
+    font-weight:700;
+}
+
+.academic-skills-heading p{
+    margin:3px 0 0;
+    color:var(--muted);
+    font-size:11px;
+}
+
+/* Skills */
+.skill-wrap{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.skill-chip{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 12px;
+    border:1px solid rgba(47,128,255,.35);
+    border-radius:8px;
+    background:rgba(47,128,255,.08);
+}
+
+/* Resume long Cloudinary name fix */
+.resume-overview{
+    max-width:260px;
+    text-align:right;
+    min-width:0;
+}
+
+#overviewResume{
+    display:block;
+    max-width:100%;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+    margin-bottom:8px;
+}
+
+#viewResumeButton{
+    padding:8px 13px;
+    border:1px solid rgba(47,128,255,.55);
+    border-radius:8px;
+    background:transparent;
+    color:#5fa2ff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* About Me uses full page width */
+.about-card{
+    grid-column:1 / -1 !important;
+}
+
+/* Old lower-grid no longer controls layout */
+.lower-grid{
+    display:contents !important;
+}
+
+/* Responsive */
+@media(max-width:1100px){
+
+    .profile-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .about-card{
+        grid-column:auto !important;
+    }
+}
+
+@media(max-width:650px){
+
+    .profile-left-column,
+    .profile-right-column{
+        gap:14px;
+    }
+
+    .resume-overview{
+        max-width:180px;
+    }
+}

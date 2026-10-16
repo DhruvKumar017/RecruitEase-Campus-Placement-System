@@ -473,3 +473,17 @@ tbody tr:hover{
         padding:16px;
     }
 }
+/* ===== Full Width Layout - Sidebar Removed ===== */
+
+.layout {
+    display: block;
+    width: 100%;
+}
+
+.main {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    padding-left: 32px;
+    padding-right: 32px;
+}

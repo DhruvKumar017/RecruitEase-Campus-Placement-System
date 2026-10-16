@@ -276,6 +276,9 @@
                     placeholder="Search tests, types..."
                     onkeyup="filterTests()"
                 >
+                <button type="button" class="refresh-btn" onclick="refreshAptitudeTestsPage()">
+    ↻ Refresh
+</button>
 
                 <button class="bell" type="button">
                     🔔
@@ -295,23 +298,7 @@
 
         </div>
 
-        <section class="page-header">
-
-            <div class="page-title">
-                <h2>Aptitude Tests</h2>
-
-                <p class="breadcrumb">
-                    <b>Dashboard</b> &nbsp;›&nbsp; Aptitude Tests
-                </p>
-            </div>
-
-            <button class="create-test-btn" type="button" onclick="toggleCreateTestPanel()">
-                ＋ Create New Test
-            </button>
-
-        </section>
-
-        <section class="create-test-panel" id="createTestPanel">
+        <section class="create-test-panel" id="createTestPanel" style="display: none;">
 
             <div class="form-head">
                 <h3>Create and Schedule Aptitude Test</h3>
@@ -322,13 +309,6 @@
             </div>
 
             <div class="test-form-grid">
-
-                <input
-                    id="newTestId"
-                    type="text"
-                    placeholder="Test ID auto-generate after saving"
-                    readonly
-                >
 
                 <input id="testName" placeholder="Test Name">
 
@@ -398,49 +378,126 @@
 
             <div>
 
-                <section class="stats-grid">
+<section class="stats-grid">
 
-                    <div class="stat-card">
-                        <div class="stat-icon blue-icon">📋</div>
+    <div class="stat-card total-tests-click-card"
+     onclick="toggleScheduledTestStudents()">
+        <div class="stat-icon blue-icon">📋</div>
 
-                        <div>
-                            <p>Total Tests</p>
-                            <h3 id="totalTests">0</h3>
-                            <small>All Time</small>
-                        </div>
-                    </div>
+        <div>
+            <p>Total Tests</p>
+            <h3 id="totalTests">0</h3>
+            <small>All Tests Created</small>
+        </div>
+    </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon green-icon">✅</div>
+    <div class="stat-card create-test-card"
+         onclick="toggleCreateTestPanel()">
 
-                        <div>
-                            <p>Active Tests</p>
-                            <h3 id="activeTests">0</h3>
-                            <small>Currently Active</small>
-                        </div>
-                    </div>
+        <div class="stat-icon green-icon">＋</div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon orange-icon">⏰</div>
+        <div>
+            <p>Create New Test</p>
+            <small>Add a new aptitude test</small>
+        </div>
 
-                        <div>
-                            <p>Scheduled Tests</p>
-                            <h3 id="scheduledTests">0</h3>
-                            <small>Student Tests</small>
-                        </div>
-                    </div>
+        <span class="create-arrow">→</span>
+    </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon purple-icon">📈</div>
+    <!-- Upcoming Test Card -->
+<div class="bottom-info-card upcoming-click-card"
+     onclick="toggleUpcomingStudents()">
 
-                        <div>
-                            <p>Completed Tests</p>
-                            <h3 id="completedTests">0</h3>
-                            <small>Student Results</small>
-                        </div>
-                    </div>
+    <div class="bottom-card-head">
+        <div>
+            <h3>📅 Upcoming Test</h3>
+            <p>Next scheduled aptitude test</p>
+        </div>
+    </div>
 
-                </section>
+    <div class="upcoming-test">
+        <div class="date-box">
+            <b id="upcomingDayNumber">--</b>
+            <span id="upcomingDayText">DAY</span>
+        </div>
+
+        <div class="upcoming-details">
+            <h4 id="upcomingTestName">No Scheduled Test</h4>
+            <p id="upcomingTestInfo">
+                Schedule a test for a student to see it here.
+            </p>
+        </div>
+    </div>
+
+    <button class="side-link"
+            type="button"
+            onclick="viewUpcomingTest()">
+        View Details
+    </button>
+
+</div>
+
+<!-- Manage Questions Card -->
+<div class="bottom-info-card manage-question-card"
+     onclick="manageSelectedTest()">
+
+    <div class="manage-question-content">
+
+        <div class="manage-question-icon">
+            ❓
+        </div>
+
+        <div>
+            <h3>Manage Questions</h3>
+            <p>Add, edit and manage aptitude test questions</p>
+        </div>
+
+        <span class="manage-question-arrow">→</span>
+
+    </div>
+
+    </div>
+</section>
+
+<!-- Scheduled Test Students List -->
+<div id="scheduledTestStudentsPanel" class="upcoming-students-panel">
+
+    <div class="upcoming-list-header">
+        <h3>📋 Scheduled Test Students</h3>
+
+        <button type="button"
+                onclick="event.stopPropagation(); toggleScheduledTestStudents();">
+            ✕
+        </button>
+    </div>
+
+    <div id="scheduledTestStudentsList">
+        <!-- Live scheduled students will appear here -->
+    </div>
+
+</div>
+
+<!-- Upcoming Students Expand List -->
+<div id="upcomingStudentsPanel" class="upcoming-students-panel">
+
+    <div class="upcoming-list-header">
+        <h3>📋 Upcoming Test Students</h3>
+
+        <button type="button"
+                onclick="event.stopPropagation(); toggleUpcomingStudents();">
+            ✕
+        </button>
+    </div>
+
+    <div id="upcomingStudentsList">
+        <!-- Live upcoming students will appear here -->
+    </div>
+
+</div>
+
+
+
+</section>
 
                 <section class="tests-panel">
 
@@ -449,16 +506,9 @@
                         <input
                             type="text"
                             id="tableSearch"
-                            placeholder="Search by test name or type..."
+                            placeholder="Search by test name, ID, company or student..."
                             onkeyup="filterTests()"
                         >
-
-                        <select id="typeFilter" onchange="filterTests()">
-                            <option value="">All Test Types</option>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
-                            <option value="Hybrid">Hybrid</option>
-                        </select>
 
                         <select id="statusFilter" onchange="filterTests()">
                             <option value="">All Status</option>
@@ -489,16 +539,16 @@
                         <table class="tests-table">
 
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Test Name</th>
-                                    <th>Test Type</th>
-                                    <th>Duration</th>
-                                    <th>Scheduled Day</th>
-                                    <th>Status</th>
-                                    <th>Score</th>
-                                    <th>Actions</th>
-                                </tr>
+                               <tr>
+    <th>#</th>
+    <th>Student Name</th>
+    <th>Test Name</th>
+    <th>Test ID</th>
+    <th>Company Name</th>
+    <th>Schedule (Date & Time)</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
                             </thead>
 
                             <tbody id="testTable"></tbody>
@@ -561,95 +611,10 @@
 
             </div>
 
-            <aside class="right-column">
+            <section class="bottom-action-grid">
 
-                <section class="side-card">
+</section>
 
-                    <h3>📅 Upcoming Test</h3>
-
-                    <div class="upcoming-test">
-
-                        <div class="date-box">
-                            <b id="upcomingDayNumber">--</b>
-                            <span id="upcomingDayText">DAY</span>
-                        </div>
-
-                        <div class="upcoming-details">
-                            <h4 id="upcomingTestName">No Scheduled Test</h4>
-                            <p id="upcomingTestInfo">
-                                Schedule a test for a student to see it here.
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <button class="side-link" type="button" onclick="viewUpcomingTest()">
-                        View Details
-                    </button>
-
-                </section>
-
-                <section class="side-card">
-
-                    <h3>Quick Actions</h3>
-
-                    <button class="quick-action" type="button" onclick="toggleCreateTestPanel()">
-                        <span>＋</span>
-                        Create New Test
-                    </button>
-
-                    <button class="quick-action" type="button" onclick="manageSelectedTest()">
-                        <span>❓</span>
-                        Manage Questions
-                    </button>
-
-                    <button class="quick-action" type="button" onclick="openQuestionBank()">
-                        <span>📚</span>
-                        Question Bank
-                    </button>
-
-                    <button class="quick-action" type="button" onclick="showTestReport()">
-                        <span>📊</span>
-                        Test Reports
-                    </button>
-
-                </section>
-
-                <section class="side-card">
-
-                    <h3>Test Type Distribution</h3>
-
-                    <div class="distribution-row">
-                        <span>Online</span>
-                        <b id="onlinePercent">0%</b>
-                    </div>
-
-                    <div class="distribution-row">
-                        <span>Offline</span>
-                        <b id="offlinePercent">0%</b>
-                    </div>
-
-                    <div class="distribution-row">
-                        <span>Hybrid</span>
-                        <b id="hybridPercent">0%</b>
-                    </div>
-
-                    <div class="distribution-line"></div>
-
-                </section>
-
-                <section class="side-card note-card">
-
-                    <h3>🔔 Note</h3>
-
-                    <p>
-                        Test save hone ke baad <b>Manage Questions</b> par click
-                        karke usi generated Test ID ke MCQ add karo.
-                    </p>
-
-                </section>
-
-            </aside>
 
         </section>
 
@@ -661,6 +626,7 @@
 
 let tests = [];
 let scheduledApplications = [];
+let activeStudents = [];
 let testMap = {};
 let selectedUpcomingApplication = null;
 let lastCreatedTestId = null;
@@ -669,6 +635,27 @@ let lastCreatedTestId = null;
 
 async function loadDashboardData() {
     try {
+
+        // ===== LOAD ACTIVE STUDENTS =====
+        try {
+            const studentsResponse = await fetch("/api/students");
+
+            if (studentsResponse.ok) {
+                const allStudents = await studentsResponse.json();
+
+                activeStudents = allStudents.filter(student =>
+                    student.blocked !== true &&
+                    student.deleted !== true
+                );
+            } else {
+                activeStudents = [];
+            }
+
+        } catch (studentError) {
+            activeStudents = [];
+        }
+
+        // ===== LOAD TESTS + APPLICATIONS =====
         const responses = await Promise.all([
             fetch("/api/aptitude-tests"),
             fetch("/api/applications/all")
@@ -694,7 +681,6 @@ async function loadDashboardData() {
         populateStudentApplications();
         updateTestStats();
         updateUpcomingTest();
-        updateDistribution();
         renderScheduledStudentTests();
 
     } catch (error) {
@@ -702,7 +688,7 @@ async function loadDashboardData() {
 
         document.getElementById("testTable").innerHTML = `
             <tr>
-                <td colspan="10" style="text-align:center; padding:30px;">
+                <td colspan="8" style="text-align:center; padding:30px;">
                     Tests load nahi ho rahe. Backend API check karo.
                 </td>
             </tr>
@@ -723,87 +709,174 @@ async function loadDashboardData() {
 function renderTests(data) {
     const table = document.getElementById("testTable");
 
-    document.getElementById("testCountText").innerText =
-        `Showing ${data.length} of ${tests.length} tests`;
+    const visibleTests = data.filter(test => {
 
-    if (data.length === 0) {
-        table.innerHTML = `
-            <tr>
-                <td colspan="10" style="text-align:center; padding:30px;">
-                    No tests found.
-                </td>
-            </tr>
-        `;
-        return;
+    // Is test ko kisi student ko assign kiya gaya hai ya nahi
+    const assignedApplications = scheduledApplications.filter(application =>
+        Number(application.testId) === Number(test.id) &&
+        application.testPermission === "Allowed"
+    );
+
+    // Test kisi student ko assigned nahi hai -> show karo
+    if (assignedApplications.length === 0) {
+        return true;
     }
 
-    table.innerHTML = data.map((test, index) => `
+    // Assigned hai -> tabhi show karo jab kam se kam ek active student ho
+    return assignedApplications.some(application =>
+        activeStudents.some(student =>
+            Number(student.id) === Number(application.studentId)
+        )
+    );
+});
+
+if (visibleTests.length === 0) {
+    document.getElementById("testCountText").innerText = "Showing 0 tests";
+
+    table.innerHTML = `
         <tr>
-            <td>${index + 1}</td>
-
-            <td>
-                <span class="test-name">${escapeHtml(test.testName || "-")}</span>
-                <span class="test-subtitle">Aptitude Test • ID ${test.id}</span>
-            </td>
-
-            <td>
-                <span class="type-badge ${getTypeClass(test.testType)}">
-                    ${escapeHtml(test.testType || "Not Set")}
-                </span>
-            </td>
-
-            <td>${test.duration || 0} min</td>
-
-            <td>${escapeHtml(test.scheduledDay || "-")}</td>
-
-            <td>
-                <span class="status-badge ${getStatusClass(test.status)}">
-                    ${escapeHtml(test.status || "Pending")}
-                </span>
-            </td>
-
-            <td>${test.score || 0}</td>
-
-            <td>
-                <div class="action-buttons">
-
-                    <button
-                        class="view-btn"
-                        type="button"
-                        title="View Test"
-                        onclick="viewTest(${test.id})"
-                    >
-                        👁
-                    </button>
-
-                    <button
-                        class="manage-btn"
-                        type="button"
-                        title="Manage Questions"
-                        onclick="manageQuestions(${test.id})"
-                    >
-                        ❓
-                    </button>
-
-                    <button
-                        class="delete-btn"
-                        type="button"
-                        title="Delete Test"
-                        onclick="showDeleteMessage(${test.id})"
-                    >
-                        🗑
-                    </button>
-
-                </div>
+            <td colspan="8" style="text-align:center; padding:30px;">
+                No tests found.
             </td>
         </tr>
-    `).join("");
+    `;
+    return;
+}
+document.getElementById("testCountText").innerText =
+    `Showing ${visibleTests.length} tests`;
+   table.innerHTML = visibleTests.map((test, index) => {
+
+        // Find the student application where this test is assigned
+      const app = scheduledApplications.find(application => {
+    const isActiveStudent = activeStudents.some(student =>
+        Number(student.id) === Number(application.studentId)
+    );
+
+    return (
+        Number(application.testId) === Number(test.id) &&
+        application.testPermission === "Allowed" &&
+        isActiveStudent
+    );
+});
+
+        const studentName = app
+            ? escapeHtml(app.studentName || "Student")
+            : "-";
+
+        const companyName = app
+            ? escapeHtml(app.companyName || "Company")
+            : "-";
+
+        let scheduleMarkup = `
+            <span class="test-name">Not Scheduled</span>
+            <span class="test-subtitle">Date & time not assigned</span>
+        `;
+
+        let displayStatus = test.status || "Pending";
+
+        if (app) {
+            const dateText = formatDate(app.testDate);
+
+            const startTime = formatTestTime(app.testStartTime);
+            const endTime = formatTestTime(app.testEndTime);
+
+            scheduleMarkup = `
+                <span class="test-name">${dateText}</span>
+                <span class="test-subtitle">
+                    ${startTime} - ${endTime}
+                </span>
+            `;
+
+            displayStatus = app.testResultStatus
+                ? "Completed"
+                : "Scheduled";
+        }
+
+        return `
+            <tr>
+
+                <td>${index + 1}</td>
+
+                <td>
+                    <span class="test-name">${studentName}</span>
+                </td>
+
+                <td>
+                    <span class="test-name">
+                        ${escapeHtml(test.testName || "-")}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="test-name">
+                        TST${String(test.testNumber || test.id).padStart(3, "0")}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="test-name">${companyName}</span>
+                </td>
+
+                <td>
+                    ${scheduleMarkup}
+                </td>
+
+                <td>
+                    <span class="status-badge ${getStatusClass(displayStatus)}">
+                        ${escapeHtml(displayStatus)}
+                    </span>
+                </td>
+
+                <td>
+                    <div class="action-buttons">
+
+                        <button
+                            class="view-btn"
+                            type="button"
+                            title="View Test"
+                            onclick="viewTest(${test.id})"
+                        >
+                            👁
+                        </button>
+
+                        <button
+                            class="manage-btn"
+                            type="button"
+                            title="Manage Questions"
+                            onclick="manageQuestions(${test.id})"
+                        >
+                            ✏️
+                        </button>
+
+                        <button
+                            class="delete-btn"
+                            type="button"
+                            title="Delete Test"
+                            onclick="showDeleteMessage(${test.id})"
+                        >
+                            🗑
+                        </button>
+
+                    </div>
+                </td>
+
+            </tr>
+        `;
+    }).join("");
 }
 
 /* ================= DIRECT CREATE + SCHEDULE ================= */
 
 function toggleCreateTestPanel() {
-    document.getElementById("createTestPanel").classList.toggle("show");
+    const panel = document.getElementById("createTestPanel");
+
+    if (panel.style.display === "none") {
+        panel.style.display = "block";
+        panel.classList.add("show");
+    } else {
+        panel.style.display = "none";
+        panel.classList.remove("show");
+    }
 }
 
 function populateStudentApplications() {
@@ -892,10 +965,9 @@ async function saveNewTest(shouldSchedule) {
 
         lastCreatedTestId = createdTest.id;
 
-        document.getElementById("newTestId").value =
-            `Generated Test ID: ${createdTest.id}`;
-
         localStorage.setItem("selectedTestId", createdTest.id);
+
+        const displayTestId = createdTest.testNumber || createdTest.id;
 
         if (shouldSchedule) {
             const scheduleResponse = await fetch(
@@ -914,7 +986,7 @@ async function saveNewTest(shouldSchedule) {
             }
 
             showCreatedTestMessage(
-                `✅ Test ID ${createdTest.id} created and scheduled. Now click Manage Questions to add MCQs.`
+                `✅ Test ID ${displayTestId} created and scheduled. Now click Manage Questions to add MCQs.`
             );
 
             alert(
@@ -1048,7 +1120,7 @@ function renderScheduledStudentTests() {
 
                 <td>
                     <span class="student-test-name">
-                        Test ID: ${app.testId || "-"}
+                        Test ID: ${test.testNumber || app.testId || "-"}
                     </span>
 
                     <span class="student-test-sub">
@@ -1120,21 +1192,30 @@ function filterTests() {
 
     const searchValue = tableSearch || topSearch;
 
-    const selectedType = document.getElementById("typeFilter").value;
     const selectedStatus = document.getElementById("statusFilter").value;
     const selectedDay = document.getElementById("dayFilter").value;
 
     const filteredTests = tests.filter(test => {
-        const testName = String(test.testName || "").toLowerCase();
-        const testType = String(test.testType || "").toLowerCase();
+const testName = String(test.testName || "").toLowerCase();
+const testId = String(test.id || "").toLowerCase();
 
-        const matchesSearch =
-            testName.includes(searchValue) ||
-            testType.includes(searchValue);
+const app = scheduledApplications.find(application =>
+    Number(application.testId) === Number(test.id) &&
+    application.testPermission === "Allowed"
+);
 
-        const matchesType =
-            selectedType === "" ||
-            test.testType === selectedType;
+const studentName = String(app?.studentName || "").toLowerCase();
+const companyName = String(app?.companyName || "").toLowerCase();
+
+const formattedTestId =
+    `tst${String(test.testNumber || test.id || "").padStart(3, "0")}`.toLowerCase();
+
+const matchesSearch =
+    testName.includes(searchValue) ||
+    testId.includes(searchValue) ||
+    formattedTestId.includes(searchValue) ||
+    studentName.includes(searchValue) ||
+    companyName.includes(searchValue);
 
         const matchesStatus =
             selectedStatus === "" ||
@@ -1145,10 +1226,9 @@ function filterTests() {
             test.scheduledDay === selectedDay;
 
         return (
-            matchesSearch &&
-            matchesType &&
-            matchesStatus &&
-            matchesDay
+           matchesSearch &&
+matchesStatus &&
+matchesDay
         );
     });
 
@@ -1158,7 +1238,6 @@ function filterTests() {
 function clearFilters() {
     document.getElementById("topSearch").value = "";
     document.getElementById("tableSearch").value = "";
-    document.getElementById("typeFilter").value = "";
     document.getElementById("statusFilter").value = "";
     document.getElementById("dayFilter").value = "";
 
@@ -1197,7 +1276,7 @@ function viewTest(testId) {
 
     alert(
         "Test Details\n\n" +
-        "Test ID: " + test.id + "\n" +
+        "Test ID: " + (test.testNumber || test.id) + "\n" +
         "Name: " + (test.testName || "-") + "\n" +
         "Type: " + (test.testType || "-") + "\n" +
         "Duration: " + (test.duration || 0) + " minutes\n" +
@@ -1207,9 +1286,18 @@ function viewTest(testId) {
 }
 
 async function showDeleteMessage(testId) {
+
+    const test = tests.find(item =>
+        Number(item.id) === Number(testId)
+    );
+
+    const displayTestId = test
+        ? (test.testNumber || test.id)
+        : testId;
+
     const confirmed = confirm(
         "Delete this aptitude test?\n\n" +
-        "Test ID: " + testId +
+        "Test ID: " + displayTestId +
         "\n\nIske questions bhi delete ho jayenge."
     );
 
@@ -1228,10 +1316,10 @@ async function showDeleteMessage(testId) {
 
         alert("Test deleted successfully.");
 
-        if (Number(lastCreatedTestId) === Number(testId)) {
-            lastCreatedTestId = null;
-            document.getElementById("newTestId").value = "";
-        }
+if (Number(lastCreatedTestId) === Number(testId)) {
+    lastCreatedTestId = null;
+    localStorage.removeItem("selectedTestId");
+}
 
         loadDashboardData();
 
@@ -1270,23 +1358,7 @@ function showTestReport() {
 /* ================= STATS + UPCOMING ================= */
 
 function updateTestStats() {
-    const scheduledCount = scheduledApplications.filter(app =>
-        app.testPermission === "Allowed"
-    ).length;
-
-    const completedCount = scheduledApplications.filter(app =>
-        Boolean(app.testResultStatus)
-    ).length;
-
     document.getElementById("totalTests").innerText = tests.length;
-
-    document.getElementById("activeTests").innerText =
-        tests.filter(test =>
-            String(test.status || "").toLowerCase() === "active"
-        ).length;
-
-    document.getElementById("scheduledTests").innerText = scheduledCount;
-    document.getElementById("completedTests").innerText = completedCount;
 }
 
 function updateUpcomingTest() {
@@ -1329,10 +1401,126 @@ function updateUpcomingTest() {
         date.toLocaleDateString("en-IN", { month:"short" }).toUpperCase();
 
     document.getElementById("upcomingTestName").innerText =
-        test.testName || `Test ID: ${app.testId}`;
+        test.testName || `Test ID: ${test.testNumber || app.testId}`;
 
     document.getElementById("upcomingTestInfo").innerText =
         `${app.studentName || "Student"} • ${app.testStartTime || "Time Not Set"} • ${test.duration || 0} min`;
+}
+
+function toggleScheduledTestStudents() {
+
+    const testsPanel = document.querySelector(".tests-panel");
+    const upcomingPanel = document.getElementById("upcomingStudentsPanel");
+    const scheduledPanel = document.getElementById("scheduledTestStudentsPanel");
+
+    // Close other opened lists
+    if (upcomingPanel) {
+        upcomingPanel.classList.remove("show");
+    }
+
+    if (scheduledPanel) {
+        scheduledPanel.classList.remove("show");
+    }
+
+    // Show only main tests table
+    if (testsPanel) {
+        testsPanel.style.display = "";
+    }
+}
+
+function toggleUpcomingStudents() {
+
+    const panel = document.getElementById("upcomingStudentsPanel");
+    const list = document.getElementById("upcomingStudentsList");
+
+    if (!panel || !list) {
+        return;
+    }
+
+    const upcomingStudents = scheduledApplications
+        .filter(app => {
+
+            const isActiveStudent = activeStudents.some(student =>
+                Number(student.id) === Number(app.studentId)
+            );
+
+            const testDateTime = new Date(
+    `${app.testDate || "1900-01-01"}T${app.testStartTime || "00:00"}`
+);
+
+const isFutureTest =
+    !isNaN(testDateTime.getTime()) &&
+    testDateTime > new Date();
+
+return (
+    app.testPermission === "Allowed" &&
+    !app.testResultStatus &&
+    isActiveStudent &&
+    isFutureTest
+);
+        })
+        .sort((first, second) => {
+
+            const firstDate = new Date(
+                `${first.testDate || "2099-01-01"}T${first.testStartTime || "00:00"}`
+            );
+
+            const secondDate = new Date(
+                `${second.testDate || "2099-01-01"}T${second.testStartTime || "00:00"}`
+            );
+
+            return firstDate - secondDate;
+        });
+
+    if (upcomingStudents.length === 0) {
+
+        list.innerHTML = `
+            <div class="upcoming-empty">
+                No upcoming student tests found.
+            </div>
+        `;
+
+    } else {
+
+        list.innerHTML = upcomingStudents.map((app, index) => {
+
+            const test = testMap[app.testId] || {};
+
+            return `
+                <div class="upcoming-student-row">
+
+                    <div>
+                        <b>${index + 1}. ${escapeHtml(app.studentName || "Student")}</b>
+                        <span>${escapeHtml(app.companyName || "Company")}</span>
+                    </div>
+
+                    <div>
+                        <b>${escapeHtml(test.testName || `Test ID: ${app.testId}`)}</b>
+                        <span>TST${String(test.testNumber || app.testId).padStart(3, "0")}</span>
+                    </div>
+
+                    <div>
+                        <b>${formatDate(app.testDate)}</b>
+                        <span>
+                            ${formatTestTime(app.testStartTime)}
+                            -
+                            ${formatTestTime(app.testEndTime)}
+                        </span>
+                    </div>
+
+                </div>
+            `;
+        }).join("");
+    }
+
+    const testsPanel = document.querySelector(".tests-panel");
+
+panel.classList.toggle("show");
+
+if (testsPanel) {
+    testsPanel.style.display =
+        panel.classList.contains("show") ? "none" : "";
+}
 }
 
 function viewUpcomingTest() {
@@ -1349,42 +1537,10 @@ function viewUpcomingTest() {
         "Student: " + (app.studentName || "-") + "\n" +
         "Student ID: " + (app.studentId || "-") + "\n" +
         "Company: " + (app.companyName || "-") + "\n" +
-        "Test: " + (test.testName || `Test ID: ${app.testId}`) + "\n" +
+        "Test: " + (test.testName || `Test ID: ${test.testNumber || app.testId}`) + "\n" +
         "Date: " + formatDate(app.testDate) + "\n" +
         "Time: " + (app.testStartTime || "-")
     );
-}
-
-function updateDistribution() {
-    const total = tests.length;
-
-    if (total === 0) {
-        document.getElementById("onlinePercent").innerText = "0%";
-        document.getElementById("offlinePercent").innerText = "0%";
-        document.getElementById("hybridPercent").innerText = "0%";
-        return;
-    }
-
-    const online = tests.filter(test =>
-        String(test.testType || "").toLowerCase() === "online"
-    ).length;
-
-    const offline = tests.filter(test =>
-        String(test.testType || "").toLowerCase() === "offline"
-    ).length;
-
-    const hybrid = tests.filter(test =>
-        String(test.testType || "").toLowerCase() === "hybrid"
-    ).length;
-
-    document.getElementById("onlinePercent").innerText =
-        Math.round((online / total) * 100) + "%";
-
-    document.getElementById("offlinePercent").innerText =
-        Math.round((offline / total) * 100) + "%";
-
-    document.getElementById("hybridPercent").innerText =
-        Math.round((hybrid / total) * 100) + "%";
 }
 
 /* ================= HELPERS ================= */
@@ -1403,6 +1559,7 @@ function getStatusClass(status) {
 
     if (value === "active") return "status-active";
     if (value === "scheduled") return "status-scheduled";
+    if (value === "completed") return "status-completed";
 
     return "status-pending";
 }
@@ -1421,6 +1578,22 @@ function formatDate(dateValue) {
     });
 }
 
+function formatTestTime(timeValue) {
+    if (!timeValue) return "Time Not Set";
+
+    const parts = timeValue.split(":");
+
+    let hour = Number(parts[0]);
+    const minute = parts[1] || "00";
+
+    const period = hour >= 12 ? "PM" : "AM";
+
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour;
+
+    return `${String(hour).padStart(2, "0")}:${minute} ${period}`;
+}
+
 function escapeHtml(value) {
     return String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -1435,7 +1608,9 @@ document.getElementById("themeToggle").addEventListener("click", function() {
 
     button.innerText = button.innerText === "🌙" ? "☀️" : "🌙";
 });
-
+function refreshAptitudeTestsPage() {
+    window.location.reload();
+}
 loadDashboardData();
 
 </script>

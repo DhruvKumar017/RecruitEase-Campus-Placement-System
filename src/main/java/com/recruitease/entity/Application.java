@@ -34,6 +34,7 @@ public class Application {
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
+    private LocalDateTime placedAt;
 
     public Application() {
     }
@@ -152,4 +153,11 @@ public class Application {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+    public LocalDateTime getPlacedAt() {
+    return placedAt;
+}
+
+public void setPlacedAt(LocalDateTime placedAt) {
+    this.placedAt = placedAt;
+}
 }

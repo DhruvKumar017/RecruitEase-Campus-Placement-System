@@ -1,0 +1,477 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Viewer Dashboard - RecruitEase</title>
+
+    <link rel="stylesheet" href="admin-dashboard.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .viewer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 15px;
+            border-radius: 30px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .viewer-notice {
+            margin: 20px 0;
+            padding: 16px 20px;
+            border: 1px solid #93c5fd;
+            border-radius: 14px;
+            background: #eff6ff;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .viewer-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .viewer-topbar h2 {
+            margin: 0;
+        }
+
+        .viewer-topbar p {
+            margin-top: 6px;
+            color: #64748b;
+        }
+
+        .viewer-logout {
+            padding: 11px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .viewer-panel {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+        }
+
+        .viewer-panel h3 {
+            margin-bottom: 18px;
+        }
+
+        .viewer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .viewer-table th,
+        .viewer-table td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .viewer-table th {
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .viewer-empty {
+            text-align: center !important;
+            color: #64748b;
+            padding: 28px !important;
+        }
+
+        .viewer-sidebar-label {
+            padding: 12px 16px;
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .viewer-disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 700px) {
+            .viewer-panel {
+                padding: 14px;
+                overflow-x: auto;
+            }
+
+            .viewer-table {
+                min-width: 480px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- VIEWER SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <p class="viewer-sidebar-label">
+            VIEWER PORTAL
+        </p>
+
+        <a class="active"
+           href="admin-viewer-dashboard.html">
+            ▦ Dashboard
+        </a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a class="viewer-disabled" aria-disabled="true">
+            👥 All Students
+        </a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a class="viewer-disabled" aria-disabled="true">
+            🏢 All Companies
+        </a>
+        <a class="viewer-disabled" aria-disabled="true">
+            🗓️ Placement Drives
+        </a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a class="viewer-disabled" aria-disabled="true">
+            📄 Applications
+        </a>
+        <a class="viewer-disabled" aria-disabled="true">
+            🏆 Eligibility
+        </a>
+        <a class="viewer-disabled" aria-disabled="true">
+            🧠 Aptitude Tests
+        </a>
+        <a class="viewer-disabled" aria-disabled="true">
+            🎤 Interviews
+        </a>
+        <a class="viewer-disabled" aria-disabled="true">
+            ✅ Placed Students
+        </a>
+        <a class="viewer-disabled" aria-disabled="true">
+            📊 Reports & Analytics
+        </a>
+
+        <p class="menu-title">ACCOUNT</p>
+        <a href="admin-viewer-login.html"
+           onclick="viewerLogout(event)">
+            ↪ Logout
+        </a>
+
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="main-content">
+
+        <div class="viewer-topbar">
+
+            <div>
+                <h2>Admin Viewer Dashboard</h2>
+                <p>RecruitEase Campus Placement System</p>
+            </div>
+
+            <div class="viewer-badge">
+                👁️ READ ONLY
+            </div>
+
+            <button class="viewer-logout"
+                    onclick="viewerLogout(event)">
+                Logout
+            </button>
+
+        </div>
+
+        <section class="dashboard-hero">
+
+            <div class="hero-welcome">
+                <h1>
+                    Welcome,
+                    <span id="viewerName">Viewer</span> 👋
+                </h1>
+
+                <p>
+                    Explore authorized placement information
+                    without changing any records.
+                </p>
+            </div>
+
+            <div class="hero-clock">
+                <div class="hero-clock-row">
+                    📅 <span id="heroDate">--</span>
+                </div>
+
+                <div class="hero-clock-row">
+                    🕒 <span id="heroTime">--</span>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="viewer-notice">
+            🛡️ <strong>Viewer Mode</strong>
+            <p>
+                This is a read-only dashboard preview.
+                Live data and additional pages will become
+                available after backend authorization is
+                completed. Settings and record modifications
+                are not available to viewers.
+            </p>
+        </div>
+
+        <!-- DASHBOARD STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue">🎓</div>
+                <div>
+                    <p>Total Students</p>
+                    <h2 id="studentCount">—</h2>
+                    <span>Awaiting secure data access</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">🏢</div>
+                <div>
+                    <p>Total Companies</p>
+                    <h2 id="companyCount">—</h2>
+                    <span>Awaiting secure data access</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">📅</div>
+                <div>
+                    <p>Total Drives</p>
+                    <h2 id="driveCount">—</h2>
+                    <span>Awaiting secure data access</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">📄</div>
+                <div>
+                    <p>Total Applications</p>
+                    <h2 id="applicationCount">—</h2>
+                    <span>Awaiting secure data access</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RECENT APPLICATIONS -->
+        <section class="viewer-panel">
+
+            <h3>📄 Recent Applications</h3>
+
+            <table class="viewer-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recentApplicationsList">
+                    <tr>
+                        <td colspan="5" class="viewer-empty">
+                            Secure read-only data access
+                            is not enabled yet.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <!-- UPCOMING DRIVES -->
+        <section class="viewer-panel">
+
+            <h3>🗓️ Upcoming Placement Drives</h3>
+
+            <table class="viewer-table">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Date</th>
+                        <th>Eligible Students</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody id="upcomingDrivesList">
+                    <tr>
+                        <td colspan="4" class="viewer-empty">
+                            Secure read-only data access
+                            is not enabled yet.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <!-- RECENT ACTIVITIES -->
+        <section class="viewer-panel">
+
+            <h3>🔔 Recent Activities</h3>
+
+            <div id="recentActivitiesList"
+                 class="viewer-empty">
+                Viewer-safe activity data
+                is not enabled yet.
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    "use strict";
+
+    const viewerToken =
+        sessionStorage.getItem("viewerToken");
+
+    const viewerId =
+        sessionStorage.getItem("viewerId");
+
+    const viewerRole =
+        sessionStorage.getItem("viewerRole");
+
+    // Frontend check only.
+    // Backend must independently validate the JWT.
+    if (
+        !viewerToken ||
+        !viewerId ||
+        viewerRole !== "VIEWER"
+    ) {
+        window.location.replace(
+            "admin-viewer-login.html"
+        );
+    } else {
+        document.getElementById(
+            "viewerName"
+        ).textContent = viewerId;
+    }
+
+    function viewerLogout(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        sessionStorage.removeItem("viewerToken");
+        sessionStorage.removeItem("viewerId");
+        sessionStorage.removeItem("viewerRole");
+
+        window.location.replace(
+            "admin-viewer-login.html"
+        );
+    }
+
+    function updateViewerClock() {
+        const now = new Date();
+
+        const dateElement =
+            document.getElementById("heroDate");
+
+        const timeElement =
+            document.getElementById("heroTime");
+
+        dateElement.textContent =
+            now.toLocaleDateString("en-IN", {
+                weekday: "long",
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            });
+
+        timeElement.textContent =
+            now.toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+    }
+
+updateViewerClock();
+setInterval(updateViewerClock, 1000);
+
+// Load student count using Viewer JWT
+async function loadViewerDashboard() {
+    const token = sessionStorage.getItem("viewerToken");
+
+    if (!token) {
+        window.location.replace("admin-viewer-login.html");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/admin-viewer/dashboard", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            cache: "no-store"
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            viewerLogout();
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error("Unable to load viewer dashboard.");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("studentCount").textContent =
+            data.totalStudents ?? "—";
+
+    } catch (error) {
+        console.error("Viewer dashboard error:", error);
+        document.getElementById("studentCount").textContent = "—";
+    }
+}
+
+if (viewerToken && viewerRole === "VIEWER") {
+    loadViewerDashboard();
+}
+</script>
+
+</body>
+</html>

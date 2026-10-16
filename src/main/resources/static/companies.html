@@ -96,6 +96,9 @@
                     <b>Dashboard</b> &nbsp;›&nbsp; All Companies
                 </p>
             </div>
+            <button type="button" class="refresh-btn" onclick="refreshCompaniesPage()">
+    ↻ Refresh
+</button>
 
             <button class="add-company-btn" type="button" onclick="toggleCompanyForm()">
                 ＋ Add New Company
@@ -151,49 +154,20 @@
         </section>
 
         <!-- ================= STATS ================= -->
-        <section class="stats-grid">
+<!-- ================= STATS ================= -->
+<section class="stats-grid">
 
-            <div class="stat-card">
-                <div class="stat-icon blue-icon">🏢</div>
+    <div class="stat-card">
+        <div class="stat-icon blue-icon">🏢</div>
 
-                <div>
-                    <p>Total Companies</p>
-                    <h3 id="totalCompanies">0</h3>
-                    <small>Registered Companies</small>
-                </div>
-            </div>
+        <div>
+            <p>Total Companies</p>
+            <h3 id="totalCompanies">0</h3>
+            <small>Registered Companies</small>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-icon green-icon">✅</div>
-
-                <div>
-                    <p>Active Companies</p>
-                    <h3 id="activeCompanies">0</h3>
-                    <small>Available for Drives</small>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon orange-icon">📅</div>
-
-                <div>
-                    <p>Total Drives</p>
-<h3 id="totalDrives">0</h3>
-<small>Live Placement Drives</small>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon purple-icon">🤝</div>
-
-                <div>
-                    <p>Hiring Partners</p>
-                    <h3 id="partnerCompanies">0</h3>
-                    <small>Campus Partners</small>
-                </div>
-            </div>
-
-        </section>
+</section>
 
         <!-- ================= COMPANY TABLE ================= -->
         <section class="company-table-panel">
@@ -476,27 +450,8 @@
         filterCompanies();
     }
 
-    function updateCompanyStats(total) {
-        document.getElementById("totalCompanies").innerText = total;
-        document.getElementById("activeCompanies").innerText = total;
-        document.getElementById("partnerCompanies").innerText = total;
-    }
-    async function loadTotalDrives() {
-    try {
-        const response = await fetch("/api/drives");
-
-        if (!response.ok) {
-            throw new Error("Drives load failed");
-        }
-
-        const drives = await response.json();
-
-        document.getElementById("totalDrives").innerText = drives.length;
-
-    } catch (error) {
-        console.error("Error loading total drives:", error);
-        document.getElementById("totalDrives").innerText = "0";
-    }
+   function updateCompanyStats(total) {
+    document.getElementById("totalCompanies").innerText = total;
 }
 
     document.getElementById("themeToggle").addEventListener("click", function() {
@@ -510,13 +465,15 @@
     });
 
     loadCompanies();
-    loadTotalDrives();
-
-</script>
 
 </script>
 
 <script src="admin-profile.js"></script>
 <script src="admin-toolbar.js"></script>
+<script>
+function refreshCompaniesPage() {
+    window.location.reload();
+}
+</script>
 </body>
 </html>

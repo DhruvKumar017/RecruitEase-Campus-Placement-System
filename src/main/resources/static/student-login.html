@@ -115,9 +115,15 @@ document.getElementById("loginForm").addEventListener("submit", async function (
             return;
         }
 
-        localStorage.setItem("studentId", result.studentId);
+if (result.role !== "STUDENT" || !result.token) {
+    alert("Invalid login response. Please try again.");
+    return;
+}
 
-        window.location.href = "student-dashboard.html";
+localStorage.setItem("studentId", result.studentId);
+sessionStorage.setItem("studentToken", result.token);
+
+window.location.href = "student-dashboard.html";
 
     } catch (error) {
         alert("Server error. Please start Spring Boot and try again.");
