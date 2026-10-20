@@ -647,17 +647,26 @@ async function saveProfile() {
         return;
     }
 
-    try {
-        const profileResponse = await fetch(
-            "/api/students/" + studentId + "/update-profile",
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(profileData)
-            }
-        );
+try {
+    const studentToken = sessionStorage.getItem("studentToken");
+
+    if (!studentToken) {
+        alert("Session expired. Please login again.");
+        window.location.href = "student-login.html";
+        return;
+    }
+
+    const profileResponse = await fetch(
+        "/api/students/" + studentId + "/update-profile",
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + studentToken
+            },
+            body: JSON.stringify(profileData)
+        }
+    );
 
         if (!profileResponse.ok) {
             throw new Error("Profile update failed.");
