@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +11,9 @@
 * { box-sizing: border-box; }
 body {
     margin: 0;
-    background: #f1f5f9;
-    color: #0f172a;
-    font-family: "Segoe UI", Arial, sans-serif;
+    background: #050b18;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
 }
 .main-content > header {
     background: #ffffff;
@@ -38,7 +37,39 @@ button {
     font-weight: 600;
 }
 .logout { background: #ef4444; color: white; }
-main { max-width: 1150px; margin: auto; padding: 30px 20px; }
+/* Demo Viewer layout — match Main Admin Dashboard */
+
+.main-content > main.viewer-dashboard-content {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.viewer-dashboard-content .dashboard-hero {
+    margin-top: 0;
+}
+
+.viewer-dashboard-content .stats-grid {
+    margin-top: 24px;
+}
+
+.viewer-dashboard-content .panel {
+    margin-top: 24px;
+}
+
+.viewer-dashboard-content .stat-card h2 {
+    color: #ffffff !important;
+}
+
+.viewer-dashboard-content .stat-card p {
+    color: #94a3b8 !important;
+}
+
+.viewer-dashboard-content .stat-card span {
+    color: #34d399;
+}
 h1 { margin-bottom: 6px; }
 .subtitle { color: #64748b; }
 .notice {
@@ -77,6 +108,139 @@ th { background: #f8fafc; }
     .stats { grid-template-columns: 1fr; }
     header { flex-wrap: wrap; }
 }
+.viewer-mode-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    white-space: nowrap;
+}
+
+.viewer-logout-btn {
+    background: #ef4444;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+}
+
+.viewer-logout-btn:hover {
+    background: #dc2626;
+}
+/* DEMO VIEWER DASHBOARD VISIBILITY FIX */
+
+.viewer-dashboard-content {
+    color: #0f172a;
+}
+
+.viewer-dashboard-content .panel {
+    background: #0b1b35;
+    color: #ffffff;
+    border: 1px solid #243b60;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.viewer-dashboard-content .panel-head h3 {
+    color: #0f172a !important;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.viewer-dashboard-content .dashboard-table {
+    color: #334155;
+}
+
+.viewer-dashboard-content .dashboard-table th {
+    background: #132947;
+    color: #e2e8f0 !important;
+    font-weight: 700;
+    border-bottom: 1px solid #243b60;
+}
+
+.viewer-dashboard-content .dashboard-table td {
+    color: #334155 !important;
+    font-weight: 500;
+}
+
+.viewer-dashboard-content .dashboard-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.viewer-dashboard-content .stat-card {
+    background: #071a33;
+    color: #ffffff;
+    border: 1px solid #243b60;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.viewer-dashboard-content .stat-card p {
+    color: #94a3b8 !important;
+}
+
+.viewer-dashboard-content .stat-card h2 {
+    color: #ffffff !important;
+}
+
+.viewer-dashboard-content .stat-card span {
+    color: #64748b;
+}
+/* DEMO VIEWER PAGE NAVIGATION */
+
+.viewer-dashboard-content .demo-section-hidden {
+    display: none !important;
+}
+
+.sidebar a.demo-nav-active {
+    background: #2563eb;
+    color: #ffffff;
+    border-radius: 12px;
+}
+/* Keep legacy API table hidden */
+#demoHiddenCompanyTable {
+    display: none !important;
+}
+/* DARK THEME — DEMO DASHBOARD OVERVIEW */
+
+.viewer-dashboard-content #demoOverview > .panel {
+    background: #0b1b35 !important;
+    border: 1px solid #243b60;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.viewer-dashboard-content #demoOverview .panel-head h3 {
+    color: #ffffff !important;
+}
+
+.viewer-dashboard-content #demoOverview .dashboard-table {
+    color: #e2e8f0;
+}
+
+.viewer-dashboard-content #demoOverview .dashboard-table th {
+    background: #132947;
+    color: #e2e8f0 !important;
+}
+
+.viewer-dashboard-content #demoOverview .dashboard-table td {
+    color: #e2e8f0 !important;
+    border-bottom-color: #243b60;
+}
+
+.viewer-dashboard-content #demoOverview .dashboard-table tbody tr:hover {
+    background: #173253;
+}
+
+.viewer-dashboard-content #demoOverview .recent-activity-item p {
+    color: #ffffff !important;
+}
+
+.viewer-dashboard-content #demoOverview .recent-activity-item small,
+.viewer-dashboard-content #demoOverview .activity-time {
+    color: #a8bdd8 !important;
+}
+
+.viewer-dashboard-content .stat-card h2 {
+    color: #ffffff !important;
+}
+
 </style>
 </head>
 <body>
@@ -97,20 +261,31 @@ th { background: #f8fafc; }
             ▦ Dashboard
         </a>
 
-        <p class="menu-title">STUDENTS</p>
-        <a href="demo-viewer-dashboard.html">👥 All Students</a>
+         <p class="menu-title">STUDENTS</p>
+        <a href="demo-students.html">👥 All Students</a>
+        <a href="demo-deleted-students.html">🗑️ Deleted Students</a>
 
         <p class="menu-title">COMPANIES</p>
-        <a href="demo-viewer-dashboard.html">🏢 All Companies</a>
-        <a href="demo-viewer-dashboard.html">🗓️ Placement Drives</a>
+        <a href="demo-companies.html">🏢 All Companies</a>
+        <a href="demo-placement-drives.html">🗓️ Placement Drives</a>
 
         <p class="menu-title">PLACEMENTS</p>
-        <a href="demo-viewer-dashboard.html">📄 Applications</a>
-        <a href="demo-viewer-dashboard.html">📊 Reports & Analytics</a>
+        <a href="demo-applications.html">📄 Applications</a>
+        <a href="demo-eligibility.html">🎯 Eligibility</a>
+        <a href="demo-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="demo-interviews.html">🎤 Interviews</a>
+        <a href="demo-placed-students.html">✅ Placed Students</a>
+        <a href="demo-reports.html">📊 Reports & Analytics</a>
+        <a href="demo-requests-issues.html">📩 Requests & Issues</a>
 
         <p class="menu-title">SYSTEM</p>
 
-        <!-- Settings intentionally unavailable to Demo Viewer -->
+        <a href="#"
+   onclick="event.preventDefault();"
+   style="opacity:0.5; cursor:not-allowed;"
+   title="Settings unavailable in Demo Viewer">
+    🔒 Settings (Disabled)
+</a>
 
         <a href="#" id="viewerSidebarLogout">↪ Logout</a>
 
@@ -118,9 +293,40 @@ th { background: #f8fafc; }
 
     <div class="main-content">
 
-<header>
-    <div class="brand">Recruit<span>Ease</span> | Demo Viewer</div>
-    <button class="logout" id="logoutBtn">Logout</button>
+<header class="target-topbar">
+
+    <div class="target-search">
+        <span class="search-icon">⌕</span>
+        <input
+            type="text"
+            placeholder="Demo Viewer — Read Only"
+            disabled
+        >
+    </div>
+
+    <div class="target-top-actions">
+
+        <span class="viewer-mode-label">
+            🔒 Demo Mode
+        </span>
+
+        <div class="target-admin-profile">
+            <div class="target-admin-info">
+                <strong>Demo Viewer</strong>
+                <span>View Only Access</span>
+            </div>
+        </div>
+
+        <button
+            type="button"
+            class="viewer-logout-btn"
+            id="logoutBtn"
+        >
+            Logout
+        </button>
+
+    </div>
+
 </header>
 
 <main class="viewer-dashboard-content">
@@ -203,8 +409,123 @@ th { background: #f8fafc; }
 
 </section>
 
-<section class="panel big-panel">
+<section class="middle-grid" id="demoOverview">
 
+    <!-- RECENT APPLICATIONS -->
+    <div class="panel big-panel recent-applications-panel">
+        <div class="panel-head">
+            <h3>Recent Applications</h3>
+            <span class="viewer-mode-label">🔒 View Only</span>
+        </div>
+
+        <div class="dashboard-table-wrapper">
+            <table class="dashboard-table recent-applications-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Demo Student 01</td>
+                        <td>TCS (Demo)</td>
+                        <td>Software Engineer</td>
+                        <td>15 Oct 2026</td>
+                        <td>Applied</td>
+                    </tr>
+                    <tr>
+                        <td>Demo Student 02</td>
+                        <td>Infosys (Demo)</td>
+                        <td>System Engineer</td>
+                        <td>17 Oct 2026</td>
+                        <td>Shortlisted</td>
+                    </tr>
+                    <tr>
+                        <td>Demo Student 03</td>
+                        <td>Capgemini (Demo)</td>
+                        <td>Analyst</td>
+                        <td>19 Oct 2026</td>
+                        <td>Interview Scheduled</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- UPCOMING PLACEMENT DRIVES -->
+    <div class="panel upcoming-drives-panel">
+        <div class="panel-head">
+            <h3>Upcoming Placement Drives</h3>
+            <span class="viewer-mode-label">🔒 View Only</span>
+        </div>
+
+        <div class="dashboard-table-wrapper">
+            <table class="dashboard-table drives-table">
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Date</th>
+                        <th>Eligible</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TCS (Demo)</td>
+                        <td>25 Oct 2026</td>
+                        <td>180</td>
+                        <td>Upcoming</td>
+                    </tr>
+                    <tr>
+                        <td>Infosys (Demo)</td>
+                        <td>28 Oct 2026</td>
+                        <td>150</td>
+                        <td>Upcoming</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- RECENT ACTIVITIES -->
+    <div class="panel recent-activities-panel">
+        <div class="panel-head">
+            <h3>Recent Activities</h3>
+            <span class="viewer-mode-label">🔒 View Only</span>
+        </div>
+
+        <div class="recent-activities-list">
+            <div class="recent-activity-item">
+                <div class="activity-marker activity-marker-1">📄</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        <p>Demo Student 01 applied to TCS</p>
+                        <small>Sample application activity</small>
+                    </div>
+                    <span class="activity-time">Demo</span>
+                </div>
+            </div>
+
+            <div class="recent-activity-item">
+                <div class="activity-marker activity-marker-2">🏢</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        <p>Infosys placement drive announced</p>
+                        <small>Sample placement activity</small>
+                    </div>
+                    <span class="activity-time">Demo</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="panel big-panel" id="demoHiddenCompanyTable" hidden>
     <div class="panel-head">
         <h3>Sample Company Drives</h3>
 
@@ -242,6 +563,400 @@ th { background: #f8fafc; }
     </div>
 
 </section>
+
+<!-- DEMO STUDENTS - SAMPLE DATA ONLY -->
+<section class="panel big-panel" id="demoStudents">
+
+    <div class="panel-head">
+        <h3>All Students</h3>
+        <span class="viewer-mode-label">🔒 View Only — Sample Data</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Branch</th>
+                    <th>CGPA</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Demo Student 01</td>
+                    <td>CSE</td>
+                    <td>8.5</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 02</td>
+                    <td>IT</td>
+                    <td>8.2</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 03</td>
+                    <td>ECE</td>
+                    <td>7.9</td>
+                    <td>Active</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- DEMO COMPANIES -->
+<section class="panel big-panel" id="demoCompanies">
+    <div class="panel-head">
+        <h3>All Companies</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Industry</th>
+                    <th>Package</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TCS (Demo)</td>
+                    <td>IT Services</td>
+                    <td>3.6 LPA</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Infosys (Demo)</td>
+                    <td>IT Services</td>
+                    <td>4.0 LPA</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Capgemini (Demo)</td>
+                    <td>Consulting & Technology</td>
+                    <td>4.5 LPA</td>
+                    <td>Upcoming</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO PLACEMENT DRIVES -->
+<section class="panel big-panel" id="demoDrives">
+    <div class="panel-head">
+        <h3>Placement Drives</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Job Role</th>
+                    <th>Mode</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TCS (Demo)</td>
+                    <td>Software Engineer</td>
+                    <td>Online</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Infosys (Demo)</td>
+                    <td>System Engineer</td>
+                    <td>Offline</td>
+                    <td>Upcoming</td>
+                </tr>
+                <tr>
+                    <td>Capgemini (Demo)</td>
+                    <td>Analyst</td>
+                    <td>Online</td>
+                    <td>Upcoming</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO APPLICATIONS -->
+<section class="panel big-panel" id="demoApplications">
+    <div class="panel-head">
+        <h3>Applications</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Demo Student 01</td>
+                    <td>TCS (Demo)</td>
+                    <td>Software Engineer</td>
+                    <td>Applied</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 02</td>
+                    <td>Infosys (Demo)</td>
+                    <td>System Engineer</td>
+                    <td>Shortlisted</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 03</td>
+                    <td>Capgemini (Demo)</td>
+                    <td>Analyst</td>
+                    <td>Interview Scheduled</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO ELIGIBILITY -->
+<section class="panel big-panel" id="demoEligibility">
+    <div class="panel-head">
+        <h3>Eligibility</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Company</th>
+                    <th>Minimum CGPA</th>
+                    <th>Eligibility</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Demo Student 01</td>
+                    <td>TCS (Demo)</td>
+                    <td>6.0</td>
+                    <td>Eligible</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 02</td>
+                    <td>Infosys (Demo)</td>
+                    <td>6.5</td>
+                    <td>Eligible</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 03</td>
+                    <td>Capgemini (Demo)</td>
+                    <td>7.0</td>
+                    <td>Eligible</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO APTITUDE TESTS -->
+<section class="panel big-panel" id="demoTests">
+    <div class="panel-head">
+        <h3>Aptitude Tests</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Test Name</th>
+                    <th>Company</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Quantitative Aptitude</td>
+                    <td>TCS (Demo)</td>
+                    <td>60 Minutes</td>
+                    <td>Scheduled</td>
+                </tr>
+                <tr>
+                    <td>Logical Reasoning</td>
+                    <td>Infosys (Demo)</td>
+                    <td>45 Minutes</td>
+                    <td>Completed</td>
+                </tr>
+                <tr>
+                    <td>Technical Assessment</td>
+                    <td>Capgemini (Demo)</td>
+                    <td>90 Minutes</td>
+                    <td>Upcoming</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO INTERVIEWS -->
+<section class="panel big-panel" id="demoInterviews">
+    <div class="panel-head">
+        <h3>Interviews</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Company</th>
+                    <th>Interview Mode</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Demo Student 01</td>
+                    <td>TCS (Demo)</td>
+                    <td>Online</td>
+                    <td>Scheduled</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 02</td>
+                    <td>Infosys (Demo)</td>
+                    <td>Offline</td>
+                    <td>Completed</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 03</td>
+                    <td>Capgemini (Demo)</td>
+                    <td>Online</td>
+                    <td>Pending</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO PLACED STUDENTS -->
+<section class="panel big-panel" id="demoPlaced">
+    <div class="panel-head">
+        <h3>Placed Students</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Company</th>
+                    <th>Package</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Demo Student 01</td>
+                    <td>TCS (Demo)</td>
+                    <td>3.6 LPA</td>
+                    <td>Placed</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 02</td>
+                    <td>Infosys (Demo)</td>
+                    <td>4.0 LPA</td>
+                    <td>Placed</td>
+                </tr>
+                <tr>
+                    <td>Demo Student 03</td>
+                    <td>Capgemini (Demo)</td>
+                    <td>4.5 LPA</td>
+                    <td>Placed</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- DEMO REPORTS -->
+<section class="panel big-panel" id="demoReports">
+    <div class="panel-head">
+        <h3>Reports & Analytics</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <p>Sample Placement Overview</p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div>
+                <p>Applications Received</p>
+                <h2>920</h2>
+                <span>Demo data</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div>
+                <p>Students Placed</p>
+                <h2>680</h2>
+                <span>Demo data</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DEMO REQUESTS -->
+<section class="panel big-panel" id="demoRequests">
+    <div class="panel-head">
+        <h3>Requests & Issues</h3>
+        <span class="viewer-mode-label">🔒 View Only</span>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Category</th>
+                    <th>Issue</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>DEMO-001</td>
+                    <td>Student Profile</td>
+                    <td>Profile update request</td>
+                    <td>Resolved</td>
+                </tr>
+                <tr>
+                    <td>DEMO-002</td>
+                    <td>Placement Drive</td>
+                    <td>Eligibility clarification</td>
+                    <td>Pending</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
 </main>
 
 <script>
@@ -323,7 +1038,121 @@ async function loadDashboard() {
     }
 }
 
+loadDashboard();function updateViewerClock() {
+    const now = new Date();
+
+    const dateElement = document.getElementById("heroDate");
+    const timeElement = document.getElementById("heroTime");
+
+    if (dateElement) {
+        dateElement.textContent = now.toLocaleDateString("en-IN", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    }
+
+    if (timeElement) {
+        timeElement.textContent = now.toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        });
+    }
+}
+
+updateViewerClock();
+setInterval(updateViewerClock, 1000);
+
 loadDashboard();
+
+/* DEMO VIEWER SIDEBAR NAVIGATION */
+
+const demoSectionIds = [
+    "demoStudents",
+    "demoDeletedStudents",
+    "demoCompanies",
+    "demoDrives",
+    "demoApplications",
+    "demoEligibility",
+    "demoTests",
+    "demoInterviews",
+    "demoPlaced",
+    "demoReports",
+    "demoRequests"
+];
+
+const demoOverviewElements = [
+    document.querySelector(".dashboard-hero"),
+    document.querySelector(".notice"),
+    document.getElementById("status"),
+    document.querySelector(".viewer-dashboard-content > .stats-grid"),
+    document.getElementById("demoOverview")
+];
+
+function showDemoPage(pageId) {
+    const isOverview = pageId === "dashboard";
+
+    demoOverviewElements.forEach(element => {
+        if (element) {
+            element.classList.toggle("demo-section-hidden", !isOverview);
+        }
+    });
+
+    demoSectionIds.forEach(id => {
+        const section = document.getElementById(id);
+
+        if (section) {
+            section.classList.toggle(
+                "demo-section-hidden",
+                isOverview || id !== pageId
+            );
+        }
+    });
+
+    document.querySelectorAll(".sidebar a").forEach(link => {
+        const target = link.getAttribute("href");
+
+        const isActive = isOverview
+            ? target === "demo-viewer-dashboard.html"
+            : target === "#" + pageId;
+
+        link.classList.toggle("demo-nav-active", isActive);
+        link.classList.toggle("active", isActive);
+    });
+
+    window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('.sidebar a[href^="#demo"]').forEach(link => {
+    link.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        const pageId = this.getAttribute("href").substring(1);
+
+        showDemoPage(pageId);
+        history.replaceState(null, "", "#" + pageId);
+    });
+});
+
+document.querySelector(
+    '.sidebar a[href="demo-viewer-dashboard.html"]'
+)?.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    showDemoPage("dashboard");
+    history.replaceState(null, "", "demo-viewer-dashboard.html");
+});
+
+const initialDemoPage = window.location.hash.substring(1);
+
+showDemoPage(
+    demoSectionIds.includes(initialDemoPage)
+        ? initialDemoPage
+        : "dashboard"
+);
 </script>
     </div>
 

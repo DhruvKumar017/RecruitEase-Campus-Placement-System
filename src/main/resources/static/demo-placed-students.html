@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placed Students - RecruitEase</title>
+
+    <link rel="stylesheet" href="placed-students.css">
+    <!-- Demo Viewer: Admin authentication removed -->
+</head>
+
+<body>
+
+<div class="placed-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+       <a href="demo-viewer-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="demo-students.html">👥 All Students</a>
+        <a href="demo-deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="demo-companies.html">🏢 All Companies</a>
+        <a href="demo-placement-drives.html">📅 Placement Drives</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="demo-applications.html">📄 Applications</a>
+        <a href="demo-eligibility.html">🏆 Eligibility</a>
+        <a href="demo-aptitude-tests.html">🧠 Aptitude Tests</a>
+         <a href="demo-interviews.html">🎤 Interviews</a>
+        <a class="active" href="demo-placed-students.html">✅ Placed Students</a>
+        <a href="demo-reports.html">📊 Reports & Analytics</a>
+        <a href="demo-requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="#"
+   onclick="event.preventDefault();"
+   style="opacity:0.5; cursor:not-allowed;"
+   title="Settings unavailable in Demo Viewer">
+    🔒 Settings (Disabled)
+</a>
+        <a href="admin-viewer-login.html">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+<h1>Placed Students ✅ (Demo Viewer)</h1>
+<p>View fictional placement records for demonstration purposes. Read-only access.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    id="topSearch"
+                    type="text"
+                    placeholder="Search by name, company, role..."
+                    onkeyup="filterPlacedStudents()"
+                >
+
+<button
+    class="bell"
+    type="button"
+    disabled
+    title="Notifications unavailable in Demo Viewer"
+    style="cursor:not-allowed; opacity:0.6;"
+>
+    🔔
+</button>
+
+                <button class="theme-btn" id="themeToggle" type="button">
+                    🌙
+                </button>
+
+<div class="admin-profile">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        alt="Demo Viewer"
+    >
+    <b>Demo Viewer</b>
+</div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE HEADER ================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>Placed Students List</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Placed Students
+                </p>
+            </div>
+            <button type="button" class="refresh-btn" onclick="refreshPlacedStudentsPage()">
+    ↻ Refresh
+</button>
+
+<button
+    class="export-btn"
+    type="button"
+    disabled
+    title="Export unavailable in Demo Viewer"
+    style="cursor:not-allowed; opacity:0.6;"
+>
+    ⬇ Export Report
+</button>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon">👥</div>
+
+                <div>
+                    <p>Total Placed</p>
+                    <h3 id="totalPlaced">0</h3>
+                    <small>All Time</small>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">🏢</div>
+
+                <div>
+                    <p>Total Companies</p>
+                    <h3 id="totalCompanies">0</h3>
+                    <small>Recruited</small>
+                </div>
+            </div>
+
+
+
+        </section>
+
+        <!-- ================= MAIN GRID ================= -->
+        <section class="placed-content-grid">
+
+            <div>
+
+                <!-- ================= FILTERS ================= -->
+                <section class="placed-panel">
+
+                    <div class="filter-bar">
+
+                        <input
+                            type="text"
+                            id="tableSearch"
+                            placeholder="Search by name, company or role..."
+                            onkeyup="filterPlacedStudents()"
+                        >
+
+                        <select id="companyFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Companies</option>
+                        </select>
+
+                        <select id="roleFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Roles</option>
+                        </select>
+
+                        <select id="branchFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Branches</option>
+                        </select>
+
+                        <select id="batchFilter" onchange="filterPlacedStudents()">
+                            <option value="">All Batches</option>
+                        </select>
+
+                    </div>
+
+                    <!-- ================= TABLE ================= -->
+                    <div class="table-head">
+                        <h3>Placed Students List</h3>
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table class="placed-table">
+
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student</th>
+                                    <th>Roll Number</th>
+                                    <th>Branch</th>
+                                    <th>Company</th>
+                                    <th>Role</th>
+                                    <th>Package</th>
+                                    <th>Placed On</th>
+                                    <th>Offer Status</th>
+                                    <th>Placement Details</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="placedTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="table-footer">
+                        <p id="placedCountText">Showing 0 placed students</p>
+                        <p>RecruitEase Placement Management System</p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- ================= RIGHT SIDE CARDS ================= -->
+
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+// Demo Viewer - Fictional Placed Students Data
+let placedStudents = [
+    {
+        applicationId: 1001,
+        studentId: 1001,
+        studentName: "Aarav Sharma",
+        studentEmail: "aarav@example.com",
+        rollNumber: "DEMO001",
+        branch: "Computer Science",
+        batch: "2026",
+        companyName: "NovaTech Solutions",
+        role: "Software Developer",
+        packageLpa: 6.5,
+        placedOn: "2026-09-15",
+        offerStatus: "Accepted"
+    },
+    {
+        applicationId: 1002,
+        studentId: 1002,
+        studentName: "Priya Mehta",
+        studentEmail: "priya@example.com",
+        rollNumber: "DEMO002",
+        branch: "Information Technology",
+        batch: "2026",
+        companyName: "CloudPeak Systems",
+        role: "Data Analyst",
+        packageLpa: 5.5,
+        placedOn: "2026-09-20",
+        offerStatus: "Accepted"
+    },
+    {
+        applicationId: 1003,
+        studentId: 1003,
+        studentName: "Kabir Verma",
+        studentEmail: "kabir@example.com",
+        rollNumber: "DEMO003",
+        branch: "Computer Science",
+        batch: "2026",
+        companyName: "NovaTech Solutions",
+        role: "Backend Developer",
+        packageLpa: 7.2,
+        placedOn: "2026-10-02",
+        offerStatus: "Accepted"
+    },
+    {
+        applicationId: 1004,
+        studentId: 1004,
+        studentName: "Ananya Rao",
+        studentEmail: "ananya@example.com",
+        rollNumber: "DEMO004",
+        branch: "Electronics",
+        batch: "2026",
+        companyName: "BrightWave Digital",
+        role: "QA Engineer",
+        packageLpa: 4.8,
+        placedOn: "2026-10-10",
+        offerStatus: "Accepted"
+    }
+];
+
+// Display fictional data only
+populateFilters();
+updatePlacedStats();
+renderPlacedStudents(placedStudents);
+
+// Demo Viewer: Real API loading function removed.
+// Fictional placed students will be loaded locally.
+
+function getPackageValue(app) {
+    const value =
+        app.packageLpa ||
+        app.package ||
+        app.ctc ||
+        app.offerPackage ||
+        0;
+
+    const parsedValue = parseFloat(value);
+
+    return isNaN(parsedValue) ? 0 : parsedValue;
+}
+
+function getPlacedDate(app) {
+    return app.placedAt ||
+           app.placedOn ||
+           app.placementDate ||
+           app.updatedAt ||
+           "";
+}
+
+function renderPlacedStudents(data) {
+    const tableBody = document.getElementById("placedTableBody");
+
+    document.getElementById("placedCountText").innerText =
+        "Showing " + data.length + " of " + placedStudents.length + " placed students";
+
+    if (data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    No placed students found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = data.map((student, index) => `
+        <tr>
+            <td>${index + 1}</td>
+
+            <td>
+                <div class="student-cell">
+                    <img
+                        class="student-avatar"
+src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        alt="Student"
+                    >
+
+                    <div>
+                        <span class="primary-text">${escapeHtml(student.studentName)}</span>
+                        <span class="secondary-text">${escapeHtml(student.studentEmail)}</span>
+                    </div>
+                </div>
+            </td>
+
+            <td>${escapeHtml(student.rollNumber)}</td>
+            <td>${escapeHtml(student.branch)}</td>
+
+            <td>
+                <div class="company-cell">
+                    <span class="company-logo">
+                        ${escapeHtml(student.companyName.substring(0, 3).toUpperCase())}
+                    </span>
+
+                    <div>
+                        <span class="primary-text">${escapeHtml(student.companyName)}</span>
+                        <span class="secondary-text">RecruitEase Partner</span>
+                    </div>
+                </div>
+            </td>
+
+            <td>${escapeHtml(student.role)}</td>
+
+            <td>
+                <span class="package-value">
+                    ${student.packageLpa > 0 ? student.packageLpa.toFixed(2) + " LPA" : "Not Set"}
+                </span>
+            </td>
+
+            <td>${formatDate(student.placedOn)}</td>
+
+            <td>
+                <span class="offer-status">
+                    ${escapeHtml(student.offerStatus)}
+                </span>
+            </td>
+
+            <td>
+                <button
+                    class="view-btn"
+                    type="button"
+                    title="View Placement Details"
+                    onclick="viewPlacement(${student.applicationId})"
+                >
+                    👁
+                </button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+function filterPlacedStudents() {
+    const topSearch = document.getElementById("topSearch").value.toLowerCase().trim();
+    const tableSearch = document.getElementById("tableSearch").value.toLowerCase().trim();
+    const searchValue = tableSearch || topSearch;
+
+    const company = document.getElementById("companyFilter").value;
+    const role = document.getElementById("roleFilter").value;
+    const branch = document.getElementById("branchFilter").value;
+    const batch = document.getElementById("batchFilter").value;
+
+    const filteredStudents = placedStudents.filter(student => {
+        const matchesSearch =
+            student.studentName.toLowerCase().includes(searchValue) ||
+            student.companyName.toLowerCase().includes(searchValue) ||
+            student.role.toLowerCase().includes(searchValue) ||
+            student.rollNumber.toLowerCase().includes(searchValue);
+
+        const matchesCompany =
+            company === "" || student.companyName === company;
+
+        const matchesRole =
+            role === "" || student.role === role;
+
+        const matchesBranch =
+            branch === "" || student.branch === branch;
+
+        const matchesBatch =
+            batch === "" || student.batch === batch;
+
+return (
+    matchesSearch &&
+    matchesCompany &&
+    matchesRole &&
+    matchesBranch &&
+    matchesBatch
+);
+    });
+
+    renderPlacedStudents(filteredStudents);
+}
+
+function populateFilters() {
+    populateSelect("companyFilter", [...new Set(placedStudents.map(item => item.companyName))]);
+    populateSelect("roleFilter", [...new Set(placedStudents.map(item => item.role))]);
+    populateSelect("branchFilter", [...new Set(placedStudents.map(item => item.branch))]);
+    populateSelect("batchFilter", [...new Set(placedStudents.map(item => item.batch))]);
+}
+
+function populateSelect(selectId, values) {
+    const select = document.getElementById(selectId);
+    const previousValue = select.value;
+
+    const firstOption = select.options[0].outerHTML;
+
+    select.innerHTML = firstOption;
+
+    values
+        .filter(value => value && value !== "Not Set")
+        .sort()
+        .forEach(value => {
+            select.innerHTML += `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`;
+        });
+
+    select.value = previousValue;
+}
+
+function updatePlacedStats() {
+    const uniqueCompanies = new Set(
+        placedStudents.map(student => student.companyName)
+    ).size;
+
+    document.getElementById("totalPlaced").innerText = placedStudents.length;
+    document.getElementById("totalCompanies").innerText = uniqueCompanies;
+}
+
+
+
+function viewPlacement(applicationId) {
+    const student = placedStudents.find(
+        item => item.applicationId === applicationId
+    );
+
+    if (!student) {
+        alert("Placement details not found.");
+        return;
+    }
+
+    alert(
+        "Placement Details\n\n" +
+        "Student: " + student.studentName + "\n" +
+        "Company: " + student.companyName + "\n" +
+        "Role: " + student.role + "\n" +
+        "Package: " +
+        (student.packageLpa > 0 ? student.packageLpa.toFixed(2) + " LPA" : "Not Set") +
+        "\nOffer Status: " + student.offerStatus
+    );
+}
+
+function clearFilters() {
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+    document.getElementById("companyFilter").value = "";
+    document.getElementById("roleFilter").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("batchFilter").value = "";
+    renderPlacedStudents(placedStudents);
+}
+
+// Demo Viewer: Export functionality removed.
+// Placement data is fictional and view-only.
+
+function formatDate(dateValue) {
+    if (!dateValue) {
+        return "Not Set";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date)) {
+        return dateValue;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function normalizeDate(dateValue) {
+    if (!dateValue) {
+        return "";
+    }
+
+    const date = new Date(dateValue);
+
+    if (isNaN(date)) {
+        return "";
+    }
+
+    return date.toISOString().split("T")[0];
+}
+
+function escapeHtml(value) {
+    return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+document.getElementById("themeToggle").addEventListener("click", function() {
+    const button = document.getElementById("themeToggle");
+
+    button.innerText = button.innerText === "🌙" ? "☀️" : "🌙";
+});
+function refreshPlacedStudentsPage() {
+    window.location.reload();
+}
+
+// Demo Viewer: Real database loading disabled.
+// Fictional student data will be added in the next steps.
+
+</script>
+
+<!-- Demo Viewer: Admin profile and toolbar scripts disabled -->
+</body>
+</html>

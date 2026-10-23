@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Placement Drives - RecruitEase</title>
+
+    <link rel="stylesheet" href="placement-drives.css">
+    <script>
+(function () {
+    const token = sessionStorage.getItem("demoViewerToken");
+    const role = sessionStorage.getItem("demoViewerRole");
+
+    if (!token || role !== "DEMO_VIEWER") {
+        window.location.replace("admin-viewer-login.html");
+        return;
+    }
+
+    // Prevent this demo page from calling real Admin APIs.
+    const originalFetch = window.fetch.bind(window);
+
+    window.fetch = function(url, options) {
+        const path = String(url);
+
+        if (path.startsWith("/api/")) {
+            return Promise.reject(
+                new Error("Real Admin APIs are disabled in Demo Viewer.")
+            );
+        }
+
+        return originalFetch(url, options);
+    };
+})();
+</script>
+</head>
+
+<body>
+
+<div class="drives-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="demo-viewer-dashboard.html">▦ Dashboard</a>
+
+        <p class="menu-title">STUDENTS</p>
+        <a href="demo-students.html">👥 All Students</a>
+        <a href="demo-deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="demo-companies.html">🏢 All Companies</a>
+        <a class="active" href="demo-placement-drives.html">📅 Placement Drives</a>
+        
+         <p class="menu-title">PLACEMENTS</p>
+        <a href="demo-applications.html">📄 Applications</a>
+        <a href="demo-eligibility.html">🏆 Eligibility</a>
+        <a href="demo-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="demo-interviews.html">🎤 Interviews</a>
+        <a href="demo-placed-students.html">✅ Placed Students</a>
+        <a href="demo-reports.html">📊 Reports & Analytics</a>
+        <a href="demo-requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+        <a href="#"
+   onclick="event.preventDefault();"
+   style="opacity:0.5; cursor:not-allowed;"
+   title="Settings unavailable in Demo Viewer">
+    🔒 Settings (Disabled)
+</a>
+        <a href="admin-viewer-login.html" onclick="demoViewerLogout(); return false;">↪ Logout</a>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+<h1>Placement Drives</h1>
+<p>Explore fictional campus recruitment drives in read-only demo mode.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="dashboard-search"
+                    type="text"
+                    id="topSearch"
+                    placeholder="Search drives..."
+                    onkeyup="filterDrives()"
+                >
+
+                <button class="bell" type="button">
+                    🔔
+                    <span>3</span>
+                </button>
+
+                <button class="theme-btn" type="button">
+                    🌙
+                </button>
+
+<div class="admin-profile">
+    <img
+        id="topAdminPhoto"
+        src="https://i.pravatar.cc/80?img=12"
+        alt="Demo Viewer"
+    >
+
+    <b id="topAdminName">Demo Viewer</b>
+</div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE HEADER ================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h2>All Placement Drives 📅</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; Placement Drives
+                </p>
+            </div>
+            <button type="button" class="refresh-btn" onclick="refreshPlacementDrivesPage()">
+    ↻ Refresh
+</button>
+
+<button
+    class="add-drive-btn"
+    type="button"
+    disabled
+    title="Demo Viewer - Read Only"
+    style="cursor: not-allowed; opacity: 0.65;"
+>
+    🔒 Schedule New Drive
+</button>
+
+        </section>
+
+<!-- Demo Viewer: Add/Edit Placement Drive form disabled (Read Only) -->
+
+        <!-- ================= STATS ================= -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon">📅</div>
+
+                <div>
+                    <p>Total Drives</p>
+                    <h3 id="totalDrives">0</h3>
+                    <small>Fictional Demo Data</small>
+                </div>
+            </div>
+           <div class="stat-card"
+     id="activeDrivesCard"
+     onclick="showActiveDrives()"
+     style="cursor: pointer;">
+
+    <div class="stat-icon green-icon">🚀</div>
+
+    <div>
+        <p>Active Drives</p>
+        <h3 id="activeDrives">0</h3>
+        <small>Currently Running</small>
+    </div>
+</div>
+
+<div class="stat-card"
+     id="upcomingDrivesCard"
+     onclick="showUpcomingDrives()"
+     style="cursor: pointer;">
+
+    <div class="stat-icon orange-icon">⏳</div>
+
+    <div>
+        <p>Upcoming Drives</p>
+        <h3 id="upcomingDrives">0</h3>
+        <small>Scheduled Drives</small>
+    </div>
+</div>
+
+            <div class="stat-card"
+     id="completedDrivesCard"
+     onclick="showCompletedDrives()"
+     style="cursor: pointer;">
+
+    <div class="stat-icon purple-icon">✅</div>
+
+    <div>
+        <p>Completed Drives</p>
+        <h3 id="completedDrives">0</h3>
+        <small>Finished Drives</small>
+    </div>
+</div>
+
+        </section>
+
+        <!-- ================= DRIVE TABLE ================= -->
+        <section class="drives-table-panel">
+
+            <div class="filter-bar">
+
+                <input
+                    class="filter-search"
+                    type="text"
+                    id="tableSearch"
+                    placeholder="Search company or job role..."
+                    onkeyup="filterDrives()"
+                >
+
+                <select class="filter-select" id="statusFilter" onchange="filterDrives()">
+                    <option value="">All Status</option>
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Active">Active</option>
+                    <option value="Completed">Completed</option>
+                </select>
+
+                <button class="clear-filter-btn" type="button" onclick="clearFilters()">
+                    ↻ Clear Filters
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="drives-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company</th>
+                            <th>Job Role</th>
+                            <th>Package</th>
+                            <th>Minimum CGPA</th>
+                            <th>Drive Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="driveTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align:center; padding:28px;">
+                                Loading demo placement drives...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="table-footer">
+                <p id="tableCountText">Showing 0 drives</p>
+            </div>
+
+        </section>
+
+        <section class="info-card">
+            <span class="info-icon">i</span>
+
+<p>
+    This is a Demo Viewer page displaying fictional placement drive data.
+    You can view drive details, search, and filter records.
+    Add, Edit, and Delete actions are disabled.
+    No changes will be made to the real MySQL database.
+</p>
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+let drives = [];
+let filteredDrives = [];
+let companies = [];
+let editingDriveId = null;
+
+/* ================= LOAD COMPANIES FOR DROPDOWN ================= */
+
+// Demo Viewer: fictional companies only
+async function loadCompaniesForDropdown() {
+
+    companies = [
+        {
+            id: 101,
+            companyName: "Demo Tech Solutions",
+            minCgpa: 7.0,
+            requiredSkills: "Java, SQL, Spring Boot"
+        },
+        {
+            id: 102,
+            companyName: "Sample Software Pvt Ltd",
+            minCgpa: 6.5,
+            requiredSkills: "Python, HTML, CSS"
+        },
+        {
+            id: 103,
+            companyName: "Demo Cloud Systems",
+            minCgpa: 8.0,
+            requiredSkills: "AWS, Java, MySQL"
+        },
+        {
+            id: 104,
+            companyName: "Sample Data Analytics",
+            minCgpa: 7.5,
+            requiredSkills: "Python, SQL, Power BI"
+        }
+    ];
+
+    const companySelect = document.getElementById("companyName");
+
+    if (!companySelect) {
+        return;
+    }
+
+    companySelect.innerHTML = `
+        <option value="">Select Company</option>
+    `;
+
+    companies.forEach(function(company) {
+        companySelect.innerHTML += `
+            <option value="${escapeHtml(company.companyName)}">
+                ${escapeHtml(company.companyName)}
+            </option>
+        `;
+    });
+}
+
+/* ================= LOAD REAL DRIVES ================= */
+
+async function loadDrives() {
+    const tableBody = document.getElementById("driveTableBody");
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="8" style="text-align:center; padding:28px;">
+                Loading demo placement drives...
+            </td>
+        </tr>
+    `;
+
+    try {
+// Demo Viewer: fictional placement drives only
+drives = [
+    {
+        id: 101,
+        companyName: "Demo Tech Solutions",
+        jobRole: "Java Developer",
+        packageLpa: 6.5,
+        minCgpa: 7.0,
+        driveDate: "2026-10-20",
+        driveStartTime: "10:00",
+        driveEndTime: "16:00",
+        lastDate: "2026-10-18",
+        mode: "Online",
+        location: "Demo Meeting Link",
+        branch: "CSE, IT",
+        skills: "Java, SQL, Spring Boot",
+        vacancy: 15,
+        status: "Completed"
+    },
+    {
+        id: 102,
+        companyName: "Sample Software Pvt Ltd",
+        jobRole: "Software Engineer",
+        packageLpa: 5.5,
+        minCgpa: 6.5,
+        driveDate: "2026-10-22",
+        driveStartTime: "09:00",
+        driveEndTime: "23:00",
+        lastDate: "2026-10-21",
+        mode: "Hybrid",
+        location: "Demo Campus",
+        branch: "CSE, IT",
+        skills: "Python, HTML, CSS",
+        vacancy: 20,
+        status: "Active"
+    },
+    {
+        id: 103,
+        companyName: "Demo Cloud Systems",
+        jobRole: "Cloud Engineer",
+        packageLpa: 8.0,
+        minCgpa: 8.0,
+        driveDate: "2026-10-28",
+        driveStartTime: "10:00",
+        driveEndTime: "17:00",
+        lastDate: "2026-10-26",
+        mode: "Online",
+        location: "Demo Meeting Link",
+        branch: "CSE, IT, ECE",
+        skills: "AWS, Java, MySQL",
+        vacancy: 10,
+        status: "Upcoming"
+    },
+    {
+        id: 104,
+        companyName: "Sample Data Analytics",
+        jobRole: "Data Analyst",
+        packageLpa: 7.0,
+        minCgpa: 7.5,
+        driveDate: "2026-11-05",
+        driveStartTime: "11:00",
+        driveEndTime: "16:00",
+        lastDate: "2026-11-02",
+        mode: "Offline",
+        location: "Demo Placement Hall",
+        branch: "CSE, IT",
+        skills: "Python, SQL, Power BI",
+        vacancy: 12,
+        status: "Upcoming"
+    }
+];
+
+        drives.sort((firstDrive, secondDrive) => {
+            return Number(secondDrive.id) - Number(firstDrive.id);
+        });
+
+        updateDriveStats();
+
+// Page open hote hi sirf Active Drives show hongi
+document.getElementById("statusFilter").value = "Active";
+
+filterDrives();
+
+    } catch (error) {
+        console.error("Drive load error:", error);
+
+        tableBody.innerHTML = `
+            <tr>
+<td colspan="8" style="text-align:center; padding:28px;">
+    Demo placement drives could not be displayed.
+    Please refresh the page.
+</td>
+            </tr>
+        `;
+    }
+}
+
+/* ================= RENDER TABLE ================= */
+
+function renderDrives() {
+    const tableBody = document.getElementById("driveTableBody");
+
+    document.getElementById("tableCountText").innerText =
+        `Showing ${filteredDrives.length} of ${drives.length} drives`;
+
+    if (filteredDrives.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding:28px;">
+                    No placement drives found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = filteredDrives.map((drive, index) => {
+
+        const companyName = drive.companyName || "Company";
+        const companyLogo = companyName.substring(0, 3).toUpperCase();
+
+        return `
+            <tr>
+                <td>${index + 1}</td>
+
+                <td>
+                    <div class="company-cell">
+                        <span class="company-logo">${escapeHtml(companyLogo)}</span>
+
+                        <div>
+                            <div class="company-name">
+                                ${escapeHtml(companyName)}
+                            </div>
+                            <small>RecruitEase Partner</small>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="job-role">
+                    ${escapeHtml(drive.jobRole || "-")}
+                </td>
+
+                <td>
+                    ${formatPackage(drive.packageLpa)}
+                </td>
+
+                <td>
+                    ${drive.minCgpa ?? "-"}
+                </td>
+
+                <td>
+                    <div class="date-box">
+                        <b>${formatDate(drive.driveDate)}</b>
+                        <small>Last Date: ${formatDate(drive.lastDate)}</small>
+                    </div>
+                </td>
+
+                <td>
+                    <span class="status-badge ${getStatusClass(drive.status)}">
+                        ${escapeHtml(drive.status || "Upcoming")}
+                    </span>
+                </td>
+
+                <td>
+                    <div class="action-buttons">
+
+                        <button
+                            class="view-btn"
+                            type="button"
+                            title="View Drive"
+                            onclick="viewDrive(${drive.id})"
+                        >
+                            👁
+                        </button>
+
+<span
+    title="Demo Viewer - Read Only"
+    style="font-size: 12px; font-weight: 600; opacity: 0.75;"
+>
+    🔒 View Only
+</span>
+
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+/* ================= FILTER ================= */
+
+function filterDrives() {
+    const topSearch = document.getElementById("topSearch").value
+        .toLowerCase()
+        .trim();
+
+    const tableSearch = document.getElementById("tableSearch").value
+        .toLowerCase()
+        .trim();
+
+    const searchValue = tableSearch || topSearch;
+
+    const selectedStatus = document.getElementById("statusFilter").value;
+
+    filteredDrives = drives.filter(drive => {
+        const company = (drive.companyName || "").toLowerCase();
+        const role = (drive.jobRole || "").toLowerCase();
+        const status = drive.status || "";
+
+        const matchesSearch =
+            company.includes(searchValue) ||
+            role.includes(searchValue);
+
+        const matchesStatus =
+            selectedStatus === "" ||
+            status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    renderDrives();
+}
+
+function clearFilters() {
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+    document.getElementById("statusFilter").value = "";
+
+    filterDrives();
+}
+
+function showActiveDrives() {
+
+    // Search reset
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+
+    // Only Active status
+    document.getElementById("statusFilter").value = "Active";
+
+    // Existing filter function use karo
+    filterDrives();
+
+    // Table tak automatically scroll
+    document.querySelector(".drives-table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showUpcomingDrives() {
+
+    // Search reset
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+
+    // Only Upcoming
+    document.getElementById("statusFilter").value = "Upcoming";
+
+    filterDrives();
+
+    // Table tak scroll
+    document.querySelector(".drives-table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showCompletedDrives() {
+
+    // Search reset
+    document.getElementById("topSearch").value = "";
+    document.getElementById("tableSearch").value = "";
+
+    // Only Completed
+    document.getElementById("statusFilter").value = "Completed";
+
+    filterDrives();
+
+    // Table tak scroll
+    document.querySelector(".drives-table-panel").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+/* ================= STATS ================= */
+
+function updateDriveStats() {
+    const active = drives.filter(drive =>
+        (drive.status || "").toLowerCase() === "active"
+    ).length;
+
+    const upcoming = drives.filter(drive =>
+        (drive.status || "").toLowerCase() === "upcoming"
+    ).length;
+
+    const completed = drives.filter(drive =>
+        (drive.status || "").toLowerCase() === "completed"
+    ).length;
+
+    document.getElementById("totalDrives").innerText = drives.length;
+    document.getElementById("activeDrives").innerText = active;
+    document.getElementById("upcomingDrives").innerText = upcoming;
+    document.getElementById("completedDrives").innerText = completed;
+}
+
+/* ================= DEMO VIEWER - READ ONLY ================= */
+// Add/Edit Drive functionality removed.
+// Demo Viewer can only view fictional placement drives.
+/* ================= VIEW ================= */
+
+function viewDrive(id) {
+    const drive = drives.find(item => Number(item.id) === Number(id));
+
+    if (!drive) {
+        return;
+    }
+
+    alert(
+        "Placement Drive Details\n\n" +
+        "Company: " + (drive.companyName || "-") + "\n" +
+        "Job Role: " + (drive.jobRole || "-") + "\n" +
+        "Package: " + formatPackage(drive.packageLpa) + "\n" +
+        "Minimum CGPA: " + (drive.minCgpa ?? "-") + "\n" +
+        "Drive Date: " + formatDate(drive.driveDate) + "\n" +
+"Start Time: " + (drive.driveStartTime || "-") + "\n" +
+"End Time: " + (drive.driveEndTime || "-") + "\n" +
+"Last Date: " + formatDate(drive.lastDate) + "\n" +
+        "Mode: " + (drive.mode || "-") + "\n" +
+        "Location: " + (drive.location || "-") + "\n" +
+        "Branches: " + (drive.branch || "-") + "\n" +
+        "Skills: " + (drive.skills || "-") + "\n" +
+        "Vacancies: " + (drive.vacancy ?? "-") + "\n" +
+        "Status: " + (drive.status || "-")
+    );
+}
+
+/* ================= DEMO VIEWER - READ ONLY ================= */
+
+// Edit Drive functionality removed.
+// Delete Drive functionality removed.
+// Demo Viewer can only view fictional placement drives.
+/* ================= HELPERS ================= */
+
+function getStatusClass(status) {
+    const value = String(status || "").toLowerCase();
+
+    if (value === "active") {
+        return "status-active";
+    }
+
+    if (value === "completed") {
+        return "status-completed";
+    }
+
+    return "status-upcoming";
+}
+
+function formatDate(value) {
+    if (!value) {
+        return "Not Set";
+    }
+
+    const date = new Date(value + "T00:00:00");
+
+    if (isNaN(date)) {
+        return value;
+    }
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function formatPackage(value) {
+    if (value === null || value === undefined || value === "") {
+        return "-";
+    }
+
+    return "₹" + value + " LPA";
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/* ================= INITIAL LOAD ================= */
+
+loadCompaniesForDropdown();
+loadDrives();
+
+</script>
+
+<!-- Demo Viewer: Main Admin profile and toolbar scripts disabled -->
+<script>
+function refreshPlacementDrivesPage() {
+    window.location.reload();
+}
+</script>
+<script>
+function demoViewerLogout() {
+    sessionStorage.removeItem("demoViewerToken");
+    sessionStorage.removeItem("demoViewerRole");
+
+    window.location.replace("admin-viewer-login.html");
+}
+</script>
+</body>
+</html>

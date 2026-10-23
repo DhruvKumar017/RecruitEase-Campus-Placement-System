@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - RecruitEase</title>
+
+    <link rel="stylesheet" href="students.css">
+   <script>
+(function () {
+    const token = sessionStorage.getItem("demoViewerToken");
+    const role = sessionStorage.getItem("demoViewerRole");
+
+    if (!token || role !== "DEMO_VIEWER") {
+        window.location.replace("admin-viewer-login.html");
+        return;
+    }
+
+    // Demo page must never call real admin APIs.
+    const originalFetch = window.fetch.bind(window);
+
+    window.fetch = function (url, options) {
+        const path = String(url);
+
+        if (path.startsWith("/api/")) {
+            return Promise.reject(
+                new Error("Real API access is disabled in Demo Viewer.")
+            );
+        }
+
+        return originalFetch(url, options);
+    };
+})();
+</script>
+</head>
+
+<body>
+
+<div class="students-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <div>
+                <h2>Recruit<span>Ease</span></h2>
+                <p>Campus Placement System</p>
+            </div>
+        </div>
+
+        <a href="demo-viewer-dashboard.html">▦ Dashboard</a> 
+
+        <p class="menu-title">STUDENTS</p>
+        <a class="active" href="demo-students.html">👥 All Students</a>
+        <a href="demo-deleted-students.html">🗑️ Deleted Students</a>
+
+        <p class="menu-title">COMPANIES</p>
+        <a href="demo-companies.html">🏢 All Companies</a>
+        <a href="demo-placement-drives.html">📅 Placement Drives</a>
+
+        <p class="menu-title">PLACEMENTS</p>
+        <a href="demo-applications.html">📄 Applications</a>
+        <a href="demo-eligibility.html">🏆 Eligibility</a>
+        <a href="demo-aptitude-tests.html">🧠 Aptitude Tests</a>
+        <a href="demo-interviews.html">🎤 Interviews</a>
+        <a href="demo-placed-students.html">✅ Placed Students</a>
+        <a href="demo-reports.html">📊 Reports & Analytics</a>
+        <a href="demo-requests-issues.html">🛟 Requests & Issues</a>
+
+        <p class="menu-title">SYSTEM</p>
+
+<a href="#"
+   onclick="event.preventDefault();"
+   style="opacity:0.5; cursor:not-allowed;"
+   title="Settings unavailable in Demo Viewer">
+    🔒 Settings (Disabled)
+</a>
+
+<a href="#" id="demoStudentsLogout">↪ Logout</a>
+
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div class="topbar-title">
+                <h1>Student Management</h1>
+                <p>Manage all registered students in your placement portal.</p>
+            </div>
+
+            <div class="top-actions">
+
+                <input
+                    class="top-search"
+                    id="topSearch"
+                    type="text"
+                    placeholder="Search students..."
+                    onkeyup="applyTopSearch()"
+                >
+
+                <div class="student-notification-wrapper">
+                    <button class="bell" type="button" onclick="toggleNotify()">
+                        🔔
+                        <span>3</span>
+                    </button>
+
+                    <div class="student-notify-box" id="notifyBox">
+                        <h4>Notifications</h4>
+                        <p>👨 New student registered</p>
+                        <p>📄 Resume uploaded</p>
+                        <p>🏢 Company added</p>
+                    </div>
+                </div>
+
+                <button id="demoStudentThemeToggle" class="student-theme-btn" type="button">
+                    🌙
+                </button>
+
+                <div class="student-admin-profile">
+<label title="Demo Viewer - Read Only">
+    <img
+        id="adminPhoto"
+        src="https://i.pravatar.cc/80?img=12"
+        alt="Demo Viewer"
+    >
+</label>
+
+<input
+    type="file"
+    id="adminPhotoUpload"
+    accept="image/*"
+    disabled
+    hidden
+>
+
+<b id="adminDisplayName">Demo Viewer</b>
+<span>⌄</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="page-header">
+
+            <div>
+                <h2>All Students 👥</h2>
+
+                <p class="breadcrumb">
+                    <b>Dashboard</b> &nbsp;›&nbsp; All Students
+                </p>
+            </div>
+<button type="button" class="refresh-btn" onclick="refreshStudentsPage()">
+    ↻ Refresh
+</button>
+
+<button
+    type="button"
+    class="add-btn"
+    disabled
+    title="Demo Viewer - Read Only"
+    style="opacity: 0.65; cursor: not-allowed;"
+>
+    + Add New Student
+</button>
+
+        </section>
+
+        <!-- ================= FILTERS ================= -->
+        <section class="filter-card">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name, email, roll no..."
+                onkeyup="renderStudents()"
+            >
+
+            <select id="branchFilter" onchange="renderStudents()">
+                <option value="">All Branches</option>
+                <option value="cse">CSE</option>
+                <option value="it">IT</option>
+                <option value="ece">ECE</option>
+            </select>
+
+            <select id="cgpaFilter" onchange="renderStudents()">
+                <option value="">All CGPA</option>
+                <option value="7">7+</option>
+                <option value="8">8+</option>
+                <option value="9">9+</option>
+            </select>
+
+            <select id="statusFilter" onchange="renderStudents()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="blocked">Blocked</option>
+            </select>
+
+            <button type="button" onclick="renderStudents()">Filter</button>
+
+        </section>
+
+        <!-- ================= STATS ================= -->
+        <section class="stats">
+
+          <div class="stat total-students-card" onclick="showAllStudents()">
+    <div class="icon blue">👥</div>
+
+    <div>
+        <p>Total Students</p>
+        <h2 id="totalStudents">0</h2>
+        <small>Registered Students</small>
+    </div>
+</div>
+
+            <div class="stat active-students-card" onclick="showActiveStudents()">
+                <div class="icon green">✅</div>
+
+                <div>
+                    <p>Active Students</p>
+                    <h2 id="activeStudents">0</h2>
+                    <small>Currently Active</small>
+                </div>
+            </div>
+
+            <div class="stat" onclick="showPlacedStudents()" style="cursor:pointer;">
+    <div class="icon purple">💼</div>
+
+    <div>
+        <p>Placed Students</p>
+        <h2 id="placedStudents">0</h2>
+        <small>Live Placement Data</small>
+    </div>
+</div>
+
+           <div class="stat blocked-students-card"
+     onclick="showBlockedStudents()"
+     style="cursor:pointer;">
+
+    <div class="icon red">🚫</div>
+
+    <div>
+        <p>Blocked Students</p>
+        <h2 id="blockedStudents">0</h2>
+        <small>Restricted Accounts</small>
+    </div>
+
+</div>
+
+        </section>
+
+        <!-- ================= STUDENT TABLE ================= -->
+        <section class="table-card">
+
+            <div class="table-head">
+                <h2>Student List</h2>
+                <button type="button">⬇ Export</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Roll No</th>
+                            <th>Branch</th>
+                            <th>CGPA</th>
+                            <th>Skills</th>
+                            <th>Preferred Company</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="studentTable"></tbody>
+
+                </table>
+            </div>
+
+            <div class="footer">
+                <p id="entryText">Showing 0 entries</p>
+                <p>Privacy Policy | Terms of Use</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- DEMO VIEWER: Edit Student modal removed (Read Only) -->
+
+<script>
+const students = [
+    {
+        id: 1,
+        name: "Demo Student 01",
+        email: "student01@example.com",
+        rollNumber: "DEMO001",
+        branch: "CSE",
+        cgpa: 8.5,
+        skills: "Java, SQL, HTML",
+        preferredCompany: "TCS",
+        blocked: false,
+        deleted: false
+    },
+    {
+        id: 2,
+        name: "Demo Student 02",
+        email: "student02@example.com",
+        rollNumber: "DEMO002",
+        branch: "IT",
+        cgpa: 8.2,
+        skills: "Python, SQL, Power BI",
+        preferredCompany: "Infosys",
+        blocked: false,
+        deleted: false
+    },
+    {
+        id: 3,
+        name: "Demo Student 03",
+        email: "student03@example.com",
+        rollNumber: "DEMO003",
+        branch: "ECE",
+        cgpa: 7.9,
+        skills: "JavaScript, React",
+        preferredCompany: "Capgemini",
+        blocked: false,
+        deleted: false
+    },
+    {
+        id: 4,
+        name: "Demo Student 04",
+        email: "student04@example.com",
+        rollNumber: "DEMO004",
+        branch: "CSE",
+        cgpa: 7.4,
+        skills: "Java, Spring Boot",
+        preferredCompany: "Wipro",
+        blocked: true,
+        deleted: false
+    }
+];
+
+const placedStudentIds = new Set([1, 2]);
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/* ================= STUDENT DATA ================= */
+
+function loadStudents() {
+    // Demo Viewer: Only fictional sample data
+    renderStudents();
+}
+function loadPlacedStudents() {
+    // Demo Viewer: fictional placement data only
+    const placedCount = students.filter(student =>
+        placedStudentIds.has(Number(student.id))
+    ).length;
+
+    document.getElementById("placedStudents").textContent =
+        placedCount;
+}
+function renderStudents() {
+    const search = document.getElementById("searchInput").value
+        .toLowerCase()
+        .trim();
+
+    const branch = document.getElementById("branchFilter").value
+        .toLowerCase();
+
+    const cgpa = document.getElementById("cgpaFilter").value;
+    const status = document.getElementById("statusFilter").value;
+
+    const filtered = students.filter(student => {
+        const matchSearch =
+            (student.name || "").toLowerCase().includes(search) ||
+            (student.email || "").toLowerCase().includes(search) ||
+            (student.rollNumber || "").toLowerCase().includes(search);
+
+        const matchBranch =
+            branch === "" ||
+            (student.branch || "").toLowerCase() === branch;
+
+        const matchCgpa =
+            cgpa === "" ||
+            Number(student.cgpa) >= Number(cgpa);
+
+        const matchStatus =
+            status === "" ||
+            (status === "active" && !student.blocked && !student.deleted)||
+            (status === "blocked" && student.blocked);
+
+        return matchSearch && matchBranch && matchCgpa && matchStatus;
+    });
+
+    document.getElementById("totalStudents").innerText = students.length;
+
+    document.getElementById("activeStudents").innerText =
+    students.filter(student =>
+        !student.blocked && !student.deleted
+    ).length;
+
+    document.getElementById("blockedStudents").innerText =
+        students.filter(student => student.blocked).length;
+
+    document.getElementById("entryText").innerText =
+        filtered.length === 0
+            ? "Showing 0 entries"
+            : `Showing 1 to ${filtered.length} of ${filtered.length} entries`;
+
+    document.getElementById("studentTable").innerHTML = filtered.map(student => `
+        <tr>
+            <td>${student.id}</td>
+
+            <td>
+                <div class="name-cell">
+                    <img
+                        class="avatar"
+                        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                        alt="Student"
+                    >
+
+                    <b>${escapeHtml(student.name || "-")}</b>
+                </div>
+            </td>
+
+            <td>${escapeHtml(student.email || "-")}</td>
+            <td>${escapeHtml(student.rollNumber || "-")}</td>
+            <td>${escapeHtml(student.branch || "-")}</td>
+            <td><span class="cgpa">${escapeHtml(student.cgpa ?? "-")}</span></td>
+            <td>${escapeHtml(student.skills || "-")}</td>
+            <td>${escapeHtml(student.preferredCompany || "-")}</td>
+
+            <td>
+                <span class="status ${student.blocked ? "blocked-status" : ""}">
+                    ${student.blocked ? "Blocked" : "Active"}
+                </span>
+            </td>
+
+<td class="actions">
+    <span class="status" title="Demo Viewer - Read Only">
+        🔒 View Only
+    </span>
+</td>
+        </tr>
+    `).join("");
+}
+
+function applyTopSearch() {
+    document.getElementById("searchInput").value =
+        document.getElementById("topSearch").value;
+
+    renderStudents();
+}
+
+/* =====================================================
+   DEMO VIEWER — READ ONLY
+
+   Student profile navigation disabled.
+   Edit student disabled.
+   Update student disabled.
+   Block / Unblock student disabled.
+   Delete student disabled.
+
+   Demo Viewer displays fictional student data only.
+===================================================== */
+
+/* ================= NOTIFICATIONS ================= */
+
+function toggleNotify() {
+    const box = document.getElementById("notifyBox");
+
+    box.style.display =
+        box.style.display === "block" ? "none" : "block";
+}
+
+/* ================= SHARED ADMIN PHOTO + NAME ================= */
+
+function loadSharedAdminProfile() {
+    const adminPhoto = document.getElementById("adminPhoto");
+    const adminDisplayName = document.getElementById("adminDisplayName");
+
+    adminPhoto.src = "https://i.pravatar.cc/80?img=12";
+    adminDisplayName.textContent = "Demo Viewer";
+}
+
+/* DEMO VIEWER PROFILE — READ ONLY
+   Photo upload and Admin localStorage synchronization disabled.
+*/
+
+/* ================= THEME ================= */
+
+const demoStudentThemeToggle =
+    document.getElementById("demoStudentThemeToggle");
+
+if (localStorage.getItem("demoStudentTheme") === "dark") {
+    document.body.classList.add("student-dark");
+    demoStudentThemeToggle.innerText = "☀️";
+}
+
+demoStudentThemeToggle.addEventListener("click", function() {
+    document.body.classList.toggle("student-dark");
+
+    if (document.body.classList.contains("student-dark")) {
+        localStorage.setItem("demoStudentTheme", "dark");
+        demoStudentThemeToggle.innerText = "☀️";
+    } else {
+        localStorage.setItem("demoStudentTheme", "light");
+        demoStudentThemeToggle.innerText = "🌙";
+    }
+});
+
+loadSharedAdminProfile();
+loadStudents();
+loadPlacedStudents();
+function showAllStudents() {
+
+    // Filters reset
+    const searchInput = document.getElementById("searchInput");
+    const branchFilter = document.getElementById("branchFilter");
+    const cgpaFilter = document.getElementById("cgpaFilter");
+    const statusFilter = document.getElementById("statusFilter");
+
+    if (searchInput) searchInput.value = "";
+    if (branchFilter) branchFilter.value = "";
+    if (cgpaFilter) cgpaFilter.value = "";
+    if (statusFilter) statusFilter.value = "";
+
+    // Show all registered students
+    renderStudents();
+
+    // Scroll to Student List
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+function showActiveStudents() {
+
+    // Reset other filters
+    document.getElementById("searchInput").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+
+    // Active filter
+    document.getElementById("statusFilter").value = "active";
+
+    renderStudents();
+
+    // Scroll to Student List
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showBlockedStudents() {
+
+    // Reset other filters
+    document.getElementById("searchInput").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+
+    // Only blocked students
+    document.getElementById("statusFilter").value = "blocked";
+
+    // Render filtered students
+    renderStudents();
+
+    // Scroll to Student List
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+function showPlacedStudents() {
+
+    // Reset filters
+    document.getElementById("searchInput").value = "";
+    document.getElementById("branchFilter").value = "";
+    document.getElementById("cgpaFilter").value = "";
+    document.getElementById("statusFilter").value = "";
+
+    const placedStudentsOnly = students.filter(student =>
+        placedStudentIds.has(Number(student.id))
+    );
+
+    const table = document.getElementById("studentTable");
+
+    if (placedStudentsOnly.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px;">
+                    No placed students found.
+                </td>
+            </tr>
+        `;
+
+        document.getElementById("entryText").innerText =
+            "Showing 0 entries";
+    } else {
+
+        table.innerHTML = placedStudentsOnly.map(student => `
+            <tr>
+                <td>${student.id}</td>
+
+                <td>
+                    <div class="name-cell">
+                        <img
+                            class="avatar"
+                            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'"
+                            alt="Student"
+                        >
+                        <b>${escapeHtml(student.name || "-")}</b>
+                    </div>
+                </td>
+
+                <td>${escapeHtml(student.email || "-")}</td>
+                <td>${escapeHtml(student.rollNumber || "-")}</td>
+                <td>${escapeHtml(student.branch || "-")}</td>
+
+                <td>
+                    <span class="cgpa">
+                        ${escapeHtml(student.cgpa ?? "-")}
+                    </span>
+                </td>
+
+                <td>${escapeHtml(student.skills || "-")}</td>
+                <td>${escapeHtml(student.preferredCompany || "-")}</td>
+
+                <td>
+                    <span class="status active">
+                        Placed
+                    </span>
+                </td>
+
+                <td>-</td>
+            </tr>
+        `).join("");
+
+        document.getElementById("entryText").innerText =
+            `Showing 1 to ${placedStudentsOnly.length} of ${placedStudentsOnly.length} entries`;
+    }
+
+    document.querySelector(".table-card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+</script>
+<script>
+function refreshStudentsPage() {
+    window.location.reload();
+}
+
+// Demo Viewer secure logout
+function demoStudentsLogout(event) {
+    event.preventDefault();
+
+    sessionStorage.removeItem("demoViewerToken");
+    sessionStorage.removeItem("demoViewerRole");
+    sessionStorage.removeItem("demoViewerId");
+
+    window.location.replace("admin-viewer-login.html");
+}
+
+document.getElementById("demoStudentsLogout")
+    .addEventListener("click", demoStudentsLogout);
+</script>
+
+</body>
+</html>
