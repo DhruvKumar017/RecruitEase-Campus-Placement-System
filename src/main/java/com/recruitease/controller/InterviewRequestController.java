@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.recruitease.entity.Application;
 import com.recruitease.entity.InterviewRequest;
+import com.recruitease.entity.PlacementDrive;
+import com.recruitease.repository.PlacementDriveRepository;
 import com.recruitease.entity.Student;
 import com.recruitease.entity.StudentTestResult;
 import com.recruitease.repository.ApplicationRepository;
@@ -27,22 +29,25 @@ import com.recruitease.repository.StudentTestResultRepository;
 @RestController
 public class InterviewRequestController {
 
-    private final InterviewRequestRepository interviewRequestRepository;
-    private final ApplicationRepository applicationRepository;
-    private final StudentRepository studentRepository;
-    private final StudentTestResultRepository resultRepository;
+private final InterviewRequestRepository interviewRequestRepository;
+private final ApplicationRepository applicationRepository;
+private final StudentRepository studentRepository;
+private final StudentTestResultRepository resultRepository;
+private final PlacementDriveRepository placementDriveRepository;
 
-    public InterviewRequestController(
-            InterviewRequestRepository interviewRequestRepository,
-            ApplicationRepository applicationRepository,
-            StudentRepository studentRepository,
-            StudentTestResultRepository resultRepository
-    ) {
-        this.interviewRequestRepository = interviewRequestRepository;
-        this.applicationRepository = applicationRepository;
-        this.studentRepository = studentRepository;
-        this.resultRepository = resultRepository;
-    }
+public InterviewRequestController(
+        InterviewRequestRepository interviewRequestRepository,
+        ApplicationRepository applicationRepository,
+        StudentRepository studentRepository,
+        StudentTestResultRepository resultRepository,
+        PlacementDriveRepository placementDriveRepository
+) {
+    this.interviewRequestRepository = interviewRequestRepository;
+    this.applicationRepository = applicationRepository;
+    this.studentRepository = studentRepository;
+    this.resultRepository = resultRepository;
+    this.placementDriveRepository = placementDriveRepository;
+}
 
     @GetMapping("/api/interview-requests")
     public List<InterviewRequest> getAllInterviewRequests() {
@@ -72,69 +77,46 @@ public class InterviewRequestController {
     /*
      * Admin directly sends a qualified student to Interview Manager.
      */
-    @PostMapping("/api/interview-requests/admin-send/{applicationId}")
-    public ResponseEntity<?> adminSendToInterview(
-            @PathVariable Long applicationId
-    ) {
-        Application application = applicationRepository
-                .findById(applicationId)
-                .orElse(null);
+@PostMapping("/api/interview-requests/admin-send/{applicationId}")
+public ResponseEntity<?> adminSendToInterview(
+        @PathVariable Long applicationId
+) {
 
-        if (application == null) {
-            return ResponseEntity.notFound().build();
-        }
+    Application application = applicationRepository
+            .findById(applicationId)
+            .orElse(null);
 
-        Optional<InterviewRequest> existingRequest =
-                interviewRequestRepository.findByApplicationId(applicationId);
-
-        if (existingRequest.isPresent()) {
-            return ResponseEntity.ok(existingRequest.get());
-        }
-
-        StudentTestResult result = resultRepository
-                .findTopByApplicationIdOrderBySubmittedAtDesc(applicationId)
-                .orElse(null);
-
-        if (result == null ||
-                !"Qualified".equalsIgnoreCase(result.getStatus())) {
-
-            return ResponseEntity.badRequest().body(
-                    "Only qualified students can be sent for interview."
-            );
-        }
-
-        Student student = studentRepository
-                .findById(application.getStudentId())
-                .orElse(null);
-
-        if (student == null) {
-            return ResponseEntity.badRequest()
-                    .body("Student data not found.");
-        }
-
-        InterviewRequest request = new InterviewRequest();
-
-        request.setStudentId(student.getId());
-        request.setStudentName(student.getName());
-        request.setStudentEmail(student.getEmail());
-
-        request.setCompanyId(application.getCompanyId());
-        request.setCompanyName(application.getCompanyName());
-
-        request.setApplicationId(application.getId());
-        request.setTestId(application.getTestId());
-        request.setAptitudePercentage(result.getPercentage());
-
-        request.setInterviewStatus("PENDING");
-
-        InterviewRequest savedRequest =
-                interviewRequestRepository.save(request);
-
-        application.setStatus("Interview Requested");
-        applicationRepository.save(application);
-
-        return ResponseEntity.ok(savedRequest);
+    if (application == null) {
+        return ResponseEntity.notFound().build();
     }
+
+    // Student must qualify the aptitude test.
+    StudentTestResult result = resultRepository
+            .findTopByApplicationIdOrderBySubmittedAtDesc(applicationId)
+            .orElse(null);
+
+    if (result == null ||
+            !"Qualified".equalsIgnoreCase(result.getStatus())) {
+
+        return ResponseEntity.badRequest().body(
+                "Student must qualify the aptitude test first."
+        );
+    }
+
+    // Student must have already requested an interview.
+    InterviewRequest request = interviewRequestRepository
+            .findByApplicationId(applicationId)
+            .orElse(null);
+
+    if (request == null) {
+        return ResponseEntity.badRequest().body(
+                "Student must apply for interview after qualifying the aptitude test."
+        );
+    }
+
+    // Return existing request without creating duplicates.
+    return ResponseEntity.ok(request);
+}
 
     /*
      * Admin sets interview date, time, mode and Google Meet/Classroom link.
@@ -160,12 +142,61 @@ public ResponseEntity<?> scheduleInterview(
                 .findById(id)
                 .orElse(null);
 
-        if (request == null) {
-            return ResponseEntity.notFound().build();
+if (request == null) {
+    return ResponseEntity.notFound().build();
+}
+
+// Check whether the interview is already scheduled.
+boolean alreadyScheduled =
+        request.getInterviewDate() != null &&
+        !request.getInterviewDate().isBlank() &&
+        request.getInterviewTime() != null &&
+        !request.getInterviewTime().isBlank();
+
+// Block NEW scheduling after the placement drive's last date.
+if (!alreadyScheduled) {
+
+    Application application = applicationRepository
+            .findById(request.getApplicationId())
+            .orElse(null);
+
+    if (application == null || application.getDriveId() == null) {
+        return ResponseEntity.badRequest()
+                .body("Placement drive information is missing.");
+    }
+
+    PlacementDrive drive = placementDriveRepository
+            .findById(application.getDriveId())
+            .orElse(null);
+
+    if (drive == null ||
+            drive.getLastDate() == null ||
+            drive.getLastDate().isBlank()) {
+
+        return ResponseEntity.badRequest()
+                .body("Placement drive last date is missing.");
+    }
+
+    try {
+
+        LocalDate lastDate = LocalDate.parse(drive.getLastDate());
+
+        if (lastDate.isBefore(LocalDate.now())) {
+            return ResponseEntity.badRequest()
+                    .body(
+                        "Drive completed. New interviews cannot be scheduled."
+                    );
         }
 
-        request.setInterviewDate(interviewDate);
-        request.setInterviewTime(interviewTime);
+    } catch (DateTimeParseException exception) {
+
+        return ResponseEntity.badRequest()
+                .body("Invalid placement drive last date.");
+    }
+}
+
+request.setInterviewDate(interviewDate);
+request.setInterviewTime(interviewTime);
         request.setInterviewDuration(interviewDuration);
         request.setInterviewMode(interviewMode);
         request.setInterviewLink(interviewLink);
@@ -237,7 +268,7 @@ public ResponseEntity<?> studentApplyForInterview(
         }
 
 request.setStudentAppliedAt(now);
-request.setInterviewAttempted(true);
+request.setInterviewAttempted(false);
 
 InterviewRequest savedRequest =
         interviewRequestRepository.save(request);

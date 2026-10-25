@@ -360,8 +360,14 @@ public List<Map<String, Object>> getStudentApplications(
         request.setCompanyName(company.getCompanyName());
         request.setApplicationId(applicationId);
         request.setTestId(application.getTestId());
-        request.setAptitudePercentage(result.getPercentage());
-        request.setInterviewStatus("PENDING");
+request.setAptitudePercentage(result.getPercentage());
+request.setInterviewStatus("PENDING");
+
+// Student already applied after qualifying aptitude test
+request.setStudentAppliedAt(java.time.LocalDateTime.now());
+
+// Applying does not mean the interview was attempted
+request.setInterviewAttempted(false);
 
         InterviewRequest savedRequest =
                 interviewRequestRepository.save(request);

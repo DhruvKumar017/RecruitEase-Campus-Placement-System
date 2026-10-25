@@ -1128,7 +1128,7 @@ const drive =
         </strong>
 
         <small>
-            📅 ${drive ? formatDate(drive.driveDate) : "-"}
+            📅 Drive Date: ${drive ? formatDate(drive.driveDate) : "-"}
         </small>
 
         <small>
@@ -1137,6 +1137,10 @@ const drive =
                     ? `${formatTime(drive.driveStartTime)} - ${formatTime(drive.driveEndTime)}`
                     : "-"
             }
+        </small>
+
+        <small style="color:#fbbf24;font-weight:600;">
+            📅 Last Date: ${drive ? formatDate(drive.lastDate) : "-"}
         </small>
 
     </div>
@@ -1185,6 +1189,40 @@ const drive =
 }
 
 function getAdminActionMarkup(item, status) {
+
+    // Find the placement drive linked to this interview
+    const application = applicationMap[item.applicationId] || {};
+
+    const driveId = application.driveId || item.driveId;
+
+    const drive = driveId ? driveMap[driveId] : null;
+
+    // Check whether the drive's last date has passed
+    const driveLastDate = drive?.lastDate
+        ? String(drive.lastDate).substring(0, 10)
+        : null;
+
+    const driveExpired = driveLastDate
+        ? driveLastDate < getTodayLocal()
+        : false;
+
+    // Check whether interview has already been scheduled
+    const interviewScheduled = Boolean(
+        item.interviewDate && item.interviewTime
+    );
+
+    // Expired drive + interview not scheduled
+    if (driveExpired && !interviewScheduled) {
+        return `
+            <span
+                class="request-status rejected-status"
+                style="min-width:135px;"
+            >
+                ⏹ Complete Drive
+            </span>
+        `;
+    }
+
     if (status === "placed") {
         return `
             <span class="request-status placed-status" style="min-width:135px;">
@@ -1292,6 +1330,30 @@ function openInterviewScheduleModal(requestId) {
     }
 
     const status = getEffectiveStatus(request);
+
+    // Find the placement drive
+    const application = applicationMap[request.applicationId] || {};
+    const driveId = application.driveId || request.driveId;
+    const drive = driveId ? driveMap[driveId] : null;
+
+    // Check drive expiry
+    const driveLastDate = drive?.lastDate
+        ? String(drive.lastDate).substring(0, 10)
+        : null;
+
+    const driveExpired = driveLastDate
+        ? driveLastDate < getTodayLocal()
+        : false;
+
+    const interviewScheduled = Boolean(
+        request.interviewDate && request.interviewTime
+    );
+
+    // Block new scheduling for expired drives
+    if (driveExpired && !interviewScheduled) {
+        alert("Drive completed. Interview cannot be scheduled after the drive's last date.");
+        return;
+    }
 
     if (["placed", "selected", "rejected", "completed"].includes(status)) {
         alert("Interview schedule cannot be changed for this student.");

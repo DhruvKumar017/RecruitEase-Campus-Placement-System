@@ -1445,11 +1445,17 @@ function getInterviewActionMarkup(interview, status) {
         `;
     }
 
-    // 3. Interview LIVE ho gaya
-    if (status === "live") {
+// 3. Interview LIVE ho gaya
+if (status === "live") {
 
-        // Apply nahi kiya tha
-        if (!interview.studentAppliedAt) {
+    // Check whether student applied for this interview
+    if (!interview.studentAppliedAt) {
+        console.warn("Interview application timestamp missing:", {
+            interviewId: interview.id,
+            studentId: interview.studentId,
+            applicationId: interview.applicationId,
+            studentAppliedAt: interview.studentAppliedAt
+        });
             return `
                 <button
                     class="interview-action-btn not-applied-btn"
