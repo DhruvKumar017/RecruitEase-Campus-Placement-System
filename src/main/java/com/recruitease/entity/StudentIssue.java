@@ -19,15 +19,31 @@ public class StudentIssue {
 
     private String studentName;
 
-    private String studentEmail;
+private String studentEmail;
 
-    private String issueType;
+// Login username entered in Student Help Center
+private String loginUsername;
+
+// Student registration ID
+private String registrationId;
+
+private String issueType;
 
     private String issueMessage;
 
-    private String status;
+private String status;
 
-    private LocalDateTime submittedAt;
+private LocalDateTime submittedAt;
+
+// Admin reply details
+@jakarta.persistence.Column(columnDefinition = "TEXT")
+private String adminReply;
+
+// Verified student account ID
+// Null for complaints submitted without login
+private Long studentId;
+
+private LocalDateTime repliedAt;
 
     @PrePersist
     public void beforeSave() {
@@ -64,9 +80,25 @@ public class StudentIssue {
         this.studentEmail = studentEmail;
     }
 
-    public String getIssueType() {
-        return issueType;
-    }
+public String getLoginUsername() {
+    return loginUsername;
+}
+
+public void setLoginUsername(String loginUsername) {
+    this.loginUsername = loginUsername;
+}
+
+public String getRegistrationId() {
+    return registrationId;
+}
+
+public void setRegistrationId(String registrationId) {
+    this.registrationId = registrationId;
+}
+
+public String getIssueType() {
+    return issueType;
+}
 
     public void setIssueType(String issueType) {
         this.issueType = issueType;
@@ -94,5 +126,29 @@ public class StudentIssue {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+public String getAdminReply() {
+    return adminReply;
+}
+
+public Long getStudentId() {
+    return studentId;
+}
+
+public void setStudentId(Long studentId) {
+    this.studentId = studentId;
+}
+
+    public void setAdminReply(String adminReply) {
+        this.adminReply = adminReply;
+    }
+
+    public LocalDateTime getRepliedAt() {
+        return repliedAt;
+    }
+
+    public void setRepliedAt(LocalDateTime repliedAt) {
+        this.repliedAt = repliedAt;
     }
 }

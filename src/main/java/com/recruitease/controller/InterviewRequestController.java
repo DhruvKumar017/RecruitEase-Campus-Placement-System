@@ -153,7 +153,7 @@ boolean alreadyScheduled =
         request.getInterviewTime() != null &&
         !request.getInterviewTime().isBlank();
 
-// Block NEW scheduling after the placement drive's last date.
+// Block NEW scheduling only after the actual placement drive ends.
 if (!alreadyScheduled) {
 
     Application application = applicationRepository
@@ -170,18 +170,28 @@ if (!alreadyScheduled) {
             .orElse(null);
 
     if (drive == null ||
-            drive.getLastDate() == null ||
-            drive.getLastDate().isBlank()) {
+            drive.getDriveDate() == null ||
+            drive.getDriveDate().isBlank() ||
+            drive.getDriveEndTime() == null ||
+            drive.getDriveEndTime().isBlank()) {
 
         return ResponseEntity.badRequest()
-                .body("Placement drive last date is missing.");
+                .body("Placement drive date or end time is missing.");
     }
 
     try {
 
-        LocalDate lastDate = LocalDate.parse(drive.getLastDate());
+        LocalDate driveDate =
+                LocalDate.parse(drive.getDriveDate());
 
-        if (lastDate.isBefore(LocalDate.now())) {
+        LocalTime driveEndTime =
+                LocalTime.parse(drive.getDriveEndTime());
+
+        LocalDateTime driveEnd =
+                LocalDateTime.of(driveDate, driveEndTime);
+
+        if (!LocalDateTime.now().isBefore(driveEnd)) {
+
             return ResponseEntity.badRequest()
                     .body(
                         "Drive completed. New interviews cannot be scheduled."
@@ -191,7 +201,7 @@ if (!alreadyScheduled) {
     } catch (DateTimeParseException exception) {
 
         return ResponseEntity.badRequest()
-                .body("Invalid placement drive last date.");
+                .body("Invalid placement drive date or end time.");
     }
 }
 

@@ -222,6 +222,35 @@ if (!enforceJwt) {
 )
 .hasAnyRole("MAIN_ADMIN", "ADMIN")
 
+// Only logged-in students can view their own complaints.
+.requestMatchers(
+    HttpMethod.GET,
+    "/api/student-issues/my"
+)
+.hasRole("STUDENT")
+
+// Only Admin / Main Admin can reply to student issues.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/student-issues/*/reply"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
+// Only Admin / Main Admin can update issue status.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/student-issues/*/status/*"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
+// Only Admin / Main Admin can view all student issues.
+.requestMatchers(
+    HttpMethod.GET,
+    "/api/student-issues",
+    "/api/student-issues/pending"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
 .anyRequest()
 .permitAll();
 
@@ -245,16 +274,53 @@ if (!enforceJwt) {
 "/api/admin-viewer/login",
 "/api/admin-viewer/otp/send",
 "/api/admin-viewer/otp/verify",
-"/api/students/register",
-                        "/api/student-issues"
-                    )
-                    .permitAll()
+"/api/students/register"
+)
+.permitAll()
 
-                    .requestMatchers(
-                        "/api/admin-settings/**",
-                        "/api/admin-notifications/**"
-                    )
-                    .hasAnyRole("MAIN_ADMIN", "ADMIN")
+// Students can submit complaints without logging in.
+// Verified complaint history also accepts credentials.
+.requestMatchers(
+    HttpMethod.POST,
+    "/api/student-issues",
+    "/api/student-issues/verify-history"
+)
+.permitAll()
+
+                   // Only logged-in students can view their complaints.
+.requestMatchers(
+    HttpMethod.GET,
+    "/api/student-issues/my"
+)
+.hasRole("STUDENT")
+
+// Only Admin / Main Admin can reply to complaints.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/student-issues/*/reply"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
+// Only Admin / Main Admin can update complaint status.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/student-issues/*/status/*"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
+// Only Admin / Main Admin can view all complaints.
+.requestMatchers(
+    HttpMethod.GET,
+    "/api/student-issues",
+    "/api/student-issues/pending"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
+.requestMatchers(
+    "/api/admin-settings/**",
+    "/api/admin-notifications/**"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
 // Secure viewer login history
 .requestMatchers(
     HttpMethod.GET,

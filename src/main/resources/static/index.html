@@ -177,7 +177,7 @@
             <div class="impact-icon">👥</div>
 
             <div class="impact-content">
-                <h3>1,248+</h3>
+                <h3>Demo: 1,248+</h3>
                 <p>Registered Students</p>
                 <small>↗ Growing Together</small>
                 <div class="impact-progress"></div>
@@ -190,7 +190,7 @@
             <div class="impact-icon">🏢</div>
 
             <div class="impact-content">
-                <h3>56+</h3>
+                <h3>Demo: 56+</h3>
                 <p>Partner Companies</p>
                 <small>🛡 Top Recruiters</small>
                 <div class="impact-progress"></div>
@@ -203,9 +203,9 @@
             <div class="impact-icon">📅</div>
 
             <div class="impact-content">
-                <h3>18+</h3>
+                <h3>Demo: 18+</h3>
                 <p>Placement Drives</p>
-                <small>🚀 Active Drives</small>
+                <small>🚀 Demo Drives</small>
                 <div class="impact-progress"></div>
             </div>
 
@@ -216,7 +216,7 @@
             <div class="impact-icon">🏆</div>
 
             <div class="impact-content">
-                <h3>342+</h3>
+                <h3>Demo: 342+</h3>
                 <p>Students Placed</p>
                 <small>★ Successful Futures</small>
                 <div class="impact-progress"></div>
@@ -421,12 +421,6 @@
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon purple-bg">📑</div>
-                <h3>Resume Builder</h3>
-                <p>Create and update professional resume information.</p>
-            </div>
-
-            <div class="feature-card">
                 <div class="feature-icon red-bg">🔔</div>
                 <h3>Notifications</h3>
                 <p>Updates for tests, interviews, drives and results.</p>
@@ -450,14 +444,33 @@
             <p>Prepare for the placement ecosystem with RecruitEase.</p>
         </div>
 
-        <div class="company-grid">
-            <div class="company-logo">TCS</div>
-            <div class="company-logo">Infosys</div>
-            <div class="company-logo">Wipro</div>
-            <div class="company-logo">Accenture</div>
-            <div class="company-logo">Capgemini</div>
-            <div class="company-logo">amazon</div>
-        </div>
+<div class="company-grid">
+
+    <div class="company-logo" onclick="showCompanyCriteria('TCS')">
+        TCS
+    </div>
+
+    <div class="company-logo" onclick="showCompanyCriteria('Infosys')">
+        Infosys
+    </div>
+
+    <div class="company-logo" onclick="showCompanyCriteria('Wipro')">
+        Wipro
+    </div>
+
+    <div class="company-logo" onclick="showCompanyCriteria('Accenture')">
+        Accenture
+    </div>
+
+    <div class="company-logo" onclick="showCompanyCriteria('Capgemini')">
+        Capgemini
+    </div>
+
+    <div class="company-logo" onclick="showCompanyCriteria('Amazon')">
+        amazon
+    </div>
+
+</div>
 
     </section>
 
@@ -523,7 +536,7 @@
 
         <div class="contact-item">
             <b>📞 Call Us</b>
-            <span>+91 9761375014</span>
+            <span>+91 ------5014</span>
         </div>
 
         <div class="contact-item">
@@ -579,7 +592,7 @@
             <h3>Contact Us</h3>
             <p>📍 GLA University, Mathura, Uttar Pradesh, India</p>
             <p>✉️ recruitease.campus.system@gmail.com</p>
-            <p>📞 +91 9761375014</p>
+            <p>📞 +91 -------5014</p>
         </div>
 
     </div>
@@ -590,6 +603,161 @@
     </div>
 
 </footer>
+
+<!-- COMPANY CRITERIA POPUP -->
+<div id="companyCriteriaModal" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    z-index:99999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+">
+
+    <div style="
+        background:#0d1b35;
+        border:1px solid #315187;
+        border-radius:18px;
+        padding:30px;
+        width:100%;
+        max-width:480px;
+        color:white;
+        box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    ">
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:15px;
+            margin-bottom:20px;
+        ">
+            <h2 id="criteriaCompanyName">Company Criteria</h2>
+
+            <button type="button"
+                onclick="closeCompanyCriteria()"
+                style="
+                    background:#243957;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                    padding:8px 13px;
+                    cursor:pointer;
+                ">
+                ✕
+            </button>
+        </div>
+
+        <div id="companyCriteriaContent"
+             style="line-height:2;overflow-wrap:anywhere;">
+            Loading...
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+async function showCompanyCriteria(companyName) {
+
+    const modal = document.getElementById("companyCriteriaModal");
+    const title = document.getElementById("criteriaCompanyName");
+    const content = document.getElementById("companyCriteriaContent");
+
+    modal.style.display = "flex";
+    title.textContent = companyName + " - Eligibility Criteria";
+    content.textContent = "Loading latest criteria...";
+
+    try {
+
+        const response = await fetch("/api/companies", {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error("Unable to fetch companies");
+        }
+
+        const companies = await response.json();
+
+        const company = companies.find(c =>
+            (c.companyName || "").trim().toLowerCase() ===
+            companyName.trim().toLowerCase()
+        );
+
+        if (!company) {
+            content.textContent =
+                "This company's eligibility criteria are not available.";
+            return;
+        }
+
+        content.replaceChildren();
+
+        function addCriteria(label, value) {
+
+            const row = document.createElement("p");
+
+            const heading = document.createElement("strong");
+            heading.textContent = label + ": ";
+
+            const detail = document.createElement("span");
+            detail.textContent =
+                value === null ||
+                value === undefined ||
+                String(value).trim() === ""
+                    ? "Not specified"
+                    : String(value);
+
+            row.append(heading, detail);
+            content.appendChild(row);
+        }
+
+        addCriteria("Company Name", company.companyName);
+        addCriteria("Minimum CGPA", company.minCgpa);
+        addCriteria("Required Skills", company.requiredSkills);
+
+        addCriteria(
+            "Aptitude Cutoff",
+            company.aptitudeCutoff == null
+                ? "Not specified"
+                : company.aptitudeCutoff + "%"
+        );
+
+    } catch (error) {
+
+        console.error("Company criteria error:", error);
+
+        content.textContent =
+            "Unable to load company criteria. Please try again.";
+    }
+}
+
+function closeCompanyCriteria() {
+
+    document.getElementById("companyCriteriaModal").style.display = "none";
+
+}
+
+document.getElementById("companyCriteriaModal")
+    .addEventListener("click", function(event) {
+
+        if (event.target === this) {
+            closeCompanyCriteria();
+        }
+
+    });
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeCompanyCriteria();
+    }
+
+});
+
+</script>
 
 </body>
 </html>

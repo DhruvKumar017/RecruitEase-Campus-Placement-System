@@ -8,21 +8,26 @@
             icon: "⌂",
             label: "Dashboard"
         },
-        {
-            file: "student-profile.html",
-            icon: "●",
-            label: "My Profile"
-        },
-        {
-            file: "student-aptitude-tests.html",
-            icon: "✓",
-            label: "Aptitude Tests"
-        },
-        {
-            file: "student-applications.html",
-            icon: "▤",
-            label: "My Applications"
-        },
+{
+    file: "student-profile.html",
+    icon: "●",
+    label: "My Profile"
+},
+{
+    file: "student-eligible-companies.html",
+    icon: "▦",
+    label: "Eligible Companies"
+},
+{
+    file: "student-applications.html",
+    icon: "▤",
+    label: "My Applications"
+},
+{
+    file: "student-aptitude-tests.html",
+    icon: "✓",
+    label: "Aptitude Tests"
+},
         {
             file: "student-interviews.html",
             icon: "●●",
@@ -240,10 +245,10 @@
                     </span>
                 </a>
 
-                <a
-                    class="student-unified-menu-item"
-                    href="student-help.html"
-                >
+<a
+    class="student-unified-menu-item"
+    href="student-support.html"
+>
                     <span class="student-menu-icon">
                         ?
                     </span>

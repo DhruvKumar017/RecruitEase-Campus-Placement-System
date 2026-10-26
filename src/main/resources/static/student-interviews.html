@@ -853,12 +853,12 @@ body.light .interview-data-table tbody tr:hover {
             <span>All interview records</span>
         </div>
 
-        <div class="interview-new-card selected">
-            <div class="interview-new-icon">🏆</div>
-            <p>Selected</p>
-            <h2 id="placedInterviewCount">0</h2>
-            <span>Successfully selected</span>
-        </div>
+<div class="interview-new-card selected">
+    <div class="interview-new-icon">🏆</div>
+    <p>Placed</p>
+    <h2 id="placedInterviewCount">0</h2>
+    <span>Successfully placed</span>
+</div>
 
         <div class="interview-new-card not-selected">
             <div class="interview-new-icon">✕</div>
@@ -915,19 +915,20 @@ body.light .interview-data-table tbody tr:hover {
             >
         </div>
 
-        <select
-            id="interviewStatusFilter"
-            class="interview-status-filter"
-            onchange="renderInterviews()"
-        >
-            <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="live">Live</option>
-            <option value="completed">Completed</option>
-            <option value="selected">Selected</option>
-            <option value="rejected">Not Selected</option>
-        </select>
+<select
+    id="interviewStatusFilter"
+    class="interview-status-filter"
+    onchange="renderInterviews()"
+>
+    <option value="">All Status</option>
+    <option value="schedule_pending">Schedule Pending</option>
+    <option value="upcoming">Upcoming</option>
+    <option value="live">Live</option>
+    <option value="result_pending">Result Pending</option>
+    <option value="drive_completed">Drive Completed</option>
+    <option value="selected">Placed</option>
+    <option value="rejected">Rejected</option>
+</select>
 
     </div>
 
@@ -1115,6 +1116,38 @@ async function refreshInterviews(silent = false) {
     }
 }
 
+/* ================================
+   CHECK PLACEMENT DRIVE END TIME
+================================ */
+
+function isPlacementDriveCompleted(interview) {
+
+    const application =
+        studentApplicationsMap[interview.applicationId];
+
+    if (!application) {
+        return false;
+    }
+
+    const driveDate = application.driveDate;
+    const driveEndTime = application.driveEndTime;
+
+    // Missing date/time: do not assume drive is completed
+    if (!driveDate || !driveEndTime) {
+        return false;
+    }
+
+    const endDateTime = new Date(
+        `${driveDate}T${normalizeTime(driveEndTime)}`
+    );
+
+    if (Number.isNaN(endDateTime.getTime())) {
+        return false;
+    }
+
+    return new Date() >= endDateTime;
+}
+
 
 function getEffectiveStatus(interview) {
 
@@ -1124,42 +1157,61 @@ function getEffectiveStatus(interview) {
     const applicationStatus =
         normalizeStatus(application?.status);
 
-    // Final result has highest priority
-    if (applicationStatus === "placed") {
-        return "placed";
-    }
-
-    if (applicationStatus === "selected") {
-        return "selected";
-    }
-
-    if (applicationStatus === "rejected") {
-        return "rejected";
-    }
-
     const backendStatus =
         normalizeStatus(interview.interviewStatus);
 
-    // Interview has not been scheduled yet
-    if (backendStatus === "pending") {
-        return "pending";
+    // 1. Admin final decision always has highest priority
+    if (
+        applicationStatus === "placed" ||
+        backendStatus === "placed"
+    ) {
+        return "placed";
     }
 
-    // Scheduled interview changes automatically by time
-    if (interview.interviewDate && interview.interviewTime) {
-        return getInterviewTimeStatus(interview);
+    if (
+        applicationStatus === "selected" ||
+        backendStatus === "selected"
+    ) {
+        return "selected";
     }
 
-    return backendStatus;
+if (
+    applicationStatus === "rejected" ||
+    applicationStatus === "failed" ||
+    applicationStatus === "not_selected" ||
+    applicationStatus === "not selected" ||
+    backendStatus === "rejected" ||
+    backendStatus === "failed" ||
+    backendStatus === "not_selected" ||
+    backendStatus === "not selected"
+) {
+    return "rejected";
+}
+
+// 2. Interview has been scheduled
+if (interview.interviewDate && interview.interviewTime) {
+
+    const timeStatus = getInterviewTimeStatus(interview);
+
+    if (timeStatus === "finished") {
+        return "result_pending";
+    }
+
+    return timeStatus;
+}
+
+    // 3. Interview not scheduled and placement drive ended
+    if (isPlacementDriveCompleted(interview)) {
+        return "drive_completed";
+    }
+
+    // 4. Student requested interview, admin schedule pending
+    return "schedule_pending";
 }
 
 function updateInterviewStats() {
 
-const total = studentInterviews.filter(interview => {
-    const status = getEffectiveStatus(interview);
-
-    return status !== "pending";
-}).length;
+const total = studentInterviews.length;
     const upcoming = studentInterviews.filter(interview =>
         getEffectiveStatus(interview) === "upcoming"
     ).length;
@@ -1168,18 +1220,21 @@ const total = studentInterviews.filter(interview => {
         getEffectiveStatus(interview) === "live"
     ).length;
 
-    const finished = studentInterviews.filter(interview => {
-        const status = getEffectiveStatus(interview);
+const finished = studentInterviews.filter(interview => {
 
-        return [
-            "finished",
-            "completed",
-            "placed",
-            "selected",
-            "failed",
-            "rejected"
-        ].includes(status);
-    }).length;
+    const status = getEffectiveStatus(interview);
+
+    return [
+        "result_pending",
+        "finished",
+        "completed",
+        "placed",
+        "selected",
+        "failed",
+        "rejected"
+    ].includes(status);
+
+}).length;
 
     const placed = studentInterviews.filter(interview => {
         const status = getEffectiveStatus(interview);
@@ -1249,27 +1304,39 @@ function renderInterviews() {
 
         let matchesStatus = true;
 
-        if (selectedStatus === "completed") {
-            matchesStatus = [
-                "finished",
-                "completed"
-            ].includes(status);
+if (selectedStatus === "selected") {
 
-        } else if (selectedStatus === "selected") {
-            matchesStatus = [
-                "selected",
-                "placed"
-            ].includes(status);
+    matchesStatus = [
+        "selected",
+        "placed"
+    ].includes(status);
 
-        } else if (selectedStatus === "rejected") {
-            matchesStatus = [
-                "rejected",
-                "failed"
-            ].includes(status);
+} else if (selectedStatus === "rejected") {
 
-        } else if (selectedStatus) {
-            matchesStatus = status === selectedStatus;
-        }
+    matchesStatus = [
+        "rejected",
+        "failed"
+    ].includes(status);
+
+} else if (selectedStatus === "result_pending") {
+
+    matchesStatus = [
+        "result_pending",
+        "finished",
+        "completed"
+    ].includes(status);
+
+} else if (selectedStatus === "schedule_pending") {
+
+    matchesStatus = [
+        "schedule_pending",
+        "pending"
+    ].includes(status);
+
+} else if (selectedStatus) {
+
+    matchesStatus = status === selectedStatus;
+}
 
         return matchesSearch && matchesStatus;
     });
@@ -1404,8 +1471,8 @@ function getInterviewRemarkMarkup(interview, status) {
 
 function getInterviewActionMarkup(interview, status) {
 
-    // 1. Interview abhi schedule nahi hua
-    if (status === "pending") {
+    // 1. Interview request submitted, admin schedule pending
+    if (status === "schedule_pending" || status === "pending") {
         return `
             <button
                 class="interview-action-btn secondary"
@@ -1492,11 +1559,11 @@ if (status === "live") {
         `;
     }
 
-    // 4. Interview finished but student never applied
-    if (
-        status === "finished" &&
-        !interview.studentAppliedAt
-    ) {
+// 4. Interview finished but student never applied
+if (
+    (status === "finished" || status === "result_pending") &&
+    !interview.studentAppliedAt
+) {
         return `
             <button
                 class="interview-action-btn not-applied-btn"
@@ -1572,32 +1639,73 @@ async function applyForInterview(interviewId, button) {
 
 function getInterviewStatusClass(status) {
 
-    if (status === "upcoming") return "status-scheduled";
-    if (status === "live") return "status-live";
-    if (status === "finished") return "status-completed";
+    // Interview schedule pending
+    if (status === "schedule_pending" || status === "pending") {
+        return "status-pending";
+    }
 
-    if (status === "scheduled") return "status-scheduled";
-    if (status === "completed") return "status-completed";
-    if (status === "selected") return "status-selected";
-    if (status === "placed") return "status-placed";
-    if (status === "rejected") return "status-rejected";
+    // Interview upcoming
+    if (status === "upcoming" || status === "scheduled") {
+        return "status-scheduled";
+    }
+
+    // Interview live
+    if (status === "live") {
+        return "status-live";
+    }
+
+    // Interview completed, waiting for admin result
+    if (
+        status === "result_pending" ||
+        status === "finished" ||
+        status === "completed"
+    ) {
+        return "status-pending";
+    }
+
+    // Drive completed without interview scheduling
+    if (status === "drive_completed") {
+        return "status-completed";
+    }
+
+    // Final selection
+    if (status === "selected" || status === "placed") {
+        return "status-selected";
+    }
+
+    // Final rejection
+    if (status === "rejected" || status === "failed") {
+        return "status-rejected";
+    }
 
     return "status-pending";
 }
 
 function getInterviewStatusText(status) {
 
+    if (status === "schedule_pending") return "Schedule Pending";
+
     if (status === "upcoming") return "Upcoming";
+
     if (status === "live") return "Live";
-    if (status === "finished") return "Finished";
 
-    if (status === "scheduled") return "Scheduled";
-    if (status === "completed") return "Completed";
-    if (status === "selected") return "Selected";
-    if (status === "placed") return "Placed";
-    if (status === "rejected") return "Failed";
+    if (status === "result_pending") return "Result Pending";
 
-    return "Request Pending";
+    if (status === "drive_completed") return "Drive Completed";
+
+if (status === "selected") return "Placed";
+if (status === "placed") return "Placed";
+
+    if (status === "rejected") return "Rejected";
+
+    // Support for older records
+    if (status === "pending") return "Schedule Pending";
+    if (status === "scheduled") return "Upcoming";
+    if (status === "finished") return "Result Pending";
+    if (status === "completed") return "Result Pending";
+    if (status === "failed") return "Rejected";
+
+    return "Schedule Pending";
 }
 
 function joinInterview(interviewId) {

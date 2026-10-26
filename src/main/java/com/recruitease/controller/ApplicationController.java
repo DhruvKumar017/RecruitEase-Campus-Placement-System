@@ -200,9 +200,12 @@ public List<Map<String, Object>> getStudentApplications(
 
                 if (drive != null) {
 
-                    data.put("driveDate", drive.getDriveDate());
-                    data.put("driveStartTime", drive.getDriveStartTime());
-                    data.put("driveEndTime", drive.getDriveEndTime());
+data.put("driveDate", drive.getDriveDate());
+data.put("driveStartTime", drive.getDriveStartTime());
+data.put("driveEndTime", drive.getDriveEndTime());
+
+// Placement drive application deadline
+data.put("lastDate", drive.getLastDate());
 
                     data.put("packageLpa", drive.getPackageLpa());
                     data.put("mode", drive.getMode());
@@ -216,9 +219,10 @@ public List<Map<String, Object>> getStudentApplications(
 
                 } else {
 
-                    data.put("driveDate", null);
-                    data.put("driveStartTime", null);
-                    data.put("driveEndTime", null);
+data.put("driveDate", null);
+data.put("driveStartTime", null);
+data.put("driveEndTime", null);
+data.put("lastDate", null);
 
                     data.put("packageLpa", null);
                     data.put("mode", null);

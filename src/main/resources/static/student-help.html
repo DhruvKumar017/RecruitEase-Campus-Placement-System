@@ -15,27 +15,59 @@
             font-family:'Poppins',sans-serif;
         }
 
-        body{
-            min-height:100vh;
-            color:#ffffff;
-            background:
-                radial-gradient(circle at 15% 10%,rgba(47,128,255,.20),transparent 28%),
-                radial-gradient(circle at 85% 90%,rgba(124,58,237,.20),transparent 30%),
-                #050816;
-            display:grid;
-            place-items:center;
-            padding:28px;
-        }
+body{
+    min-height:100vh;
+    background:#080e1d;
+    color:#f8fafc;
+    padding:36px;
+}
 
-        .help-card{
-            width:100%;
-            max-width:720px;
-            padding:40px;
-            border:1px solid rgba(96,165,250,.25);
-            border-radius:26px;
-            background:rgba(13,19,37,.90);
-            box-shadow:0 30px 80px rgba(0,0,0,.55);
-        }
+.help-card{
+    width:100%;
+    max-width:1400px;
+    margin:0 auto;
+    padding:0;
+    border:none;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+}
+
+/* Help & Support style two-column layout */
+.help-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    align-items:start;
+}
+
+/* Matching card design */
+.help-panel{
+    padding:28px;
+    border-radius:18px;
+    background:#111b30;
+    border:1px solid #293a58;
+}
+
+.help-panel h2{
+    font-size:21px;
+    margin-bottom:8px;
+    color:#f8fafc;
+}
+
+.help-panel .card-subtitle{
+    color:#94a3b8;
+    font-size:13px;
+    line-height:1.6;
+    margin-bottom:22px;
+}
+
+/* Responsive layout */
+@media(max-width:1100px){
+    .help-grid{
+        grid-template-columns:1fr;
+    }
+}
 
         .logo{
             text-align:center;
@@ -48,17 +80,81 @@
             color:#2f80ff;
         }
 
-        .help-icon{
-            width:82px;
-            height:82px;
-            margin:0 auto 18px;
-            display:grid;
-            place-items:center;
-            border-radius:50%;
-            font-size:40px;
-            background:linear-gradient(135deg,#2563eb,#7c3aed);
-            box-shadow:0 15px 35px rgba(47,128,255,.30);
-        }
+.help-icon{
+    display:none;
+}
+
+/* Help & Support style header banner */
+/* Help Center Top Header */
+.support-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.support-header h1{
+    font-size:30px;
+    margin-bottom:8px;
+    text-align:left;
+    color:#f8fafc;
+}
+
+.support-header p{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+/* Back to Student Login Button */
+.support-header .back-link{
+    display:inline-block;
+    margin-top:0;
+    padding:12px 18px;
+    background:#172440;
+    border:1px solid #30456c;
+    border-radius:10px;
+    color:#e2e8f0;
+    text-decoration:none;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.support-header .back-link:hover{
+    background:#1e3155;
+    color:#ffffff;
+}
+
+/* Help & Support Style Banner */
+.help-hero{
+    padding:30px;
+    border-radius:20px;
+    background:linear-gradient(120deg,#172f67,#34216a);
+    border:1px solid #4054a0;
+    margin-bottom:28px;
+}
+
+@media(max-width:768px){
+    .support-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+
+.help-hero h1{
+    font-size:25px;
+    margin-bottom:10px;
+    text-align:left;
+    color:#ffffff;
+}
+
+.help-hero .subtitle{
+    color:#cbd5e1;
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:0;
+    text-align:left;
+}
 
         h1{
             text-align:center;
@@ -72,25 +168,28 @@
             margin-bottom:28px;
         }
 
-        label{
-            display:block;
-            margin:16px 0 8px;
-            font-size:14px;
-            font-weight:600;
-        }
+/* Same label design as Help & Support */
+label{
+    display:block;
+    margin:18px 0 8px;
+    font-size:13px;
+    font-weight:600;
+    color:#f8fafc;
+}
 
-        input,
-        select,
-        textarea{
-            width:100%;
-            padding:15px 16px;
-            outline:none;
-            border:1px solid #263a5f;
-            border-radius:14px;
-            background:#0f172a;
-            color:#ffffff;
-            font-size:15px;
-        }
+/* Same input design as Help & Support */
+input,
+select,
+textarea{
+    width:100%;
+    padding:13px;
+    outline:none;
+    border:1px solid #30405f;
+    border-radius:10px;
+    background:#0b1425;
+    color:#ffffff;
+    font-size:14px;
+}
 
         textarea{
             min-height:125px;
@@ -109,25 +208,32 @@
             color:#ffffff;
         }
 
-        button{
-            width:100%;
-            height:56px;
-            margin-top:24px;
-            border:none;
-            border-radius:14px;
-            background:linear-gradient(90deg,#2563eb,#2f80ff);
-            color:#ffffff;
-            font-size:17px;
-            font-weight:800;
-            cursor:pointer;
-            transition:.25s;
-            box-shadow:0 15px 35px rgba(37,99,235,.28);
-        }
+/* Same button design as Help & Support */
+/* Same button design as Help & Support */
+button{
+    width:100%;
+    padding:15px;
+    height:auto;
+    margin-top:10px;
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
+    border:none;
+    border-radius:10px;
+    color:#ffffff;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    transition:background .25s ease, transform .25s ease;
+}
 
-        button:hover{
-            transform:translateY(-4px);
-            box-shadow:0 22px 45px rgba(37,99,235,.40);
-        }
+/* Submit button hover */
+button:hover{
+    background:linear-gradient(90deg,#1d4ed8,#2563eb);
+    transform:translateY(-2px);
+}
+
+button:active{
+    transform:translateY(0);
+}
 
         .back-link{
             display:block;
@@ -147,48 +253,81 @@
                 padding:16px;
             }
 
-            .help-card{
-                padding:28px 20px;
-            }
+.help-card{
+    padding:0;
+}
 
-            h1{
-                font-size:25px;
-            }
+.help-panel{
+    padding:20px;
+}
+
+.help-hero{
+    padding:22px;
+}
+
+h1{
+    font-size:25px;
+}
         }
     </style>
 </head>
-<a href="student-dashboard.html"
-   style="
-       position: absolute;
-       top: 25px;
-       left: 30px;
-       padding: 12px 20px;
-       background: #102a50;
-       color: #ffffff;
-       border: 1px solid #2563eb;
-       border-radius: 10px;
-       text-decoration: none;
-       font-size: 14px;
-       font-weight: 600;
-       z-index: 100;
-   ">
-    ← Back to Dashboard
-</a>
 <body>
 
     <main class="help-card">
 
-        <div class="logo">🎓 Recruit<span>Ease</span></div>
+<!-- RecruitEase Header -->
+<header class="support-header">
+    <div>
+        <h1>🛟 Student Help Center</h1>
+        <p>Get assistance with login, registration and placement-related issues.</p>
+    </div>
 
-        <div class="help-icon">🛟</div>
+    <a href="student-login.html" class="back-link">
+        ← Back to Student Login
+    </a>
+</header>
 
-        <h1>Student Help Center</h1>
+<!-- Help Center Banner -->
+<section class="help-hero">
+    <h1>How can we help you?</h1>
 
-        <p class="subtitle">
-            Login problem, registration issue, password issue ya koi placement query submit karo.
+    <p class="subtitle">
+        Facing login problems, registration issues, password issues
+        or placement-related queries? Submit your concern and
+        our placement team will review it.
+    </p>
+</section>
+
+       <!-- Help Center Two-Column Layout -->
+<div class="help-grid">
+
+    <!-- Left Side: Raise a Complaint -->
+    <section class="help-panel">
+
+        <h2>📝 Raise a Complaint</h2>
+
+        <p class="card-subtitle">
+            Describe your issue clearly so our placement team can assist you.
         </p>
 
         <form id="helpForm">
+
+    <!-- Validation error message -->
+    <div id="helpError"
+         role="alert"
+         aria-live="polite"
+         style="
+            display:none;
+            background:#fff1f2;
+            color:#dc2626;
+            border:1px solid #fecdd3;
+            padding:12px 15px;
+            border-radius:8px;
+            margin-bottom:18px;
+            font-size:14px;
+            font-weight:500;
+         ">
+    </div>
 
             <label for="studentName">Your Name</label>
             <input
@@ -198,15 +337,23 @@
                 required
             >
 
-            <label for="studentEmail">Email Address</label>
-            <input
-                type="email"
-                id="studentEmail"
-                placeholder="Enter your email address"
-                required
-            >
+<label for="studentEmail">Username</label>
+<input
+    type="text"
+    id="studentEmail"
+    placeholder="Enter your registered username"
+    required
+>
 
-            <label for="issueType">Issue Type</label>
+<label for="registrationId">Registration ID</label>
+<input
+    type="text"
+    id="registrationId"
+    placeholder="Enter your roll no"
+    required
+>
+
+<label for="issueType">Issue Type</label>
             <select id="issueType" required>
                 <option value="">Select your issue</option>
                 <option>Unable to Login</option>
@@ -226,11 +373,154 @@
 
             <button type="submit">Submit Issue →</button>
 
-        </form>
+</form>
 
-        <a class="back-link" href="student-login.html">
-            ← Back to Student Login
-        </a>
+    </section>
+    <!-- End Left Side: Raise a Complaint -->
+
+
+    <!-- Right Side: Help Center Information -->
+    <section class="help-panel">
+
+        <h2>📋 Help Center Information</h2>
+
+        <p class="card-subtitle">
+            Get assistance with your RecruitEase account
+            and placement-related issues.
+        </p>
+
+        <div style="
+            background:#0b1425;
+            border:1px solid #30405f;
+            border-radius:12px;
+            padding:20px;
+            margin-bottom:18px;
+        ">
+            <h3 style="color:#93c5fd;margin-bottom:12px;">
+                📝 How to Submit a Complaint
+            </h3>
+
+            <p style="color:#cbd5e1;line-height:1.8;font-size:14px;">
+                Enter your registered Username and Registration ID,
+                select your issue type, describe your problem
+                clearly, and click Submit Complaint.
+            </p>
+        </div>
+
+        <div style="
+            background:#0b1425;
+            border:1px solid #30405f;
+            border-radius:12px;
+            padding:20px;
+            margin-bottom:18px;
+        ">
+            <h3 style="color:#93c5fd;margin-bottom:12px;">
+                🛟 Available Support
+            </h3>
+
+            <p style="color:#cbd5e1;line-height:1.8;font-size:14px;">
+                Login Issues<br>
+                Forgot Password<br>
+                Registration Issues<br>
+                Profile Update Issues<br>
+                Placement / Application Queries
+            </p>
+        </div>
+
+        <div style="
+            background:rgba(37,99,235,0.10);
+            border:1px solid #30456c;
+            border-radius:12px;
+            padding:20px;
+        ">
+            <h3 style="color:#93c5fd;margin-bottom:12px;">
+                🔒 Account Security
+            </h3>
+
+            <p style="color:#cbd5e1;line-height:1.8;font-size:14px;">
+                Never share your password or OTP in a complaint.
+                For password-related problems, use the official
+                password reset process.
+            </p>
+        </div>
+
+    </section>
+    <!-- End Right Side -->
+
+</div>
+<!-- End Help Center Two-Column Layout -->
+
+<!-- Student Complaint History -->
+<section class="help-panel" style="margin-top:24px;">
+
+    <h2>📋 View Complaint History</h2>
+
+    <p class="card-subtitle">
+        Verify your student account to view your previous
+        complaints, their status, and replies from Admin / TPO.
+    </p>
+
+    <form id="complaintHistoryForm" autocomplete="off">
+
+        <label for="historyUsername">Username</label>
+        <input
+            type="text"
+            id="historyUsername"
+            placeholder="Enter your registered username"
+            autocomplete="username"
+            required
+        >
+
+        <label for="historyRegistrationId">Registration ID</label>
+        <input
+            type="text"
+            id="historyRegistrationId"
+            placeholder="Enter your registration ID"
+            required
+        >
+
+        <label for="historyEmail">Registered Email</label>
+        <input
+            type="email"
+            id="historyEmail"
+            placeholder="Enter your registered email"
+            required
+        >
+
+        <label for="historyPassword">Student Login Password</label>
+        <input
+            type="password"
+            id="historyPassword"
+            placeholder="Enter your student login password"
+            autocomplete="current-password"
+            required
+        >
+
+        <button type="submit">
+            🔍 View My Complaints
+        </button>
+
+        <p
+            id="historyError"
+            role="alert"
+            aria-live="polite"
+            style="
+                display:none;
+                color:#fca5a5;
+                margin-top:14px;
+                font-size:14px;
+            "
+        ></p>
+
+    </form>
+
+    <div
+        id="complaintHistoryResults"
+        aria-live="polite"
+        style="display:none;margin-top:24px;"
+    ></div>
+
+</section>
 
     </main>
 
@@ -238,37 +528,57 @@
 document.getElementById("helpForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
-    const issueData = {
-        studentName: document.getElementById("studentName").value.trim(),
-        studentEmail: document.getElementById("studentEmail").value.trim(),
-        issueType: document.getElementById("issueType").value,
-        issueMessage: document.getElementById("issueMessage").value.trim()
-    };
+const issueData = {
+    studentName: document.getElementById("studentName").value.trim(),
+    loginUsername: document.getElementById("studentEmail").value.trim(),
+    registrationId: document.getElementById("registrationId").value.trim(),
+    issueType: document.getElementById("issueType").value,
+    issueMessage: document.getElementById("issueMessage").value.trim()
+};
 
     try {
-        const response = await fetch("/api/student-issues", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(issueData)
-        });
+// Public Help Center: submit without student JWT
+const response = await fetch("/api/student-issues", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(issueData)
+});
 
-        const message = await response.text();
+const message = await response.text();
 
-        if (!response.ok) {
-            alert("❌ " + message);
-            return;
-        }
+const helpError = document.getElementById("helpError");
 
-        alert(
-            "✅ Your issue has been submitted successfully. " +
-            "Admin / TPO will review it soon."
-        );
+if (!response.ok) {
 
-        document.getElementById("helpForm").reset();
+    helpError.textContent =
+        message || "Unable to submit issue. Please check your details.";
 
-        window.location.href = "student-login.html";
+    helpError.style.display = "block";
+
+    helpError.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    return;
+}
+
+// Hide previous error after successful submission
+helpError.textContent = "";
+helpError.style.display = "none";
+
+alert(
+    "✅ Your issue has been submitted successfully. " +
+    "Admin / TPO will review it soon."
+);
+
+document.getElementById("helpForm").reset();
+
+// Refresh complaint history after successful submission
+// Public Help Center: complaint history must remain private.
+// Students can view their complaints after logging in.
 
     } catch (error) {
         console.error("Student issue submit error:", error);
@@ -276,6 +586,127 @@ document.getElementById("helpForm").addEventListener("submit", async function(ev
         alert("❌ Issue submit nahi hua. Backend check karo.");
     }
 });
+
+// Public Help Center: complaint history is not displayed.
+// Complaint history is available on the logged-in Student Support page.
+
+// ================= COMPLAINT HISTORY =================
+
+document.getElementById("complaintHistoryForm")
+    .addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const errorBox = document.getElementById("historyError");
+    const resultsBox = document.getElementById("complaintHistoryResults");
+    const passwordInput = document.getElementById("historyPassword");
+
+    errorBox.style.display = "none";
+    errorBox.textContent = "";
+
+    // Hide previous student's history before new verification.
+    resultsBox.replaceChildren();
+    resultsBox.style.display = "none";
+
+    const requestData = {
+        username: document.getElementById("historyUsername").value.trim(),
+        registrationId: document.getElementById("historyRegistrationId").value.trim(),
+        email: document.getElementById("historyEmail").value.trim(),
+        password: passwordInput.value
+    };
+
+    // Clear password field immediately after reading it.
+    passwordInput.value = "";
+
+    try {
+        const response = await fetch("/api/student-issues/verify-history", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            cache: "no-store",
+            credentials: "same-origin",
+            body: JSON.stringify(requestData)
+        });
+
+        // Do not retain password in this JavaScript object.
+        requestData.password = "";
+
+        if (!response.ok) {
+            errorBox.textContent =
+                "Unable to verify account. Please check your details.";
+            errorBox.style.display = "block";
+            return;
+        }
+
+        const complaints = await response.json();
+
+        resultsBox.style.display = "block";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "📋 Your Complaint History";
+        heading.style.marginBottom = "18px";
+        resultsBox.appendChild(heading);
+
+        if (!Array.isArray(complaints) || complaints.length === 0) {
+            const emptyMessage = document.createElement("p");
+            emptyMessage.textContent = "No complaints found.";
+            emptyMessage.style.color = "#94a3b8";
+            resultsBox.appendChild(emptyMessage);
+            return;
+        }
+
+        complaints.forEach(issue => {
+            const card = document.createElement("div");
+
+            card.style.cssText = `
+                background:#0b1425;
+                border:1px solid #30405f;
+                border-radius:12px;
+                padding:20px;
+                margin-bottom:16px;
+            `;
+
+            function addDetail(label, value) {
+                const row = document.createElement("p");
+                row.style.cssText =
+                    "color:#cbd5e1;line-height:1.8;font-size:14px;overflow-wrap:anywhere;";
+
+                const strong = document.createElement("strong");
+                strong.textContent = label + ": ";
+                strong.style.color = "#93c5fd";
+
+                row.appendChild(strong);
+                row.appendChild(
+                    document.createTextNode(value == null ? "N/A" : String(value))
+                );
+
+                card.appendChild(row);
+            }
+
+            addDetail("Complaint ID", issue.id);
+            addDetail("Issue Type", issue.issueType);
+            addDetail("Description", issue.issueMessage);
+            addDetail("Status", issue.status);
+            addDetail("Admin Reply", issue.adminReply || "No reply yet");
+            addDetail(
+                "Submitted At",
+                issue.submittedAt
+                    ? new Date(issue.submittedAt).toLocaleString()
+                    : "N/A"
+            );
+
+            resultsBox.appendChild(card);
+        });
+
+    } catch (error) {
+        requestData.password = "";
+        errorBox.textContent =
+            "Unable to load complaint history. Please try again.";
+        errorBox.style.display = "block";
+    }
+});
+
 </script>
 </body>
 </html>

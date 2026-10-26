@@ -469,6 +469,12 @@ let scheduledApplications = [];
 let resultMap = {};
 let testMap = {};
 
+// Store existing interview requests by application ID
+let interviewRequestMap = {};
+
+// Interview request status API successfully loaded or not
+let interviewRequestsLoaded = false;
+
 let activeApplication = null;
 let activeQuestions = [];
 
@@ -482,17 +488,19 @@ if (!studentId) {
 
 async function initializeStudentTests() {
     try {
-        const responses = await Promise.all([
-            fetch("/api/students/" + studentId),
-            fetch("/api/applications/student/" + studentId + "/scheduled-tests"),
-            fetch("/api/test-results/student/" + studentId),
-            fetch("/api/aptitude-tests")
-        ]);
+const responses = await Promise.all([
+    fetch("/api/students/" + studentId),
+    fetch("/api/applications/student/" + studentId + "/scheduled-tests"),
+    fetch("/api/test-results/student/" + studentId),
+    fetch("/api/aptitude-tests"),
+    fetch("/api/interview-requests/student/" + studentId)
+]);
 
-        const studentResponse = responses[0];
-        const scheduledResponse = responses[1];
-        const resultResponse = responses[2];
-        const testsResponse = responses[3];
+const studentResponse = responses[0];
+const scheduledResponse = responses[1];
+const resultResponse = responses[2];
+const testsResponse = responses[3];
+const interviewResponse = responses[4];
 
         if (!studentResponse.ok) {
             throw new Error("Student profile not found.");
@@ -522,17 +530,49 @@ async function initializeStudentTests() {
                 resultMap[result.applicationId] = result;
             });
         }
+if (testsResponse.ok) {
+    const tests = await testsResponse.json();
 
-        if (testsResponse.ok) {
-            const tests = await testsResponse.json();
+    testMap = {};
 
-            testMap = {};
+    tests.forEach(test => {
+        testMap[test.id] = test;
+    });
+}
 
-            tests.forEach(test => {
-                testMap[test.id] = test;
-            });
+// Load existing interview requests
+interviewRequestMap = {};
+interviewRequestsLoaded = false;
+
+if (interviewResponse.ok) {
+
+    try {
+        const requests = await interviewResponse.json();
+
+        if (!Array.isArray(requests)) {
+            throw new Error("Invalid interview requests response.");
         }
 
+        requests.forEach(request => {
+            if (request.applicationId != null) {
+                interviewRequestMap[String(request.applicationId)] = request;
+            }
+        });
+
+        interviewRequestsLoaded = true;
+
+    } catch (error) {
+        console.error("Interview requests parsing failed:", error);
+    }
+
+} else {
+
+    console.error(
+        "Interview requests load failed:",
+        interviewResponse.status
+    );
+
+}
         scheduledApplications.sort((a, b) =>
             Number(b.id) - Number(a.id)
         );
@@ -614,13 +654,70 @@ function getTestWindowStatus(app) {
 }
 
 function getTestButtonMarkup(app, result) {
-    if (result) {
-        return `
-            <button class="disabled-test-btn" disabled>
-                Test Completed
+if (result) {
+
+    const qualified =
+        String(result.status || "").trim().toLowerCase() === "qualified";
+
+    if (qualified) {
+
+const alreadyRequested =
+    Boolean(interviewRequestMap[String(app.id)]);
+
+if (!interviewRequestsLoaded) {
+    return `
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+            <button
+                class="start-test-btn"
+                type="button"
+                onclick="viewTestResult(${app.id})"
+            >
+                View Result
             </button>
+
+            <button
+                class="disabled-test-btn"
+                type="button"
+                disabled
+            >
+                Status Unavailable
+            </button>
+
+        </div>
+    `;
+}
+
+        return `
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+                <button
+                    class="start-test-btn"
+                    type="button"
+                    onclick="viewTestResult(${app.id})"
+                >
+                    View Result
+                </button>
+
+                <button
+                    class="${alreadyRequested ? 'disabled-test-btn' : 'start-test-btn'}"
+                    type="button"
+                    ${alreadyRequested ? "disabled" : ""}
+                    onclick="applyInterviewFromList(${app.id})"
+                >
+                    ${alreadyRequested ? "✓ Request Submitted" : "Apply Interview"}
+                </button>
+
+            </div>
         `;
     }
+
+    return `
+        <button class="disabled-test-btn" disabled>
+            Test Completed
+        </button>
+    `;
+}
 
     const testWindow = getTestWindowStatus(app);
 
@@ -788,6 +885,118 @@ function getResultTag(result) {
             ❌ Not Qualified ${percentage}%
         </span>
     `;
+}
+/* ================= APPLY INTERVIEW FROM LIST ================= */
+
+async function applyInterviewFromList(applicationId) {
+
+    // Prevent submission if existing request status is unavailable
+    if (!interviewRequestsLoaded) {
+        alert(
+            "Interview request status load nahi hua. Please refresh the page."
+        );
+        return;
+    }
+
+    const application = scheduledApplications.find(app =>
+        Number(app.id) === Number(applicationId)
+    );
+
+    if (!application) {
+        alert("Application details not found.");
+        return;
+    }
+
+    const result = resultMap[applicationId];
+
+    if (
+        !result ||
+        String(result.status || "").trim().toLowerCase() !== "qualified"
+    ) {
+        alert("Only qualified students can request an interview.");
+        return;
+    }
+
+    if (interviewRequestMap[String(applicationId)]) {
+        alert("Interview request already submitted.");
+        return;
+    }
+
+    if (application.interviewSubmitting) {
+        return;
+    }
+
+    application.interviewSubmitting = true;
+
+    try {
+
+        const response = await fetch(
+            `/api/applications/${applicationId}/request-interview/${studentId}`,
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        const savedRequest = await response.json();
+
+        interviewRequestMap[String(applicationId)] = savedRequest;
+
+        renderScheduledTests();
+
+        alert("Interview request submitted successfully.");
+
+    } catch (error) {
+
+        console.error("Interview request error:", error);
+
+        alert(error.message || "Interview request submit nahi hui.");
+
+    } finally {
+
+        application.interviewSubmitting = false;
+
+        renderScheduledTests();
+    }
+}
+/* ================= VIEW TEST RESULT ================= */
+
+function viewTestResult(applicationId) {
+
+    const application = scheduledApplications.find(app =>
+        Number(app.id) === Number(applicationId)
+    );
+
+    if (!application) {
+        alert("Application details not found.");
+        return;
+    }
+
+    const result = resultMap[applicationId];
+
+    if (!result) {
+        alert("Test result not found.");
+        return;
+    }
+
+    const qualified =
+        String(result.status || "").trim().toLowerCase() === "qualified";
+
+    if (qualified) {
+        showQualifiedResult(result, application);
+        return;
+    }
+
+    alert(
+        `Test Result\n\n` +
+        `Company: ${application.companyName || "Company"}\n` +
+        `Marks: ${result.obtainedMarks || 0} / ${result.totalMarks || 0}\n` +
+        `Percentage: ${Number(result.percentage || 0).toFixed(2)}%\n` +
+        `Status: ${result.status}`
+    );
 }
 
 /* ================= START TEST ================= */
@@ -1021,11 +1230,26 @@ function showQualifiedResult(result, application) {
         `Marks: ${result.obtainedMarks || 0} / ${result.totalMarks || 0} • ` +
         `Percentage: ${percentage}%`;
 
-    document.getElementById("applyInterviewButton").disabled = false;
-    document.getElementById("applyInterviewButton").innerText =
-        "Apply for Interview";
+const alreadyRequested =
+    Boolean(interviewRequestMap[String(application.id)]);
 
-    document.getElementById("interviewRequestMessage").innerText = "";
+const applyButton = document.getElementById("applyInterviewButton");
+
+applyButton.disabled =
+    alreadyRequested || !interviewRequestsLoaded;
+
+applyButton.innerText = !interviewRequestsLoaded
+    ? "Status Unavailable"
+    : alreadyRequested
+        ? "✓ Request Submitted"
+        : "Apply for Interview";
+
+document.getElementById("interviewRequestMessage").innerText =
+    !interviewRequestsLoaded
+        ? "⚠️ Interview request status load nahi hua. Please refresh the page."
+        : alreadyRequested
+            ? "✅ Your interview request has already been submitted."
+            : "";
 
     card.style.display = "block";
 
@@ -1045,8 +1269,8 @@ function hideQualifiedResult() {
 }
 
 async function applyForInterviewFromTest() {
-    const card = document.getElementById("qualifiedResultCard");
 
+    const card = document.getElementById("qualifiedResultCard");
     const applicationId = card.dataset.applicationId;
 
     if (!applicationId) {
@@ -1056,36 +1280,30 @@ async function applyForInterviewFromTest() {
 
     const applyButton = document.getElementById("applyInterviewButton");
 
+    if (interviewRequestMap[String(applicationId)]) {
+        applyButton.disabled = true;
+        applyButton.innerText = "✓ Request Submitted";
+        return;
+    }
+
     applyButton.disabled = true;
     applyButton.innerText = "Submitting Request...";
 
-    try {
-        const response = await fetch(
-            `/api/applications/${applicationId}/request-interview/${studentId}`,
-            {
-                method: "POST"
-            }
-        );
+    await applyInterviewFromList(applicationId);
 
-        if (!response.ok) {
-            throw new Error(await response.text());
-        }
+    const requestSubmitted =
+        Boolean(interviewRequestMap[String(applicationId)]);
 
-        applyButton.innerText = "Interview Request Submitted";
+    applyButton.disabled = requestSubmitted;
 
-        document.getElementById("interviewRequestMessage").innerText =
-            "✅ Interview request submitted successfully. Admin will review it.";
+    applyButton.innerText = requestSubmitted
+        ? "✓ Request Submitted"
+        : "Apply for Interview";
 
-        await initializeStudentTests();
-
-    } catch (error) {
-        console.error("Interview request error:", error);
-
-        applyButton.disabled = false;
-        applyButton.innerText = "Apply for Interview";
-
-        alert(error.message || "Interview request submit nahi hua.");
-    }
+    document.getElementById("interviewRequestMessage").innerText =
+        requestSubmitted
+            ? "✅ Interview request submitted successfully. Admin will review it."
+            : "";
 }
 
 function goToInterviewDashboard() {
