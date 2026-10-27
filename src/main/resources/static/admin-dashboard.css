@@ -2995,3 +2995,25 @@ body.dark-mode .dashboard-hero .hero-welcome p {
 body.dark-mode .dashboard-hero .hero-clock-row {
     color: #d7e4ff !important;
 }
+/* STEP 175 - ADMIN HEADER ORDER FIX */
+
+.target-top-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+/* Dark Mode - First */
+.target-top-actions #themeToggle {
+    order: 1 !important;
+}
+
+/* Notification Bell - Second */
+.target-top-actions .notification-box {
+    order: 2 !important;
+}
+
+/* Admin Profile - Third */
+.target-top-actions .target-admin-profile {
+    order: 3 !important;
+}

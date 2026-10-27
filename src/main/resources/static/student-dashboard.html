@@ -12,11 +12,9 @@
 
     <main class="main premium-dashboard">
 
-        <!-- ================= TOP HERO ================= -->
+        <!-- ================= TOP HEADER ================= -->
 
-        <section class="premium-hero">
-
-            <div class="premium-hero-overlay"></div>
+        <div class="student-admin-style-header">
 
             <header class="premium-topbar">
 
@@ -113,22 +111,23 @@
 
             </header>
 
+        </div>
+
+        <!-- ================= WELCOME BANNER ================= -->
+
+        <section class="premium-hero">
+
+            <div class="premium-hero-overlay"></div>
+
             <div class="premium-hero-content">
 
                 <div class="premium-hero-copy">
 
-                    <span class="hero-small-label">
-                        Welcome Back!
-                    </span>
-
-                    <h1>
-                        <span id="welcomeName">
-                            Student
-                        </span>
-                        <span class="hero-wave">
-                            &#128075;
-                        </span>
-                    </h1>
+<h1 class="admin-style-welcome">
+    <span class="welcome-white">Welcome Back, </span>
+    <span id="welcomeName" class="welcome-blue">Student</span>
+    <span class="hero-wave">&#128075;</span>
+</h1>
 
                     <p>
                         Stay consistent. Every application brings you
@@ -153,17 +152,61 @@
 
                 </div>
 
-                <div class="hero-message">
+<div class="student-live-clock">
 
-                    <span>Learn.</span>
-                    <span>Apply.</span>
-                    <span>Grow.</span>
+    <div class="student-clock-row">
+        <span class="student-clock-icon">
+            <svg width="25" height="25" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="16" rx="2"/>
+                <path d="M16 3v4M8 3v4M3 10h18"/>
+            </svg>
+        </span>
 
-                    <strong>
-                        Get Placed.
-                    </strong>
+        <span id="studentHeroDate">Loading date...</span>
+    </div>
 
-                </div>
+    <div class="student-clock-row">
+        <span class="student-clock-icon">
+            <svg width="25" height="25" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+            </svg>
+        </span>
+
+        <span id="studentHeroTime">Loading time...</span>
+    </div>
+
+</div>
+
+<script>
+(function () {
+    function updateStudentClock() {
+        const now = new Date();
+
+        document.getElementById("studentHeroDate").textContent =
+            now.toLocaleDateString("en-GB", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+        document.getElementById("studentHeroTime").textContent =
+            now.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true
+            }).toLowerCase();
+    }
+
+    updateStudentClock();
+    setInterval(updateStudentClock, 1000);
+})();
+</script>
 
             </div>
 
@@ -427,9 +470,22 @@
                             class="premium-access-card profile-access"
                         >
 
-                            <div class="access-icon">
-                                &#9679;
-                            </div>
+<div class="access-icon">
+    <svg
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <circle cx="12" cy="8" r="4"></circle>
+        <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+    </svg>
+</div>
 
                             <div>
 

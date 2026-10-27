@@ -161,12 +161,39 @@ a{
     z-index:3;
 
     display:flex;
-    justify-content:flex-end;
+    justify-content:space-between;
     align-items:center;
 
     gap:16px;
 
-    padding:14px 18px 0;
+    padding:14px 0 16px;
+
+    width:100%;
+
+    border-bottom:1px solid rgba(100,145,210,0.18);
+}
+
+/* Search bar - Admin dashboard style */
+.premium-topbar .premium-search-wrap{
+    width:48%;
+    max-width:725px;
+    height:60px;
+
+    margin-right:auto;
+
+    border-radius:16px;
+    background:#071e3d;
+
+    border:1px solid rgba(45,120,220,0.25);
+}
+
+/* Keep action buttons on right */
+.premium-topbar .premium-top-actions{
+    margin-left:auto;
+
+    display:flex;
+    align-items:center;
+    gap:14px;
 }
 
 .premium-search-wrap{
@@ -2027,13 +2054,105 @@ body {
     margin: 20px 0;
 }
 
+/* =========================================
+   STEP 160 - PREMIUM NEON STATISTICS CARDS
+   ========================================= */
+
 .premium-stat-card {
     min-height: 130px;
     padding: 22px;
     border-radius: 18px;
-    background: #081528 !important;
-    border: 1px solid rgba(47, 128, 255, .18);
-    box-shadow: none;
+
+    position: relative;
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+/* 1. ELIGIBLE COMPANIES - BLUE */
+.premium-stat-card.stat-blue {
+    background: linear-gradient(
+        135deg,
+        #103c91 0%,
+        #0b2454 55%,
+        #07162f 100%
+    ) !important;
+
+    border: 1px solid #287bff;
+
+    box-shadow:
+        0 0 22px rgba(37, 99, 235, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 2. APPLICATIONS SENT - GREEN */
+.premium-stat-card.stat-green {
+    background: linear-gradient(
+        135deg,
+        #075f68 0%,
+        #073c48 55%,
+        #071e31 100%
+    ) !important;
+
+    border: 1px solid #12bfae;
+
+    box-shadow:
+        0 0 22px rgba(18, 191, 174, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 3. INTERVIEWS SCHEDULED - ORANGE */
+.premium-stat-card.stat-orange {
+    background: linear-gradient(
+        135deg,
+        #754016 0%,
+        #422d28 55%,
+        #211b30 100%
+    ) !important;
+
+    border: 1px solid #f59e36;
+
+    box-shadow:
+        0 0 22px rgba(245, 158, 54, 0.20),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 4. APTITUDE TEST STATUS - PURPLE */
+.premium-stat-card.stat-purple {
+    background: linear-gradient(
+        135deg,
+        #5223a2 0%,
+        #302064 55%,
+        #161638 100%
+    ) !important;
+
+    border: 1px solid #9560ff;
+
+    box-shadow:
+        0 0 22px rgba(149, 96, 255, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* PREMIUM HOVER EFFECT */
+.premium-stat-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.28),
+        0 0 30px rgba(75, 120, 255, 0.24);
+}
+
+/* ICON LIGHTING */
+.premium-stat-card .premium-stat-icon {
+    background: rgba(255, 255, 255, 0.10);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 0 18px rgba(255, 255, 255, 0.08);
 }
 
 .premium-stat-card::before {
@@ -2054,11 +2173,81 @@ body {
 }
 
 /* Simple dashboard panels */
+/* =========================================
+   STEP 161 - PREMIUM DASHBOARD PANELS
+   ========================================= */
+
 .premium-panel {
-    background: #081528;
-    border: 1px solid rgba(47, 128, 255, .16);
+    position: relative;
+    overflow: hidden;
+
+    background: linear-gradient(
+        145deg,
+        #0c2352 0%,
+        #101d48 48%,
+        #1a164c 100%
+    );
+
+    border: 1px solid rgba(92, 126, 255, 0.55);
     border-radius: 18px;
-    box-shadow: none;
+
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.24),
+        0 0 24px rgba(57, 100, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* Upcoming Placement Drives */
+.premium-drives-panel {
+    background: linear-gradient(
+        135deg,
+        #0a2858 0%,
+        #101d47 60%,
+        #171947 100%
+    );
+
+    border-color: rgba(65, 145, 255, 0.55);
+
+    box-shadow:
+        0 0 28px rgba(37, 99, 235, 0.18),
+        0 12px 32px rgba(0, 0, 0, 0.20);
+}
+
+/* My Career Access */
+.quick-access-panel {
+    background: linear-gradient(
+        135deg,
+        #18184d 0%,
+        #1c174b 55%,
+        #291554 100%
+    );
+
+    border-color: rgba(157, 100, 255, 0.55);
+
+    box-shadow:
+        0 0 28px rgba(139, 92, 246, 0.18),
+        0 12px 32px rgba(0, 0, 0, 0.20);
+}
+
+/* Smooth hover lighting */
+.premium-drives-panel:hover {
+    border-color: rgba(96, 165, 250, 0.85);
+
+    box-shadow:
+        0 0 35px rgba(37, 99, 235, 0.24),
+        0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+.quick-access-panel:hover {
+    border-color: rgba(167, 139, 250, 0.85);
+
+    box-shadow:
+        0 0 35px rgba(139, 92, 246, 0.25),
+        0 12px 32px rgba(0, 0, 0, 0.22);
 }
 
 .premium-panel-head h2 {
@@ -2070,9 +2259,57 @@ body {
 }
 
 /* Clean layout */
+/* =========================================
+   STEP 164 - FINAL DASHBOARD GRID
+   ========================================= */
+
 .premium-dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.55fr)
+        minmax(320px, 1fr);
+
+    align-items: start;
+    gap: 20px;
+}
+
+/* Right side panels */
+.premium-right-column {
+    display: flex;
+    flex-direction: column;
     gap: 18px;
-    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 1fr);
+}
+
+/* Consistent panel spacing */
+.premium-drives-panel,
+.quick-access-panel,
+.student-profile-card {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Prevent drive content from stretching the page */
+.premium-drive-list {
+    min-width: 0;
+}
+
+/* Responsive layout */
+@media (max-width: 1250px) {
+    .premium-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .premium-right-column {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .premium-right-column {
+        grid-template-columns: 1fr;
+    }
 }
 
 .premium-right-column {
@@ -2111,12 +2348,91 @@ body {
 }
 /* ===== SIMPLE CAREER ACCESS CARDS ===== */
 
+/* =========================================
+   STEP 162 - CAREER ACCESS NEON CARDS
+   ========================================= */
+
 .premium-access-grid .premium-access-card {
-    background: #0d1d35 !important;
-    border: 1px solid #203a5c !important;
-    box-shadow: none !important;
-    border-radius: 12px !important;
-    transition: 0.2s ease;
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 16px !important;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+/* VIEW MY PROFILE - BLUE */
+.premium-access-grid .profile-access {
+    background: linear-gradient(
+        135deg,
+        #123c91 0%,
+        #172d70 55%,
+        #101c49 100%
+    ) !important;
+
+    border: 1px solid #4285ff !important;
+
+    box-shadow:
+        0 0 24px rgba(59, 130, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* VIEW RESUME - PURPLE */
+.premium-access-grid .resume-access {
+    background: linear-gradient(
+        135deg,
+        #5128a8 0%,
+        #392179 55%,
+        #21194e 100%
+    ) !important;
+
+    border: 1px solid #9b6aff !important;
+
+    box-shadow:
+        0 0 24px rgba(139, 92, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* NOTIFICATIONS - CYAN */
+.premium-access-grid .notification-access {
+    background: linear-gradient(
+        135deg,
+        #075c87 0%,
+        #103c70 55%,
+        #111f4b 100%
+    ) !important;
+
+    border: 1px solid #27c5ff !important;
+
+    box-shadow:
+        0 0 24px rgba(34, 211, 238, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* HOVER EFFECT */
+.premium-access-grid .premium-access-card:hover {
+    transform: translateY(-5px);
+
+    filter: brightness(1.12);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.25),
+        0 0 30px rgba(94, 120, 255, 0.32) !important;
+}
+
+/* ICON LIGHTING */
+.premium-access-grid .access-icon {
+    background: rgba(255, 255, 255, 0.12) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+
+    box-shadow:
+        0 0 20px rgba(96, 165, 250, 0.22) !important;
+
+    color: #ffffff !important;
 }
 
 .premium-access-grid .premium-access-card:hover {
@@ -2138,4 +2454,388 @@ body {
 
 .premium-access-grid .premium-access-card span {
     color: #a9bdd9;
+}
+/* =========================================
+   STEP 159 - PREMIUM STUDENT HERO
+   ========================================= */
+
+.premium-hero {
+    position: relative;
+    min-height: 200px;
+
+    border-radius: 18px;
+    overflow: hidden;
+
+    background: linear-gradient(
+        110deg,
+        #071e58 0%,
+        #092458 48%,
+        #20166c 78%,
+        #35138a 100%
+    ) !important;
+
+    border: 1px solid rgba(85, 123, 255, 0.45) !important;
+    border-left: 10px solid #1683ff !important;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.25),
+        0 0 28px rgba(47, 100, 255, 0.12);
+}
+
+/* Remove old overlay darkness */
+.premium-hero-overlay {
+    display: none !important;
+}
+
+/* Keep header and content above decorative layers */
+.premium-topbar,
+.premium-hero-content {
+    position: relative;
+    z-index: 3;
+}
+
+/* Welcome text and clock alignment */
+.premium-hero-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 30px;
+
+    padding: 28px 38px 35px !important;
+}
+
+.premium-hero-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.premium-hero-copy h1 {
+    font-size: clamp(26px, 2.6vw, 40px);
+    font-weight: 800;
+    color: #ffffff;
+}
+
+/* Date and time section */
+.student-live-clock {
+    flex: 0 0 auto;
+
+    min-width: 310px;
+    padding: 12px 0 12px 35px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+
+    border-left: 2px solid rgba(154, 182, 255, 0.45);
+}
+
+.student-clock-row {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+
+    color: #c5d7ff;
+    font-size: 17px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.student-clock-icon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #60a5fa;
+    flex-shrink: 0;
+}
+
+.student-clock-icon svg {
+    display: block;
+}
+
+/* Responsive layout */
+@media (max-width: 1100px) {
+    .premium-hero-content {
+        flex-wrap: wrap;
+    }
+
+    .student-live-clock {
+        min-width: 0;
+        width: 100%;
+        padding: 15px 0 0;
+
+        border-left: none;
+        border-top: 1px solid rgba(154, 182, 255, 0.35);
+    }
+}
+
+@media (max-width: 600px) {
+    .premium-hero-content {
+        padding: 20px !important;
+    }
+
+    .student-clock-row {
+        font-size: 14px;
+        gap: 12px;
+        white-space: normal;
+    }
+}
+/* =========================================
+   STEP 163 - HIDE BOTTOM DASHBOARD SECTIONS
+   ========================================= */
+
+/* Hide Latest Updates and bottom Resume Card */
+.dashboard-bottom-grid {
+    display: none !important;
+}
+
+/* Keep Upcoming Drives and Career Access visible */
+.premium-dashboard-grid {
+    margin-bottom: 0;
+}
+
+/* Maintain clean spacing */
+.placement-success-banner {
+    margin-top: 18px;
+}
+/* =========================================
+   STEP 171 - ADMIN MATCHING WELCOME BANNER
+   ========================================= */
+
+/* Exact Admin Banner Shape and Size */
+.premium-hero {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 182px !important;
+    max-height: none !important;
+
+    margin: 24px 0 20px !important;
+    padding: 0 !important;
+
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    align-items: center !important;
+
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 16px !important;
+    border: 1px solid rgba(66, 109, 255, 0.45) !important;
+    border-left: 9px solid #1683ff !important;
+
+    background:
+        radial-gradient(
+            circle at 85% 50%,
+            rgba(82, 35, 190, 0.30),
+            transparent 42%
+        ),
+        linear-gradient(
+            110deg,
+            #071a55 0%,
+            #062354 52%,
+            #24106b 100%
+        ) !important;
+
+    box-shadow: none !important;
+}
+
+/* Remove Student Banner Decorative Overlays */
+.premium-hero-overlay,
+.premium-hero::after {
+    display: none !important;
+}
+
+/* Exact Admin Welcome Content Layout */
+.premium-hero-content {
+    width: 100% !important;
+    min-height: 182px !important;
+    height: auto !important;
+
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) !important;
+    align-items: center !important;
+
+    gap: 20px !important;
+    padding: 34px 46px !important;
+}
+
+/* Welcome Text */
+.premium-hero-copy {
+    min-width: 0 !important;
+}
+
+.premium-hero-copy h1 {
+    margin: 0 !important;
+
+    color: #ffffff !important;
+    font-size: 38px !important;
+    line-height: 1.2 !important;
+
+    font-weight: 800 !important;
+    letter-spacing: -1px !important;
+}
+
+/* Description */
+.premium-hero-copy > p {
+    margin-top: 13px !important;
+
+    color: #b8c7e8 !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+}
+
+/* Date and Time */
+.student-live-clock {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 95px !important;
+
+    padding: 0 0 0 45px !important;
+
+    border-left: 2px solid rgba(126, 166, 255, 0.40) !important;
+    border-top: none !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+
+    gap: 15px !important;
+}
+
+/* Date and Time Rows */
+.student-clock-row {
+    display: flex !important;
+    align-items: center !important;
+
+    gap: 18px !important;
+
+    color: #b9c9ee !important;
+    font-size: 18px !important;
+    font-weight: 400 !important;
+
+    white-space: nowrap !important;
+}
+
+/* Calendar and Clock Icons */
+.student-clock-icon {
+    width: 32px !important;
+    height: 32px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    color: #5ba2ff !important;
+    flex-shrink: 0 !important;
+}
+
+/* Light Mode - Preserve Banner Colors */
+body.dark-mode .premium-hero {
+    background:
+        radial-gradient(
+            circle at 85% 50%,
+            rgba(82, 35, 190, 0.30),
+            transparent 42%
+        ),
+        linear-gradient(
+            110deg,
+            #071a55 0%,
+            #062354 52%,
+            #24106b 100%
+        ) !important;
+}
+
+body.dark-mode .premium-hero-copy h1 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .premium-hero-copy > p {
+    color: #b8c7e8 !important;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .premium-hero-content {
+        grid-template-columns: 1fr !important;
+        gap: 25px !important;
+        padding: 30px !important;
+    }
+
+    .student-live-clock {
+        padding: 20px 0 0 !important;
+        border-left: none !important;
+        border-top: 1px solid rgba(126, 166, 255, 0.40) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .premium-hero-content {
+        padding: 24px !important;
+    }
+
+    .premium-hero-copy h1 {
+        font-size: 27px !important;
+    }
+
+    .premium-hero-copy > p {
+        font-size: 13px !important;
+    }
+
+    .student-clock-row {
+        font-size: 14px !important;
+        white-space: normal !important;
+    }
+}
+/* =========================================
+   STEP 172 - ADMIN STYLE WELCOME HEADING
+   ========================================= */
+
+.premium-hero-copy h1.admin-style-welcome {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+
+    font-size: 42px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -1px !important;
+    margin: 0 !important;
+}
+
+/* Welcome Back text */
+.admin-style-welcome .welcome-white {
+    color: #ffffff !important;
+}
+
+/* Dynamic student name */
+.admin-style-welcome .welcome-blue {
+    color: #1683ff !important;
+}
+
+/* Waving hand */
+.admin-style-welcome .hero-wave {
+    font-size: 36px !important;
+    display: inline-block !important;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .premium-hero-copy h1.admin-style-welcome {
+        font-size: 32px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .premium-hero-copy h1.admin-style-welcome {
+        font-size: 25px !important;
+    }
+
+    .admin-style-welcome .hero-wave {
+        font-size: 25px !important;
+    }
 }

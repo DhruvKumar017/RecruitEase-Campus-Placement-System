@@ -145,21 +145,7 @@
         return `
             <aside class="student-unified-sidebar">
 
-                <div class="student-unified-brand">
-
-                    <div class="student-unified-brand-icon">
-                        ◆
-                    </div>
-
-                    <div>
-                        <h2>
-                            Recruit<span>Ease</span>
-                        </h2>
-
-                        <p>Student Placement Portal</p>
-                    </div>
-
-                </div>
+<!-- Student Sidebar Branding Removed -->
 
                 <div class="student-unified-user">
 
