@@ -2679,12 +2679,13 @@ body {
     letter-spacing: -1px !important;
 }
 
-/* Description */
+/* Description - Exact Admin Dashboard Size */
 .premium-hero-copy > p {
-    margin-top: 13px !important;
+    margin: 14px 0 0 !important;
 
-    color: #b8c7e8 !important;
-    font-size: 16px !important;
+    color: #b8c9e4 !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
     font-weight: 400 !important;
 }
 
@@ -2800,9 +2801,9 @@ body.dark-mode .premium-hero-copy > p {
     flex-wrap: wrap !important;
     gap: 8px !important;
 
-    font-size: 42px !important;
+    font-size: 36px !important;
     font-weight: 800 !important;
-    line-height: 1.2 !important;
+    line-height: 1.15 !important;
     letter-spacing: -1px !important;
     margin: 0 !important;
 }
@@ -2838,4 +2839,224 @@ body.dark-mode .premium-hero-copy > p {
     .admin-style-welcome .hero-wave {
         font-size: 25px !important;
     }
+}
+/* =========================================
+   STUDENT STATS - ADMIN DASHBOARD COLORS
+========================================= */
+
+.premium-stats-grid .premium-stat-card {
+    background: #06162e !important;
+    box-shadow: none !important;
+}
+
+/* Eligible Companies - Purple */
+.premium-stats-grid .stat-blue {
+    border: 1px solid #6438d8 !important;
+}
+
+/* Applications Sent - Teal */
+.premium-stats-grid .stat-green {
+    border: 1px solid #007f78 !important;
+}
+
+/* Interviews Scheduled - Amber */
+.premium-stats-grid .stat-orange {
+    border: 1px solid #946000 !important;
+}
+
+/* Aptitude Test Status - Blue */
+.premium-stats-grid .stat-purple {
+    border: 1px solid #1763d8 !important;
+}
+/* ==========================================
+   STUDENT DASHBOARD - ADMIN STYLE ICON COLORS
+========================================== */
+
+/* Common Icon Styling */
+.premium-stats-grid .premium-stat-icon {
+    width: 78px !important;
+    height: 78px !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 1. Eligible Companies - Purple */
+.premium-stats-grid .stat-blue .premium-stat-icon {
+    background: linear-gradient(135deg, #4338ca, #7c00ff) !important;
+}
+
+/* 2. Applications Sent - Green */
+.premium-stats-grid .stat-green .premium-stat-icon {
+    background: linear-gradient(135deg, #00875a, #00b879) !important;
+}
+
+/* 3. Interviews Scheduled - Orange */
+.premium-stats-grid .stat-orange .premium-stat-icon {
+    background: linear-gradient(135deg, #c46a00, #ff9800) !important;
+}
+
+/* 4. Aptitude Test Status - Blue */
+.premium-stats-grid .stat-purple .premium-stat-icon {
+    background: linear-gradient(135deg, #0756d8, #087cff) !important;
+}
+
+/* SVG Icon Styling */
+.premium-stats-grid .premium-stat-icon svg {
+    width: 34px !important;
+    height: 34px !important;
+    stroke: #ffffff !important;
+}
+/* =========================================
+   STEP 200 - ADMIN STYLE WELCOME CARD SIZE
+========================================= */
+
+.premium-hero {
+    min-height: 180px !important;
+    height: auto !important;
+    border-radius: 16px !important;
+}
+
+.premium-hero-content {
+    width: 100% !important;
+    min-height: 180px !important;
+    padding: 34px 46px !important;
+
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    column-gap: 40px !important;
+}
+
+.premium-hero-copy {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+.premium-hero-copy h1.admin-style-welcome {
+    width: 100% !important;
+}
+
+.premium-hero-copy > p {
+    width: 100% !important;
+    max-width: none !important;
+}
+/* ==========================================
+   STEP 206 - ADMIN EXACT SIZE STAT CARDS
+   ========================================== */
+
+/* Four Cards Layout */
+.premium-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    margin: 20px 0 !important;
+}
+
+/* Card Size */
+.premium-stats-grid .premium-stat-card {
+    height: 132px !important;
+    min-height: 132px !important;
+    padding: 20px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    gap: 18px !important;
+
+    border-radius: 15px !important;
+    box-sizing: border-box !important;
+}
+
+/* Logo Box */
+.premium-stats-grid .premium-stat-icon {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+    flex: 0 0 64px !important;
+
+    border-radius: 13px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 !important;
+}
+
+/* SVG Logo */
+.premium-stats-grid .premium-stat-icon svg {
+    width: 29px !important;
+    height: 29px !important;
+}
+
+/* Text Container */
+.premium-stats-grid .premium-stat-content {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+/* Card Heading */
+.premium-stats-grid .premium-stat-title {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.35 !important;
+}
+
+/* Number */
+.premium-stats-grid .premium-stat-content h2 {
+    font-size: 30px !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+    margin: 3px 0 !important;
+}
+
+/* Description */
+.premium-stats-grid .premium-stat-content p {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    margin-top: 3px !important;
+}
+
+/* Arrow */
+.premium-stats-grid .premium-stat-arrow {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    flex: 0 0 38px !important;
+
+    border-radius: 50% !important;
+    font-size: 18px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin-left: auto !important;
+}
+
+/* Responsive */
+@media (max-width: 1250px) {
+    .premium-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 650px) {
+    .premium-stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+/* ========================================
+   HIDE STUDENT PROFILE & PLACEMENT JOURNEY
+======================================== */
+
+.student-profile-card,
+.placement-success-banner {
+    display: none !important;
 }

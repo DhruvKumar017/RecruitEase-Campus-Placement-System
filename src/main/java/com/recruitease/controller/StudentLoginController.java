@@ -6,6 +6,7 @@ import java.util.Map;
 import com.recruitease.security.JwtService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,29 +32,63 @@ public class StudentLoginController {
     private final PasswordResetOtpRepository passwordResetOtpRepository;
     private final EmailService emailService;
     private final JwtService jwtService;
+private final PasswordEncoder passwordEncoder;
 
     public StudentLoginController(
             StudentLoginRepository studentLoginRepository,
             StudentRepository studentRepository,
 PasswordResetOtpRepository passwordResetOtpRepository,
 EmailService emailService,
-JwtService jwtService
+JwtService jwtService,
+PasswordEncoder passwordEncoder
     ) {
         this.studentLoginRepository = studentLoginRepository;
         this.studentRepository = studentRepository;
         this.passwordResetOtpRepository = passwordResetOtpRepository;
         this.emailService = emailService;
 this.jwtService = jwtService;
+this.passwordEncoder = passwordEncoder;
     }
 
 @PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody StudentLogin loginRequest) {
 
-    StudentLogin studentLogin =
-            studentLoginRepository.findByUsernameAndPassword(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword()
+StudentLogin studentLogin =
+        studentLoginRepository.findByUsernameIgnoreCase(
+                loginRequest.getUsername()
+        );
+
+if (studentLogin != null) {
+
+    String storedPassword = studentLogin.getPassword();
+    String enteredPassword = loginRequest.getPassword();
+
+    boolean validPassword = false;
+
+    if (storedPassword != null && enteredPassword != null) {
+
+        if (storedPassword.matches("^\\$2[aby]\\$\\d{2}\\$.*")) {
+            // Password already hashed using BCrypt
+            validPassword = passwordEncoder.matches(
+                    enteredPassword, storedPassword
             );
+        } else {
+            // Legacy plain-text password
+            validPassword = storedPassword.equals(enteredPassword);
+
+            if (validPassword) {
+                studentLogin.setPassword(
+                        passwordEncoder.encode(enteredPassword)
+                );
+                studentLoginRepository.save(studentLogin);
+            }
+        }
+    }
+
+    if (!validPassword) {
+        studentLogin = null;
+    }
+}
 
     if (studentLogin == null) {
         return ResponseEntity.status(401)
@@ -79,18 +114,29 @@ public ResponseEntity<?> login(@RequestBody StudentLogin loginRequest) {
     ));
 }
 
-    @PostMapping("/create")
-    public StudentLogin createLogin(@RequestBody StudentLogin studentLogin) {
-        return studentLoginRepository.save(studentLogin);
+@PostMapping("/create")
+public ResponseEntity<?> createLogin(@RequestBody StudentLogin studentLogin) {
+    return ResponseEntity.status(403).body(
+            Map.of("message", "Direct login creation is disabled.")
+    );
+}
+
+@GetMapping("/by-student/{studentId}")
+public ResponseEntity<?> getLoginByStudentId(
+        @PathVariable Long studentId
+) {
+    StudentLogin login =
+            studentLoginRepository.findByStudentId(studentId);
+
+    if (login == null) {
+        return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/by-student/{studentId}")
-    public StudentLogin getLoginByStudentId(
-            @PathVariable Long studentId
-    ) {
-        return studentLoginRepository.findByStudentId(studentId);
-    }
-
+    return ResponseEntity.ok(Map.of(
+            "studentId", login.getStudentId(),
+            "username", login.getUsername()
+    ));
+}
     /* ================= UPDATE USERNAME ================= */
 
     @PutMapping("/{studentId}/update-username")
@@ -178,11 +224,18 @@ public ResponseEntity<?> login(@RequestBody StudentLogin loginRequest) {
             );
         }
 
-        if (!login.getPassword().equals(oldPassword)) {
-            return ResponseEntity.badRequest().body(
-                    Map.of("message", "Current password is incorrect.")
-            );
-        }
+String storedPassword = login.getPassword();
+
+boolean passwordMatches = storedPassword != null &&
+        (storedPassword.matches("^\\$2[aby]\\$\\d{2}\\$.*")
+                ? passwordEncoder.matches(oldPassword, storedPassword)
+                : storedPassword.equals(oldPassword));
+
+if (!passwordMatches) {
+    return ResponseEntity.badRequest().body(
+            Map.of("message", "Current password is incorrect.")
+    );
+}
 
         if (newPassword.length() < 6) {
             return ResponseEntity.badRequest().body(
@@ -193,7 +246,7 @@ public ResponseEntity<?> login(@RequestBody StudentLogin loginRequest) {
             );
         }
 
-        login.setPassword(newPassword);
+       login.setPassword(passwordEncoder.encode(newPassword));
 
         return ResponseEntity.ok(
                 studentLoginRepository.save(login)
@@ -400,8 +453,10 @@ public ResponseEntity<?> login(@RequestBody StudentLogin loginRequest) {
             );
         }
 
-        studentLogin.setPassword(newPassword.trim());
-        studentLoginRepository.save(studentLogin);
+studentLogin.setPassword(
+        passwordEncoder.encode(newPassword.trim())
+);
+studentLoginRepository.save(studentLogin);
 
         passwordResetOtp.setVerified(true);
         passwordResetOtpRepository.save(passwordResetOtp);

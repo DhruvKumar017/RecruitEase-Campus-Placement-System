@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,18 +44,21 @@ public class StudentController {
     private final StudentRepository studentRepository;
     private final CompanyRepository companyRepository;
     private final StudentLoginRepository studentLoginRepository;
+private final PasswordEncoder passwordEncoder;
     private final StudentDeletionHistoryRepository studentDeletionHistoryRepository;
 
    public StudentController(
         StudentRepository studentRepository,
         CompanyRepository companyRepository,
-        StudentLoginRepository studentLoginRepository,
-        StudentDeletionHistoryRepository studentDeletionHistoryRepository
+StudentLoginRepository studentLoginRepository,
+StudentDeletionHistoryRepository studentDeletionHistoryRepository,
+PasswordEncoder passwordEncoder
 ) {
     this.studentRepository = studentRepository;
     this.companyRepository = companyRepository;
     this.studentLoginRepository = studentLoginRepository;
     this.studentDeletionHistoryRepository = studentDeletionHistoryRepository;
+this.passwordEncoder = passwordEncoder;
 }
 private void saveDeletionHistory(Student student, String action) {
 
@@ -97,11 +101,17 @@ private void saveDeletionHistory(Student student, String action) {
         StudentLogin login = new StudentLogin();
         login.setStudentId(savedStudent.getId());
         login.setUsername(student.getUsername());
-        login.setPassword(student.getPassword());
+        login.setPassword(passwordEncoder.encode(student.getPassword()));
 
         studentLoginRepository.save(login);
 
-        return ResponseEntity.ok(login);
+        return ResponseEntity.ok(
+    Map.of(
+        "message", "Student registered successfully",
+        "studentId", savedStudent.getId(),
+        "username", login.getUsername()
+    )
+);
     }
 
     /* ================= GET ACTIVE STUDENTS ================= */
@@ -434,7 +444,30 @@ public Student uploadResume(
     String safeFileName =
             originalFileName.replaceAll("[^a-zA-Z0-9._-]", "_");
 
-    Cloudinary cloudinary = new Cloudinary();
+String cloudName = System.getenv("CLOUDINARY_CLOUD_NAME");
+String apiKey = System.getenv("CLOUDINARY_API_KEY");
+String apiSecret = System.getenv("CLOUDINARY_API_SECRET");
+
+if (cloudName != null) cloudName = cloudName.trim();
+if (apiKey != null) apiKey = apiKey.trim();
+if (apiSecret != null) apiSecret = apiSecret.trim();
+
+if (cloudName == null || cloudName.isBlank()
+        || apiKey == null || apiKey.isBlank()
+        || apiSecret == null || apiSecret.isBlank()) {
+    throw new IllegalStateException(
+        "Cloudinary environment variables are missing"
+    );
+}
+
+Cloudinary cloudinary = new Cloudinary(
+    ObjectUtils.asMap(
+        "cloud_name", cloudName,
+        "api_key", apiKey,
+        "api_secret", apiSecret,
+        "secure", true
+    )
+);
 
     String publicId =
             "recruitease/resumes/student_"
@@ -522,7 +555,30 @@ public Student uploadStudentPhoto(
         throw new IOException("Please select a valid image");
     }
 
-    Cloudinary cloudinary = new Cloudinary();
+String cloudName = System.getenv("CLOUDINARY_CLOUD_NAME");
+String apiKey = System.getenv("CLOUDINARY_API_KEY");
+String apiSecret = System.getenv("CLOUDINARY_API_SECRET");
+
+if (cloudName != null) cloudName = cloudName.trim();
+if (apiKey != null) apiKey = apiKey.trim();
+if (apiSecret != null) apiSecret = apiSecret.trim();
+
+if (cloudName == null || cloudName.isBlank()
+        || apiKey == null || apiKey.isBlank()
+        || apiSecret == null || apiSecret.isBlank()) {
+    throw new IllegalStateException(
+        "Cloudinary environment variables are missing"
+    );
+}
+
+Cloudinary cloudinary = new Cloudinary(
+    ObjectUtils.asMap(
+        "cloud_name", cloudName,
+        "api_key", apiKey,
+        "api_secret", apiSecret,
+        "secure", true
+    )
+);
     String publicId = "recruitease/student-photos/student_" + id + "_" + UUID.randomUUID();
 
     Map<?, ?> result = cloudinary.uploader().upload(

@@ -723,10 +723,21 @@ document.getElementById("photoInput").addEventListener("change", async function(
     formData.append("file", file);
 
     try {
+        const studentToken = sessionStorage.getItem("studentToken");
+
+        if (!studentToken) {
+            alert("Session expired. Please login again.");
+            window.location.href = "student-login.html";
+            return;
+        }
+
         const response = await fetch(
             "/api/students/" + studentId + "/upload-photo",
             {
                 method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + studentToken
+                },
                 body: formData
             }
         );
@@ -773,16 +784,45 @@ document.getElementById("resumeInput").addEventListener("change", async function
     formData.append("file", file);
 
     try {
+        const studentToken = sessionStorage.getItem("studentToken");
+
+        if (!studentToken) {
+            alert("Session expired. Please login again.");
+            window.location.href = "student-login.html";
+            return;
+        }
+
         const response = await fetch(
             "/api/students/" + studentId + "/upload-resume",
             {
                 method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + studentToken
+                },
                 body: formData
             }
         );
 
         if (!response.ok) {
-            throw new Error("Resume upload failed.");
+            const errorText = await response.text();
+
+            let serverMessage = errorText;
+
+            try {
+                const errorData = JSON.parse(errorText);
+
+                serverMessage =
+                    errorData.message ||
+                    errorData.error ||
+                    errorText;
+            } catch (e) {
+                // Server ne plain text response diya hai
+            }
+
+            throw new Error(
+                "HTTP Status: " + response.status +
+                "\nServer Error: " + String(serverMessage).slice(0, 500)
+            );
         }
 
         alert("Resume uploaded successfully.");
@@ -790,8 +830,10 @@ document.getElementById("resumeInput").addEventListener("change", async function
         loadStudent();
 
     } catch (error) {
-        console.error(error);
-        alert("Resume upload nahi hua.");
+        alert(
+            "Resume Upload Failed!\n\n" +
+            (error.message || "Unknown error")
+        );
     }
 });
 

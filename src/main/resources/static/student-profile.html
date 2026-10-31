@@ -626,7 +626,13 @@ function applyAdminViewUi() {
 
 async function loadProfile() {
     try {
-        const response = await fetch("/api/students/" + studentId);
+        const studentToken = sessionStorage.getItem("studentToken");
+
+const response = await fetch("/api/students/" + studentId, {
+    headers: {
+        "Authorization": "Bearer " + studentToken
+    }
+});
 
         if (!response.ok) {
             throw new Error("Student profile load failed.");

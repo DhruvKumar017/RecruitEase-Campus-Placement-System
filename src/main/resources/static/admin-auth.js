@@ -38,12 +38,12 @@
             (input instanceof Request ? input.headers : undefined)
         );
 
-        if (token) {
-            headers.set(
-                "Authorization",
-                "Bearer " + token
-            );
-        }
+if (token && !headers.has("Authorization")) {
+    headers.set(
+        "Authorization",
+        "Bearer " + token
+    );
+}
 
         return originalFetch(input, {
             ...init,
