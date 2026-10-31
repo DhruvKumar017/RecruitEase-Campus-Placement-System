@@ -149,4 +149,35 @@ public class AdminRequestController {
                 adminRequestRepository.save(request)
         );
     }
+
+    /* Main Admin revokes an approved admin's access */
+
+    @PutMapping("/api/admin-requests/{id}/revoke")
+    public ResponseEntity<?> revokeAdminAccess(
+            @PathVariable Long id
+    ) {
+        AdminRequest request = adminRequestRepository
+                .findById(id)
+                .orElse(null);
+
+        if (request == null) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Admin request not found.");
+        }
+
+        if (!"Approved".equalsIgnoreCase(request.getStatus())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Only approved admin access can be revoked.");
+        }
+
+        request.setStatus("Revoked");
+
+        adminRequestRepository.save(request);
+
+        return ResponseEntity.ok(
+                "Admin access revoked successfully."
+        );
+    }
 }

@@ -615,13 +615,81 @@ const sortedRequests = [...filteredRequests].sort((a, b) => {
                                         </button>
                                     </div>
                                 `
-                                : `<span class="disabled-text">Action completed</span>`
+                                : lowerStatus === "approved"
+    ? `
+        <div class="action-buttons">
+            <button
+                class="reject-btn"
+                onclick="cancelAdminAccess(${request.id})"
+            >
+                ✕ Cancel Access
+            </button>
+        </div>
+    `
+    : `<span class="disabled-text">Action completed</span>`
                         }
                     </td>
                 </tr>
             `;
         }).join("");
     }
+    async function cancelAdminAccess(requestId) {
+
+    const adminRole = String(
+        localStorage.getItem("adminRole") || ""
+    ).toUpperCase();
+
+    if (adminRole !== "MAIN_ADMIN") {
+        alert("Only Main Admin can cancel admin access.");
+        return;
+    }
+
+    const confirmed = confirm(
+        "Are you sure you want to cancel this admin's access?\n\n" +
+        "This admin will no longer be able to login or access the portal."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+        alert("Admin session expired. Please login again.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "/api/admin-requests/" + requestId + "/revoke",
+            {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(
+                errorMessage || "Failed to cancel admin access."
+            );
+        }
+
+        alert("Admin access cancelled successfully.");
+
+        await loadAdminRequests();
+
+    } catch (error) {
+
+        console.error("Cancel Access Error:", error);
+
+        alert("Cancel Access failed: " + error.message);
+    }
+}
 
     async function updateRequestStatus(requestId, action) {
         const actionText = action === "approve" ? "approve" : "reject";

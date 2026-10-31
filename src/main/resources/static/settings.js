@@ -729,18 +729,102 @@ const requestOptions = {
             return;
         }
 
-        table.innerHTML = users.map(function (user, index) {
-            return `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${escapeHtml(user.name || "Admin")}</td>
-                    <td>${escapeHtml(user.email || "-")}</td>
-                    <td>${escapeHtml(user.role || "Admin")}</td>
-                    <td>${escapeHtml(user.status || "Active")}</td>
-                </tr>
-            `;
-        }).join("");
+table.innerHTML = users.map(function (user, index) {
+
+    const isMainAccount =
+        String(user.role || "").toLowerCase() === "main admin";
+
+    const canCancel =
+        isMainAdmin() &&
+        !isMainAccount &&
+        Number(user.id) > 0;
+
+    return `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(user.name || "Admin")}</td>
+            <td>${escapeHtml(user.email || "-")}</td>
+            <td>${escapeHtml(user.role || "Admin")}</td>
+            <td>${escapeHtml(user.status || "Active")}</td>
+
+            <td>
+                ${
+                    canCancel
+                    ? `
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            data-revoke-id="${Number(user.id)}"
+                            style="background:#dc3545;color:white;"
+                        >
+                            ✕ Cancel Access
+                        </button>
+                    `
+                    : `<span style="color:#9ca3af;">Protected</span>`
+                }
+            </td>
+        </tr>
+    `;
+}).join("");
     }
+
+    /* ================= CANCEL ADMIN ACCESS ================= */
+
+    async function cancelAdminAccess(adminId) {
+
+        if (!requireMainAdmin()) {
+            return;
+        }
+
+        const confirmed = confirm(
+            "Are you sure you want to cancel this admin's access?\n\n" +
+            "This admin will no longer be able to login or access the portal."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            await apiRequest(
+                "/api/admin-requests/" + adminId + "/revoke",
+                {
+                    method: "PUT"
+                }
+            );
+
+            alert("✅ Admin access cancelled successfully.");
+
+            await loadPortalUsers();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "❌ Cancel Access failed: " + error.message
+            );
+        }
+    }
+
+        document.addEventListener("click", function (event) {
+
+        const button = event.target.closest("[data-revoke-id]");
+
+        if (!button) {
+            return;
+        }
+
+        const adminId = Number(button.dataset.revokeId);
+
+        if (!Number.isSafeInteger(adminId) || adminId <= 0) {
+            alert("Invalid admin ID.");
+            return;
+        }
+
+        cancelAdminAccess(adminId);
+    });
 
     async function addNewAdmin() {
         if (!requireMainAdmin()) {

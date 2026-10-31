@@ -105,6 +105,13 @@ if (!enforceJwt) {
 )
 .denyAll()
 
+// Only Main Admin can cancel approved admin access.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/admin-requests/*/revoke"
+)
+.hasRole("MAIN_ADMIN")
+
 // Prevent unauthenticated login-record creation.
 .requestMatchers(
     HttpMethod.POST,
@@ -338,6 +345,13 @@ if (!enforceJwt) {
 
 .requestMatchers("/api/admin-viewer/**")
 .denyAll()
+
+// Only Main Admin can revoke approved admin access.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/admin-requests/*/revoke"
+)
+.hasRole("MAIN_ADMIN")
 
 .requestMatchers("/api/**")
 .authenticated()
