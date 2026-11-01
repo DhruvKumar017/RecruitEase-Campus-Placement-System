@@ -683,3 +683,77 @@ tbody tr:hover {
         display: none;
     }
 }
+/* ==========================================
+   ELIGIBILITY - LIGHT MODE CONTRAST FIX
+   ========================================== */
+
+/* Checker and summary cards */
+body.recruitease-light-mode .checker-card,
+body.recruitease-light-mode .student-summary-card {
+    background: #ffffff !important;
+    border: 1px solid #c9dcf5 !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.06) !important;
+}
+
+/* Card headings */
+body.recruitease-light-mode .checker-card h3,
+body.recruitease-light-mode .student-summary-card h4 {
+    color: #0f172a !important;
+}
+
+/* Card descriptions */
+body.recruitease-light-mode .checker-card p,
+body.recruitease-light-mode .student-summary-card p {
+    color: #475569 !important;
+}
+
+/* Student ID input */
+body.recruitease-light-mode .checker-form input {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #bfdbfe !important;
+}
+
+body.recruitease-light-mode .checker-form input::placeholder {
+    color: #64748b !important;
+}
+
+/* Student names */
+body.recruitease-light-mode .company-name {
+    color: #0f172a !important;
+}
+
+/* Student ID and secondary text */
+body.recruitease-light-mode .company-cell small {
+    color: #64748b !important;
+}
+
+/* CGPA badges */
+body.recruitease-light-mode .cgpa-badge {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    border-color: #86efac !important;
+}
+
+/* Eligible company count */
+body.recruitease-light-mode .company-count-link {
+    color: #15803d !important;
+}
+
+/* Summary status */
+body.recruitease-light-mode .summary-data span {
+    color: #2563eb !important;
+}
+/* ELIGIBILITY - LIGHT MODE TAGS FIX */
+
+body.recruitease-light-mode .skill-tag {
+    background: #e8f1ff !important;
+    color: #1e40af !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+body.recruitease-light-mode .company-tag {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe !important;
+}

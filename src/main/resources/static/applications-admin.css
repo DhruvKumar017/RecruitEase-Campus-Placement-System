@@ -741,3 +741,64 @@ body{
     border-color:#60a5fa;
     transform:translateY(-1px);
 }
+
+/* ===== APPLICATIONS LIGHT MODE TEXT FIX ===== */
+
+body.recruitease-light-mode .application-table td {
+    color: #263b58;
+    border-bottom-color: #dce6f4;
+}
+
+body.recruitease-light-mode .application-table .primary-text,
+body.recruitease-light-mode .application-table .student-cell .primary-text,
+body.recruitease-light-mode .application-table .company-cell .primary-text {
+    color: #101f38;
+    font-weight: 700;
+}
+
+body.recruitease-light-mode .application-table .secondary-text {
+    color: #526987;
+}
+
+body.recruitease-light-mode .application-table .stage,
+body.recruitease-light-mode .application-table .stage b {
+    color: #172b47;
+}
+
+body.recruitease-light-mode .application-table .stage small {
+    color: #526987;
+}
+
+body.recruitease-light-mode .application-table .status-review {
+    background: #fff0d9;
+    color: #a65a00;
+}
+
+body.recruitease-light-mode .application-table .status-applied {
+    background: #e3efff;
+    color: #1859bc;
+}
+
+body.recruitease-light-mode .application-table .status-selected,
+body.recruitease-light-mode .application-table .status-placed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+body.recruitease-light-mode .application-table .status-rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+body.recruitease-light-mode .application-table .company-logo {
+    background: #f0f5ff;
+    color: #142b4d;
+}
+
+body.recruitease-light-mode .application-table tbody tr:hover {
+    background: #edf4ff;
+}
+
+body.recruitease-light-mode .table-footer {
+    color: #526987;
+}

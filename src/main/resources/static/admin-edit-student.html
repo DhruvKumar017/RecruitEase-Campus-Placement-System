@@ -33,13 +33,32 @@
 .student-settings-grid > .profile-management-box {
     grid-column: 2 !important;
     background: #071428 !important;
-color: #ffffff !important;
+    color: #ffffff !important;
     border: 1px solid var(--border-color, #e5e7eb);
     border-radius: 16px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 18px;
+}
+
+/* Light Mode - Profile Management */
+body.student-light-theme
+.student-settings-grid > .profile-management-box {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #cfe0ff !important;
+}
+
+/* Light Mode - Profile Management Heading */
+body.student-light-theme
+.profile-management-box > .card-heading h2 {
+    color: #0f172a !important;
+}
+
+body.student-light-theme
+.profile-management-box > .card-heading p {
+    color: #64748b !important;
 }
 
 /* Photo, Resume and Password sections */

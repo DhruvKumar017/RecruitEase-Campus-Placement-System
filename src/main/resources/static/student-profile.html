@@ -1059,11 +1059,15 @@ function toggleTheme() {
 
 function loadTheme() {
 
-    // Admin view must remain independent
-    if (isAdminView) return;
-
-    const savedTheme =
-        localStorage.getItem(profileThemeKey) || "dark";
+    const savedTheme = isAdminView
+        ? (
+            localStorage.getItem("recruiteaseAdminTheme") ||
+            localStorage.getItem("adminTheme") ||
+            "dark"
+          )
+        : (
+            localStorage.getItem(profileThemeKey) || "dark"
+          );
 
     const isLight = savedTheme === "light";
 
@@ -1074,9 +1078,13 @@ function loadTheme() {
 
     document.body.classList.toggle("light", isLight);
     document.body.classList.toggle("light-mode", isLight);
+    document.body.classList.toggle("recruitease-light-mode", isLight);
 
-    document.getElementById("themeButton").innerText =
-        isLight ? "☀️" : "🌙";
+    const themeButton = document.getElementById("themeButton");
+
+    if (themeButton) {
+        themeButton.innerText = isLight ? "☀️" : "🌙";
+    }
 }
 
 function searchProfile() {

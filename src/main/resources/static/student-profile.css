@@ -1731,3 +1731,101 @@ body.student-light-profile:not(.admin-student-view) .skill-chip {
 body.student-light-profile:not(.admin-student-view) .contact-row a {
     color: #1d4ed8 !important;
 }
+
+/* ===== ADMIN STUDENT VIEW - LIGHT MODE FIX ===== */
+
+body.student-light-profile.admin-student-view {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --input: #f8fafc;
+    --line: #dbe3ef;
+    --text: #0f172a;
+    --muted: #64748b;
+    background: #f4f7fb;
+    color: #0f172a;
+}
+
+body.student-light-profile.admin-student-view .profile-main {
+    background: #f4f7fb;
+    color: #0f172a;
+}
+
+body.student-light-profile.admin-student-view .card,
+body.student-light-profile.admin-student-view .profile-summary-card {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #dbe3ef;
+}
+
+body.student-light-profile.admin-student-view .profile-summary-card:hover {
+    background: #f8fafc;
+}
+
+body.student-light-profile.admin-student-view .page-heading h1,
+body.student-light-profile.admin-student-view .profile-summary-card h2,
+body.student-light-profile.admin-student-view .profile-summary-card p,
+body.student-light-profile.admin-student-view .profile-hero-content h2,
+body.student-light-profile.admin-student-view .profile-hero-content p b,
+body.student-light-profile.admin-student-view .card-heading h3,
+body.student-light-profile.admin-student-view .academic-skills-heading h4,
+body.student-light-profile.admin-student-view .overview-row b,
+body.student-light-profile.admin-student-view .info-row b,
+body.student-light-profile.admin-student-view .contact-row b {
+    color: #0f172a;
+}
+
+body.student-light-profile.admin-student-view .page-heading p,
+body.student-light-profile.admin-student-view .profile-summary-card small,
+body.student-light-profile.admin-student-view .profile-hero-content p,
+body.student-light-profile.admin-student-view .profile-hero-content p span,
+body.student-light-profile.admin-student-view .card-heading p,
+body.student-light-profile.admin-student-view .academic-skills-heading p,
+body.student-light-profile.admin-student-view .overview-row span,
+body.student-light-profile.admin-student-view .info-row span,
+body.student-light-profile.admin-student-view .contact-row span,
+body.student-light-profile.admin-student-view .about-text,
+body.student-light-profile.admin-student-view .empty-note {
+    color: #475569;
+}
+
+body.student-light-profile.admin-student-view .contact-row a {
+    color: #2563eb;
+}
+
+body.student-light-profile.admin-student-view .skill-chip {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+
+body.student-light-profile.admin-student-view .student-status {
+    background: #dcfce7;
+    color: #166534;
+}
+
+body.student-light-profile.admin-student-view .overview-row,
+body.student-light-profile.admin-student-view .info-row,
+body.student-light-profile.admin-student-view .contact-row {
+    border-bottom-color: #e2e8f0;
+}
+
+body.student-light-profile.admin-student-view .secondary-btn {
+    background: #ffffff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+}
+
+body.student-light-profile.admin-student-view .profile-topbar {
+    background: #ffffff;
+    border-color: #dbe3ef;
+}
+
+body.student-light-profile.admin-student-view .profile-search,
+body.student-light-profile.admin-student-view .icon-button {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+body.student-light-profile.admin-student-view .top-profile b {
+    color: #0f172a;
+}

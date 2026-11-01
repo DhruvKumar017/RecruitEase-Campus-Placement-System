@@ -214,6 +214,46 @@
             background:#173f92;
             color:#ffffff;
         }
+    /* ==========================================
+       APTITUDE CARDS - LIGHT MODE FIX
+       ========================================== */
+
+    body.recruitease-light-mode .stats-grid .bottom-info-card {
+        background: #ffffff !important;
+        border: 1px solid #c9dcff !important;
+        color: #0f172a !important;
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.07) !important;
+    }
+
+    body.recruitease-light-mode .stats-grid .bottom-info-card h3,
+    body.recruitease-light-mode .stats-grid .bottom-info-card h4 {
+        color: #0f172a !important;
+    }
+
+    body.recruitease-light-mode .stats-grid .bottom-info-card p,
+    body.recruitease-light-mode .stats-grid .bottom-info-card span {
+        color: #475569 !important;
+    }
+
+    body.recruitease-light-mode .stats-grid .bottom-info-card .date-box {
+        background: #dbeafe !important;
+        border-color: #bfdbfe !important;
+    }
+
+    body.recruitease-light-mode .stats-grid .bottom-info-card .date-box b,
+    body.recruitease-light-mode .stats-grid .bottom-info-card .date-box span {
+        color: #1d4ed8 !important;
+    }
+
+    body.recruitease-light-mode .stats-grid .manage-question-arrow {
+        color: #2563eb !important;
+    }
+
+    body.recruitease-light-mode .stats-grid .bottom-info-card:hover {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.13) !important;
+    }
+
     </style>
     <script src="admin-auth.js"></script>
 </head>
@@ -260,7 +300,7 @@
 
     <main class="main-content">
 
-        <div class="topbar">
+        <div class="topbar" style="display: none;">
 
             <div>
                 <h1>Aptitude Test Management 🧠</h1>

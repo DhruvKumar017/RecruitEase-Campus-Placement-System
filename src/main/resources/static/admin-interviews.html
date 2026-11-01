@@ -474,6 +474,72 @@
     transform:translateY(-1px);
     opacity:.92;
 }
+/* ===== ADMIN INTERVIEWS LIGHT MODE FIX ===== */
+
+body.recruitease-light-mode .interview-admin-panel,
+body.recruitease-light-mode .interview-table-wrapper {
+    background: #ffffff;
+    border-color: #cbdcf5;
+}
+
+body.recruitease-light-mode .interview-table thead {
+    background: #e8f0ff;
+}
+
+body.recruitease-light-mode .interview-table th {
+    color: #172b4d;
+}
+
+body.recruitease-light-mode .interview-table td {
+    color: #263b59;
+    border-bottom-color: #e1eaf7;
+}
+
+body.recruitease-light-mode .student-cell strong,
+body.recruitease-light-mode .drive-details-cell strong,
+body.recruitease-light-mode .interview-table td > strong {
+    color: #10213c;
+}
+
+body.recruitease-light-mode .student-cell small,
+body.recruitease-light-mode .drive-details-cell small {
+    color: #526785;
+}
+
+body.recruitease-light-mode .panel-head h3 {
+    color: #10213c;
+}
+
+body.recruitease-light-mode .panel-subtitle {
+    color: #526785;
+}
+
+body.recruitease-light-mode .interview-table tbody tr:hover {
+    background: #eef5ff;
+}
+
+body.recruitease-light-mode .interview-table .placed-status,
+body.recruitease-light-mode .interview-table .selected-status,
+body.recruitease-light-mode .interview-table .completed-status {
+    color: #08734e;
+    background: #d6f5e8;
+}
+
+body.recruitease-light-mode .interview-table .rejected-status {
+    color: #b4233b;
+    background: #ffe1e7;
+}
+
+body.recruitease-light-mode .interview-table .pending-status {
+    color: #985700;
+    background: #fff0d2;
+}
+
+body.recruitease-light-mode .interview-table .scheduled-status {
+    color: #6336b2;
+    background: #eee3ff;
+}
+
 </style>
     <script src="admin-auth.js"></script>
 </head>
@@ -520,7 +586,7 @@
 
     <main class="main-content">
 
-<div class="topbar">
+<div class="topbar" style="display: none;">
     <div>
         <h1>Interview Management 🎤</h1>
         <p>Manage interview requests, schedules and candidate progress.</p>

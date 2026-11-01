@@ -487,3 +487,124 @@ tbody tr:hover{
     padding-left: 32px;
     padding-right: 32px;
 }
+/* ==========================================
+   MANAGE QUESTIONS - SHARED ADMIN LIGHT MODE
+   ========================================== */
+
+/* Main page */
+body.recruitease-light-mode {
+    --bg: #eef4ff;
+    --card: #ffffff;
+    --input: #ffffff;
+    --text: #0f172a;
+    --muted: #475569;
+
+    background: #eef4ff !important;
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode .main,
+body.recruitease-light-mode .content {
+    background: #eef4ff !important;
+    color: #0f172a !important;
+}
+
+/* Page heading */
+body.recruitease-light-mode .topbar h1 {
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode .topbar p {
+    color: #475569 !important;
+}
+
+/* Test ID selector and Copy Questions cards */
+body.recruitease-light-mode .content > div[style*="background"],
+body.recruitease-light-mode .content > section[style*="background"] {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #c9dcf5 !important;
+}
+
+/* Statistics cards */
+body.recruitease-light-mode .stat {
+    background: #ffffff !important;
+    border-color: #c9dcf5 !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.06) !important;
+}
+
+body.recruitease-light-mode .stat h2 {
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode .stat p {
+    color: #475569 !important;
+}
+
+/* Add Question and Questions List */
+body.recruitease-light-mode .table-card {
+    background: #ffffff !important;
+    border-color: #c9dcf5 !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.06) !important;
+}
+
+body.recruitease-light-mode .table-head {
+    border-bottom-color: #dbeafe !important;
+}
+
+body.recruitease-light-mode .table-head h2 {
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode .table-head button {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+    border-color: #bfdbfe !important;
+}
+
+/* Form labels */
+body.recruitease-light-mode .question-form label {
+    color: #0f172a !important;
+}
+
+/* Inputs, dropdowns and textarea */
+body.recruitease-light-mode .question-form input,
+body.recruitease-light-mode .question-form select,
+body.recruitease-light-mode .question-form textarea {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #bfdbfe !important;
+}
+
+body.recruitease-light-mode .question-form input::placeholder,
+body.recruitease-light-mode .question-form textarea::placeholder {
+    color: #64748b !important;
+}
+
+body.recruitease-light-mode .question-form select option {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Questions table */
+body.recruitease-light-mode thead {
+    background: #e8f1ff !important;
+}
+
+body.recruitease-light-mode th {
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode td,
+body.recruitease-light-mode .question-text {
+    color: #0f172a !important;
+    border-bottom-color: #e2e8f0 !important;
+}
+
+body.recruitease-light-mode .question-option-box {
+    color: #475569 !important;
+}
+
+body.recruitease-light-mode tbody tr:hover {
+    background: #eff6ff !important;
+}

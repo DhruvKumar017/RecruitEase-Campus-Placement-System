@@ -917,3 +917,52 @@ body.student-dark .refresh-btn{
 body.student-dark .refresh-btn:hover{
     background:#102744;
 }
+/* =========================================
+   ALL STUDENTS - LIGHT MODE SIDEBAR FIX
+   ========================================= */
+
+body.student-dark .sidebar {
+    background: linear-gradient(
+        180deg,
+        #e2efff 0%,
+        #c8ddff 100%
+    ) !important;
+
+    border-right: 1px solid #adcaf6 !important;
+}
+
+/* Logo and branding */
+body.student-dark .sidebar .brand h2 {
+    color: #0f172a !important;
+}
+
+body.student-dark .sidebar .brand p {
+    color: #52647f !important;
+}
+
+/* Sidebar section headings */
+body.student-dark .sidebar .menu-title {
+    color: #53647f !important;
+}
+
+/* Sidebar navigation links */
+body.student-dark .sidebar a {
+    color: #172640 !important;
+}
+
+/* Active and hovered navigation */
+body.student-dark .sidebar a.active,
+body.student-dark .sidebar a:hover {
+    background: linear-gradient(
+        135deg,
+        #1e40af,
+        #3b82f6
+    ) !important;
+
+    color: #ffffff !important;
+}
+
+/* Brand divider */
+body.student-dark .sidebar .brand {
+    border-bottom-color: #aecaf2 !important;
+}

@@ -160,11 +160,94 @@
             width:100%;
         }
     }
+/* ==========================================
+   MANAGE QUESTIONS - LIGHT MODE FINAL FIX
+   ========================================== */
+
+/* Select Test ID and Copy Questions cards */
+body.recruitease-light-mode .test-id-selector,
+body.recruitease-light-mode .copy-question-box {
+    background: #ffffff !important;
+    border: 1px solid #c9dcf5 !important;
+    box-shadow: 0 6px 20px rgba(37,99,235,.07) !important;
+}
+
+/* Headings */
+body.recruitease-light-mode .test-id-selector h2,
+body.recruitease-light-mode .copy-question-box h3 {
+    color: #0f172a !important;
+}
+
+/* Descriptions */
+body.recruitease-light-mode .test-id-selector p,
+body.recruitease-light-mode .copy-question-box p {
+    color: #475569 !important;
+}
+
+/* Dropdown label */
+body.recruitease-light-mode .copy-question-actions label {
+    color: #334155 !important;
+}
+
+/* Test ID input and dropdowns */
+body.recruitease-light-mode .test-id-actions input,
+body.recruitease-light-mode .test-id-actions select,
+body.recruitease-light-mode .copy-question-box select {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+/* Dropdown options */
+body.recruitease-light-mode .test-id-actions select option,
+body.recruitease-light-mode .copy-question-box select option {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Placeholder */
+body.recruitease-light-mode .test-id-actions input::placeholder {
+    color: #64748b !important;
+}
+
+/* Selected Test success message */
+body.recruitease-light-mode .selected-test-message {
+    background: #dcfce7 !important;
+    border: 1px solid #86efac !important;
+    color: #166534 !important;
+}
+
 </style>
     <script src="admin-auth.js"></script>
 </head>
 
 <body>
+
+<script>
+/* ==========================================
+   RECRUITEASE SHARED ADMIN THEME
+   ========================================== */
+
+(function () {
+    function applyManageQuestionsTheme() {
+        const savedTheme =
+            localStorage.getItem("recruiteaseAdminTheme");
+
+        document.body.classList.toggle(
+            "recruitease-light-mode",
+            savedTheme === "light"
+        );
+    }
+
+    applyManageQuestionsTheme();
+
+    window.addEventListener("storage", function (event) {
+        if (event.key === "recruiteaseAdminTheme") {
+            applyManageQuestionsTheme();
+        }
+    });
+})();
+</script>
 
 <div class="layout">
 

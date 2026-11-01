@@ -694,3 +694,44 @@ body{
     color:#ffffff;
     transform:translateY(-1px);
 }
+/* ===== PLACED STUDENTS LIGHT MODE FIX ===== */
+/* Sidebar and dark mode remain unchanged */
+
+body.recruitease-light-mode .page-title h2,
+body.recruitease-light-mode .table-head h3 {
+    color: #0f172a;
+}
+
+body.recruitease-light-mode .placed-table td {
+    color: #334155;
+    border-bottom-color: #e2e8f0;
+}
+
+body.recruitease-light-mode .placed-table .primary-text {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+body.recruitease-light-mode .placed-table .secondary-text {
+    color: #64748b;
+}
+
+body.recruitease-light-mode .placed-table th {
+    color: #0f172a;
+    background: #e8f0ff;
+}
+
+body.recruitease-light-mode .table-footer {
+    background: #f1f5f9;
+    color: #475569;
+    border-top: 1px solid #dbe4f0;
+}
+
+body.recruitease-light-mode .package-value {
+    color: #059669;
+}
+
+body.recruitease-light-mode .offer-status {
+    color: #047857;
+    background: #d1fae5;
+}

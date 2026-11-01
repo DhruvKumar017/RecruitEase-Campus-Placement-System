@@ -712,3 +712,110 @@ body{
         grid-column:auto;
     }
 }
+
+/* ===== ADMIN SETTINGS LIGHT MODE FIX ===== */
+/* Sidebar styles are intentionally unchanged */
+
+body.recruitease-light-mode .page-title h2,
+body.recruitease-light-mode .card-title h3,
+body.recruitease-light-mode .section-mini-title,
+body.recruitease-light-mode .profile-summary h4,
+body.recruitease-light-mode .side-card h3 {
+    color: #0f172a;
+}
+
+body.recruitease-light-mode .card-title p,
+body.recruitease-light-mode .profile-summary p,
+body.recruitease-light-mode .breadcrumb,
+body.recruitease-light-mode .form-group label,
+body.recruitease-light-mode .toggle-row,
+body.recruitease-light-mode .overview-row,
+body.recruitease-light-mode .security-row,
+body.recruitease-light-mode .storage-info,
+body.recruitease-light-mode .quick-action {
+    color: #334155;
+}
+
+body.recruitease-light-mode .overview-row b,
+body.recruitease-light-mode .security-row b {
+    color: #0f172a;
+}
+
+body.recruitease-light-mode .settings-tabs button {
+    color: #334155;
+}
+
+body.recruitease-light-mode .settings-tabs button.active,
+body.recruitease-light-mode .settings-tabs button:hover {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+body.recruitease-light-mode .form-group input,
+body.recruitease-light-mode .form-group textarea,
+body.recruitease-light-mode .form-group select {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+body.recruitease-light-mode .quick-action:hover,
+body.recruitease-light-mode .side-link {
+    color: #2563eb;
+}
+
+body.recruitease-light-mode .secondary-btn {
+    color: #1e40af;
+    background: #eff6ff;
+}
+
+/* ===== SETTINGS TABS VISIBILITY FIX ===== */
+
+body.recruitease-light-mode .settings-tabs {
+    background: #07182f;
+    border: 1px solid #1e3a5f;
+}
+
+body.recruitease-light-mode .settings-tabs button {
+    color: #ffffff;
+    background: transparent;
+    font-weight: 600;
+    opacity: 1;
+}
+
+body.recruitease-light-mode .settings-tabs button:hover {
+    color: #ffffff;
+    background: #1e40af;
+}
+
+body.recruitease-light-mode .settings-tabs button.active {
+    color: #1d4ed8;
+    background: #dbeafe;
+    box-shadow: inset 0 -3px 0 #3b82f6;
+}
+
+/* SETTINGS TABS - LIGHT MODE DESIGN FIX */
+
+body.recruitease-light-mode .settings-tabs {
+    background: #ffffff !important;
+    border: 1px solid #c9dcf5 !important;
+    border-radius: 16px !important;
+    padding: 10px !important;
+    gap: 8px !important;
+}
+
+body.recruitease-light-mode .settings-tabs button {
+    background: transparent !important;
+    color: #0f172a !important;
+    opacity: 1 !important;
+}
+
+body.recruitease-light-mode .settings-tabs button:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+}
+
+body.recruitease-light-mode .settings-tabs button.active {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+}

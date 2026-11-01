@@ -2915,105 +2915,188 @@ body.dark-mode .notification-item {
 body.dark-mode .notification-item:hover {
     background: #eef5ff !important;
 }
-/* ==================================================
-   FINAL LIGHT MODE FIX
-   Keep this at the very end of the CSS file
-================================================== */
+/* ==========================================
+   ADMIN DASHBOARD - FINAL LIGHT MODE FIX
+   ========================================== */
 
-/* Hero text must stay readable */
+/* Welcome banner */
+body.dark-mode .dashboard-hero {
+    background: linear-gradient(
+        110deg,
+        #eaf3ff 0%,
+        #dbeafe 55%,
+        #e9e7ff 100%
+    ) !important;
+
+    border: 1px solid #93c5fd !important;
+    border-left: 9px solid #1683ff !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.10) !important;
+}
+
+/* Welcome heading */
 body.dark-mode .dashboard-hero .hero-welcome h1 {
-    color: #ffffff !important;
-}
-
-body.dark-mode .dashboard-hero .hero-welcome h1 span {
-    color: #1683ff !important;
-}
-
-body.dark-mode .dashboard-hero .hero-welcome p {
-    color: #b8c7e8 !important;
-}
-
-/* ALL four statistic cards */
-
-body.dark-mode .stats-grid > .stat-card:nth-child(1),
-body.dark-mode .stats-grid > .stat-card:nth-child(2),
-body.dark-mode .stats-grid > .stat-card:nth-child(3),
-body.dark-mode .stats-grid > .stat-card:nth-child(4) {
-    background: #ffffff !important;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, .06) !important;
-}
-
-body.dark-mode .stats-grid > .stat-card:nth-child(1) {
-    border-color: #c4b5fd !important;
-}
-
-body.dark-mode .stats-grid > .stat-card:nth-child(2) {
-    border-color: #86efac !important;
-}
-
-body.dark-mode .stats-grid > .stat-card:nth-child(3) {
-    border-color: #fcd34d !important;
-}
-
-body.dark-mode .stats-grid > .stat-card:nth-child(4) {
-    border-color: #93c5fd !important;
-}
-
-/* Stat text */
-body.dark-mode .stats-grid .stat-card p {
-    color: #64748b !important;
-}
-
-body.dark-mode .stats-grid .stat-card h2 {
     color: #0f172a !important;
 }
 
-body.dark-mode .stats-grid .stat-card span {
-    color: #10b981 !important;
-}
-
-/* Arrow button inside cards */
-body.dark-mode .stats-grid .stat-card .arrow {
-    background: #ffffff !important;
-    color: #2563eb !important;
-    border-color: #93c5fd !important;
-}
-/* ================= HERO LIGHT MODE TEXT FIX ================= */
-
-body.dark-mode .dashboard-hero .hero-welcome h1 {
-    color: #ffffff !important;
-}
-
 body.dark-mode .dashboard-hero .hero-welcome h1 span {
-    color: #1683ff !important;
+    color: #1677ff !important;
 }
 
+/* Welcome description */
 body.dark-mode .dashboard-hero .hero-welcome p {
-    color: #b8c7e8 !important;
+    color: #475569 !important;
 }
 
+/* Date and time */
 body.dark-mode .dashboard-hero .hero-clock-row {
-    color: #d7e4ff !important;
+    color: #334155 !important;
 }
-/* STEP 175 - ADMIN HEADER ORDER FIX */
+
+body.dark-mode .dashboard-hero .hero-clock {
+    border-left-color: #93c5fd !important;
+}
+
+/* Header search */
+body.dark-mode .target-search {
+    background: #ffffff !important;
+    border-color: #c9dcf5 !important;
+}
+
+body.dark-mode .target-search input {
+    background: transparent !important;
+    color: #0f172a !important;
+}
+
+body.dark-mode .target-search input::placeholder {
+    color: #64748b !important;
+}
+
+body.dark-mode .target-search .search-icon {
+    color: #2563eb !important;
+}
+
+/* Header buttons */
+body.dark-mode .target-circle-btn {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #c9dcf5 !important;
+}
+
+/* Admin profile */
+body.dark-mode .target-admin-profile {
+    background: #ffffff !important;
+    border-color: #c9dcf5 !important;
+}
+
+body.dark-mode .target-admin-info strong {
+    color: #0f172a !important;
+}
+
+body.dark-mode .target-admin-info span,
+body.dark-mode .profile-arrow {
+    color: #475569 !important;
+}
+/* ==========================================
+   ACTUAL ADMIN LIGHT MODE - WELCOME FIX
+   ========================================== */
+
+body.recruitease-light-mode .dashboard-hero {
+    background: linear-gradient(
+        110deg,
+        #eaf3ff 0%,
+        #dbeafe 55%,
+        #e9e7ff 100%
+    ) !important;
+    border: 1px solid #93c5fd !important;
+    border-left: 9px solid #1683ff !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.10) !important;
+}
+
+body.recruitease-light-mode .dashboard-hero h1 {
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode .dashboard-hero h1 span {
+    color: #1677ff !important;
+}
+
+body.recruitease-light-mode .dashboard-hero p {
+    color: #475569 !important;
+}
+
+body.recruitease-light-mode .dashboard-hero .hero-clock-row {
+    color: #334155 !important;
+}
+
+body.recruitease-light-mode .dashboard-hero .hero-clock {
+    border-left-color: #93c5fd !important;
+}
+/* ==========================================
+   ADMIN TOP HEADER - LIGHT MODE FIX
+   ========================================== */
+
+/* Search bar */
+body.recruitease-light-mode .target-search {
+    background: #ffffff !important;
+    border: 1px solid #c9dcf5 !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.06) !important;
+}
+
+body.recruitease-light-mode .target-search input {
+    background: transparent !important;
+    color: #0f172a !important;
+    border: none !important;
+    outline: none !important;
+}
+
+body.recruitease-light-mode .target-search input::placeholder {
+    color: #64748b !important;
+}
+
+body.recruitease-light-mode .target-search .search-icon {
+    color: #2563eb !important;
+}
+
+/* Theme and notification buttons */
+body.recruitease-light-mode .target-circle-btn {
+    background: #ffffff !important;
+    border: 1px solid #c9dcf5 !important;
+    color: #0f172a !important;
+}
+
+/* Admin profile */
+body.recruitease-light-mode .target-admin-profile {
+    background: #ffffff !important;
+    border: 1px solid #c9dcf5 !important;
+}
+
+body.recruitease-light-mode .target-admin-info strong {
+    color: #0f172a !important;
+}
+
+body.recruitease-light-mode .target-admin-info span,
+body.recruitease-light-mode .profile-arrow {
+    color: #475569 !important;
+}
+/* ADMIN DASHBOARD HEADER - CORRECT ORDER */
 
 .target-top-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 16px !important;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-/* Dark Mode - First */
-.target-top-actions #themeToggle {
+/* 1. Notification */
+.target-top-actions .notification-box {
     order: 1 !important;
 }
 
-/* Notification Bell - Second */
-.target-top-actions .notification-box {
+/* 2. Dark / Light Mode */
+.target-top-actions .theme-btn {
     order: 2 !important;
 }
 
-/* Admin Profile - Third */
+/* 3. Admin Profile */
 .target-top-actions .target-admin-profile {
     order: 3 !important;
 }

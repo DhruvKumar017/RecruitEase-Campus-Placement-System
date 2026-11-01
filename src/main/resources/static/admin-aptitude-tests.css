@@ -1163,3 +1163,44 @@ body{
     border-color:#60a5fa;
     transform:translateY(-1px);
 }
+/* ==========================================
+   ADMIN APTITUDE TESTS - LIGHT MODE TABLE FIX
+   ========================================== */
+
+body.recruitease-light-mode .tests-table td {
+    color: #334155 !important;
+    border-bottom-color: #e2e8f0 !important;
+}
+
+body.recruitease-light-mode .tests-table .test-name {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+body.recruitease-light-mode .tests-table .test-subtitle {
+    color: #475569 !important;
+}
+
+body.recruitease-light-mode .tests-table .status-scheduled {
+    background: #fff0d9 !important;
+    color: #b45309 !important;
+}
+
+body.recruitease-light-mode .tests-table .status-completed {
+    background: #ede9fe !important;
+    color: #6d28d9 !important;
+}
+
+body.recruitease-light-mode .tests-table .status-pending {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+}
+
+body.recruitease-light-mode .tests-table .status-active {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+}
+
+body.recruitease-light-mode .tests-table tbody tr:hover {
+    background: #eff6ff !important;
+}

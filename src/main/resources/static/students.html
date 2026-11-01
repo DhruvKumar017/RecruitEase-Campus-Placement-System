@@ -54,7 +54,7 @@
     <!-- ================= MAIN CONTENT ================= -->
     <main class="main-content">
 
-        <div class="topbar">
+       <div class="topbar" style="display: none;">
 
             <div class="topbar-title">
                 <h1>Student Management</h1>
@@ -611,25 +611,41 @@ window.addEventListener("storage", function(event) {
     }
 });
 
-/* ================= THEME ================= */
+/* ================= SHARED ADMIN THEME ================= */
 
 const studentThemeToggle =
     document.getElementById("studentThemeToggle");
 
-if (localStorage.getItem("studentTheme") === "dark") {
-    document.body.classList.add("student-dark");
-    studentThemeToggle.innerText = "☀️";
+function applyStudentsTheme() {
+    const isLightMode =
+        localStorage.getItem("recruiteaseAdminTheme") === "light";
+
+    document.body.classList.toggle("student-dark", isLightMode);
+
+    if (studentThemeToggle) {
+        studentThemeToggle.innerText = isLightMode ? "☀️" : "🌙";
+    }
 }
 
-studentThemeToggle.addEventListener("click", function() {
-    document.body.classList.toggle("student-dark");
+applyStudentsTheme();
 
-    if (document.body.classList.contains("student-dark")) {
-        localStorage.setItem("studentTheme", "dark");
-        studentThemeToggle.innerText = "☀️";
-    } else {
-        localStorage.setItem("studentTheme", "light");
-        studentThemeToggle.innerText = "🌙";
+if (studentThemeToggle) {
+    studentThemeToggle.addEventListener("click", function() {
+        const isLightMode =
+            !document.body.classList.contains("student-dark");
+
+        localStorage.setItem(
+            "adminTheme",
+            isLightMode ? "light" : "dark"
+        );
+
+        applyStudentsTheme();
+    });
+}
+
+window.addEventListener("storage", function(event) {
+    if (event.key === "adminTheme") {
+        applyStudentsTheme();
     }
 });
 
