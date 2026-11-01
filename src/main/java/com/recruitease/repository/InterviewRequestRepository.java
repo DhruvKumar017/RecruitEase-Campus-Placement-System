@@ -28,4 +28,9 @@ public interface InterviewRequestRepository
     Optional<InterviewRequest> findByApplicationId(Long applicationId);
 
     boolean existsByApplicationId(Long applicationId);
+
+    /* Bulk fetch for faster Admin Applications loading */
+    List<InterviewRequest> findByApplicationIdIn(
+            List<Long> applicationIds
+    );
 }

@@ -4,11 +4,16 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -242,10 +247,134 @@ data.put("lastDate", null);
 
     @GetMapping("/api/applications/all")
     public List<ApplicationAdminDTO> getAllApplications() {
-        return applicationRepository.findAll()
-                .stream()
-                .map(this::convertToAdminDTO)
+
+        List<Application> applications = applicationRepository.findAll();
+
+        if (applications.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> applicationIds = applications.stream()
+                .map(Application::getId)
                 .toList();
+
+        Map<Long, Student> studentMap = studentRepository.findAll()
+                .stream()
+                .collect(Collectors.toMap(
+                        Student::getId,
+                        Function.identity()
+                ));
+
+        Map<Long, Company> companyMap = companyRepository.findAll()
+                .stream()
+                .collect(Collectors.toMap(
+                        Company::getId,
+                        Function.identity()
+                ));
+
+        Map<String, Company> companyNameMap = new HashMap<>();
+
+        for (Company company : companyMap.values()) {
+            if (company.getCompanyName() != null) {
+                companyNameMap.putIfAbsent(
+                        company.getCompanyName().trim().toLowerCase(Locale.ROOT),
+                        company
+                );
+            }
+        }
+
+        Map<Long, StudentTestResult> latestResultMap = new HashMap<>();
+
+        for (StudentTestResult result :
+                resultRepository.findByApplicationIdIn(applicationIds)) {
+
+            if (result.getApplicationId() == null) {
+                continue;
+            }
+
+            StudentTestResult existing =
+                    latestResultMap.get(result.getApplicationId());
+
+            if (existing == null ||
+                    (result.getSubmittedAt() != null &&
+                     (existing.getSubmittedAt() == null ||
+                      result.getSubmittedAt().isAfter(existing.getSubmittedAt())))) {
+
+                latestResultMap.put(result.getApplicationId(), result);
+            }
+        }
+
+        Map<Long, InterviewRequest> interviewMap = new HashMap<>();
+
+        for (InterviewRequest request :
+                interviewRequestRepository.findByApplicationIdIn(applicationIds)) {
+
+            if (request.getApplicationId() != null) {
+                interviewMap.putIfAbsent(request.getApplicationId(), request);
+            }
+        }
+
+        List<ApplicationAdminDTO> response = new ArrayList<>();
+
+        for (Application application : applications) {
+
+            ApplicationAdminDTO dto = new ApplicationAdminDTO();
+
+            dto.setId(application.getId());
+            dto.setStudentId(application.getStudentId());
+            dto.setCompanyId(application.getCompanyId());
+            dto.setDriveId(application.getDriveId());
+            dto.setCompanyName(application.getCompanyName());
+            dto.setRole(application.getRole());
+            dto.setStatus(application.getStatus());
+            dto.setCreatedAt(application.getCreatedAt());
+
+            dto.setTestId(application.getTestId());
+            dto.setTestDate(application.getTestDate());
+            dto.setTestStartTime(application.getTestStartTime());
+            dto.setTestEndTime(application.getTestEndTime());
+            dto.setTestPermission(application.getTestPermission());
+
+            Student student = studentMap.get(application.getStudentId());
+
+            dto.setStudentName(
+                    student != null ? student.getName() : "Unknown Student"
+            );
+
+            Company company = companyMap.get(application.getCompanyId());
+
+            if (company == null && application.getCompanyName() != null) {
+                company = companyNameMap.get(
+                        application.getCompanyName().trim().toLowerCase(Locale.ROOT)
+                );
+            }
+
+            dto.setCompanyCutoff(getCompanyCutoff(company));
+
+            StudentTestResult result =
+                    latestResultMap.get(application.getId());
+
+            if (result != null) {
+                dto.setObtainedMarks(result.getObtainedMarks());
+                dto.setTotalMarks(result.getTotalMarks());
+                dto.setPercentage(result.getPercentage());
+                dto.setTestResultStatus(result.getStatus());
+            }
+
+            InterviewRequest interview =
+                    interviewMap.get(application.getId());
+
+            if (interview != null) {
+                dto.setInterviewRequested(true);
+                dto.setInterviewStatus(interview.getInterviewStatus());
+            } else {
+                dto.setInterviewRequested(false);
+            }
+
+            response.add(dto);
+        }
+
+        return response;
     }
 
     @GetMapping("/api/applications/student/{studentId}/company/{companyId}")

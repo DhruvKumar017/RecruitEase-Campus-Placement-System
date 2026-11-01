@@ -835,12 +835,35 @@ let openFocusOnce = true;
 
 async function loadInterviewRequests() {
     try {
-const responses = await Promise.all([
-    fetch("/api/interview-requests"),
+const interviewPromise = fetch("/api/interview-requests");
+
+const otherDataPromise = Promise.all([
     fetch("/api/applications/all"),
     fetch("/api/drives"),
     fetch("/api/students/eligibility-summary")
 ]);
+
+const interviewResponse = await interviewPromise;
+
+if (!interviewResponse.ok) {
+    throw new Error("Interview requests load failed.");
+}
+
+interviewRequests = await interviewResponse.json();
+
+interviewRequests.sort((first, second) =>
+    Number(second.id) - Number(first.id)
+);
+
+document.getElementById("totalRequestCount").innerText =
+    interviewRequests.length;
+
+const otherResponses = await otherDataPromise;
+
+const responses = [
+    interviewResponse,
+    ...otherResponses
+];
 
 if (
     !responses[0].ok ||
@@ -851,7 +874,8 @@ if (
     throw new Error("Interview data load failed.");
 }
 
-        interviewRequests = await responses[0].json();
+// Interview requests already loaded above.
+// Do not read the same response twice.
 
 const applications = await responses[1].json();
 const drives = await responses[2].json();

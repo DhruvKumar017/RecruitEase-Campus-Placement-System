@@ -55,10 +55,6 @@ public List<AptitudeTest> getAllTests() {
         }
     }
 
-    if (changed) {
-        aptitudeTestRepository.saveAll(tests);
-    }
-
     return tests;
 }
 

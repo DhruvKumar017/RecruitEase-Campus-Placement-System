@@ -19,4 +19,8 @@ public interface StudentTestResultRepository
 
     Optional<StudentTestResult>
             findTopByApplicationIdOrderBySubmittedAtDesc(Long applicationId);
+
+    List<StudentTestResult> findByApplicationIdIn(
+            List<Long> applicationIds
+    );
 }
