@@ -7,6 +7,8 @@ import com.recruitease.security.JwtService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -125,6 +127,32 @@ public ResponseEntity<?> createLogin(@RequestBody StudentLogin studentLogin) {
 public ResponseEntity<?> getLoginByStudentId(
         @PathVariable Long studentId
 ) {
+    Authentication auth =
+            SecurityContextHolder.getContext().getAuthentication();
+
+    if (auth == null || !auth.isAuthenticated()) {
+        return ResponseEntity.status(403).body(
+                Map.of("message", "Authentication required.")
+        );
+    }
+
+    boolean isAdmin = auth.getAuthorities().stream()
+            .anyMatch(a ->
+                    a.getAuthority().equals("ROLE_MAIN_ADMIN") ||
+                    a.getAuthority().equals("ROLE_ADMIN")
+            );
+
+    boolean isStudentOwner = auth.getAuthorities().stream()
+            .anyMatch(a ->
+                    a.getAuthority().equals("ROLE_STUDENT")
+            ) && String.valueOf(studentId).equals(auth.getName());
+
+    if (!isAdmin && !isStudentOwner) {
+        return ResponseEntity.status(403).body(
+                Map.of("message", "You are not authorized to update this username.")
+        );
+    }
+
     StudentLogin login =
             studentLoginRepository.findByStudentId(studentId);
 
@@ -195,13 +223,31 @@ public ResponseEntity<?> getLoginByStudentId(
 
     /* ================= CHANGE PASSWORD ================= */
 
-    @PutMapping("/{studentId}/change-password")
-    public ResponseEntity<?> changePassword(
-            @PathVariable Long studentId,
-            @RequestBody StudentLogin request
-    ) {
-        StudentLogin login =
-                studentLoginRepository.findByStudentId(studentId);
+@PutMapping("/{studentId}/change-password")
+public ResponseEntity<?> changePassword(
+        @PathVariable Long studentId,
+        @RequestBody StudentLogin request
+) {
+    Authentication auth =
+            SecurityContextHolder.getContext().getAuthentication();
+
+    boolean isStudentOwner =
+            auth != null &&
+            auth.isAuthenticated() &&
+            auth.getAuthorities().stream()
+                .anyMatch(a ->
+                    "ROLE_STUDENT".equals(a.getAuthority())
+                ) &&
+            String.valueOf(studentId).equals(auth.getName());
+
+    if (!isStudentOwner) {
+        return ResponseEntity.status(403).body(
+                Map.of("message", "Only the student can change their own password.")
+        );
+    }
+
+    StudentLogin login =
+            studentLoginRepository.findByStudentId(studentId);
 
         if (login == null) {
             return ResponseEntity.notFound().build();
@@ -253,7 +299,58 @@ if (!passwordMatches) {
         );
     }
 
-    /* ================= FORGOT PASSWORD OTP ================= */
+    /* ================= ADMIN RESET STUDENT PASSWORD ================= */
+
+@PutMapping("/{studentId}/admin-reset-password")
+public ResponseEntity<?> adminResetStudentPassword(
+        @PathVariable Long studentId,
+        @RequestBody Map<String, String> request
+) {
+    Authentication auth =
+            SecurityContextHolder.getContext().getAuthentication();
+
+    boolean isAdmin = auth != null
+            && auth.isAuthenticated()
+            && auth.getAuthorities().stream()
+                .anyMatch(a ->
+                    "ROLE_MAIN_ADMIN".equals(a.getAuthority())
+                    || "ROLE_ADMIN".equals(a.getAuthority())
+                );
+
+    if (!isAdmin) {
+        return ResponseEntity.status(403).body(
+                Map.of("message", "Only Admin or Main Admin can reset student passwords.")
+        );
+    }
+
+    StudentLogin login =
+            studentLoginRepository.findByStudentId(studentId);
+
+    if (login == null) {
+        return ResponseEntity.status(404).body(
+                Map.of("message", "Student login not found.")
+        );
+    }
+
+    String newPassword = request == null
+            ? null
+            : request.get("newPassword");
+
+    if (newPassword == null || newPassword.length() < 8) {
+        return ResponseEntity.badRequest().body(
+                Map.of("message", "Password must contain at least 8 characters.")
+        );
+    }
+
+    login.setPassword(passwordEncoder.encode(newPassword));
+    studentLoginRepository.save(login);
+
+    return ResponseEntity.ok(
+            Map.of("message", "Student password reset successfully.")
+    );
+}
+
+/* ================= FORGOT PASSWORD OTP ================= */
 
     @PostMapping("/forgot-password/send-otp")
     public ResponseEntity<?> sendForgotPasswordOtp(

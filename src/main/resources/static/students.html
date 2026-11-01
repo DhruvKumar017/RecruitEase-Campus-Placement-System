@@ -451,14 +451,16 @@ function viewStudent(id) {
 /* ================= EDIT STUDENT ================= */
 
 function openEditById(id) {
-    const student = students.find(item => item.id === id);
+    const student = students.find(item => Number(item.id) === Number(id));
 
     if (!student) {
         alert("Student data nahi mila.");
         return;
     }
 
-    openEdit(student);
+    window.location.href =
+        "admin-edit-student.html?id=" +
+        encodeURIComponent(id);
 }
 
 function openEdit(student) {

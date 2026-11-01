@@ -868,13 +868,21 @@ async function changePassword() {
     }
 
     try {
-        const response = await fetch(
-            "/api/student-login/" + studentId + "/change-password",
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+const studentToken = localStorage.getItem("studentToken");
+
+if (!studentToken) {
+    alert("Student session expired. Please login again.");
+    return;
+}
+
+const response = await fetch(
+    "/api/student-login/" + studentId + "/change-password",
+    {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + studentToken
+        },
                 body: JSON.stringify({
                     oldPassword: oldPassword,
                     password: newPassword

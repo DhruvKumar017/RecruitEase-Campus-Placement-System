@@ -119,6 +119,22 @@ if (!enforceJwt) {
 )
 .denyAll()
 
+// Only Admin and Main Admin can reset student passwords.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/student-login/*/admin-reset-password"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN")
+
+// Admin can update student username.
+// Student can update only their own username.
+// Ownership is verified in StudentLoginController.
+.requestMatchers(
+    HttpMethod.PUT,
+    "/api/student-login/*/update-username"
+)
+.hasAnyRole("MAIN_ADMIN", "ADMIN", "STUDENT")
+
 // Student management modifications:
 // Only authenticated Admin or Main Admin.
 .requestMatchers(
@@ -277,7 +293,9 @@ if (!enforceJwt) {
                         "/*.js",
                         "/uploads/**",
 "/api/admin-login/**",
-"/api/student-login/**",
+"/api/student-login/login",
+"/api/student-login/forgot-password/send-otp",
+"/api/student-login/forgot-password/reset",
 "/api/admin-viewer/login",
 "/api/admin-viewer/otp/send",
 "/api/admin-viewer/otp/verify",

@@ -15,10 +15,27 @@
             display:none;
         }
 
-        body.admin-student-view .profile-main{
-            width:100%;
-            margin-left:0;
-        }
+body.admin-student-view .student-profile-layout{
+    display: block;
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+}
+
+body.admin-student-view .profile-main{
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-left: 28px;
+    padding-right: 28px;
+    box-sizing: border-box;
+}
+
+body.admin-student-view .profile-summary-stats,
+body.admin-student-view .profile-grid{
+    width: 100%;
+    max-width: none;
+}
 
         body.admin-student-view .profile-topbar{
             display:none;
@@ -401,25 +418,51 @@
                     <b id="overviewCompany">Not added</b>
                 </div>
 
+  <!-- Resume details moved to separate card -->
+
+            </div>
+
+        </section>
+
+        <!-- ================= RESUME DETAILS ================= -->
+        <section class="card resume-details-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">📄</div>
+
+                <div>
+                    <h3>Resume Details</h3>
+                    <p>Student uploaded resume information.</p>
+                </div>
+            </div>
+
+            <div class="overview-list">
+
                 <div class="overview-row">
+                    <span>📄 Resume Status</span>
+                    <b id="resumeUploadStatus">Checking...</b>
+                </div>
 
-                    <span>📄 Resume</span>
+                <div class="overview-row">
+                    <span>📁 Resume File</span>
+                    <b id="overviewResume"
+                       style="overflow-wrap:anywhere; text-align:right; max-width:65%;">
+                        Not uploaded
+                    </b>
+                </div>
 
-                    <div class="resume-overview">
+                <div class="overview-row">
+                    <span>Resume Preview</span>
 
-                        <b id="overviewResume">Not uploaded</b>
-
-                        <button
-                            id="viewResumeButton"
-                            type="button"
-                            onclick="viewStudentResume()"
-                            style="display:none;"
-                        >
-                            View Resume
-                        </button>
-
-                    </div>
-
+                    <button
+                        id="viewResumeButton"
+                        class="secondary-btn"
+                        type="button"
+                        onclick="viewStudentResume()"
+                        style="display:none;"
+                    >
+                        📄 View Resume
+                    </button>
                 </div>
 
             </div>
@@ -428,6 +471,69 @@
 
     </div>
 
+    <!-- ================= ADMIN EDIT STUDENT ================= -->
+    <section
+        id="adminEditSection"
+        class="card"
+        style="display:none; grid-column:1 / -1;"
+    >
+        <div class="card-heading">
+            <div class="heading-icon">✏️</div>
+            <div>
+                <h3>Edit Student Details</h3>
+                <p>Update student information from Admin Portal.</p>
+            </div>
+        </div>
+
+        <div class="admin-edit-grid">
+            <label>Name
+                <input id="adminEditName" type="text">
+            </label>
+
+            <label>Email
+                <input id="adminEditEmail" type="email">
+            </label>
+
+            <label>Roll Number
+                <input id="adminEditRoll" type="text">
+            </label>
+
+            <label>Branch
+                <input id="adminEditBranch" type="text">
+            </label>
+
+            <label>CGPA
+                <input id="adminEditCgpa"
+                       type="number" min="0" max="10" step="0.01">
+            </label>
+
+            <label>Skills
+                <input id="adminEditSkills" type="text">
+            </label>
+
+            <label>Preferred Company
+                <input id="adminEditCompany" type="text">
+            </label>
+        </div>
+
+        <div class="page-buttons" style="margin-top:22px;">
+            <button
+                type="button"
+                class="primary-btn"
+                id="adminSaveChanges"
+            >
+                Save Changes
+            </button>
+
+            <button
+                type="button"
+                class="secondary-btn"
+                onclick="window.location.href='students.html'"
+            >
+                Cancel
+            </button>
+        </div>
+    </section>
 
     <!-- ================= ABOUT ME ================= -->
     <section class="card about-card">
@@ -466,6 +572,11 @@ const isAdminView =
 const studentId = isAdminView
     ? requestedStudentId
     : localStorage.getItem("studentId");
+
+// Admin Edit Mode
+const isAdminEditMode =
+    isAdminView &&
+    profileParams.get("editMode") === "true";
 
 const profileThemeKey =
     "recruiteaseStudentProfileTheme_" + studentId;
@@ -609,36 +720,83 @@ function applyAdminViewUi() {
         return;
     }
 
-    document.getElementById("profilePageTitle").innerText =
-        "Student Profile 👤";
+    const title = document.getElementById("profilePageTitle");
+    const subtitle = document.getElementById("profilePageSubtitle");
+    const backButton = document.getElementById("editProfileButton");
+    const photoButton = document.getElementById("changePhotoButton");
 
-    document.getElementById("profilePageSubtitle").innerText =
-        "Viewing student details from Admin Portal.";
+    if (isAdminEditMode) {
+        title.innerText = "Edit Student Profile ✏️";
+        subtitle.innerText =
+            "Update student details from Admin Portal.";
+    } else {
+        title.innerText = "Student Profile 👤";
+        subtitle.innerText =
+            "Viewing student details from Admin Portal.";
+    }
 
-    const editButton =
-        document.getElementById("editProfileButton");
+    backButton.innerText = "← Back to All Students";
+    backButton.onclick = function() {
+        window.location.href = "students.html";
+    };
 
-    editButton.innerText = "??? Back to All Students";
-
-    document.getElementById("changePhotoButton").style.display =
-        "none";
+    photoButton.style.display = "none";
 }
 
 async function loadProfile() {
     try {
-        const studentToken = sessionStorage.getItem("studentToken");
 
-const response = await fetch("/api/students/" + studentId, {
-    headers: {
-        "Authorization": "Bearer " + studentToken
-    }
-});
+        const token = isAdminView
+            ? localStorage.getItem("adminToken")
+            : sessionStorage.getItem("studentToken");
+
+        if (!token) {
+            throw new Error("Login token missing. Please login again.");
+        }
+
+        const response = await fetch("/api/students/" + studentId, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
 
         if (!response.ok) {
             throw new Error("Student profile load failed.");
         }
 
         studentData = await response.json();
+
+        // Admin Edit Mode: Show form and fill existing details
+        if (isAdminEditMode) {
+
+            const editSection =
+                document.getElementById("adminEditSection");
+
+            if (editSection) {
+                editSection.style.display = "block";
+            }
+
+            const editFields = {
+                adminEditName: studentData.name,
+                adminEditEmail: studentData.email,
+                adminEditRoll: studentData.rollNumber,
+                adminEditBranch: studentData.branch,
+                adminEditCgpa: studentData.cgpa,
+                adminEditSkills: studentData.skills,
+                adminEditCompany: studentData.preferredCompany
+            };
+
+            Object.entries(editFields).forEach(([id, value]) => {
+                const input = document.getElementById(id);
+
+                if (input) {
+                    input.value = value ?? "";
+                }
+            });
+
+            document.getElementById("profilePageTitle").innerText =
+                "Edit Student Profile ✏️";
+        }
 
         const photoUrl =
             "/api/students/" + studentId + "/photo?t=" + Date.now();
@@ -787,6 +945,88 @@ applyAdminViewUi();
         alert("Profile load nahi ho raha. Backend check karo.");
     }
 }
+// ========== ADMIN SAVE STUDENT CHANGES ==========
+
+async function saveAdminStudentChanges() {
+
+    if (!isAdminEditMode || !studentData) {
+        return;
+    }
+
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+        alert("Admin session missing. Please login again.");
+        return;
+    }
+
+    const getValue = (id) =>
+        document.getElementById(id).value.trim();
+
+    const cgpaText = getValue("adminEditCgpa");
+
+    if (cgpaText !== "" &&
+        (!Number.isFinite(Number(cgpaText)) ||
+         Number(cgpaText) < 0 ||
+         Number(cgpaText) > 10)) {
+        alert("CGPA must be between 0 and 10.");
+        return;
+    }
+
+    const updatedStudent = {
+        ...studentData,
+
+        name: getValue("adminEditName"),
+        email: getValue("adminEditEmail"),
+        rollNumber: getValue("adminEditRoll"),
+        branch: getValue("adminEditBranch"),
+        cgpa: cgpaText === "" ? null : Number(cgpaText),
+        skills: getValue("adminEditSkills"),
+        preferredCompany: getValue("adminEditCompany")
+    };
+
+    const saveButton =
+        document.getElementById("adminSaveChanges");
+
+    saveButton.disabled = true;
+    saveButton.innerText = "Saving...";
+
+    try {
+        const response = await fetch(
+            "/api/students/" + encodeURIComponent(studentId) + "/update",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(updatedStudent)
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Student update failed: " + response.status);
+        }
+
+        alert("Student profile updated successfully!");
+
+        window.location.href =
+            "student-profile.html?id=" +
+            encodeURIComponent(studentId) +
+            "&adminView=true";
+
+    } catch (error) {
+        console.error("Update error:", error);
+        alert("Student update nahi hua. Backend check karo.");
+
+    } finally {
+        saveButton.disabled = false;
+        saveButton.innerText = "Save Changes";
+    }
+}
+
+document.getElementById("adminSaveChanges")
+    .addEventListener("click", saveAdminStudentChanges);
 
 function goToSettings() {
     if (isAdminView) {
