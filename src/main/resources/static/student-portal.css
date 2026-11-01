@@ -659,6 +659,75 @@ body.light .note p{
     color:#64748b;
 }
 
+/* ===== COMMON STUDENT LIGHT MODE ===== */
+
+body.light,
+body.light-mode {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --card2: #f1f5f9;
+    --border: #dbe3ef;
+    --text: #0f172a;
+    --muted: #64748b;
+}
+
+/* Main page */
+body.light .main,
+body.light-mode .main {
+    background: #f4f7fb;
+    color: #0f172a;
+}
+
+/* Cards */
+body.light .profile-card,
+body.light .details-card,
+body.light .application-card,
+body.light .resume-preview,
+body.light .resume-actions,
+body.light .application-details,
+body.light .info-grid div,
+body.light .cgpa-box,
+body.light-mode .profile-card,
+body.light-mode .details-card,
+body.light-mode .application-card,
+body.light-mode .resume-preview,
+body.light-mode .resume-actions,
+body.light-mode .application-details,
+body.light-mode .info-grid div,
+body.light-mode .cgpa-box {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #dbe3ef;
+}
+
+/* Inputs */
+body.light .info-grid input,
+body.light .info-grid textarea,
+body.light .info-grid select,
+body.light .resume-actions input,
+body.light-mode .info-grid input,
+body.light-mode .info-grid textarea,
+body.light-mode .info-grid select,
+body.light-mode .resume-actions input {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+/* Secondary text */
+body.light .profile-card p,
+body.light .application-card p,
+body.light .resume-preview p,
+body.light .info-grid label,
+body.light-mode .profile-card p,
+body.light-mode .application-card p,
+body.light-mode .resume-preview p,
+body.light-mode .info-grid label {
+    color: #64748b;
+}
+
+/* ===== END COMMON STUDENT LIGHT MODE ===== */
+
 /* SCROLLBAR */
 
 ::-webkit-scrollbar{

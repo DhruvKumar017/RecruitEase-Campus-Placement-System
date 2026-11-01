@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="student-portal.css">
 
 <style>
+    /* Hide top header only on Student Interviews page */
+    .topbar {
+        display: none !important;
+    }
     .interview-empty{
         padding:30px;
         text-align:center;
@@ -772,8 +776,162 @@ body.light .interview-data-table tbody tr:hover {
     }
 }
 
+
+/* =========================================
+   STUDENT INTERVIEWS - LIGHT MODE TEXT FIX
+   ========================================= */
+
+/* Main heading */
+body.light .interview-page-heading h1,
+body.light-mode .interview-page-heading h1 {
+    color: #0f172a !important;
+}
+
+body.light .interview-page-heading p,
+body.light-mode .interview-page-heading p {
+    color: #475569 !important;
+}
+
+/* Statistics cards */
+body.light .interview-new-card,
+body.light-mode .interview-new-card {
+    background: #ffffff !important;
+    border-color: #dbe4f0 !important;
+}
+
+body.light .interview-new-card p,
+body.light-mode .interview-new-card p,
+body.light .interview-new-card h2,
+body.light-mode .interview-new-card h2 {
+    color: #0f172a !important;
+}
+
+body.light .interview-new-card span,
+body.light-mode .interview-new-card span {
+    color: #475569 !important;
+}
+
+/* Interview table section */
+body.light .interview-table-section,
+body.light-mode .interview-table-section {
+    background: #ffffff !important;
+    border-color: #dbeafe !important;
+}
+
+body.light .interview-table-header h2,
+body.light-mode .interview-table-header h2 {
+    color: #0f172a !important;
+}
+
+body.light .interview-table-header p,
+body.light-mode .interview-table-header p {
+    color: #475569 !important;
+}
+
+/* Table header and rows */
+body.light .interview-data-table thead,
+body.light-mode .interview-data-table thead {
+    background: #eff6ff !important;
+}
+
+body.light .interview-data-table th,
+body.light-mode .interview-data-table th {
+    color: #334155 !important;
+}
+
+body.light .interview-data-table td,
+body.light-mode .interview-data-table td {
+    color: #0f172a !important;
+    border-bottom-color: #e2e8f0 !important;
+}
+
+/* Company and role */
+body.light .interview-company-name,
+body.light-mode .interview-company-name,
+body.light .interview-role-name,
+body.light-mode .interview-role-name {
+    color: #0f172a !important;
+}
+
+/* Interview mode */
+body.light .interview-mode-label,
+body.light-mode .interview-mode-label {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+/* Status badges */
+body.light .interview-status.status-pending,
+body.light-mode .interview-status.status-pending {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+body.light .interview-status.status-scheduled,
+body.light-mode .interview-status.status-scheduled {
+    background: #ede9fe !important;
+    color: #6d28d9 !important;
+}
+
+body.light .interview-status.status-live,
+body.light-mode .interview-status.status-live {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+body.light .interview-status.status-selected,
+body.light-mode .interview-status.status-selected,
+body.light .interview-status.status-placed,
+body.light-mode .interview-status.status-placed,
+body.light .interview-status.status-completed,
+body.light-mode .interview-status.status-completed {
+    background: #d1fae5 !important;
+    color: #047857 !important;
+}
+
+body.light .interview-status.status-rejected,
+body.light-mode .interview-status.status-rejected {
+    background: #ffe4e6 !important;
+    color: #be123c !important;
+}
+
+/* Search and status dropdown */
+body.light .interview-filter-search,
+body.light-mode .interview-filter-search,
+body.light .interview-status-filter,
+body.light-mode .interview-status-filter {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+body.light .interview-filter-search input,
+body.light-mode .interview-filter-search input {
+    color: #0f172a !important;
+}
+
+body.light .interview-filter-search input::placeholder,
+body.light-mode .interview-filter-search input::placeholder {
+    color: #64748b !important;
+}
+
+/* Details button */
+body.light .interview-action-btn.secondary,
+body.light-mode .interview-action-btn.secondary {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #93c5fd !important;
+}
+
+/* Empty messages */
+body.light .interview-empty,
+body.light-mode .interview-empty {
+    color: #475569 !important;
+}
+
 </style>
 </head>
+
 
 <body>
 

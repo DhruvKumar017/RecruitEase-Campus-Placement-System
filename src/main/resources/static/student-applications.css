@@ -789,3 +789,173 @@ body.student-applications-light .application-modal-section{
         grid-template-columns:1fr;
     }
 }
+/* =========================================
+   RECRUITEASE MY APPLICATIONS
+   FINAL LIGHT MODE FIX
+   ========================================= */
+
+body.student-applications-light {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --card2: #f8fafc;
+    --input: #f8fafc;
+    --line: #dbe3ef;
+    --text: #0f172a;
+    --muted: #64748b;
+}
+
+/* Main page */
+body.student-applications-light .student-applications-main {
+    background: #f4f7fb;
+    color: #0f172a;
+}
+
+/* Heading and breadcrumb */
+body.student-applications-light .applications-heading h1,
+body.student-applications-light .applications-breadcrumb b {
+    color: #0f172a;
+}
+
+body.student-applications-light .applications-breadcrumb {
+    color: #64748b;
+}
+
+/* Summary cards */
+body.student-applications-light .applications-stat-card {
+    background: #ffffff;
+    border-color: #dbe3ef;
+}
+
+body.student-applications-light .applications-stat-card h2,
+body.student-applications-light .applications-stat-card p {
+    color: #0f172a;
+}
+
+body.student-applications-light .applications-stat-card small {
+    color: #64748b;
+}
+
+/* Applications table container */
+body.student-applications-light .applications-table-card,
+body.student-applications-light .applications-table-title,
+body.student-applications-light .applications-table-footer {
+    background: #ffffff;
+    border-color: #dbe3ef;
+}
+
+body.student-applications-light .applications-table-title h2 {
+    color: #0f172a;
+}
+
+/* Table */
+body.student-applications-light .applications-table thead {
+    background: #eff6ff;
+}
+
+body.student-applications-light .applications-table th {
+    color: #334155;
+}
+
+body.student-applications-light .applications-table td {
+    color: #0f172a;
+    border-top-color: #e2e8f0;
+}
+
+body.student-applications-light .applications-table tr:hover td {
+    background: #f8fafc;
+}
+
+/* Company details */
+body.student-applications-light .application-company-cell b {
+    color: #0f172a;
+}
+
+body.student-applications-light .application-company-cell p {
+    color: #64748b;
+}
+
+/* Loading and footer text */
+body.student-applications-light .applications-loading {
+    color: #64748b !important;
+}
+
+body.student-applications-light .applications-table-footer p {
+    color: #64748b;
+}
+
+/* Refresh and View buttons */
+body.student-applications-light .applications-reset-btn,
+body.student-applications-light .application-view-btn {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+
+/* Pagination */
+body.student-applications-light .applications-pagination button:not(.active-page) {
+    background: #ffffff;
+    color: #475569;
+    border-color: #cbd5e1;
+}
+
+/* Modal */
+body.student-applications-light .application-modal-box {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #dbe3ef;
+}
+
+body.student-applications-light .application-modal-close {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+body.student-applications-light .application-modal-heading h2,
+body.student-applications-light .application-detail-grid b,
+body.student-applications-light .application-modal-section h3 {
+    color: #0f172a;
+}
+
+body.student-applications-light .application-modal-heading p,
+body.student-applications-light .application-detail-grid span,
+body.student-applications-light .application-modal-section p {
+    color: #64748b;
+}
+
+body.student-applications-light .application-detail-grid > div,
+body.student-applications-light .application-modal-section {
+    background: #f8fafc;
+    border-color: #dbe3ef;
+}
+
+/* Empty message */
+body.student-applications-light .modal-empty-text {
+    color: #64748b !important;
+}
+
+/* Status badges */
+body.student-applications-light .status-applied,
+body.student-applications-light .status-review {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+body.student-applications-light .status-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+body.student-applications-light .status-interview {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+body.student-applications-light .status-rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* =========================================
+   END MY APPLICATIONS LIGHT MODE FIX
+   ========================================= */

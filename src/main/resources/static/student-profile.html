@@ -37,9 +37,10 @@ body.admin-student-view .profile-grid{
     max-width: none;
 }
 
-        body.admin-student-view .profile-topbar{
-            display:none;
-        }
+/* Hide top header on Student Profile for all users */
+.profile-topbar {
+    display: none !important;
+}
     </style>
 </head>
 
@@ -578,8 +579,7 @@ const isAdminEditMode =
     isAdminView &&
     profileParams.get("editMode") === "true";
 
-const profileThemeKey =
-    "recruiteaseStudentProfileTheme_" + studentId;
+const profileThemeKey = "recruiteaseStudentTheme";
 
 let studentData = null;
 
@@ -1042,19 +1042,26 @@ function downloadProfilePdf() {
 }
 
 function toggleTheme() {
-    const isLight = document.body.classList.toggle(
+
+    if (isAdminView) return;
+
+    const isLight = !document.body.classList.contains(
         "student-light-profile"
     );
 
-    const theme = isLight ? "light" : "dark";
+    localStorage.setItem(
+        profileThemeKey,
+        isLight ? "light" : "dark"
+    );
 
-    localStorage.setItem(profileThemeKey, theme);
-
-    document.getElementById("themeButton").innerText =
-    isLight ? "☀️" : "🌙";
+    loadTheme();
 }
 
 function loadTheme() {
+
+    // Admin view must remain independent
+    if (isAdminView) return;
+
     const savedTheme =
         localStorage.getItem(profileThemeKey) || "dark";
 
@@ -1064,6 +1071,9 @@ function loadTheme() {
         "student-light-profile",
         isLight
     );
+
+    document.body.classList.toggle("light", isLight);
+    document.body.classList.toggle("light-mode", isLight);
 
     document.getElementById("themeButton").innerText =
         isLight ? "☀️" : "🌙";

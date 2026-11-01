@@ -1317,3 +1317,178 @@ body{
 }
 
 }
+
+/* ==========================================
+   ELIGIBLE COMPANIES - COMPLETE LIGHT MODE
+   ========================================== */
+
+/* Main page */
+body.light,
+body.light-mode {
+    --bg: #f4f7fb;
+    --text: #111827;
+    --muted: #475569;
+}
+
+body.light .main,
+body.light-mode .main {
+    background: #f4f7fb !important;
+    color: #111827;
+}
+
+/* Page headings */
+body.light .companies-topbar h1,
+body.light-mode .companies-topbar h1,
+body.light .section-head h2,
+body.light-mode .section-head h2 {
+    color: #111827 !important;
+}
+
+body.light .companies-topbar p,
+body.light-mode .companies-topbar p {
+    color: #475569 !important;
+}
+
+/* Summary cards */
+body.light .summary-card,
+body.light-mode .summary-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe5f2 !important;
+    box-shadow: 0 6px 20px rgba(15,23,42,.06);
+}
+
+body.light .summary-card h2,
+body.light-mode .summary-card h2 {
+    color: #111827 !important;
+}
+
+body.light .summary-card p,
+body.light-mode .summary-card p {
+    color: #334155 !important;
+}
+
+/* Company cards */
+body.light .company-card,
+body.light-mode .company-card {
+    background: linear-gradient(
+        180deg,
+        #ffffff,
+        #f8fbff
+    ) !important;
+
+    border: 1px solid #d6e3f3 !important;
+    box-shadow: 0 8px 24px rgba(15,23,42,.07);
+}
+
+body.light .company-card:hover,
+body.light-mode .company-card:hover {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 14px 30px rgba(37,99,235,.13);
+}
+
+/* Company name */
+body.light .company-header h3,
+body.light-mode .company-header h3 {
+    color: #111827 !important;
+}
+
+/* Company subtitle */
+body.light .company-header p,
+body.light-mode .company-header p {
+    color: #475569 !important;
+}
+
+/* Package, CGPA and Mode boxes */
+body.light .company-info div,
+body.light-mode .company-info div {
+    background: #eef4ff !important;
+    border: 1px solid #dce8f9;
+}
+
+/* Info labels */
+body.light .company-info small,
+body.light-mode .company-info small {
+    color: #475569 !important;
+}
+
+/* Info values */
+body.light .company-info b,
+body.light-mode .company-info b {
+    color: #111827 !important;
+}
+
+/* Required Skills box */
+body.light .skills-box,
+body.light-mode .skills-box {
+    background: #eef4ff !important;
+    border: 1px solid #dce8f9;
+}
+
+body.light .skills-box small,
+body.light-mode .skills-box small {
+    color: #334155 !important;
+}
+
+body.light .skills-box p,
+body.light-mode .skills-box p {
+    color: #111827 !important;
+}
+
+/* Keep company logos readable */
+body.light .company-logo,
+body.light-mode .company-logo {
+    color: #ffffff !important;
+}
+
+/* Eligible badge */
+body.light .match-badge,
+body.light-mode .match-badge {
+    background: #059669;
+    color: #ffffff !important;
+}
+
+/* Apply and Applied buttons */
+body.light .company-actions button,
+body.light-mode .company-actions button {
+    color: #ffffff !important;
+}
+
+/* View Details */
+body.light .company-actions a,
+body.light-mode .company-actions a {
+    color: #1d4ed8 !important;
+}
+
+/* No companies found */
+body.light .empty-card,
+body.light-mode .empty-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe5f2;
+}
+
+body.light .empty-card h2,
+body.light-mode .empty-card h2 {
+    color: #111827 !important;
+}
+
+body.light .empty-card p,
+body.light-mode .empty-card p {
+    color: #475569 !important;
+}
+
+/* Search input */
+body.light .companies-topbar input,
+body.light-mode .companies-topbar input {
+    background: #ffffff;
+    color: #111827;
+    border-color: #dbe5f2;
+}
+
+body.light .companies-topbar input::placeholder,
+body.light-mode .companies-topbar input::placeholder {
+    color: #64748b;
+}
+
+/* ==========================================
+   END ELIGIBLE COMPANIES LIGHT MODE FIX
+   ========================================== */

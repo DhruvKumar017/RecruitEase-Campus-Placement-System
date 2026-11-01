@@ -801,3 +801,143 @@ body.light
     background:#2563eb;
 }
 }
+/* =========================================
+   UNIFIED STUDENT SIDEBAR - LIGHT MODE FIX
+   ========================================= */
+
+/* Light sidebar background */
+body.light .student-unified-sidebar,
+body.light-mode .student-unified-sidebar,
+body.student-light-theme .student-unified-sidebar,
+body.student-light-profile .student-unified-sidebar,
+body.student-applications-light .student-unified-sidebar {
+    background: linear-gradient(
+        180deg,
+        #e8f3ff 0%,
+        #d8e8ff 100%
+    ) !important;
+
+    border-right-color: #bfd5ef;
+    box-shadow: none;
+}
+
+/* Brand title */
+body.light .student-unified-brand h2,
+body.light-mode .student-unified-brand h2,
+body.student-light-theme .student-unified-brand h2,
+body.student-light-profile .student-unified-brand h2,
+body.student-applications-light .student-unified-brand h2 {
+    color: #10213b;
+}
+
+/* Brand subtitle and section headings */
+body.light .student-unified-brand p,
+body.light-mode .student-unified-brand p,
+body.student-light-theme .student-unified-brand p,
+body.student-light-profile .student-unified-brand p,
+body.student-applications-light .student-unified-brand p,
+body.light .student-unified-title,
+body.light-mode .student-unified-title,
+body.student-light-theme .student-unified-title,
+body.student-light-profile .student-unified-title,
+body.student-applications-light .student-unified-title {
+    color: #526b89;
+}
+
+/* Student profile card */
+body.light .student-unified-user,
+body.light-mode .student-unified-user,
+body.student-light-theme .student-unified-user,
+body.student-light-profile .student-unified-user,
+body.student-applications-light .student-unified-user {
+    background: #ffffff;
+    border-color: #cbdcf0;
+}
+
+/* Student name */
+body.light .student-unified-user b,
+body.light-mode .student-unified-user b,
+body.student-light-theme .student-unified-user b,
+body.student-light-profile .student-unified-user b,
+body.student-applications-light .student-unified-user b {
+    color: #10213b;
+}
+
+/* Student details */
+body.light .student-unified-user p,
+body.light-mode .student-unified-user p,
+body.student-light-theme .student-unified-user p,
+body.student-light-profile .student-unified-user p,
+body.student-applications-light .student-unified-user p {
+    color: #526b89;
+}
+
+/* Profile progress */
+body.light .student-profile-progress-head,
+body.light-mode .student-profile-progress-head,
+body.student-light-theme .student-profile-progress-head,
+body.student-light-profile .student-profile-progress-head,
+body.student-applications-light .student-profile-progress-head {
+    color: #526b89;
+}
+
+body.light .student-profile-progress-head strong,
+body.light-mode .student-profile-progress-head strong,
+body.student-light-theme .student-profile-progress-head strong,
+body.student-light-profile .student-profile-progress-head strong,
+body.student-applications-light .student-profile-progress-head strong {
+    color: #10213b;
+}
+
+/* Sidebar menu links */
+body.light .student-unified-menu-item,
+body.light-mode .student-unified-menu-item,
+body.student-light-theme .student-unified-menu-item,
+body.student-light-profile .student-unified-menu-item,
+body.student-applications-light .student-unified-menu-item {
+    color: #29435f;
+}
+
+/* Active and hover menu links */
+body.light .student-unified-menu-item.active,
+body.light-mode .student-unified-menu-item.active,
+body.student-light-theme .student-unified-menu-item.active,
+body.student-light-profile .student-unified-menu-item.active,
+body.student-applications-light .student-unified-menu-item.active,
+body.light .student-unified-menu-item:hover,
+body.light-mode .student-unified-menu-item:hover,
+body.student-light-theme .student-unified-menu-item:hover,
+body.student-light-profile .student-unified-menu-item:hover,
+body.student-applications-light .student-unified-menu-item:hover {
+    color: #ffffff;
+}
+
+/* Help card */
+body.light .student-unified-help,
+body.light-mode .student-unified-help,
+body.student-light-theme .student-unified-help,
+body.student-light-profile .student-unified-help,
+body.student-applications-light .student-unified-help {
+    background: #ffffff;
+    border-color: #cbdcf0;
+}
+
+body.light .student-unified-help h4,
+body.light-mode .student-unified-help h4,
+body.student-light-theme .student-unified-help h4,
+body.student-light-profile .student-unified-help h4,
+body.student-applications-light .student-unified-help h4 {
+    color: #10213b;
+}
+
+body.light .student-unified-help p,
+body.light-mode .student-unified-help p,
+body.student-light-theme .student-unified-help p,
+body.student-light-profile .student-unified-help p,
+body.student-applications-light .student-unified-help p {
+    color: #2563eb;
+}
+
+/* =========================================
+   END UNIFIED SIDEBAR LIGHT MODE FIX
+   ========================================= */

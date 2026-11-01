@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="student-portal.css">
 
 <style>
+    /* Hide top header only on Student Aptitude Tests page */
+    .topbar {
+        display: none !important;
+    }
     .test-card{
         display:flex;
         justify-content:space-between;
@@ -887,8 +891,261 @@
         align-items: flex-start;
     }
 }
+
+/* =========================================
+   APTITUDE TESTS - LIGHT MODE DESIGN FIX
+   ========================================= */
+
+/* Page heading */
+body.light .aptitude-page-header h1,
+body.light-mode .aptitude-page-header h1 {
+    color: #111827 !important;
+}
+
+body.light .aptitude-breadcrumb b,
+body.light-mode .aptitude-breadcrumb b {
+    color: #334155 !important;
+}
+
+/* Four statistics cards */
+body.light .aptitude-stat-card,
+body.light-mode .aptitude-stat-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe5f2 !important;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, .06);
+}
+
+body.light .aptitude-stat-card:hover,
+body.light-mode .aptitude-stat-card:hover {
+    background: #f8fbff !important;
+    border-color: #3b82f6 !important;
+}
+
+body.light .aptitude-stat-card.active-test-card,
+body.light-mode .aptitude-stat-card.active-test-card {
+    background: #eff6ff !important;
+    border-color: #2563eb !important;
+}
+
+body.light .aptitude-stat-card h2,
+body.light-mode .aptitude-stat-card h2,
+body.light .aptitude-stat-card p,
+body.light-mode .aptitude-stat-card p {
+    color: #111827 !important;
+}
+
+body.light .aptitude-stat-card small,
+body.light-mode .aptitude-stat-card small {
+    color: #475569 !important;
+}
+
+/* Search and filters */
+body.light .aptitude-filter-card,
+body.light-mode .aptitude-filter-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe5f2 !important;
+}
+
+body.light .aptitude-filter-search input,
+body.light-mode .aptitude-filter-search input,
+body.light .aptitude-filter-card select,
+body.light-mode .aptitude-filter-card select {
+    background: #f8fafc !important;
+    color: #111827 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+body.light .aptitude-filter-search input::placeholder,
+body.light-mode .aptitude-filter-search input::placeholder {
+    color: #64748b !important;
+}
+
+body.light .aptitude-filter-search span,
+body.light-mode .aptitude-filter-search span {
+    color: #475569 !important;
+}
+
+body.light .aptitude-reset-btn,
+body.light-mode .aptitude-reset-btn {
+    color: #1d4ed8 !important;
+}
+
+/* Table container */
+body.light .aptitude-table-card,
+body.light-mode .aptitude-table-card {
+    background: #ffffff !important;
+    border: 1px solid #dbe5f2 !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .05);
+}
+
+body.light .aptitude-table-title,
+body.light-mode .aptitude-table-title {
+    color: #111827 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Table headings */
+body.light .aptitude-table thead,
+body.light-mode .aptitude-table thead {
+    background: #eff6ff !important;
+}
+
+body.light .aptitude-table th,
+body.light-mode .aptitude-table th {
+    color: #1e293b !important;
+}
+
+/* Table rows */
+body.light .aptitude-table,
+body.light-mode .aptitude-table,
+body.light .aptitude-table td,
+body.light-mode .aptitude-table td,
+body.light .aptitude-company-cell b,
+body.light-mode .aptitude-company-cell b {
+    color: #111827 !important;
+}
+
+body.light .aptitude-table td,
+body.light-mode .aptitude-table td {
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+body.light .aptitude-table tbody tr:hover,
+body.light-mode .aptitude-table tbody tr:hover {
+    background: #eff6ff !important;
+}
+
+/* Status badges */
+body.light .status-qualified,
+body.light-mode .status-qualified {
+    color: #6b21a8 !important;
+    background: #f3e8ff !important;
+}
+
+body.light .status-completed,
+body.light-mode .status-completed {
+    color: #92400e !important;
+    background: #fef3c7 !important;
+}
+
+body.light .status-upcoming,
+body.light-mode .status-upcoming {
+    color: #1d4ed8 !important;
+    background: #dbeafe !important;
+}
+
+body.light .status-live,
+body.light-mode .status-live {
+    color: #047857 !important;
+    background: #d1fae5 !important;
+}
+
+body.light .status-expired,
+body.light-mode .status-expired {
+    color: #334155 !important;
+    background: #e2e8f0 !important;
+}
+
+/* Action buttons */
+body.light .aptitude-action-btn:not(.aptitude-start-btn),
+body.light-mode .aptitude-action-btn:not(.aptitude-start-btn) {
+    color: #1d4ed8 !important;
+    border-color: #60a5fa !important;
+}
+
+body.light .aptitude-start-btn,
+body.light-mode .aptitude-start-btn {
+    color: #ffffff !important;
+}
+
+/* Table footer */
+body.light .aptitude-table-footer,
+body.light-mode .aptitude-table-footer {
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+body.light .aptitude-table-footer p,
+body.light-mode .aptitude-table-footer p {
+    color: #475569 !important;
+}
+
+body.light .aptitude-pagination button,
+body.light-mode .aptitude-pagination button {
+    background: #f8fafc !important;
+    color: #111827 !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light .aptitude-pagination .active-page,
+body.light-mode .aptitude-pagination .active-page {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
+
+/* Test questions and results */
+body.light .test-window,
+body.light-mode .test-window,
+body.light .test-card,
+body.light-mode .test-card,
+body.light .question-box,
+body.light-mode .question-box {
+    background: #ffffff !important;
+    border-color: #dbe5f2 !important;
+}
+
+body.light .test-window-head h2,
+body.light-mode .test-window-head h2,
+body.light .test-card h3,
+body.light-mode .test-card h3,
+body.light .question-box h3,
+body.light-mode .question-box h3 {
+    color: #111827 !important;
+}
+
+body.light .test-window-head p,
+body.light-mode .test-window-head p,
+body.light .test-card p,
+body.light-mode .test-card p,
+body.light .empty-test-message,
+body.light-mode .empty-test-message {
+    color: #475569 !important;
+}
+
+body.light .option-label,
+body.light-mode .option-label {
+    background: #f8fafc !important;
+    color: #111827 !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light .option-label:hover,
+body.light-mode .option-label:hover {
+    background: #eff6ff !important;
+}
+
+body.light .qualified-result-card,
+body.light-mode .qualified-result-card {
+    background: #ecfdf5 !important;
+}
+
+body.light .qualified-result-card h2,
+body.light-mode .qualified-result-card h2 {
+    color: #047857 !important;
+}
+
+body.light .qualified-result-card p:not(.interview-request-message),
+body.light-mode .qualified-result-card p:not(.interview-request-message) {
+    color: #111827 !important;
+}
+
+body.light .interview-request-message,
+body.light-mode .interview-request-message {
+    color: #047857 !important;
+}
+
 </style>
 </head>
+
 
 <body>
 

@@ -751,3 +751,214 @@ body.student-light-theme .student-search::placeholder{
         display:none;
     }
 }
+/* =========================================
+   STUDENT SETTINGS - LIGHT MODE FIX
+   MAIN CONTENT ONLY
+   ========================================= */
+
+body.student-light-theme {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --input: #f8fafc;
+    --line: #dbe3ef;
+    --text: #0f172a;
+    --muted: #64748b;
+}
+
+/* Sidebar follows Light Mode */
+body.student-light-theme {
+    --sidebar: #e0efff;
+    --sidebar-bottom: #c9deff;
+}
+
+body.student-light-theme .student-settings-sidebar a,
+body.student-light-theme .student-settings-brand h2,
+body.student-light-theme .sidebar-student b {
+    color: #10213b;
+}
+
+body.student-light-theme .student-settings-sidebar a.active,
+body.student-light-theme .student-settings-sidebar a:hover {
+    color: #ffffff;
+}
+
+/* Main page */
+body.student-light-theme .student-settings-main {
+    background: #f4f7fb;
+    color: #0f172a;
+}
+
+/* Page heading */
+body.student-light-theme .settings-title h1 {
+    color: #0f172a;
+}
+
+body.student-light-theme .settings-title p {
+    color: #64748b;
+}
+
+/* All settings cards */
+body.student-light-theme .settings-card {
+    background: #ffffff;
+    border-color: #dbe3ef;
+    color: #0f172a;
+}
+
+/* Card headings */
+body.student-light-theme .card-heading h2 {
+    color: #0f172a;
+}
+
+body.student-light-theme .card-heading p {
+    color: #64748b;
+}
+
+/* Form labels */
+body.student-light-theme .settings-form-group label {
+    color: #334155;
+}
+
+/* Input containers */
+body.student-light-theme .input-shell {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+/* All inputs and selects */
+body.student-light-theme .input-shell input,
+body.student-light-theme .settings-form-group input,
+body.student-light-theme .settings-form-group select,
+body.student-light-theme .password-input-wrap input,
+body.student-light-theme .preference-row select {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+/* Input placeholders */
+body.student-light-theme .settings-form-group input::placeholder,
+body.student-light-theme .password-input-wrap input::placeholder {
+    color: #94a3b8;
+}
+
+/* Input icons */
+body.student-light-theme .input-shell span {
+    color: #64748b;
+}
+
+/* Information box */
+body.student-light-theme .form-info-box {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* Secondary buttons */
+body.student-light-theme .secondary-btn {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+
+/* Profile photo description */
+body.student-light-theme .profile-photo-preview p {
+    color: #64748b;
+}
+
+/* Resume box */
+body.student-light-theme .resume-file-box {
+    background: #f8fafc;
+    border-color: #dbe3ef;
+}
+
+body.student-light-theme .resume-file-box b {
+    color: #0f172a;
+}
+
+body.student-light-theme .resume-file-box p {
+    color: #64748b;
+}
+
+body.student-light-theme .resume-file-icon {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Password visibility button */
+body.student-light-theme .password-toggle {
+    color: #475569;
+}
+
+/* Security tips */
+body.student-light-theme .security-tip {
+    color: #334155;
+}
+
+body.student-light-theme .security-check {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Preferences */
+body.student-light-theme .preference-row {
+    border-bottom-color: #e2e8f0;
+}
+
+body.student-light-theme .preference-row b {
+    color: #0f172a;
+}
+
+body.student-light-theme .preference-row p {
+    color: #64748b;
+}
+
+body.student-light-theme .preference-row select {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+/* =========================================
+   END STUDENT SETTINGS LIGHT MODE FIX
+   ========================================= */
+   /* =========================================
+   STUDENT SETTINGS - LIGHT MODE DARK TEXT
+   ========================================= */
+
+/* All form field labels */
+body.student-light-theme .student-settings-main .settings-form-group label {
+    color: #111827 !important;
+    font-weight: 600;
+}
+
+/* Input, select and textarea values */
+body.student-light-theme .student-settings-main input,
+body.student-light-theme .student-settings-main select,
+body.student-light-theme .student-settings-main textarea {
+    color: #111827 !important;
+}
+
+/* Card headings and descriptions */
+body.student-light-theme .student-settings-main .card-heading h2,
+body.student-light-theme .student-settings-main .card-heading p,
+body.student-light-theme .student-settings-main .settings-title h1,
+body.student-light-theme .student-settings-main .settings-title p {
+    color: #111827 !important;
+}
+
+/* Preference labels and descriptions */
+body.student-light-theme .student-settings-main .preference-row b,
+body.student-light-theme .student-settings-main .preference-row p {
+    color: #111827 !important;
+}
+
+/* Profile photo and other helper text */
+body.student-light-theme .student-settings-main .photo-card p,
+body.student-light-theme .student-settings-main .settings-card small {
+    color: #111827 !important;
+}
+
+/* Keep placeholders readable */
+body.student-light-theme .student-settings-main input::placeholder,
+body.student-light-theme .student-settings-main textarea::placeholder {
+    color: #64748b !important;
+}

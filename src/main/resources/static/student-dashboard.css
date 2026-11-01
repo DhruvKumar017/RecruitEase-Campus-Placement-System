@@ -3060,3 +3060,351 @@ body.dark-mode .premium-hero-copy > p {
 .placement-success-banner {
     display: none !important;
 }
+
+/* ==========================================
+   RECRUITEASE STUDENT DASHBOARD - LIGHT MODE
+   Dashboard content only, sidebar untouched
+========================================== */
+
+body.light {
+    background: #eef4fc !important;
+    color: #14243d;
+}
+
+body.light .main.premium-dashboard {
+    background: #eef4fc !important;
+}
+
+/* Top header */
+
+body.light .premium-topbar {
+    border-bottom-color: #d9e4f2;
+}
+
+body.light .premium-topbar .premium-search-wrap {
+    background: #ffffff;
+    border-color: #d5e2f2;
+    box-shadow: 0 3px 14px rgba(30, 60, 110, .05);
+}
+
+body.light .premium-search-wrap input {
+    color: #14243d;
+}
+
+body.light .premium-search-wrap input::placeholder,
+body.light .search-shortcut {
+    color: #64748b;
+}
+
+body.light .search-shortcut {
+    background: #f1f5fb;
+    border-color: #dce5f2;
+}
+
+body.light .premium-bell,
+body.light .premium-theme-button,
+body.light .premium-top-user {
+    background: #ffffff;
+    color: #1e3a5f;
+    border-color: #d5e2f2;
+}
+
+body.light .premium-top-user b {
+    color: #14243d;
+}
+
+body.light .premium-top-user p {
+    color: #64748b;
+}
+
+/* Welcome banner stays blue with readable white text */
+
+body.light .premium-hero {
+    background: linear-gradient(120deg, #16478a, #2563b4) !important;
+    border-color: #7da8e5;
+    color: #ffffff;
+}
+
+body.light .premium-hero-copy h1,
+body.light .premium-hero-copy > p,
+body.light .student-live-clock {
+    color: #ffffff;
+}
+
+/* Four statistic cards */
+
+body.light .premium-stats-grid .premium-stat-card {
+    color: #14243d;
+    box-shadow: 0 6px 20px rgba(30, 60, 110, .08);
+}
+
+body.light .premium-stats-grid .stat-blue {
+    background: linear-gradient(135deg, #e7f0ff, #f6f9ff) !important;
+    border-color: #a8c8ff;
+}
+
+body.light .premium-stats-grid .stat-green {
+    background: linear-gradient(135deg, #e0f8f0, #f4fdf9) !important;
+    border-color: #9cdec9;
+}
+
+body.light .premium-stats-grid .stat-orange {
+    background: linear-gradient(135deg, #fff0db, #fffaf2) !important;
+    border-color: #f5cc93;
+}
+
+body.light .premium-stats-grid .stat-purple {
+    background: linear-gradient(135deg, #f0e8ff, #faf7ff) !important;
+    border-color: #cfb7ff;
+}
+
+body.light .premium-stat-title,
+body.light .premium-stat-content h2 {
+    color: #14243d;
+}
+
+body.light .premium-stat-content p {
+    color: #526780;
+}
+
+body.light .premium-stat-arrow {
+    color: #315d9b;
+    background: rgba(255,255,255,.75);
+    border-color: rgba(90,125,180,.20);
+}
+
+/* Main dashboard panels */
+
+body.light .premium-panel,
+body.light .premium-drives-panel,
+body.light .quick-access-panel,
+body.light .premium-resume-card {
+    background: #ffffff !important;
+    color: #14243d;
+    border-color: #d7e3f2;
+    box-shadow: 0 6px 22px rgba(30,60,110,.06);
+}
+
+body.light .premium-panel-head {
+    border-bottom-color: #e4ebf5;
+}
+
+body.light .premium-panel-head h2,
+body.light .premium-panel h3,
+body.light .resume-card-content h2 {
+    color: #14243d;
+}
+
+body.light .premium-panel-head p,
+body.light .premium-panel p,
+body.light .resume-card-label {
+    color: #64748b;
+}
+
+body.light .premium-view-link {
+    color: #2563eb;
+    background: #eff5ff;
+    border-color: #c9ddff;
+}
+
+body.light .premium-view-link:hover {
+    color: #1d4ed8;
+    background: #dfeaff;
+}
+
+/* Placement drive rows */
+
+body.light .premium-drive-list .drive {
+    background: #f7faff;
+    border-color: #dce7f5;
+    box-shadow: none;
+}
+
+body.light .premium-drive-list .drive h4 {
+    color: #14243d;
+}
+
+body.light .premium-drive-list .drive p,
+body.light .premium-drive-list .drive span {
+    color: #526780;
+}
+
+body.light .premium-loading-state,
+body.light .premium-loading-state strong {
+    color: #334155;
+}
+
+/* Career Access cards - override dark !important */
+
+body.light .premium-access-grid .profile-access {
+    background: linear-gradient(135deg, #e6efff, #f5f9ff) !important;
+    border-color: #adcaff !important;
+}
+
+body.light .premium-access-grid .resume-access {
+    background: linear-gradient(135deg, #eee6ff, #faf7ff) !important;
+    border-color: #d2bcff !important;
+}
+
+body.light .premium-access-grid .notification-access {
+    background: linear-gradient(135deg, #e0f6ff, #f3fbff) !important;
+    border-color: #a6e3fa !important;
+}
+
+body.light .premium-access-grid .premium-access-card {
+    color: #14243d;
+    box-shadow: none !important;
+}
+
+body.light .premium-access-card strong {
+    color: #14243d;
+}
+
+body.light .premium-access-card div > span {
+    color: #526780;
+}
+
+body.light .premium-access-grid .access-icon {
+    background: rgba(255,255,255,.75);
+    border-color: rgba(100,130,180,.18);
+    box-shadow: none;
+}
+
+body.light .access-arrow {
+    color: #315d9b;
+    background: rgba(255,255,255,.75);
+}
+
+/* Notifications */
+
+body.light .premium-notification-item {
+    border-bottom-color: #e5edf7;
+}
+
+body.light .premium-notification-content strong {
+    color: #14243d;
+}
+
+body.light .premium-notification-content p,
+body.light .premium-notification-meta,
+body.light .premium-notification-empty {
+    color: #64748b;
+}
+
+body.light .student-notification-box {
+    background: #ffffff;
+    border-color: #d7e3f2;
+    box-shadow: 0 15px 35px rgba(30,60,110,.15);
+    color: #14243d;
+}
+
+body.light .notification-popup-head h4,
+body.light .popup-notification-item strong {
+    color: #14243d;
+}
+
+body.light .popup-notification-item {
+    color: #14243d;
+    border-bottom-color: #e5edf7;
+}
+
+body.light .popup-notification-item:hover {
+    background: #f1f6ff;
+}
+
+body.light .popup-notification-item span,
+body.light .notification-loading {
+    color: #64748b;
+}
+
+/* Resume card */
+
+body.light .resume-card-content p {
+    color: #64748b;
+}
+
+body.light .resume-manage-button {
+    color: #2563eb;
+    background: #eff5ff;
+    border-color: #c9ddff;
+}
+
+/* Dashboard scrollbar */
+
+body.light::-webkit-scrollbar-track {
+    background: #eef4fc;
+}
+/* =========================================
+   LIGHT MODE - WELCOME BANNER TEXT FIX
+   ========================================= */
+
+body.light .premium-hero .welcome-blue {
+    color: #ffffff !important;
+}
+
+body.light .premium-hero .welcome-white {
+    color: #ffffff !important;
+}
+
+body.light .premium-hero .student-live-clock,
+body.light .premium-hero .student-clock-row,
+body.light .premium-hero .student-clock-row span {
+    color: #ffffff !important;
+}
+
+body.light .premium-hero .student-clock-icon {
+    color: #dbeafe !important;
+}
+
+body.light .premium-hero-copy > p {
+    color: #e2e8f0 !important;
+}
+
+/* =========================================
+   DASHBOARD WELCOME BANNER - LIGHT MODE
+   ========================================= */
+
+body.light .premium-hero {
+    background: linear-gradient(
+        120deg,
+        #e8f3ff 0%,
+        #d8eaff 100%
+    ) !important;
+
+    border: 1px solid #b8d5f7 !important;
+    border-left: 10px solid #2680ff !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08) !important;
+}
+
+/* Welcome heading and student name */
+body.light .premium-hero .welcome-white,
+body.light .premium-hero .welcome-blue,
+body.light .premium-hero-copy h1 {
+    color: #111827 !important;
+}
+
+/* Welcome description */
+body.light .premium-hero-copy > p {
+    color: #334155 !important;
+}
+
+/* Date and time */
+body.light .premium-hero .student-live-clock,
+body.light .premium-hero .student-clock-row,
+body.light .premium-hero .student-clock-row span {
+    color: #111827 !important;
+}
+
+/* Calendar and clock icons */
+body.light .premium-hero .student-clock-icon {
+    color: #2563eb !important;
+}
+
+/* Divider between welcome and date/time */
+body.light .premium-hero .student-live-clock {
+    border-color: #b8d5f7 !important;
+}
+
+/* =========================================
+   END WELCOME BANNER LIGHT MODE
+   ========================================= */

@@ -2,6 +2,28 @@
 
     const studentId = localStorage.getItem("studentId");
 
+    /* ================= COMMON STUDENT THEME ================= */
+
+    const STUDENT_THEME_KEY = "recruiteaseStudentTheme";
+
+    function applySavedStudentTheme() {
+
+        const savedTheme =
+            localStorage.getItem(STUDENT_THEME_KEY) || "dark";
+
+        const isLight = savedTheme === "light";
+
+        // Support existing student page theme classes
+        document.body.classList.toggle("light", isLight);
+        document.body.classList.toggle("light-mode", isLight);
+
+    }
+
+    // Apply saved theme to every page using student-sidebar.js
+    applySavedStudentTheme();
+
+    /* ================= END COMMON STUDENT THEME ================= */
+
     const menuItems = [
         {
             file: "student-dashboard.html",

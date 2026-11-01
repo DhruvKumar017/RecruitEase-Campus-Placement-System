@@ -1724,8 +1724,29 @@ function escapeHtml(value) {
 
 /* ================= THEME + NOTIFICATION ================= */
 
+// Common theme preference for Student Portal
+const STUDENT_THEME_KEY = "recruiteaseStudentTheme";
+
+// Restore saved theme on page load
+function applyStudentTheme() {
+    const savedTheme = localStorage.getItem(STUDENT_THEME_KEY) || "dark";
+
+    document.body.classList.toggle("light", savedTheme === "light");
+}
+
+// Apply saved theme
+applyStudentTheme();
+
+// Save theme whenever Dashboard button is clicked
 document.getElementById("themeBtn").addEventListener("click", function() {
-    document.body.classList.toggle("light");
+
+    const isLight = document.body.classList.toggle("light");
+
+    localStorage.setItem(
+        STUDENT_THEME_KEY,
+        isLight ? "light" : "dark"
+    );
+
 });
 
 function toggleStudentNotifications() {

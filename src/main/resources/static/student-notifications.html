@@ -5,6 +5,10 @@
 <title>Notifications | RecruitEase</title>
 <link rel="stylesheet" href="student-portal.css">
 <style>
+/* Hide top header only on Student Notifications page */
+main.main > header.topbar {
+    display: none !important;
+}
 /* =========================================================
    RECRUITEASE - PREMIUM NOTIFICATION PAGE
    ========================================================= */
@@ -437,6 +441,129 @@ body.light-mode .notification-tab {
     color: #17233b;
 }
 
+/* =========================================
+   NOTIFICATIONS - LIGHT MODE TEXT FIX
+   ========================================= */
+
+/* Page headings and descriptions */
+body.light-mode .notification-hero h1,
+body.light-mode .notification-list-header h2 {
+    color: #111827 !important;
+}
+
+body.light-mode .notification-hero p,
+body.light-mode .notification-list-header p {
+    color: #334155 !important;
+}
+
+/* Category card headings and numbers */
+body.light-mode .notification-summary-card .summary-content label,
+body.light-mode .notification-summary-card .summary-content p {
+    color: #111827 !important;
+}
+
+/* Category descriptions */
+body.light-mode .notification-summary-card .summary-content small {
+    color: #334155 !important;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Category arrows */
+body.light-mode .summary-arrow {
+    color: #111827 !important;
+    border-color: #cbd5e1 !important;
+    background: rgba(255, 255, 255, .45);
+}
+
+/* Filter buttons */
+body.light-mode .notification-tab {
+    color: #111827 !important;
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-mode .notification-tab.active,
+body.light-mode .notification-tab:hover {
+    color: #ffffff !important;
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Search bar */
+body.light-mode .notification-search input {
+    background: #f8fafc !important;
+    color: #111827 !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.light-mode .notification-search input::placeholder {
+    color: #475569 !important;
+}
+
+/* Notification list */
+body.light-mode .notification-list-panel {
+    border-color: #dbe5f2 !important;
+}
+
+body.light-mode .notification-list-header {
+    border-bottom-color: #dbe5f2 !important;
+}
+
+body.light-mode .notification-item {
+    border-bottom-color: #e2e8f0 !important;
+}
+
+body.light-mode .notification-message h3 {
+    color: #111827 !important;
+}
+
+body.light-mode .notification-message p,
+body.light-mode .notification-time {
+    color: #334155 !important;
+}
+
+/* Read and unread status */
+body.light-mode .notification-state.unread-state {
+    color: #be123c !important;
+}
+
+body.light-mode .notification-state.read-state {
+    color: #047857 !important;
+}
+
+/* Notification action buttons */
+body.light-mode .notification-action-btn {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border-color: #93c5fd !important;
+}
+
+body.light-mode .notification-delete {
+    background: #fff1f2 !important;
+    color: #be123c !important;
+    border-color: #fecdd3 !important;
+}
+
+/* Empty notifications message */
+body.light-mode .notification-empty h3 {
+    color: #111827 !important;
+}
+
+body.light-mode .notification-empty p {
+    color: #334155 !important;
+}
+
+/* Preserve white text on primary button */
+body.light-mode .mark-all-btn {
+    color: #ffffff !important;
+}
+
+/* =========================================
+   END NOTIFICATIONS LIGHT MODE TEXT FIX
+   ========================================= */
+
+
 /* ---------- RESPONSIVE ---------- */
 
 @media (max-width: 1100px) {
@@ -493,7 +620,7 @@ body.light-mode .notification-tab {
 }
 
 main.main > header.topbar {
-    display: flex !important;
+    display: none !important;
     justify-content: flex-end !important;
     align-items: center !important;
     width: 100%;

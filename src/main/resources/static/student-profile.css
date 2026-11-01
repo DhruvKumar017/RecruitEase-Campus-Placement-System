@@ -1569,3 +1569,165 @@ body.student-light-profile .skill-chip{
         max-width:180px;
     }
 }
+/* =========================================
+   RECRUITEASE STUDENT PROFILE
+   FINAL LIGHT MODE FIX
+   ========================================= */
+
+body.student-light-profile:not(.admin-student-view) {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --input: #f8fafc;
+    --line: #dbe3ef;
+    --text: #0f172a;
+    --muted: #64748b;
+}
+
+/* Main background */
+body.student-light-profile:not(.admin-student-view) .profile-main {
+    background: #f4f7fb;
+    color: #0f172a;
+}
+
+/* Page headings */
+body.student-light-profile:not(.admin-student-view) .page-heading h1,
+body.student-light-profile:not(.admin-student-view) .card-heading h3,
+body.student-light-profile:not(.admin-student-view) .academic-skills-heading h4 {
+    color: #0f172a;
+}
+
+/* All profile cards */
+body.student-light-profile:not(.admin-student-view) .card,
+body.student-light-profile:not(.admin-student-view) .profile-summary-card {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #dbe3ef;
+}
+
+/* Summary cards hover */
+body.student-light-profile:not(.admin-student-view) .profile-summary-card:hover {
+    background: #f8fafc;
+    border-color: #93c5fd;
+}
+
+/* Summary numbers and labels */
+body.student-light-profile:not(.admin-student-view) .profile-summary-card h2,
+body.student-light-profile:not(.admin-student-view) .profile-summary-card p {
+    color: #0f172a;
+}
+
+body.student-light-profile:not(.admin-student-view) .profile-summary-card small {
+    color: #64748b;
+}
+
+/* Profile name and details */
+body.student-light-profile:not(.admin-student-view) .profile-hero-content h2,
+body.student-light-profile:not(.admin-student-view) .profile-hero-content p b {
+    color: #0f172a;
+}
+
+body.student-light-profile:not(.admin-student-view) .profile-hero-content p,
+body.student-light-profile:not(.admin-student-view) .profile-hero-content p span {
+    color: #64748b;
+}
+
+/* Academic, overview and contact values */
+body.student-light-profile:not(.admin-student-view) .overview-row b,
+body.student-light-profile:not(.admin-student-view) .info-row b,
+body.student-light-profile:not(.admin-student-view) .contact-row b {
+    color: #0f172a;
+}
+
+/* Row labels - Dark Black in Light Mode */
+body.student-light-profile:not(.admin-student-view) .overview-row span,
+body.student-light-profile:not(.admin-student-view) .info-row span,
+body.student-light-profile:not(.admin-student-view) .contact-row span {
+    color: #111827;
+    font-weight: 500;
+}
+
+/* Links */
+body.student-light-profile:not(.admin-student-view) .contact-row a {
+    color: #2563eb;
+}
+
+/* Secondary text */
+body.student-light-profile:not(.admin-student-view) .page-heading p,
+body.student-light-profile:not(.admin-student-view) .card-heading p,
+body.student-light-profile:not(.admin-student-view) .academic-skills-heading p,
+body.student-light-profile:not(.admin-student-view) .about-text,
+body.student-light-profile:not(.admin-student-view) .empty-note {
+    color: #64748b;
+}
+
+/* Skills */
+body.student-light-profile:not(.admin-student-view) .skill-chip {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+
+/* Secondary buttons */
+body.student-light-profile:not(.admin-student-view) .secondary-btn {
+    background: #ffffff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+}
+
+/* Profile status */
+body.student-light-profile:not(.admin-student-view) .student-status {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Row separators */
+body.student-light-profile:not(.admin-student-view) .overview-row,
+body.student-light-profile:not(.admin-student-view) .info-row,
+body.student-light-profile:not(.admin-student-view) .contact-row {
+    border-bottom-color: #e2e8f0;
+}
+
+/* Hidden topbar styles */
+body.student-light-profile:not(.admin-student-view) .profile-topbar {
+    background: #ffffff;
+    border-color: #dbe3ef;
+}
+
+/* =========================================
+   END PROFILE LIGHT MODE FIX
+   ========================================= */
+   /* =========================================
+   PROFILE ALL DETAILS - DARK TEXT IN LIGHT MODE
+   ========================================= */
+
+body.student-light-profile:not(.admin-student-view) .profile-hero-content p,
+body.student-light-profile:not(.admin-student-view) .profile-hero-content p span,
+body.student-light-profile:not(.admin-student-view) .profile-hero-content p b,
+body.student-light-profile:not(.admin-student-view) .overview-row span,
+body.student-light-profile:not(.admin-student-view) .overview-row b,
+body.student-light-profile:not(.admin-student-view) .info-row span,
+body.student-light-profile:not(.admin-student-view) .info-row b,
+body.student-light-profile:not(.admin-student-view) .contact-row span,
+body.student-light-profile:not(.admin-student-view) .contact-row b,
+body.student-light-profile:not(.admin-student-view) .profile-summary-card small,
+body.student-light-profile:not(.admin-student-view) .card-heading p,
+body.student-light-profile:not(.admin-student-view) .academic-skills-heading p,
+body.student-light-profile:not(.admin-student-view) .page-heading p,
+body.student-light-profile:not(.admin-student-view) .about-text {
+    color: #111827 !important;
+}
+
+/* Resume file details */
+body.student-light-profile:not(.admin-student-view) #overviewResume {
+    color: #111827 !important;
+}
+
+/* Technical skills */
+body.student-light-profile:not(.admin-student-view) .skill-chip {
+    color: #111827 !important;
+}
+
+/* Preserve blue clickable links */
+body.student-light-profile:not(.admin-student-view) .contact-row a {
+    color: #1d4ed8 !important;
+}

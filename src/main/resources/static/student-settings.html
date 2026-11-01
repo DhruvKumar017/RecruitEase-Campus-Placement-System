@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Settings - RecruitEase</title>
 
-    <link rel="stylesheet" href="student-settings.css">
+<link rel="stylesheet" href="student-settings.css">
+
+<style>
+    /* Hide top header only on Student Settings page */
+    .student-settings-topbar {
+        display: none !important;
+    }
+</style>
+
 </head>
 
 <body>
@@ -919,6 +927,7 @@ function togglePassword(inputId) {
 }
 
 function loadPreferences() {
+
     const defaults = {
         theme: "dark",
         placementNotifications: true,
@@ -934,8 +943,11 @@ function loadPreferences() {
         ...(savedPreferences || {})
     };
 
+    const commonTheme =
+        localStorage.getItem("recruiteaseStudentTheme") || "dark";
+
     document.getElementById("themePreference").value =
-        preferences.theme;
+        commonTheme;
 
     document.getElementById("placementNotifications").checked =
         preferences.placementNotifications;
@@ -943,10 +955,11 @@ function loadPreferences() {
     document.getElementById("testNotifications").checked =
         preferences.testNotifications;
 
-    applyTheme(preferences.theme);
+    applyTheme(commonTheme);
 }
 
 function savePreferences() {
+
     const preferences = {
         theme: document.getElementById("themePreference").value,
         placementNotifications:
@@ -960,19 +973,30 @@ function savePreferences() {
         JSON.stringify(preferences)
     );
 
+    localStorage.setItem(
+        "recruiteaseStudentTheme",
+        preferences.theme
+    );
+
     applyTheme(preferences.theme);
 
     alert("Preferences browser me save ho gayi.");
 }
 
 function applyTheme(theme) {
+
+    const isLight = theme === "light";
+
     document.body.classList.toggle(
         "student-light-theme",
-        theme === "light"
+        isLight
     );
 
+    document.body.classList.toggle("light", isLight);
+    document.body.classList.toggle("light-mode", isLight);
+
     document.getElementById("themeButton").innerText =
-        theme === "light" ? "☀️" : "🌙";
+        isLight ? "☀️" : "🌙";
 }
 
 function toggleTheme() {
