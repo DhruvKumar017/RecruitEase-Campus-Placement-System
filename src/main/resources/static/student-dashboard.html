@@ -1082,6 +1082,7 @@ let loggedInStudent = null;
 let allDrives = [];
 let allCompanies = [];
 let eligibleUpcomingDrives = [];
+let studentApplications = [];
 
 if (!studentId) {
     alert("Please login first.");
@@ -1094,16 +1095,81 @@ if (!studentId) {
 
 async function initializeStudentDashboard() {
     try {
-       const responses = await Promise.all([
+const requests = [
     fetch("/api/students/" + studentId),
     fetch("/api/students/" + studentId + "/eligible-companies"),
     fetch("/api/drives"),
     fetch("/api/companies"),
-    fetch("/api/applications/student/" + studentId),
-    fetch("/api/interview-requests/student/" + studentId),
-    fetch("/api/applications/student/" + studentId + "/scheduled-tests"),
+    fetch("/api/applications/student/" + studentId).then(async response => {
+    if (response.ok) {
+        const applications = await response.clone().json();
+
+        document.getElementById("applicationCount").innerText =
+            applications.length;
+
+        document.getElementById("applicationStatText").innerText =
+            applications.length === 1
+                ? "1 application submitted"
+                : applications.length + " applications submitted";
+    }
+
+    return response;
+}),
+    fetch("/api/interview-requests/student/" + studentId).then(async response => {
+    if (response.ok) {
+        const interviews = await response.clone().json();
+
+        const scheduledInterviews = interviews.filter(interview =>
+            String(interview.interviewStatus || "")
+                .trim()
+                .toUpperCase() === "SCHEDULED"
+        );
+
+        document.getElementById("interviewCount").innerText =
+            scheduledInterviews.length;
+
+        document.getElementById("interviewStatText").innerText =
+            scheduledInterviews.length === 0
+                ? "No upcoming interview"
+                : scheduledInterviews.length === 1
+                    ? "1 interview scheduled"
+                    : scheduledInterviews.length + " interviews scheduled";
+    }
+
+    return response;
+}),
+    fetch("/api/applications/student/" + studentId + "/scheduled-tests").then(async response => {
+    if (response.ok) {
+        const scheduledTests = await response.clone().json();
+
+        document.getElementById("aptitudeStatusCount").innerText =
+            scheduledTests.length;
+
+        document.getElementById("aptitudeStatText").innerText =
+            scheduledTests.length === 0
+                ? "No aptitude test scheduled"
+                : scheduledTests.length === 1
+                    ? "1 aptitude test scheduled"
+                    : scheduledTests.length + " aptitude tests scheduled";
+    }
+
+    return response;
+}),
     fetch("/api/student-notifications/student/" + studentId)
-]);
+];
+
+// Student profile ko pehle load karo
+const studentResponseEarly = await requests[0];
+
+if (!studentResponseEarly.ok) {
+    throw new Error("Student profile load failed");
+}
+
+loggedInStudent = await studentResponseEarly.json();
+updateStudentProfile();
+
+// Baaki API responses ka wait karo
+const responses = await Promise.all(requests);
 
 
         const studentResponse = responses[0];
@@ -1115,13 +1181,14 @@ async function initializeStudentDashboard() {
         const scheduledTestsResponse = responses[6];
         const notificationsResponse = responses[7];
 
-        if (!studentResponse.ok) {
-            throw new Error("Student profile load failed");
-        }
+if (!studentResponse.ok) {
+    throw new Error("Student profile load failed");
+}
 
-        loggedInStudent = await studentResponse.json();
+// Student profile already loaded earlier.
+// Do not read studentResponse.json() again.
 
-        if (eligibleCompanyResponse.ok) {
+if (eligibleCompanyResponse.ok) {
             const eligibleCompanies = await eligibleCompanyResponse.json();
             document.getElementById("eligibleCount").innerText =
                 eligibleCompanies.length;
@@ -1134,12 +1201,13 @@ async function initializeStudentDashboard() {
         if (companiesResponse.ok) {
             allCompanies = await companiesResponse.json();
         }
-        if (applicationsResponse.ok) {
-    const applications = await applicationsResponse.json();
+ if (applicationsResponse.ok) {
+    studentApplications = await applicationsResponse.json();
+
+    const applications = studentApplications;
 
     document.getElementById("applicationCount").innerText =
         applications.length;
-
     document.getElementById("applicationStatText").innerText =
         applications.length === 1
             ? "1 application submitted"
@@ -1311,7 +1379,6 @@ if (latestNotifications.length === 0) {
         }).join("");
 }
 }
-        updateStudentProfile();
         await loadEligibleUpcomingDrives();
 
     } catch (error) {
@@ -1420,11 +1487,11 @@ async function loadEligibleUpcomingDrives() {
             };
         });
 
-    await Promise.all(
-    eligibleUpcomingDrives.map(async drive => {
-        drive.applied = await isDriveAlreadyApplied(drive.id);
-    })
-);
+    eligibleUpcomingDrives.forEach(drive => {
+        drive.applied = studentApplications.some(app =>
+            Number(app.driveId) === Number(drive.id)
+        );
+    });
 
     document.getElementById("upcomingDriveCount").innerText =
         eligibleUpcomingDrives.length;

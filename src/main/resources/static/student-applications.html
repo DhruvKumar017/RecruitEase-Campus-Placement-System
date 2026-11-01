@@ -337,10 +337,11 @@ async function initializeApplications() {
             Number(b.id) - Number(a.id)
         );
 
-        await loadInterviewEligibility();
-
         updateStats();
         renderApplications();
+
+        // Load interview eligibility without blocking the applications list
+        await loadInterviewEligibility();
 
     } catch (error) {
         console.error("Application load error:", error);
@@ -391,28 +392,22 @@ function setPhoto(id, url) {
 /* ================= TEST + INTERVIEW STATUS ================= */
 
 async function loadInterviewEligibility() {
-    const requests = applications.map(async app => {
-        try {
-            const response = await fetch(
-                "/api/applications/" +
-                app.id +
-                "/interview-eligibility"
-            );
+    try {
+        const response = await fetch(
+            "/api/applications/student/" +
+            studentId +
+            "/interview-eligibility"
+        );
 
-            if (response.ok) {
-                interviewEligibilityMap[app.id] =
-                    await response.json();
-            }
-
-        } catch (error) {
-            console.log(
-                "Interview eligibility load failed:",
-                app.id
-            );
+        if (!response.ok) {
+            throw new Error("Interview eligibility load failed");
         }
-    });
 
-    await Promise.all(requests);
+        interviewEligibilityMap = await response.json();
+
+    } catch (error) {
+        console.error("Interview eligibility load failed:", error);
+    }
 }
 
 function getInterviewEligibility(appId) {

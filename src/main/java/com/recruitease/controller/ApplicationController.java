@@ -171,9 +171,19 @@ public List<Map<String, Object>> getStudentApplications(
         @PathVariable Long studentId
 ) {
 
-    return applicationRepository.findByStudentId(studentId)
-            .stream()
-            .map(application -> {
+List<Application> applications =
+        applicationRepository.findByStudentId(studentId);
+
+Map<Long, PlacementDrive> driveMap =
+        placementDriveRepository.findAll()
+                .stream()
+                .collect(Collectors.toMap(
+                        PlacementDrive::getId,
+                        Function.identity()
+                ));
+
+return applications.stream()
+        .map(application -> {
 
                 Map<String, Object> data = new LinkedHashMap<>();
 
@@ -195,13 +205,11 @@ public List<Map<String, Object>> getStudentApplications(
                 data.put("testPermission", application.getTestPermission());
 
                 // Placement drive details
-                PlacementDrive drive = null;
+PlacementDrive drive = null;
 
-                if (application.getDriveId() != null) {
-                    drive = placementDriveRepository
-                            .findById(application.getDriveId())
-                            .orElse(null);
-                }
+if (application.getDriveId() != null) {
+    drive = driveMap.get(application.getDriveId());
+}
 
                 if (drive != null) {
 
@@ -396,6 +404,118 @@ data.put("lastDate", null);
                 .findByStudentIdAndDriveId(studentId, driveId)
                 .isPresent();
     }
+@GetMapping("/api/applications/student/{studentId}/interview-eligibility")
+public ResponseEntity<?> getStudentInterviewEligibility(
+        @PathVariable Long studentId
+) {
+    List<Application> applications =
+            applicationRepository.findByStudentId(studentId);
+
+    Map<Long, Object> eligibilityMap = new LinkedHashMap<>();
+
+    if (applications.isEmpty()) {
+        return ResponseEntity.ok(eligibilityMap);
+    }
+
+    List<Long> applicationIds = applications.stream()
+            .map(Application::getId)
+            .toList();
+
+    Map<Long, StudentTestResult> latestResultMap = new HashMap<>();
+
+    for (StudentTestResult result :
+            resultRepository.findByApplicationIdIn(applicationIds)) {
+
+        Long applicationId = result.getApplicationId();
+
+        if (applicationId == null) {
+            continue;
+        }
+
+        StudentTestResult existing = latestResultMap.get(applicationId);
+
+        if (existing == null ||
+                (result.getSubmittedAt() != null &&
+                 (existing.getSubmittedAt() == null ||
+                  result.getSubmittedAt().isAfter(existing.getSubmittedAt())))) {
+            latestResultMap.put(applicationId, result);
+        }
+    }
+
+    Map<Long, Boolean> interviewRequestMap = new HashMap<>();
+
+    for (InterviewRequest request :
+            interviewRequestRepository.findByApplicationIdIn(applicationIds)) {
+
+        if (request.getApplicationId() != null) {
+            interviewRequestMap.put(request.getApplicationId(), true);
+        }
+    }
+
+    Map<Long, Company> companyMap = companyRepository.findAll()
+            .stream()
+            .collect(Collectors.toMap(
+                    Company::getId,
+                    Function.identity()
+            ));
+
+    Map<String, Company> companyNameMap = new HashMap<>();
+
+    for (Company company : companyMap.values()) {
+        if (company.getCompanyName() != null) {
+            companyNameMap.putIfAbsent(
+                    company.getCompanyName().trim().toLowerCase(Locale.ROOT),
+                    company
+            );
+        }
+    }
+
+    for (Application application : applications) {
+        Long applicationId = application.getId();
+
+        StudentTestResult result = latestResultMap.get(applicationId);
+
+        Company company = null;
+
+        if (application.getCompanyId() != null) {
+            company = companyMap.get(application.getCompanyId());
+        }
+
+        if (company == null && application.getCompanyName() != null) {
+            company = companyNameMap.get(
+                    application.getCompanyName().trim().toLowerCase(Locale.ROOT)
+            );
+        }
+
+        double cutoff = getCompanyCutoff(company);
+
+        boolean qualified = result != null &&
+                "Qualified".equalsIgnoreCase(result.getStatus());
+
+        boolean interviewRequested =
+                interviewRequestMap.containsKey(applicationId);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        response.put("applicationId", applicationId);
+        response.put("testTaken", result != null);
+        response.put("qualified", qualified);
+        response.put("interviewRequested", interviewRequested);
+        response.put("canApplyForInterview", qualified && !interviewRequested);
+        response.put("companyCutoff", cutoff);
+
+        if (result != null) {
+            response.put("obtainedMarks", result.getObtainedMarks());
+            response.put("totalMarks", result.getTotalMarks());
+            response.put("percentage", result.getPercentage());
+            response.put("testResultStatus", result.getStatus());
+        }
+
+        eligibilityMap.put(applicationId, response);
+    }
+
+    return ResponseEntity.ok(eligibilityMap);
+}
 
     @GetMapping("/api/applications/{applicationId}/interview-eligibility")
     public ResponseEntity<?> getInterviewEligibility(
