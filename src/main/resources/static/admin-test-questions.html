@@ -635,6 +635,37 @@ document.getElementById("selectedTestMessage").innerText =
     document.getElementById("testIdSelect").value = testId;
 
     await loadQuestions();
+
+    try {
+        const response = await fetch(
+            "/api/test-questions/" + activeTestId
+        );
+
+        if (!response.ok) {
+            throw new Error("Questions verify nahi ho paaye.");
+        }
+
+        const questions = await response.json();
+
+        if (questions.length > 0) {
+            alert(
+                "✅ Questions Added Successfully!\n\n" +
+                "Test ID: " + displayTestId + "\n" +
+                "Total Questions: " + questions.length + "\n\n" +
+                "Questions database mein available hain."
+            );
+        } else {
+            alert(
+                "⚠️ Questions Not Added!\n\n" +
+                "Test ID: " + displayTestId + "\n\n" +
+                "Is test mein abhi koi question nahi hai."
+            );
+        }
+
+    } catch (error) {
+        alert("Questions verify nahi ho paaye.");
+        console.error(error);
+    }
 }
 
 async function loadQuestions() {

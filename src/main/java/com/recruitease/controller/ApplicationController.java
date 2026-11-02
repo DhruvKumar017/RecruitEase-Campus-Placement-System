@@ -731,7 +731,7 @@ public ResponseEntity<?> scheduleTest(
 AptitudeTest aptitudeTest = null;
 boolean newTestGenerated = false;
 
-// Create New Test page se already-created test aaya hai
+// Existing Test ID ko safely assign karo
 if (testId != null) {
     aptitudeTest = aptitudeTestRepository
             .findById(testId)
@@ -740,6 +740,18 @@ if (testId != null) {
     if (aptitudeTest == null) {
         return ResponseEntity.badRequest()
                 .body("Selected aptitude test not found.");
+    }
+
+    boolean assignedToAnotherApplication =
+            applicationRepository.findByTestId(testId)
+                    .stream()
+                    .anyMatch(existing ->
+                            !existing.getId().equals(application.getId())
+                    );
+
+    if (assignedToAnotherApplication) {
+        return ResponseEntity.badRequest()
+                .body("This Test ID is already assigned to another student.");
     }
 }
 

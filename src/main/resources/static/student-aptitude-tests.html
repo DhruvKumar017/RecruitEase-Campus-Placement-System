@@ -2315,7 +2315,7 @@ statusClass = "status-completed";
 }
 
 /* ================= START TEST ================= */
-function viewTestDetails(applicationId) {
+async function viewTestDetails(applicationId) {
 
     const app = scheduledApplications.find(item =>
         Number(item.id) === Number(applicationId)
@@ -2337,7 +2337,30 @@ function viewTestDetails(applicationId) {
             ? `${test.duration} min`
             : "Not set";
 
+    let questionStatus = "Unable to verify";
+
+    if (app.testId) {
+        try {
+            const response = await fetch(
+                "/api/test-questions/student/" + app.testId
+            );
+
+            if (response.ok) {
+                const questions = await response.json();
+
+                questionStatus = Array.isArray(questions)
+                    ? questions.length + " Questions Available"
+                    : "Invalid question data";
+            }
+        } catch (error) {
+            console.error("Question verification error:", error);
+        }
+    } else {
+        questionStatus = "Test ID not assigned";
+    }
+
     alert(
+        `Questions: ${questionStatus}\n\n` +
         `Test Details\n\n` +
         `Company: ${app.companyName || "Company"}\n` +
         `Role: ${app.role || "Role"}\n` +

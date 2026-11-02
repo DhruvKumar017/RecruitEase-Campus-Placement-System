@@ -356,16 +356,7 @@
 
                 <input id="duration" type="number" placeholder="Duration in minutes">
 
-                <select id="scheduledDay">
-                    <option value="">Select Day</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                </select>
+<input id="scheduleDate" type="date">
 
                 
 
@@ -384,7 +375,16 @@
                         <option value="">Select Student Application</option>
                     </select>
 
-                    <input id="scheduleDate" type="date">
+                    <select id="scheduledDay">
+    <option value="">Select Day</option>
+    <option value="Monday">Monday</option>
+    <option value="Tuesday">Tuesday</option>
+    <option value="Wednesday">Wednesday</option>
+    <option value="Thursday">Thursday</option>
+    <option value="Friday">Friday</option>
+    <option value="Saturday">Saturday</option>
+    <option value="Sunday">Sunday</option>
+</select>
 
                     <input id="scheduleStartTime" type="time">
 
@@ -757,10 +757,10 @@ function renderTests(data) {
         application.testPermission === "Allowed"
     );
 
-    // Test kisi student ko assigned nahi hai -> show karo
-    if (assignedApplications.length === 0) {
-        return true;
-    }
+// Show only tests assigned to at least one student
+if (assignedApplications.length === 0) {
+    return false;
+}
 
     // Assigned hai -> tabhi show karo jab kam se kam ek active student ho
     return assignedApplications.some(application =>
@@ -904,6 +904,52 @@ document.getElementById("testCountText").innerText =
         `;
     }).join("");
 }
+document.getElementById("scheduleDate").addEventListener("change", function () {
+    const selectedDate = this.value;
+    const daySelect = document.getElementById("scheduledDay");
+
+    if (!selectedDate) {
+        daySelect.value = "";
+        return;
+    }
+
+    const date = new Date(selectedDate + "T00:00:00");
+
+    const dayName = date.toLocaleDateString("en-US", {
+        weekday: "long"
+    });
+
+    daySelect.value = dayName;
+});
+/* ===== AUTO CALCULATE TEST END TIME ===== */
+
+function calculateTestEndTime() {
+    const duration = Number(document.getElementById("duration").value);
+    const startTime = document.getElementById("scheduleStartTime").value;
+    const endTimeInput = document.getElementById("scheduleEndTime");
+
+    if (!startTime || !Number.isFinite(duration) || duration <= 0) {
+        endTimeInput.value = "";
+        return;
+    }
+
+    const [hours, minutes] = startTime.split(":").map(Number);
+
+    const totalMinutes = (hours * 60) + minutes + duration;
+
+    const endHours = Math.floor((totalMinutes % 1440) / 60);
+    const endMinutes = totalMinutes % 60;
+
+    endTimeInput.value =
+        String(endHours).padStart(2, "0") + ":" +
+        String(endMinutes).padStart(2, "0");
+}
+
+document.getElementById("duration")
+    .addEventListener("input", calculateTestEndTime);
+
+document.getElementById("scheduleStartTime")
+    .addEventListener("input", calculateTestEndTime);
 
 /* ================= DIRECT CREATE + SCHEDULE ================= */
 
@@ -989,19 +1035,39 @@ async function saveNewTest(shouldSchedule) {
     };
 
     try {
-        const createResponse = await fetch("/api/aptitude-tests", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(testData)
-        });
+let createdTest = null;
 
-        if (!createResponse.ok) {
-            throw new Error(await createResponse.text());
-        }
+// Schedule karte waqt same-name unassigned test reuse karo
+if (shouldSchedule) {
+    createdTest = tests.find(test => {
+        const sameName =
+            String(test.testName || "").trim().toLowerCase() ===
+            name.toLowerCase();
 
-        const createdTest = await createResponse.json();
+        const alreadyAssigned = scheduledApplications.some(app =>
+            Number(app.testId) === Number(test.id)
+        );
+
+        return sameName && !alreadyAssigned;
+    }) || null;
+}
+
+// Available test nahi mila, ya Save Test Only click hua
+if (!createdTest) {
+    const createResponse = await fetch("/api/aptitude-tests", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(testData)
+    });
+
+    if (!createResponse.ok) {
+        throw new Error(await createResponse.text());
+    }
+
+    createdTest = await createResponse.json();
+}
 
         lastCreatedTestId = createdTest.id;
 

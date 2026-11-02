@@ -39,16 +39,18 @@ public class Application {
     public Application() {
     }
 
-    @PrePersist
-    public void beforeSave() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-
-        if (status == null || status.trim().isEmpty()) {
-            status = "Applied";
-        }
+@PrePersist
+public void beforeSave() {
+    if (createdAt == null) {
+        createdAt = LocalDateTime.now(
+                java.time.ZoneId.of("Asia/Kolkata")
+        );
     }
+
+    if (status == null || status.trim().isEmpty()) {
+        status = "Applied";
+    }
+}
 
     public Long getId() {
         return id;
