@@ -159,7 +159,9 @@ private void updateDriveStatus(PlacementDrive drive) {
         LocalDateTime lastDateTime =
                 LocalDateTime.of(lastDate, LocalTime.MAX);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(
+        java.time.ZoneId.of("Asia/Kolkata")
+);
 
         if (now.isBefore(startDateTime)) {
             drive.setStatus("Upcoming");
