@@ -169,40 +169,36 @@ if (!alreadyScheduled) {
             .findById(application.getDriveId())
             .orElse(null);
 
-    if (drive == null ||
-            drive.getDriveDate() == null ||
-            drive.getDriveDate().isBlank() ||
-            drive.getDriveEndTime() == null ||
-            drive.getDriveEndTime().isBlank()) {
+if (drive == null ||
+        drive.getLastDate() == null ||
+        drive.getLastDate().isBlank()) {
+
+    return ResponseEntity.badRequest()
+            .body("Placement drive last date is missing.");
+}
+
+try {
+
+    LocalDate lastDate =
+            LocalDate.parse(drive.getLastDate());
+
+    LocalDate today =
+            LocalDate.now(java.time.ZoneId.of("Asia/Kolkata"));
+
+    // Allow scheduling until the end of the last date (IST).
+    if (today.isAfter(lastDate)) {
 
         return ResponseEntity.badRequest()
-                .body("Placement drive date or end time is missing.");
+                .body(
+                    "Drive completed. New interviews cannot be scheduled."
+                );
     }
 
-    try {
+} catch (DateTimeParseException exception) {
 
-        LocalDate driveDate =
-                LocalDate.parse(drive.getDriveDate());
-
-        LocalTime driveEndTime =
-                LocalTime.parse(drive.getDriveEndTime());
-
-        LocalDateTime driveEnd =
-                LocalDateTime.of(driveDate, driveEndTime);
-
-        if (!LocalDateTime.now().isBefore(driveEnd)) {
-
-            return ResponseEntity.badRequest()
-                    .body(
-                        "Drive completed. New interviews cannot be scheduled."
-                    );
-        }
-
-    } catch (DateTimeParseException exception) {
-
-        return ResponseEntity.badRequest()
-                .body("Invalid placement drive date or end time.");
-    }
+    return ResponseEntity.badRequest()
+            .body("Invalid placement drive last date.");
+}
 }
 
 request.setInterviewDate(interviewDate);
