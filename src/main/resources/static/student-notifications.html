@@ -897,10 +897,9 @@ async function loadNotifications() {
 
     try {
 
-        const response = await fetch(
-            "/api/student-notifications/student/" + studentId
-        );
-
+const response = await fetch(
+    "/api/student-notifications/" + studentId
+);
         if (!response.ok) {
             throw new Error(
                 "Notification API failed: " + response.status
@@ -909,9 +908,12 @@ async function loadNotifications() {
 
         const data = await response.json();
 
-        notifications = Array.isArray(data)
-            ? data
-            : [];
+notifications = Array.isArray(data)
+    ? data.map(n => ({
+        ...n,
+        readStatus: n.read === true
+    }))
+    : [];
 
         renderNotifications();
 
@@ -942,16 +944,19 @@ function renderNotifications() {
     // CATEGORY COUNTS
     // -------------------------
 
-    const recentNotifications = notifications.filter(n => {
-        const type = String(n.type || "").toUpperCase();
+const recentNotifications = notifications.filter(n => {
+    const type = String(n.type || "").trim().toUpperCase();
 
-        return type !== "APTITUDE" &&
-               type !== "INTERVIEW";
-    });
+    return type !== "APTITUDE" &&
+           type !== "TEST" &&
+           type !== "INTERVIEW";
+});
 
-    const aptitudeNotifications = notifications.filter(n =>
-        String(n.type || "").toUpperCase() === "APTITUDE"
-    );
+const aptitudeNotifications = notifications.filter(n => {
+    const type = String(n.type || "").trim().toUpperCase();
+
+    return type === "APTITUDE" || type === "TEST";
+});
 
     const interviewNotifications = notifications.filter(n =>
         String(n.type || "").toUpperCase() === "INTERVIEW"
@@ -1038,10 +1043,10 @@ filtered.forEach(n => {
     let typeClass = "";
     let typeText = "RECENT";
 
-    if (type === "APTITUDE") {
-        typeClass = "aptitude";
-        typeText = "APTITUDE TEST";
-    } 
+if (type === "APTITUDE" || type === "TEST") {
+    typeClass = "aptitude";
+    typeText = "APTITUDE TEST";
+}
     else if (type === "INTERVIEW") {
         typeClass = "interview";
         typeText = "INTERVIEW";
@@ -1092,18 +1097,18 @@ filtered.forEach(n => {
                     ?
                     `<button
                         class="notification-action-btn"
-                        onclick="markRead(${n.id})">
+                        onclick="markRead('${escapeHtml(n.notificationKey)}')">
                         ✓ Mark Read
                     </button>`
                     :
                     ""
                 }
 
-                <button
-                    class="notification-action-btn notification-delete"
-                    onclick="deleteNotification(${n.id})">
-                    🗑
-                </button>
+<button
+    class="notification-action-btn notification-delete"
+    onclick="deleteNotification('${escapeHtml(n.notificationKey)}')">
+    🗑
+</button>
 
             </div>
 
@@ -1215,27 +1220,39 @@ function formatDate(date){
 
 }
 
-async function markRead(id){
+async function markRead(notificationKey) {
+    try {
+        const response = await fetch(
+            "/api/student-notifications/" +
+            studentId +
+            "/read/" +
+            encodeURIComponent(notificationKey),
+            {
+                method: "PUT"
+            }
+        );
 
-    await fetch("/api/student-notifications/"+id+"/read",{
+        if (!response.ok) {
+            throw new Error("Failed to mark notification as read");
+        }
 
-        method:"PUT"
+        await loadNotifications();
 
-    });
-
-    loadNotifications();
-
+    } catch (error) {
+        console.error("Mark Read Error:", error);
+        alert("Unable to mark notification as read.");
+    }
 }
 async function markAllRead() {
 
     try {
 
-        const response = await fetch(
-            "/api/student-notifications/student/" + studentId + "/read-all",
-            {
-                method: "PUT"
-            }
-        );
+const response = await fetch(
+    "/api/student-notifications/" + studentId + "/read-all",
+    {
+        method: "PUT"
+    }
+);
 
         if (!response.ok) {
             throw new Error("Unable to mark notifications as read.");
@@ -1250,18 +1267,31 @@ async function markAllRead() {
     }
 }
 
-async function deleteNotification(id){
+async function deleteNotification(notificationKey) {
 
-    if(!confirm("Delete notification?")) return;
+    if (!confirm("Delete notification?")) return;
 
-    await fetch("/api/student-notifications/"+id,{
+    try {
+        const response = await fetch(
+            "/api/student-notifications/" +
+            studentId +
+            "/delete/" +
+            encodeURIComponent(notificationKey),
+            {
+                method: "DELETE"
+            }
+        );
 
-        method:"DELETE"
+        if (!response.ok) {
+            throw new Error("Failed to delete notification");
+        }
 
-    });
+        await loadNotifications();
 
-    loadNotifications();
-
+    } catch (error) {
+        console.error("Delete Notification Error:", error);
+        alert("Unable to delete notification.");
+    }
 }
 
 fetch("/api/students/"+studentId)

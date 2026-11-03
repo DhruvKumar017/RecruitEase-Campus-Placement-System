@@ -103,19 +103,42 @@ public ResponseEntity<?> adminSendToInterview(
         );
     }
 
-    // Student must have already requested an interview.
-    InterviewRequest request = interviewRequestRepository
-            .findByApplicationId(applicationId)
-            .orElse(null);
+// Check existing interview request
+InterviewRequest request = interviewRequestRepository
+        .findByApplicationId(applicationId)
+        .orElse(null);
 
-    if (request == null) {
-        return ResponseEntity.badRequest().body(
-                "Student must apply for interview after qualifying the aptitude test."
-        );
-    }
-
-    // Return existing request without creating duplicates.
+// Prevent duplicate requests
+if (request != null) {
     return ResponseEntity.ok(request);
+}
+
+// Get student details
+Student student = studentRepository
+        .findById(application.getStudentId())
+        .orElse(null);
+
+if (student == null) {
+    return ResponseEntity.badRequest()
+            .body("Student not found.");
+}
+
+// Create admin interview request
+InterviewRequest newRequest = new InterviewRequest();
+
+newRequest.setApplicationId(applicationId);
+newRequest.setStudentId(student.getId());
+newRequest.setStudentName(student.getName());
+newRequest.setCompanyId(application.getCompanyId());
+newRequest.setCompanyName(application.getCompanyName());
+newRequest.setInterviewStatus("PENDING");
+
+// Student has not submitted an interview request
+newRequest.setStudentAppliedAt(null);
+
+return ResponseEntity.ok(
+        interviewRequestRepository.save(newRequest)
+);
 }
 
     /*

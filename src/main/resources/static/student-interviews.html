@@ -929,6 +929,137 @@ body.light-mode .interview-empty {
     color: #475569 !important;
 }
 
+/* ================================
+   INTERVIEW DETAILS MODAL
+================================ */
+
+.interview-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.interview-modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 850px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 30px;
+    background: #0b1931;
+    border: 1px solid #275184;
+    border-radius: 22px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+
+.interview-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #355477;
+    border-radius: 50%;
+    background: #142b49;
+    color: #ffffff;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.interview-modal-box h2 {
+    margin: 0 45px 8px 0;
+    font-size: 25px;
+}
+
+.interview-modal-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.interview-modal-info {
+    padding: 18px;
+    background: #0e2240;
+    border: 1px solid #20416d;
+    border-radius: 13px;
+}
+
+.interview-modal-info span {
+    display: block;
+    color: #9bbce7;
+    font-size: 12px;
+    margin-bottom: 9px;
+}
+
+.interview-modal-info strong {
+    color: #ffffff;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.interview-modal-remark {
+    margin-top: 20px;
+    padding: 20px;
+    background: #0e2240;
+    border: 1px solid #20416d;
+    border-radius: 13px;
+}
+
+.interview-modal-remark h3 {
+    margin: 0 0 12px;
+}
+
+.interview-modal-remark p {
+    margin: 0;
+    color: #b8cce8;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .interview-modal-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .interview-modal-box {
+        padding: 20px;
+    }
+}
+
+body.light .interview-modal-box,
+body.light-mode .interview-modal-box {
+    background: #ffffff;
+    color: #0f172a;
+}
+
+body.light .interview-modal-info,
+body.light-mode .interview-modal-info,
+body.light .interview-modal-remark,
+body.light-mode .interview-modal-remark {
+    background: #f8fafc;
+    border-color: #dbeafe;
+}
+
+body.light .interview-modal-info strong,
+body.light-mode .interview-modal-info strong,
+body.light .interview-modal-remark h3,
+body.light-mode .interview-modal-remark h3 {
+    color: #0f172a;
+}
+
+body.light .interview-modal-remark p,
+body.light-mode .interview-modal-remark p {
+    color: #475569;
+}
+
 </style>
 </head>
 
@@ -1122,7 +1253,26 @@ body.light-mode .interview-empty {
 </section>
 
 
-    </main>
+</main>
+
+</div>
+
+<!-- INTERVIEW DETAILS POPUP -->
+<div id="interviewDetailsModal" class="interview-modal-overlay"
+     style="display:none;">
+
+    <div class="interview-modal-box">
+
+        <button
+            type="button"
+            class="interview-modal-close"
+            onclick="closeInterviewModal()">
+            ×
+        </button>
+
+        <div id="interviewModalContent"></div>
+
+    </div>
 
 </div>
 
@@ -1635,9 +1785,9 @@ function getInterviewActionMarkup(interview, status) {
             <button
                 class="interview-action-btn secondary"
                 type="button"
-                onclick="showInterviewDetails(${interview.id})"
+                onclick="showInterviewDetails((${interview.id})"
             >
-                Details
+                👁 View
             </button>
         `;
     }
@@ -1673,24 +1823,18 @@ function getInterviewActionMarkup(interview, status) {
 // 3. Interview LIVE ho gaya
 if (status === "live") {
 
-    // Check whether student applied for this interview
-    if (!interview.studentAppliedAt) {
-        console.warn("Interview application timestamp missing:", {
-            interviewId: interview.id,
-            studentId: interview.studentId,
-            applicationId: interview.applicationId,
-            studentAppliedAt: interview.studentAppliedAt
-        });
-            return `
-                <button
-                    class="interview-action-btn not-applied-btn"
-                    type="button"
-                    disabled
-                >
-                    Not Applied
-                </button>
-            `;
-        }
+// Admin scheduled interview, but student has not applied
+if (!interview.studentAppliedAt) {
+    return `
+        <button
+            class="interview-action-btn secondary"
+            type="button"
+            onclick="showInterviewDetails(${interview.id})"
+        >
+            👁 View
+        </button>
+    `;
+}
 
         // Applied + online interview link available
         if (isValidHttpLink(interview.interviewLink)) {
@@ -1712,26 +1856,23 @@ if (status === "live") {
                 type="button"
                 onclick="showInterviewDetails(${interview.id})"
             >
-                Details
+                👁 View
             </button>
         `;
     }
 
-// 4. Interview finished but student never applied
-if (
-    (status === "finished" || status === "result_pending") &&
-    !interview.studentAppliedAt
-) {
-        return `
-            <button
-                class="interview-action-btn not-applied-btn"
-                type="button"
-                disabled
-            >
-                Not Applied
-            </button>
-        `;
-    }
+// 4. Interview finished but admin result pending
+if (status === "finished" || status === "result_pending") {
+    return `
+        <button
+            class="interview-action-btn secondary"
+            type="button"
+            disabled
+        >
+            No Result
+        </button>
+    `;
+}
 
     // 5. Finished / Selected / Placed / Rejected
     return `
@@ -1740,7 +1881,7 @@ if (
             type="button"
             onclick="showInterviewDetails(${interview.id})"
         >
-            Details
+            👁 View
         </button>
     `;
 }
@@ -1884,6 +2025,7 @@ function joinInterview(interviewId) {
 }
 
 function showInterviewDetails(interviewId) {
+
     const interview = studentInterviews.find(item =>
         Number(item.id) === Number(interviewId)
     );
@@ -1893,16 +2035,88 @@ function showInterviewDetails(interviewId) {
         return;
     }
 
-    const status = getEffectiveStatus(interview);
+    const application =
+        studentApplicationsMap[interview.applicationId];
 
-    alert(
-        `Company: ${interview.companyName || "-"}\n` +
-        `Status: ${getInterviewStatusText(status)}\n` +
-        `Date: ${formatDate(interview.interviewDate)}\n` +
-        `Time: ${formatTime(interview.interviewTime)}\n` +
-        `Mode: ${interview.interviewMode || "-"}\n` +
-        `Admin Note: ${interview.adminRemark || "-"}`
+const status = getEffectiveStatus(interview);
+
+// Package from linked application, if available
+const packageValue =
+    application?.packageLpa ??
+    application?.package ??
+    application?.ctc ??
+    application?.offerPackage;
+
+const packageText =
+    packageValue !== undefined &&
+    packageValue !== null &&
+    String(packageValue).trim() !== ""
+        ? `₹${packageValue} LPA`
+        : "Not Set";
+
+const company = escapeHtml(interview.companyName || "Company");
+    const role = escapeHtml(
+        interview.role || application?.role || "Not specified"
     );
+
+    const date = escapeHtml(formatDate(interview.interviewDate));
+    const time = escapeHtml(formatTime(interview.interviewTime));
+    const mode = escapeHtml(interview.interviewMode || "Not Set");
+
+    const statusText = escapeHtml(getInterviewStatusText(status));
+    const remark = escapeHtml(
+        interview.adminRemark || "No remarks from admin yet."
+    );
+
+    document.getElementById("interviewModalContent").innerHTML = `
+        <h2>🎤 ${company}</h2>
+        <p>${role}</p>
+
+        <div class="interview-modal-info-grid">
+
+            <div class="interview-modal-info">
+                <span>Interview ID</span>
+                <strong>#${escapeHtml(interview.id)}</strong>
+            </div>
+
+            <div class="interview-modal-info">
+                <span>Application ID</span>
+                <strong>${escapeHtml(interview.applicationId ?? "Not Available")}</strong>
+            </div>
+
+            <div class="interview-modal-info">
+                <span>Interview Date</span>
+                <strong>${date}</strong>
+            </div>
+
+            <div class="interview-modal-info">
+                <span>Interview Time</span>
+                <strong>${time}</strong>
+            </div>
+
+            <div class="interview-modal-info">
+                <span>Interview Mode</span>
+                <strong>${mode}</strong>
+            </div>
+
+<div class="interview-modal-info">
+    <span>Interview Status</span>
+    <strong>${statusText}</strong>
+</div>
+
+<div class="interview-modal-info">
+    <span>💰 Package (LPA)</span>
+    <strong>${escapeHtml(packageText)}</strong>
+</div>
+
+</div>
+    `;
+
+    document.getElementById("interviewDetailsModal").style.display = "flex";
+}
+
+function closeInterviewModal() {
+    document.getElementById("interviewDetailsModal").style.display = "none";
 }
 
 function getInterviewTimeStatus(interview) {

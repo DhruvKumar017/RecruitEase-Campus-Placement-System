@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -195,6 +196,41 @@ public class StudentNotificationController {
 
         return ResponseEntity.ok(notifications);
     }
+    /* ================= DELETE NOTIFICATION ================= */
+
+@DeleteMapping(
+        "/api/student-notifications/{studentId}/delete/{notificationKey}"
+)
+public ResponseEntity<?> deleteNotification(
+        @PathVariable Long studentId,
+        @PathVariable String notificationKey
+) {
+    Student student = studentRepository
+            .findById(studentId)
+            .orElse(null);
+
+    if (student == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    StudentNotificationRead notificationRecord =
+            notificationReadRepository
+                    .findByStudentIdAndNotificationKey(
+                            studentId,
+                            notificationKey
+                    )
+                    .orElse(new StudentNotificationRead());
+
+    notificationRecord.setStudentId(studentId);
+    notificationRecord.setNotificationKey(notificationKey);
+    notificationRecord.setDeleted(true);
+
+    notificationReadRepository.save(notificationRecord);
+
+    return ResponseEntity.ok(
+            Map.of("message", "Notification deleted successfully.")
+    );
+}
 
     /* ================= MARK ONE AS READ ================= */
 
@@ -508,13 +544,22 @@ public class StudentNotificationController {
             String type,
             LocalDateTime createdAt
     ) {
-        boolean isRead = notificationReadRepository
+StudentNotificationRead notificationRecord =
+        notificationReadRepository
                 .findByStudentIdAndNotificationKey(
                         studentId,
                         notificationKey
                 )
-                .map(StudentNotificationRead::isReadStatus)
-                .orElse(false);
+                .orElse(null);
+
+// Deleted notification ko dobara show nahi karna
+if (notificationRecord != null && notificationRecord.isDeleted()) {
+    return;
+}
+
+// Existing read/unread status
+boolean isRead = notificationRecord != null
+&& notificationRecord.isReadStatus();
 
         StudentNotificationDTO notification =
                 new StudentNotificationDTO();

@@ -31,9 +31,20 @@ public class StudentNotificationRead {
 
     private String notificationKey;
 
-    private boolean readStatus;
+private boolean readStatus;
 
-    private LocalDateTime readAt;
+private LocalDateTime readAt;
+
+// Notification delete status
+private boolean deleted = false;
+
+public boolean isDeleted() {
+    return deleted;
+}
+
+public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+}
 
     public StudentNotificationRead() {
     }

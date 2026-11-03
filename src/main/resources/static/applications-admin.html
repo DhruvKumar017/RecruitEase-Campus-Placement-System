@@ -414,67 +414,98 @@ const score = hasTestResult(app)
                 </td>
 
                 <td>
-                    <button
-                        class="action-btn"
-                        onclick="window.location.href='admin-interviews.html'">
-                        Schedule Interview
-                    </button>
+<button
+    class="action-btn"
+    type="button"
+    onclick="openAdminInterviewPage(${app.id})"
+    style="
+        background: #112238;
+        color: #22d3ee;
+        border: 1px solid #164e63;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+    ">
+    Schedule Interview
+</button>
                 </td>
             </tr>
         `;
     });
 }
 
+
 async function showInterviewRequests() {
     currentApplicationView = "interview-request";
 
-    // Clear existing filters/search
     document.getElementById("topSearch").value = "";
 
-    // Show ONLY applications sent/requested for interview
-try {
-    const response = await fetch("/api/interview-requests");
+    try {
+        const response = await fetch("/api/interview-requests");
 
-    if (!response.ok) {
-        throw new Error("Interview requests load failed");
-    }
-
-    const requests = await response.json();
-
-const studentSentRequests = requests.filter(request =>
-    request.studentAppliedAt != null
-);
-
-const interviewApplications = studentSentRequests
-    .map(request => {
-        const application = applications.find(app =>
-            Number(app.id) === Number(request.applicationId)
-        );
-
-        if (!application) {
-            return null;
+        if (!response.ok) {
+            throw new Error("Interview requests load failed");
         }
 
-        return {
-            ...application,
-            interviewRequestId: request.id,
-            aptitudePercentage: request.aptitudePercentage,
-            interviewDate: request.interviewDate,
-            interviewTime: request.interviewTime,
-            interviewMode: request.interviewMode,
-            interviewStatus: request.interviewStatus,
-            studentAppliedAt: request.studentAppliedAt
-        };
-    })
-    .filter(app => app !== null);
+        const requests = await response.json();
 
-renderInterviewRequests(interviewApplications);
+        const submittedApplicationIds = new Set(
+            requests
+                .filter(request => request.studentAppliedAt != null)
+                .map(request => Number(request.applicationId))
+        );
 
-} catch (error) {
-    console.error("Interview request load error:", error);
-    renderInterviewRequests([]);
+        const scheduledApplicationIds = new Set(
+            requests
+                .filter(request =>
+                    request.interviewDate != null &&
+                    request.interviewTime != null
+                )
+                .map(request => Number(request.applicationId))
+        );
+
+        const interviewApplications = applications.filter(app => {
+            const qualified = isTestQualified(app);
+
+            const requestNotSubmitted =
+                !submittedApplicationIds.has(Number(app.id));
+
+            const notScheduled =
+                !scheduledApplicationIds.has(Number(app.id));
+
+const applicationStatus = normalizeStatus(app.status);
+
+const notPlaced = applicationStatus !== "placed";
+
+const notScheduledByStatus =
+    applicationStatus !== "interview scheduled";
+
+const driveNotExpired =
+    !isInterviewDriveExpired(app);
+
+return qualified &&
+       requestNotSubmitted &&
+       notScheduled &&
+notPlaced &&
+notScheduledByStatus &&
+driveNotExpired;
+        });
+
+        renderInterviewRequests(interviewApplications);
+
+        document.getElementById("applicationCountText").innerText =
+            `Showing ${interviewApplications.length} qualified students without interview requests`;
+
+    } catch (error) {
+        console.error("Interview request load error:", error);
+        renderInterviewRequests([]);
+    }
 }
-}
+
 
 function showAptitudeResults() {
     currentApplicationView = "aptitude-result";
@@ -782,6 +813,37 @@ function showAptitudeRequests() {
 
     renderAptitudeRequests(aptitudeRequests);
 }
+
+function isInterviewDriveExpired(app) {
+    // No drive associated: don't exclude by drive expiry
+    if (!app.driveId) {
+        return false;
+    }
+
+    const drive = driveMap[Number(app.driveId)];
+
+    // Missing drive data: don't assume expired
+    if (!drive) {
+        return false;
+    }
+
+    const lastDate = String(drive.lastDate || "").trim();
+    const endTime = String(drive.driveEndTime || "").trim();
+
+    // Both values required for exact expiry
+    if (!lastDate || !endTime) {
+        return false;
+    }
+
+    const endDateTime = new Date(`${lastDate}T${endTime}`);
+
+    if (Number.isNaN(endDateTime.getTime())) {
+        return false;
+    }
+
+    return Date.now() >= endDateTime.getTime();
+}
+
 
 function isDriveCompleted(app) {
 
@@ -1519,9 +1581,25 @@ async function sendToInterview(applicationId) {
     }
 }
 
-function openAdminInterviewPage(applicationId) {
-    window.location.href =
-        `admin-interviews.html?applicationId=${applicationId}`;
+async function openAdminInterviewPage(applicationId) {
+    try {
+        const response = await fetch(
+            `/api/interview-requests/admin-send/${applicationId}`,
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        window.location.href =
+            `admin-interviews.html?applicationId=${applicationId}`;
+
+    } catch (error) {
+        alert(error.message || "Interview request create nahi hui.");
+    }
 }
 
 function directPlace(applicationId) {
@@ -1734,10 +1812,32 @@ try {
     if (interviewResponse.ok) {
         const interviewRequests = await interviewResponse.json();
 
-        document.getElementById("interviewRequestCount").innerText =
-            interviewRequests.filter(request =>
-                request.studentAppliedAt != null
-            ).length;
+const submittedIds = new Set(
+    interviewRequests
+        .filter(request => request.studentAppliedAt != null)
+        .map(request => Number(request.applicationId))
+);
+
+const scheduledIds = new Set(
+    interviewRequests
+        .filter(request =>
+            request.interviewDate != null &&
+            request.interviewTime != null
+        )
+        .map(request => Number(request.applicationId))
+);
+
+const pendingInterviewStudents = applications.filter(app =>
+    isTestQualified(app) &&
+    !submittedIds.has(Number(app.id)) &&
+    !scheduledIds.has(Number(app.id)) &&
+normalizeStatus(app.status) !== "placed" &&
+normalizeStatus(app.status) !== "interview scheduled" &&
+!isInterviewDriveExpired(app)
+);
+
+document.getElementById("interviewRequestCount").innerText =
+    pendingInterviewStudents.length;
     } else {
         document.getElementById("interviewRequestCount").innerText = "0";
     }
@@ -1840,6 +1940,17 @@ document.getElementById("themeToggle").addEventListener("click", function() {
 });
 
 loadApplications();
+
+// Check drive expiry every 10 seconds
+setInterval(async () => {
+    if (currentApplicationView !== "interview-request") {
+        return;
+    }
+
+    await showInterviewRequests();
+    await updateApplicationStats();
+
+}, 10000);
 
 </script>
 
