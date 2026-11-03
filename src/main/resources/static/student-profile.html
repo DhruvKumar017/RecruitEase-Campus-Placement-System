@@ -637,20 +637,38 @@ function setText(id, value, fallback = "Not added") {
 }
 
 function toUrl(value) {
-    const text = String(value || "").trim();
+    let text = String(value || "")
+        .replace(/[\u0000-\u001F\u007F]/g, "")
+        .trim();
 
-    if (!text) {
+    if (!text || text === "#") {
         return "#";
     }
 
-    if (
-        text.startsWith("http://") ||
-        text.startsWith("https://")
-    ) {
-        return text;
+    // Remove repeated http/https prefixes
+    text = text.replace(/^(?:https?:\/\/)+/i, "https://");
+
+    // Add https if missing
+    if (!/^https?:\/\//i.test(text)) {
+        text = "https://" + text;
     }
 
-    return "https://" + text;
+    try {
+        const url = new URL(text);
+
+        if (
+            !["http:", "https:"].includes(url.protocol) ||
+            !url.hostname.includes(".")
+        ) {
+            return "#";
+        }
+
+        return url.href;
+
+    } catch (error) {
+        console.error("Invalid profile URL:", text);
+        return "#";
+    }
 }
 
 function escapeHtml(value) {
@@ -861,16 +879,26 @@ if (studentData.resumeFileName) {
         linkedinElement.innerText = linkedin || "Not added";
         githubElement.innerText = github || "Not added";
 
-        linkedinElement.href = linkedin ? toUrl(linkedin) : "#";
-        githubElement.href = github ? toUrl(github) : "#";
+const linkedinUrl = linkedin ? toUrl(linkedin) : "#";
+const githubUrl = github ? toUrl(github) : "#";
 
-        if (!linkedin) {
-            linkedinElement.removeAttribute("target");
-        }
+[
+    [linkedinElement, linkedinUrl],
+    [githubElement, githubUrl]
+].forEach(([element, url]) => {
 
-        if (!github) {
-            githubElement.removeAttribute("target");
-        }
+    if (url === "#") {
+        element.removeAttribute("href");
+        element.removeAttribute("target");
+        element.style.cursor = "default";
+        return;
+    }
+
+    element.href = url;
+    element.target = "_blank";
+    element.rel = "noopener noreferrer";
+    element.style.cursor = "pointer";
+});
 renderSkills(studentData.skills);
 
 /* ================= PROFILE SUMMARY CARDS ================= */

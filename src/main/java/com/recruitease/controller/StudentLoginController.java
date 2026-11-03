@@ -172,6 +172,25 @@ public ResponseEntity<?> getLoginByStudentId(
             @PathVariable Long studentId,
             @RequestBody StudentLogin request
     ) {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isStudentOwner =
+                auth != null &&
+                auth.isAuthenticated() &&
+                auth.getAuthorities().stream()
+                        .anyMatch(a ->
+                                "ROLE_STUDENT".equals(a.getAuthority())
+                        ) &&
+                String.valueOf(studentId).equals(auth.getName());
+
+        if (!isStudentOwner) {
+            return ResponseEntity.status(403).body(
+                    Map.of("message",
+                            "Only the student can update their own username.")
+            );
+        }
+
         StudentLogin login =
                 studentLoginRepository.findByStudentId(studentId);
 

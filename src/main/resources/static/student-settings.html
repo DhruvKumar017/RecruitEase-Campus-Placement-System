@@ -680,18 +680,19 @@ try {
             throw new Error("Profile update failed.");
         }
 
-        const usernameResponse = await fetch(
-            "/api/student-login/" + studentId + "/update-username",
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: username
-                })
-            }
-        );
+const usernameResponse = await fetch(
+    "/api/student-login/" + studentId + "/update-username",
+    {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + studentToken
+        },
+        body: JSON.stringify({
+            username: username
+        })
+    }
+);
 
         const usernameResult = await getResponseData(usernameResponse);
 
