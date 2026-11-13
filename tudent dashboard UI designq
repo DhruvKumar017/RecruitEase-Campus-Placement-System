@@ -1,0 +1,12 @@
+src/main/resources/static/admin-dashboard.css
+src/main/resources/static/admin-dashboard.html
+src/main/resources/static/admin-login.html
+src/main/resources/static/demo-viewer-dashboard.html
+src/main/resources/static/index.html
+src/main/resources/static/student-dashboard.css
+src/main/resources/static/student-dashboard.html
+src/main/resources/static/student-help.html
+src/main/resources/static/student-login.html
+src/main/resources/static/student-register.html
+src/main/resources/static/student-sidebar.css
+src/main/resources/static/student-sidebar.js

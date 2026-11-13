@@ -1779,77 +1779,18 @@ function getInterviewRemarkMarkup(interview, status) {
 
 function getInterviewActionMarkup(interview, status) {
 
-    // 1. Interview request submitted, admin schedule pending
-    if (status === "schedule_pending" || status === "pending") {
-        return `
-            <button
-                class="interview-action-btn secondary"
-                type="button"
-                onclick="showInterviewDetails((${interview.id})"
-            >
-                👁 View
-            </button>
-        `;
-    }
+    const isScheduled =
+        Boolean(interview.interviewDate && interview.interviewTime);
 
-    // 2. Interview UPCOMING hai
-    if (status === "upcoming") {
+    const isFinalResult = [
+        "selected",
+        "placed",
+        "rejected",
+        "failed"
+    ].includes(status);
 
-        // Student already applied
-        if (interview.studentAppliedAt) {
-            return `
-                <button
-                    class="interview-action-btn applied-btn"
-                    type="button"
-                    disabled
-                >
-                    ✓ Applied
-                </button>
-            `;
-        }
-
-        // Student abhi tak apply nahi kiya
-        return `
-            <button
-                class="interview-action-btn apply-btn"
-                type="button"
-                onclick="applyForInterview(${interview.id}, this)"
-            >
-                Apply for Interview
-            </button>
-        `;
-    }
-
-// 3. Interview LIVE ho gaya
-if (status === "live") {
-
-// Admin scheduled interview, but student has not applied
-if (!interview.studentAppliedAt) {
-    return `
-        <button
-            class="interview-action-btn secondary"
-            type="button"
-            onclick="showInterviewDetails(${interview.id})"
-        >
-            👁 View
-        </button>
-    `;
-}
-
-        // Applied + online interview link available
-        if (isValidHttpLink(interview.interviewLink)) {
-            return `
-                <button
-                    class="interview-action-btn"
-                    type="button"
-                    onclick="joinInterview(${interview.id})"
-                >
-                    Join Interview
-                </button>
-            `;
-        }
-
-        // Applied but offline/no URL
+    // Final results unchanged
+    if (isFinalResult) {
         return `
             <button
                 class="interview-action-btn secondary"
@@ -1861,20 +1802,66 @@ if (!interview.studentAppliedAt) {
         `;
     }
 
-// 4. Interview finished but admin result pending
-if (status === "finished" || status === "result_pending") {
-    return `
-        <button
-            class="interview-action-btn secondary"
-            type="button"
-            disabled
-        >
-            No Result
-        </button>
-    `;
-}
+    // STAGE 1: No student request and no admin request
+    // Only show Apply when an unscheduled record exists
+    // and the student has not applied.
+    if (!isScheduled && !interview.studentAppliedAt &&
+        status !== "schedule_pending" &&
+        status !== "pending" &&
+        status !== "drive_completed") {
 
-    // 5. Finished / Selected / Placed / Rejected
+        return `
+            <button
+                class="interview-action-btn apply-btn"
+                type="button"
+                onclick="applyForInterview(${interview.id}, this)"
+            >
+                Apply for Interview
+            </button>
+        `;
+    }
+
+    // STAGE 2: Request exists but schedule is not assigned
+    if (!isScheduled) {
+        return `
+            <button
+                class="interview-action-btn secondary"
+                type="button"
+                disabled
+            >
+                Interview Not Scheduled
+            </button>
+        `;
+    }
+
+    // STAGE 3: Interview scheduled
+    if (status === "upcoming" || status === "scheduled") {
+        return `
+            <button
+                class="interview-action-btn secondary"
+                type="button"
+                onclick="showInterviewDetails(${interview.id})"
+            >
+                Interview Scheduled
+            </button>
+        `;
+    }
+
+    // Live online interview
+    if (status === "live" &&
+        isValidHttpLink(interview.interviewLink)) {
+        return `
+            <button
+                class="interview-action-btn"
+                type="button"
+                onclick="joinInterview(${interview.id})"
+            >
+                Join Interview
+            </button>
+        `;
+    }
+
+    // Live offline or completed interview
     return `
         <button
             class="interview-action-btn secondary"
